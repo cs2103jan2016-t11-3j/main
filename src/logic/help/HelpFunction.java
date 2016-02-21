@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class HelpFunction {
 
 	// Messages used within the function
-	private static final String MESSAGE_NO_TOPIC = "Sorry, the topic you requested is not available";
+	public static final String MESSAGE_NO_TOPIC = "Sorry, the topic you requested is not available";
 
 	// Number of topics in user manual
 	private static final int MAX_TOPIC_NUMBER = 13;
