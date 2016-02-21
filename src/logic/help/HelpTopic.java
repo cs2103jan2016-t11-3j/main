@@ -7,6 +7,9 @@ import java.io.FileReader;
 
 public class HelpTopic {
 
+	// File Path
+	private static String FILE_PATH = "C:/Users/ChongYan/Desktop/ISE Resources/1516 S2/CS2103/IDE Stuff/TaskFinder/src/logic/help/";
+	
 	// Attributes of the HelpTopic class
 	private int number = 0;
 	private String name = "";
@@ -18,8 +21,10 @@ public class HelpTopic {
 	}
 	
 	public HelpTopic(int _number) {
+		String num;
 		number = _number;
-		File topicFile = new File(number + ".txt");
+		num = Integer.toString(number);
+		File topicFile = new File(FILE_PATH + num + ".txt");
 		readFile(topicFile);
 	}
 	
