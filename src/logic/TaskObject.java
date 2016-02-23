@@ -3,15 +3,21 @@
 public class TaskObject {
 
 	private String title;
-	private int date;
-	private int time;								
+	private int startDate;
+	private int endDate;
+	private int startTime;
+	private int endTime;
+	private String category; // deadline, event, or floating
 	private String status;
 	private int taskId;
 	
-	public TaskObject(String title, int date, int time, String status, int taskId) {
+	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
 		this.title = title;
-		this.date = date;
-		this.time = time;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.category = category;
 		this.status = status;
 		this.taskId = taskId;
 	}
@@ -20,12 +26,24 @@ public class TaskObject {
 		return title;
 	}
 	
-	public int getDate() {
-		return date;
+	public int getStartDate() {
+		return startDate;
 	}
 	
-	public int getTime() {
-		return time;
+	public int getEndDate() {
+		return endDate;
+	}
+	
+	public int getStartTime() {
+		return startTime;
+	}
+	
+	public int getEndTime() {
+		return endTime;
+	}
+	
+	public String getCategory() {
+		return category;
 	}
 	
 	public String getStatus() {
@@ -40,12 +58,24 @@ public class TaskObject {
 		this.title = newTitle;
 	}
 	
-	public void setDate(int newDate) {
-		this.date = newDate;
+	public void setStartDate(int newStartDate) {
+		this.startDate = newStartDate;
 	}
 	
-	public void setTime(int newTime) {
-		this.time = newTime;
+	public void setEndDate(int newEndDate) {
+		this.endDate = newEndDate;
+	}
+	
+	public void setStartTime(int newStartTime) {
+		this.startTime = newStartTime;
+	}
+	
+	public void setEndTime(int newEndTime) {
+		this.endTime = newEndTime;
+	}
+	
+	public void setCategory(String newCategory) {
+		this.category = newCategory;
 	}
 	
 	public void setStatus(String newStatus) {

@@ -3,18 +3,27 @@ import java.util.Stack;
 
 public class Logic {
 	
-	private CommandObject commandObj;
-	private TaskObject taskObj;
 	private ArrayList<TaskObject> taskList;
 	private Stack<CommandObject> undoList;
- 	
-	public Logic(CommandObject commandObj, TaskObject taskObj, ArrayList<TaskObject> taskList) {
-		this.commandObj = commandObj;
-		this.taskObj = taskObj;
+
+	private CommandObject commandObj;
+	private TaskObject taskObj;
+ 	private ArrayList<String> output; // output is to be returned to UI after each command
+	
+	public Logic(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
 		this.taskList = taskList;
+		this.undoList = undoList;
 	}
 	
-	// ...
+	public ArrayList<String> getOutput() {
+		return output;
+	}
+	
+	public void setOutput(ArrayList<String> newOutput) {
+		this.output = newOutput;
+	}
+	
+	// Calling Parser
 	// ...
 	// ...
 	
@@ -34,29 +43,30 @@ public class Logic {
 		}
 	}
 	
-	public void addFunction() {
+	private void addFunction() {
 		Add add = new Add(taskObj, taskList);
-		add.run();
+		setOutput(add.run());
 	}
 	
-	public void displayFunction() {
+	private void displayFunction() {
 		Display display = new Display(taskList);
-		display.run();
+		setOutput(display.run());
 	}
 	
-	public void deleteFunction() {
+	private void deleteFunction() {
 		Delete delete = new Delete(taskObj, taskList);
-		delete.run();
+		setOutput(delete.run());
 	}
 	
-	public void searchFunction() {
+	private void searchFunction() {
 		Search search = new Search(taskObj, taskList);
-		search.run();
+		setOutput(search.run());
 	}
 	
-	public void exitFunction() {
+	private void exitFunction() {
 		Exit exit = new Exit();
-		exit.run();
+		setOutput(exit.run());
 	}
+	
 	
 }
