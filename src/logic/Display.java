@@ -2,6 +2,15 @@ package logic;
 
 import java.util.ArrayList;
 
+/* Sample output formats are listed as follows.
+ * (a) Example output for deadline: 
+ *	   1. CS2103 v0.1, 11/03/2016, 1600hrs, pending
+ * (b) Example output for event:
+ *     2. Pulau Ubin Camp, 15/06/2009-17/06/2009, 0800hrs-1300hrs, completed
+ * (c) Example output for floating task:
+ * 	   3. Study more, pending
+ */
+
 public class Display {
 	
 	private static final String MESSAGE_EMPTY_LIST = "Task list is empty";
