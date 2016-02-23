@@ -35,8 +35,7 @@ public class WriteListTest {
         
         assertEquals("Line 1", "task1;0;0;0;0;;;1;" , writtenList.get(0));
         assertEquals("Line 2", "task2;0;0;0;0;;;2;" , writtenList.get(1));
-        
-        //test list here
+
     }
 
     void writeList (ArrayList<TaskObject> taskList) {
