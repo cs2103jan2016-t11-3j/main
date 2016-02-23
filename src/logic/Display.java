@@ -1,3 +1,5 @@
+package logic;
+
 import java.util.ArrayList;
 
 public class Display {
@@ -29,6 +31,9 @@ public class Display {
 				int taskEndTime = task.getEndTime();
 				String taskStatus = task.getStatus();
 				
+				/* Output format for the tasks differs according to the category.
+				 * This switch statement calls the relevant method and passes in the relevant arguments.
+				 */
 				switch (taskCategory) {
 					case "deadline":
 						String taskStartDateInOutputFormat = parseDate(taskStartDate);
