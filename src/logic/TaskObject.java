@@ -25,6 +25,17 @@ public class TaskObject {
 		this.taskId = taskId;
 	}
 	
+	public TaskObject(int taskId){
+		this.title = "";
+		this.startDate = 0;
+		this.endDate = 0;
+		this.startTime = 0;
+		this.endTime = 0;
+		this.category = "";
+		this.status = "";
+		this.taskId = taskId;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
