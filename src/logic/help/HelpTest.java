@@ -12,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class HelpFunctionTest {
+public class HelpTest {
 
 	private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
@@ -21,12 +21,12 @@ public class HelpFunctionTest {
 	public void testHelpFunctionOne() {
 		PrintStream printStream = new PrintStream(outContent);
 		System.setOut(printStream);
-		HelpFunction helper = new HelpFunction("hello");
+		Help helper = new Help("hello");
 		ArrayList<String> toDisplay = new ArrayList<String>();
-		toDisplay = helper.searchManual();
+		toDisplay = helper.run();
 		for (int i = 0; i < toDisplay.size(); i++) {
 			System.out.print(toDisplay.get(i));
-			assertEquals(HelpFunction.MESSAGE_NO_TOPIC, outContent.toString());
+			assertEquals(Help.MESSAGE_NO_TOPIC, outContent.toString());
 		}
 		printStream.flush();
 	}
@@ -34,11 +34,13 @@ public class HelpFunctionTest {
 	@Test
 	// For no search string
 	public void testHelpFunctionTwo() {
+		PrintStream newPrintStream = new PrintStream(outContent);
+		System.setOut(newPrintStream);
 		String text = "";
 		int i = 0;
-		HelpFunction help = new HelpFunction();
+		Help help = new Help();
 		ArrayList<String> toDisp = new ArrayList<String>();
-		toDisp = help.searchManual();
+		toDisp = help.run();
 		try {
 			File file = new File(HelpTopic.FILE_PATH + "helpfile.txt");
 			FileReader fileReader = new FileReader(file);

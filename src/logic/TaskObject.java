@@ -1,3 +1,6 @@
+package logic;
+
+import java.util.Date;
 
 
 public class TaskObject {

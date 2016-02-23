@@ -5,27 +5,27 @@ import java.util.ArrayList;
 public class ExecuteHelp {
 
 	public static void main(String[] args) {
-		HelpFunction help = new HelpFunction("Hello");
+		Help help = new Help("Hello");
 		ArrayList<String> toDisp = new ArrayList<String>();
-		toDisp = help.searchManual();
-		
-		for(int i = 0; i < toDisp.size(); i++) {
+		toDisp = help.run();
+
+		for (int i = 0; i < toDisp.size(); i++) {
 			System.out.println(toDisp.get(i));
 		}
-		
-		HelpFunction helper = new HelpFunction("Add");
+
+		Help helper = new Help("Add");
 		ArrayList<String> toDisplay = new ArrayList<String>();
-		toDisplay = helper.searchManual();
-		
-		for(int i = 0; i < toDisplay.size(); i++) {
+		toDisplay = helper.run();
+
+		for (int i = 0; i < toDisplay.size(); i++) {
 			System.out.println(toDisplay.get(i));
 		}
-		
-		HelpFunction h = new HelpFunction();
+
+		Help h = new Help();
 		ArrayList<String> display = new ArrayList<String>();
-		display = h.searchManual();
-		
-		for(int i = 0; i < display.size(); i++) {
+		display = h.run();
+
+		for (int i = 0; i < display.size(); i++) {
 			System.out.println(display.get(i));
 		}
 	}
