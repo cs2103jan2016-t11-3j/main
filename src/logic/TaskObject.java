@@ -1,25 +1,26 @@
-import java.util.Date;
 
 
 public class TaskObject {
 
 	private String title;
-	private Date date;
-	private int time;									// TIME INT???
+	private int date;
+	private int time;								
 	private String status;
+	private int taskId;
 	
-	public TaskObject(String title, Date date, int time, String status) {
+	public TaskObject(String title, int date, int time, String status, int taskId) {
 		this.title = title;
 		this.date = date;
 		this.time = time;
 		this.status = status;
+		this.taskId = taskId;
 	}
 	
 	public String getTitle() {
 		return title;
 	}
 	
-	public Date getDate() {
+	public int getDate() {
 		return date;
 	}
 	
@@ -31,11 +32,15 @@ public class TaskObject {
 		return status;
 	}
 	
+	public int getTaskId() {
+		return taskId;
+	}
+	
 	public void setTitle(String newTitle) {
 		this.title = newTitle;
 	}
 	
-	public void setDate(Date newDate) {
+	public void setDate(int newDate) {
 		this.date = newDate;
 	}
 	
@@ -45,6 +50,10 @@ public class TaskObject {
 	
 	public void setStatus(String newStatus) {
 		this.status = newStatus;
+	}
+	
+	public void setTaskId(int newTaskId) {
+		this.taskId = newTaskId;
 	}
 
 }
