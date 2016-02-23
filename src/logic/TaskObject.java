@@ -1,9 +1,6 @@
-<<<<<<< Updated upstream
-=======
 package logic;
 
 import java.util.Date;
->>>>>>> Stashed changes
 
 
 public class TaskObject {

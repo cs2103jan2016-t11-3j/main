@@ -1,7 +1,4 @@
-<<<<<<< Updated upstream
-=======
 package logic;
->>>>>>> Stashed changes
 
 public class CommandObject {
 	
