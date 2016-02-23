@@ -9,7 +9,7 @@ public class Display {
 	private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
 	private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
 	
-	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
+	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 
 	public Display(ArrayList<TaskObject> taskList) {
