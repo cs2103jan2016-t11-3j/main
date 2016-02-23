@@ -2,7 +2,7 @@ package logic.help;
 
 import java.util.ArrayList;
 
-public class HelpFunction {
+public class Help {
 
 	// Messages used within the function
 	public static final String MESSAGE_NO_TOPIC = "Sorry, the topic you requested is not available";
@@ -11,17 +11,17 @@ public class HelpFunction {
 	private static final int MAX_TOPIC_NUMBER = 13;
 
 	// Attributes contained in the helpFunction class
-	private ArrayList<HelpTopic> manual = new ArrayList<HelpTopic>(); 
+	private ArrayList<HelpTopic> manual = new ArrayList<HelpTopic>();
 	// Entire manual will be stored in this once a new object is called
 	private ArrayList<String> display = new ArrayList<String>();
 	private String searchKey = "";
 
 	// Constructors
-	public HelpFunction() {
+	public Help() {
 		importManual();
 	}
 
-	public HelpFunction(String line) {
+	public Help(String line) {
 		searchKey = line;
 		importManual();
 	}
@@ -44,7 +44,7 @@ public class HelpFunction {
 	}
 
 	// Class methods
-	
+
 	// Imports manual from text files using objects called HelpTopics
 	public void importManual() {
 		for (int i = 1; i <= MAX_TOPIC_NUMBER; i++) {
@@ -52,11 +52,14 @@ public class HelpFunction {
 		}
 	}
 
-	// If a searchKey is absent, method automatically moves everything from the manual over to
-	// the display arrayList. Else it will search for all the topics containing the searchKey.
-	// If searchKey does not match with any help topic, method returns a message contained in
+	// If a searchKey is absent, method automatically moves everything from the
+	// manual over to
+	// the display arrayList. Else it will search for all the topics containing
+	// the searchKey.
+	// If searchKey does not match with any help topic, method returns a message
+	// contained in
 	// the arrayList
-	public ArrayList<String> searchManual() {
+	public ArrayList<String> run() {
 		if (searchKey == "") {
 			for (int i = 0; i < MAX_TOPIC_NUMBER; i++) {
 				createDisplay(i);
@@ -64,7 +67,7 @@ public class HelpFunction {
 			return display;
 		} else {
 			runSearch();
-			if(display.isEmpty()) {
+			if (display.isEmpty()) {
 				display.add(MESSAGE_NO_TOPIC);
 			}
 			return display;
@@ -75,7 +78,7 @@ public class HelpFunction {
 		int i = 0;
 		String text = "";
 		display.add(manual.get(num).getTopicName());
-		while(i < manual.get(num).getDetails().size()) {
+		while (i < manual.get(num).getDetails().size()) {
 			text = manual.get(num).getDetails().get(i);
 			display.add(text);
 			i++;
@@ -84,9 +87,9 @@ public class HelpFunction {
 
 	public void runSearch() {
 		String name;
-		for(int i = 0; i < MAX_TOPIC_NUMBER; i++) {
+		for (int i = 0; i < MAX_TOPIC_NUMBER; i++) {
 			name = manual.get(i).getTopicName();
-			if(name.contains(searchKey)) {
+			if (name.contains(searchKey)) {
 				createDisplay(i);
 			}
 		}
