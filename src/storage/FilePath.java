@@ -41,7 +41,7 @@ public class FilePath {
          * <p>
          * @return String of path of the file containing saved tasks
          */
-        public static String getPath() {
+        protected static String getPath() {
             Path saveDir = Paths.get(".");
             try {
                 BufferedReader fileReader = new BufferedReader(new FileReader(SAVE_DATA_FILE));
