@@ -7,7 +7,6 @@ import logic.TaskObject;
 
 public interface Storage {
     
-    
     /**
      * Overwrites storage file with tasks from taskList.
      * <p>

@@ -17,7 +17,6 @@ public class LoadTest {
     static String DELIMITER = ";";
     static String NEW_LINE = "\n";
 
-
     @Test
     public void test() {
 

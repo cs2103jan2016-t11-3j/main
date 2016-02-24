@@ -1,6 +1,7 @@
 package storage;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,12 +14,8 @@ public class FileStorage implements Storage {
 
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
-
+    
     private static FileStorage instance = null;
-
-
-    //to change
-    public static String FILE_NAME = "data.csv";
 
     private FileStorage() {
     }
@@ -39,16 +36,12 @@ public class FileStorage implements Storage {
         return;   
     }
 
- // TODO Auto-generated method stub : test
     @Override
     public ArrayList<TaskObject> load() throws IOException {
         ArrayList<String> taskDataList = readData();
         ArrayList<TaskObject> taskList = parseData(taskDataList);
         return taskList;
-
     }
-
-    // HELPER
 
     private ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
@@ -66,11 +59,11 @@ public class FileStorage implements Storage {
         return taskList;
     }
 
-    private ArrayList<String> readData() throws IOException {
-        ArrayList<String> taskDataList = new ArrayList<String>();
-        BufferedReader fileReader = null;
-        String line = "";
-        fileReader = new BufferedReader(new FileReader(FILE_NAME));
+    private ArrayList<String> readData() throws FileNotFoundException , IOException {
+        ArrayList<String> taskDataList = new ArrayList<String>();  
+        String filePath = FilePath.getPath();
+        BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
+        String line = null;
         while ((line = fileReader.readLine()) != null) {
             taskDataList.add(line);
         }
@@ -79,9 +72,10 @@ public class FileStorage implements Storage {
     }
 
     private void writeToFile(TaskObject task) throws IOException{
-        FileWriter fileWriter = new FileWriter(FILE_NAME, true);
+        String filePath = FilePath.getPath();
+        FileWriter fileWriter = new FileWriter(filePath , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(task.getTitle());
+        printWriter.print(task.getTitle().replace(";", ","));
         printWriter.print(DELIMITER);
         printWriter.print(task.getStartDate());
         printWriter.print(DELIMITER);
@@ -91,9 +85,9 @@ public class FileStorage implements Storage {
         printWriter.print(DELIMITER);
         printWriter.print(task.getEndTime());
         printWriter.print(DELIMITER);
-        printWriter.print(task.getCategory());
+        printWriter.print(task.getCategory().replace(";", ","));
         printWriter.print(DELIMITER);
-        printWriter.print(task.getStatus());
+        printWriter.print(task.getStatus().replace(";", ","));
         printWriter.print(DELIMITER);
         printWriter.print(task.getTaskId());
         printWriter.print(DELIMITER);
@@ -102,7 +96,8 @@ public class FileStorage implements Storage {
     }
 
     private void clearFile() throws IOException{
-        FileWriter fileWriter = new FileWriter(FILE_NAME, false);
+        String filePath = FilePath.getPath();
+        FileWriter fileWriter = new FileWriter(filePath, false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.close();
     }

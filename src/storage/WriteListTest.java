@@ -33,6 +33,7 @@ public class WriteListTest {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+
         }        
         
         ArrayList<String> writtenList = readFile();
