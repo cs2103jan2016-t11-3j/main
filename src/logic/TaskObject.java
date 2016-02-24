@@ -31,8 +31,8 @@ public class TaskObject {
 		this.endDate = 0;
 		this.startTime = 0;
 		this.endTime = 0;
-		this.category = "default";
-		this.status = "default";
+		this.category = "";
+		this.status = "";
 		this.taskId = taskId;
 	}
 	
