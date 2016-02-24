@@ -26,13 +26,13 @@ public class TaskObject {
 	}
 	
 	public TaskObject(String title, int taskId){
-		this.title = "title";
+		this.title = title;
 		this.startDate = 0;
 		this.endDate = 0;
 		this.startTime = 0;
 		this.endTime = 0;
-		this.category = "default";
-		this.status = "default";
+		this.category = "";
+		this.status = "";
 		this.taskId = taskId;
 	}
 	
