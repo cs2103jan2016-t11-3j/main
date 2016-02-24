@@ -2,6 +2,8 @@ package logic.add;
 
 import logic.*;
 import storage.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Add {
@@ -123,8 +125,15 @@ public class Add {
 			addedInternal = true;
 	}
 
+	// NEEDS CHECKING
 	public void addExternal() {
-		StorageFile.WriteList(taskList);
+		FileStorage storage = FileStorage.getInstance();
+		try {
+			storage.writeList(taskList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		addedExternal = true;
 	}
 
