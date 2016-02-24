@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 public class FilePath {
 
-        private static final String SAVE_DATA_FILE = "saveInfo.txt";
+        private static final String SAVE_FILE_NAME = "saveInfo.txt";
         private static final String DATA_FILE_NAME = "data.csv";
     
         
@@ -25,7 +25,7 @@ public class FilePath {
             
             FileWriter fileWriter = null;
             try {
-                fileWriter = new FileWriter(SAVE_DATA_FILE , false);
+                fileWriter = new FileWriter(SAVE_FILE_NAME , false);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -34,6 +34,7 @@ public class FilePath {
             printWriter.print(saveDir.toString());
             printWriter.close();
         }
+        
         /**
          * Returns the path of the file containing saved tasks. If no path is defined, 
          * sets the default save location to the working directory and returns the path
@@ -41,10 +42,10 @@ public class FilePath {
          * <p>
          * @return String of path of the file containing saved tasks
          */
-        protected static String getPath() {
+        static String getPath() {
             Path saveDir = Paths.get(".");
             try {
-                BufferedReader fileReader = new BufferedReader(new FileReader(SAVE_DATA_FILE));
+                BufferedReader fileReader = new BufferedReader(new FileReader(SAVE_FILE_NAME));
                 saveDir = Paths.get(fileReader.readLine());
                 fileReader.close();
             } catch (IOException e) {

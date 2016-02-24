@@ -20,7 +20,7 @@ public class WriteListTest {
     
     
     @Test
-    public void test() {
+    public void testWrite() {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>(); 
         TaskObject task1 = new TaskObject("task1", 1);
         TaskObject task2 = new TaskObject("task2", 2);
@@ -65,8 +65,8 @@ public class WriteListTest {
         
         
         
-        assertEquals("Line 1", "task3;0;0;0;0;;;3;" , writtenList.get(0));
-        assertEquals("Line 2", "task4;0;0;0;0;;;4;" , writtenList.get(1));
+        assertEquals("Line 3", "task3;0;0;0;0;;;3;" , writtenList.get(0));
+        assertEquals("Line 4", "task4;0;0;0;0;;;4;" , writtenList.get(1));
         assertEquals("Length", 2, writtenList.size());
         
     }
