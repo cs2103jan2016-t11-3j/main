@@ -35,9 +35,7 @@ public class WriteListTest {
             e.printStackTrace();
         }        
         
-        
         ArrayList<String> writtenList = readFile();
-        
         
         
         assertEquals("Line 1", "task1;0;0;0;0;;;1;" , writtenList.get(0));
