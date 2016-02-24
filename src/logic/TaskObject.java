@@ -26,7 +26,7 @@ public class TaskObject {
 	}
 	
 	public TaskObject(String title, int taskId){
-		this.title = "title";
+		this.title = title;
 		this.startDate = 0;
 		this.endDate = 0;
 		this.startTime = 0;

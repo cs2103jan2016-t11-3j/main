@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class HelpTest {
 
-	private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
 	@Test
 	// For invalid search string
