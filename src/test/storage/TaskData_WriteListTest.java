@@ -1,7 +1,7 @@
 /**
  * 
  */
-package storage;
+package test.storage;
 
 import static org.junit.Assert.*;
 
@@ -16,8 +16,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import Test.TaskGenerator;
 import logic.TaskObject;
+import storage.TaskData;
+import test.TaskGenerator;
 
 /**
  * @author Hang

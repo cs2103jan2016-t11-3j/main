@@ -18,16 +18,24 @@ public interface Storage {
     public abstract int save(ArrayList<TaskObject> taskList);
     
     /**
-     * Returns all task data list stored in file as taskObjects.
+     * Loads all task data list stored in file into storage.
      * <p>
-     * @return taskDataList - Tasks read from stored file
-     * @throws IOException - If unable to open file/file does not exist
+     * @return 0 - If successful
+     * @return 1 - No file is found
+     * @return 2 - Error reading existing file
      */
-    public abstract ArrayList<TaskObject> load() throws IOException;
-
+    public abstract int load();
+    
+    /**
+     * Returns loaded tasks stored in storage
+     * <p>
+     * @return taskList - ArrayList of taskObjects stored in storage
+     */
+    public abstract ArrayList<TaskObject> getTaskList();
+    
     /**
      * Creates a copy of the saved task data file at the specified filePath location
-     * 
+     * <p>
      * @param filePath to create the copy
      * @return 0 if successful
      * @return 1 if existing file does not exist

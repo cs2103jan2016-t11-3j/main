@@ -1,4 +1,4 @@
-package storage;
+package test.storage;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import logic.TaskObject;
+import storage.FileStorage;
+import storage.Storage;
 
 public class LoadTest {
 
@@ -34,7 +36,8 @@ public class LoadTest {
             printWriter.print("task2;0;0;0;0;;;2;");
             printWriter.print(NEW_LINE);
             fileWriter.close();
-            loadedTasks = storageTest.load();
+            storageTest.load();
+            loadedTasks = storageTest.getTaskList();
         }
         catch (IOException e){
         }
