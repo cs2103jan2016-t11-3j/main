@@ -41,8 +41,8 @@ public class Parser {
 	private static final String HELP_COMMAND = "help";
 	private static final int HELP_INDEX = 8;	
 	
-	public static CommandObject commandObject = new CommandObject();
-	public static TaskObject taskObject = new TaskObject();
+	private static CommandObject commandObject = new CommandObject();
+	private static TaskObject taskObject = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
 	
 	private static String _command;
@@ -53,7 +53,7 @@ public class Parser {
 	public static CommandObject run() {
 		return parseInput(_command);
 	}
-	public static CommandObject parseInput(String command) {
+	private static CommandObject parseInput(String command) {
 		allocateCommandType(command);
 		return commandObject;
 	}
@@ -69,6 +69,12 @@ public class Parser {
 			commandObject.setCommandType(EDIT_INDEX);
 			EditProcessor EP = new EditProcessor();
 			EP.processEdit(command);
+			taskObject.setTitle(EP.getTask());
+			taskObject.setStartTime(EP.getStartTime());
+			taskObject.setEndTime(EP.getEndTime());
+			taskObject.setStartDate(EP.getStartDate());
+			taskObject.setEndDate(EP.getEndDate());
+			commandObject.setTaskObject(taskObject);
 		} else if(command.startsWith(SAVE_COMMAND)) {
 			commandObject.setCommandType(SAVE_INDEX);
 			setCommandObjectToSave(command);
@@ -85,12 +91,11 @@ public class Parser {
 			taskObject.setEndTime(AP.getEndTime());
 			taskObject.setStartDate(AP.getStartDate());
 			taskObject.setEndDate(AP.getEndDate());
-			commandObject.setTask(taskObject);
+			commandObject.setTaskObject(taskObject);
 		} else if(isSearch(command)) {
-			//commandObject.setCommandType(SEARCH_INDEX);
+			commandObject.setCommandType(SEARCH_INDEX);
 			SearchProcessor SP = new SearchProcessor();
-			//SP.p
-			setCommandObjectToSearch(command);
+			SP.processSearchTerm(command);
 		}
  	}
 	
@@ -111,7 +116,7 @@ public class Parser {
  		String index;
  		index = extractDeleteIndex(command);
  		taskObject.setTitle(index);
- 		commandObject.setTask(taskObject);
+ 		commandObject.setTaskObject(taskObject);
  	}
  	
  	/**
@@ -129,7 +134,7 @@ public class Parser {
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
  		taskObject.setTitle(newString);
- 		commandObject.setTask(taskObject);
+ 		commandObject.setTaskObject(taskObject);
  	}
 
  	

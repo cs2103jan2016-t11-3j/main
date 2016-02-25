@@ -50,39 +50,78 @@ public class SearchProcessor {
 	private static final int VALUE_NOV = 11;
 	private static final int VALUE_DEC = 12;
 	
-	public static String class_task;
-	public static int class_date;
-	public static int class_date_day;
-	public static int class_date_month;
-	public static int class_date_year;
-	public static int class_time;
+	
+	
+	private static String _task = null;
+	private static Integer _startDate = -1;
+	private static Integer _endDate = -1;
+	private static Integer _startTime = -1;
+	private static Integer _endTime = -1;
 	
 	private static ArrayList<String> list = new ArrayList<String>();
 	
-	public void processSearchTerm(String input) {
-		convertToArray(input);
-		isTime(input);
-		isDate(input);
-		}
+	private static boolean isPM;
+	private static boolean isAlternativeFormat;
 	
-	/**
-	 * this method checks for presence of time-keywords in the array 
-	 * and converting them into integer to be parsed back to parser class
-	 */
-	private static boolean isTime(ArrayList<String> input) {
-		for (String testing : input) {
-			//nid to make sure it is a time
-			if (testing.contains(TIME_AM_1) || testing.contains(TIME_AM_2) || 
-					testing.contains(TIME_AM_3) || testing.contains(TIME_AM_4)) {
-				convertToTime(testing, false);
+	public void processSearchTerm(String input) {
+		input = removeSearchKeyword(input);
+		convertToArray(input);
+		if (isTime(input) || hasNumber()) {
+			//process and set time
+			convertToTime(input, isPM);
+		} else if (isDate(input) || hasNumber()) {
+			//process and set date
+			convertToDate(input);
+		}
+		
+		//set task
+		_task = input;
+	}
+	
+	private static boolean hasNumber() {
+		for (String testing : list) {
+			if (testing.contains("[0-9]+")) {
 				return true;
-			} else if (testing.contains(TIME_PM_1) || testing.contains(TIME_PM_2)|| 
-					testing.contains(TIME_PM_3) || testing.contains(TIME_PM_4)) {
-				convertToTime(testing, true);
-				return true;
-			} 
+			}
 		}
 		return false;
+	}
+	
+	private static String removeSearchKeyword(String input) {
+		input.replaceFirst("search", "");
+		input.replaceFirst(" ", "");
+		return input;
+	}
+	
+	/**
+	 * this method checks for presence of time-keywords in the string 
+	 * 
+	 */
+	private static boolean isTime(String input) {
+			input.toLowerCase();
+			if (input.contains(TIME_AM_1) || input.contains(TIME_AM_2) || 
+					input.contains(TIME_AM_3) || input.contains(TIME_AM_4)) {
+				isPM = false;
+				return true;
+			} else if (input.contains(TIME_PM_1) || input.contains(TIME_PM_2)|| 
+					input.contains(TIME_PM_3) || input.contains(TIME_PM_4)) {
+				isPM = true;
+				return true;
+			}
+		return false;
+	}
+	
+	
+	private static boolean isDate(String input) {
+		if (hasMonth(input)) {
+			isAlternativeFormat = false;
+			return true;
+		} else if (isAlternativeDateFormat(input)) {
+			isAlternativeFormat = true;
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	private static void convertToArray(String input) {
@@ -96,7 +135,7 @@ public class SearchProcessor {
 	 * time in HHMM format
 	 */
 	private static void convertToTime(String input, boolean isPM) {
-		input.replaceAll("[!-/a-zA-Z]", "");
+		input.replaceAll("[!-/a-zA-Z]+", "");
 		if (!input.isEmpty()) { 
 		int time = Integer.parseInt(input);
 			if (time < 100) {
@@ -110,23 +149,19 @@ public class SearchProcessor {
 			if (time == 2400) {
 				time = 0000;
 			}
-			class_time = time;
+			_startTime = time;
+			_endTime = _startTime;
 		}
 	}
 	
-	private static boolean isDate(ArrayList <String> input) {
-		for (int i = 0;i < input.size(); i++) {
-			String testing = input.get(i);
-			testing.toLowerCase();
-			if (isAValidDate(testing)) {
-			setMonth();
-			setDay();
-			setYear();
-			}
-		}
+	private static void convertToDate(String input) {
+		DateProcessor DP = new DateProcessor();
+		DP.processDate(input, true);
+		_startDate = DP.getSearchDate();
+		_endDate = _startDate;
 	}
 	
-	private static boolean isAValidDate(String input) {
+	private static boolean hasMonth(String input) {
 		if (input == MONTH_1_1 || input == MONTH_1_2 || 
 				input == MONTH_2_1 || input == MONTH_2_2 || 
 				input == MONTH_3_1 || input == MONTH_3_2 ||
@@ -145,5 +180,51 @@ public class SearchProcessor {
 		}
 	}
 	
-	private static void ()
+	private static int setMonthInDataProcessor(String month) {
+		if (month == MONTH_1_1 || month == MONTH_1_2) {
+			return VALUE_JAN;
+		} else if (month == MONTH_2_1 || month == MONTH_2_2) {
+			return VALUE_FEB;
+		} else if (month == MONTH_3_1 || month == MONTH_3_2) {
+			return VALUE_MAR;
+		} else if (month == MONTH_4_1 || month == MONTH_4_2) {
+			return VALUE_APR;
+		} else if (month == MONTH_5_1) {
+			return VALUE_MAY;
+		} else if (month == MONTH_6_1 || month == MONTH_6_2) {
+			return VALUE_JUN;
+		} else if (month == MONTH_7_1 || month == MONTH_7_2) {
+			return VALUE_JUL;
+		} else if (month == MONTH_8_1 || month == MONTH_8_2) {
+			return VALUE_AUG;
+		} else if (month == MONTH_9_1 || month == MONTH_9_2) {
+			return VALUE_SEPT;
+		} else if (month == MONTH_10_1 || month == MONTH_10_2) {
+			return VALUE_OCT;
+		} else if (month == MONTH_11_1 || month == MONTH_11_2) {
+			return VALUE_NOV;
+		} else if (month == MONTH_12_1 || month == MONTH_12_2) {
+			return VALUE_DEC;
+		} else {
+			return -1;
+		}
+	}
+	
+	private static boolean isAlternativeDateFormat(String input) {
+		//look for slashes
+		ArrayList<String> templist = new ArrayList<String>();
+		if (input.contains("/")) {
+			for (String temp : input.split("/")) {
+				templist.add(temp);
+			}
+			if (templist.size() < 4) { //magic number
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
 }

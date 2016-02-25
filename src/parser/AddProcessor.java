@@ -61,7 +61,7 @@ public class AddProcessor {
  			_date = _date + list.get(index);
  			index++;
  		}
- 		DP.processDate(_date);
+ 		DP.processDate(_date, false);
  		setDate();
  		readTime(list, index);
  	}
