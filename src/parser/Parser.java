@@ -1,4 +1,6 @@
 package parser;
+import logic.CommandObject;
+import logic.TaskObject;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,7 @@ public class Parser {
 	private static final String SEARCH_COMMAND_3 = "sort";
 	private static final String SEARCH_COMMAND_4 = "find";
 	private static final String SEARCH_COMMAND_5 = "filter";
+	private static final String SEARCH_COMMAND_6 = "display";
 	private static final int SEARCH_INDEX = 2;
 
 	private static final String EDIT_COMMAND = "edit";
@@ -37,47 +40,56 @@ public class Parser {
 
 	private static final String HELP_COMMAND = "help";
 	private static final int HELP_INDEX = 8;	
-
+	
+	public static CommandObject commandObject = new CommandObject();
+	public static TaskObject taskObject = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
-
-
-	private static commandObject parseInput(String command) {
-		CommandObject commandObject = new CommandObject();
+	
+	private static String _command;
+	
+	public Parser(String command) {
+		_command = command;
+	}
+	public static CommandObject run() {
+		return parseInput(_command);
+	}
+	public static CommandObject parseInput(String command) {
 		allocateCommandType(command);
 		return commandObject;
 	}
 
 	private static void allocateCommandType(String command) {
 		if(command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
-		//	commandObject.setType(EXIT_INDEX);
+			commandObject.setCommandType(EXIT_INDEX);
 		} else if(command.startsWith(HELP_COMMAND)) {
-			//commandObject.setType(HELP_INDEX);
+			commandObject.setCommandType(HELP_INDEX);
 		} else if(command.startsWith(UNDO_COMMAND)) {
-			//commandObject.setType(UNDO_INDEX)
+			commandObject.setCommandType(UNDO_INDEX);
 		} else if(command.startsWith(EDIT_COMMAND)) {
-			//commandObject.setType(EDIT_INDEX);
+			commandObject.setCommandType(EDIT_INDEX);
 			EditProcessor EP = new EditProcessor();
 			EP.processEdit(command);
 		} else if(command.startsWith(SAVE_COMMAND)) {
-			//commandObject.setType(SAVE_INDEX);
+			commandObject.setCommandType(SAVE_INDEX);
 			setCommandObjectToSave(command);
 		} else if(command.startsWith(DELETE_COMMAND)) {
-			//commandObject.setType(DELETE_INDEX);
+			commandObject.setCommandType(DELETE_INDEX);
 			setCommandObjectToDelete(command);
 		} else if(command.startsWith(ADD_COMMAND)) {
-			//commandObject.setType(ADD_INDEX);
+			commandObject.setCommandType(ADD_INDEX);
 			AddProcessor AP = new AddProcessor();
 			AP.addCommand(command);
 			//add these 5 main attributes
-			commandObject.setTask(AP.getTask());
-			commandObject.setStartTime(AP.getStartTime());
-			commandObject.setEndTime(AP.getEndTime());
-			commandObject.setStartDate(AP.getStartDate());
-			commandObject.setEndDate(AP.getEndDate());
+			taskObject.setTitle(AP.getTask());
+			taskObject.setStartTime(AP.getStartTime());
+			taskObject.setEndTime(AP.getEndTime());
+			taskObject.setStartDate(AP.getStartDate());
+			taskObject.setEndDate(AP.getEndDate());
+			commandObject.setTask(taskObject);
 		} else if(isSearch(command)) {
-			//commandObject.setType(SEARCH_INDEX);
+			//commandObject.setCommandType(SEARCH_INDEX);
 			SearchProcessor SP = new SearchProcessor();
-			SP.p
+			//SP.p
 			setCommandObjectToSearch(command);
 		}
  	}
@@ -88,7 +100,7 @@ public class Parser {
  	private static boolean isSearch(String command) {
  		if(command.startsWith(SEARCH_COMMAND_1) || command.startsWith(SEARCH_COMMAND_2) 
  			|| command.startsWith(SEARCH_COMMAND_3) || command.startsWith(SEARCH_COMMAND_4) 
- 			|| command.startsWith(SEARCH_COMMAND_5) ) {
+ 			|| command.startsWith(SEARCH_COMMAND_5) || command.startsWith(SEARCH_COMMAND_6)) {
  			return true;
  		} else {
  			return false;
@@ -96,26 +108,28 @@ public class Parser {
  	}
  	
  	private static void setCommandObjectToDelete(String command) {
- 		int index;
+ 		String index;
  		index = extractDeleteIndex(command);
- 		commandObject.setIndex(index);
+ 		taskObject.setTitle(index);
+ 		commandObject.setTask(taskObject);
  	}
  	
  	/**
  	 * this method returns the number that is after the delete command as an integer
  	 */
- 	private static int extractDeleteIndex(String command) {		
+ 	private static String extractDeleteIndex(String command) {		
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
- 		return Integer.parseInt(newString);
+ 		return newString;
  	}
 
  	private static void setCommandObjectToSave(String command) {
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
- 		commandObject.setPath(newString);
+ 		taskObject.setTitle(newString);
+ 		commandObject.setTask(taskObject);
  	}
 
  	
