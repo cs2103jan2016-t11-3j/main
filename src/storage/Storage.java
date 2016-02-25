@@ -13,7 +13,7 @@ public interface Storage {
      * @param taskList - The list of tasksObjects to be written
      * @throws IOException - If unable to edit file
      */
-    public abstract void writeList(ArrayList<TaskObject> taskList) throws IOException;
+    public abstract void save(ArrayList<TaskObject> taskList) throws IOException;
     
     /**
      * Returns all task data list stored in file as taskObjects.

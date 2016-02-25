@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import logic.TaskObject;
 
-public class WriteListTest {
+public class SaveTest {
 
     static String TEST_FILE = "data.csv";
     static String DELIMITER = ";";
@@ -29,7 +29,7 @@ public class WriteListTest {
         
         Storage testStorage = FileStorage.getInstance();
         try {
-            testStorage.writeList(taskList);
+            testStorage.save(taskList);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class WriteListTest {
         
         Storage testStorage = FileStorage.getInstance();
         try {
-            testStorage.writeList(taskList);
+            testStorage.save(taskList);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

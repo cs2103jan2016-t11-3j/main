@@ -28,7 +28,7 @@ public class FileStorage implements Storage {
     }    
 
     @Override
-    public void writeList(ArrayList<TaskObject> taskList) throws IOException {        
+    public void save(ArrayList<TaskObject> taskList) throws IOException {        
         clearFile();
         for (TaskObject task : taskList) {
             writeToFile(task);
