@@ -51,7 +51,7 @@ public class Delete {
 	public void deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();
 		try {
-			storage.writeList(taskList);
+			storage.save(taskList);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
