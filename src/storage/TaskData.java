@@ -32,7 +32,7 @@ public class TaskData {
         return taskDataList;
     }
     
-    static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
+    protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
         addTaskList(taskList, filePath);
     }
     
