@@ -2,15 +2,16 @@ package Test;
 
 import logic.TaskObject;
 
-public class dummyTask {
+public class TaskGenerator {
     public static Integer taskId = 0;
     
-    TaskObject getTask() {
+    public TaskObject getTask() {
+        taskId += 1;
         TaskObject task = new TaskObject("task" + taskId.toString(), taskId);
         return task;
     }
     
-    String getLastData() {
+    public String getLastData() {
         if (taskId == 0) {
             return null;
         }

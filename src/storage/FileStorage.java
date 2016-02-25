@@ -39,15 +39,14 @@ public class FileStorage implements Storage {
     
     @Override
     public int createCopy(String filePath) {
-        ArrayList<String> taskDataList = null;
+        ArrayList<TaskObject> taskList;
         try {
-            taskDataList = TaskData.readData();
-        } catch (FileNotFoundException e) {
+            taskList = load();
+        } catch (FileNotFoundException e1) {
             return 1;
-        } catch (IOException e) {
+        } catch (IOException e1) {
             return 2;
         }
-        ArrayList<TaskObject> taskList = TaskData.parseData(taskDataList);
         try {
             TaskData.writeList(taskList, filePath);
         } catch (IOException e) {
