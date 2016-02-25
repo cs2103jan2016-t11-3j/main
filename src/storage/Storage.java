@@ -1,5 +1,6 @@
 package storage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,5 +25,17 @@ public interface Storage {
      * @throws IOException - If unable to open file/file does not exist
      */
     public abstract ArrayList<TaskObject> load() throws IOException;
+
+    /**
+     * Creates a copy of the saved task data file at the specified filePath location
+     * 
+     * @param filePath to create the copy
+     * @return 0 if successful
+     * @return 1 if existing file does not exist
+     * @return 2 if unable to read existing file
+     * @return 3 if unable to create copy
+     */
+    //TODO: test
+    public abstract int createCopy(String filePath);
     
 }

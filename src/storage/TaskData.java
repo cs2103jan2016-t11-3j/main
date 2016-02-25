@@ -15,20 +15,86 @@ public class TaskData {
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
     
-    static void clearFile() throws IOException{
+    static void overWriteList(ArrayList<TaskObject> taskList) throws IOException {
+        clearFile();
+        addTaskList(taskList);
+    }
+    
+    static ArrayList<String> readData() throws FileNotFoundException , IOException {
+        ArrayList<String> taskDataList = new ArrayList<String>();  
+        String filePath = FilePath.getPath();
+        BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
+        String line = null;
+        while ((line = fileReader.readLine()) != null) {
+            taskDataList.add(line);
+        }
+        fileReader.close();
+        return taskDataList;
+    }
+    
+    static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
+        addTaskList(taskList, filePath);
+    }
+    
+    static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
+        ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
+        for (String taskData : taskDataList) {
+            String[] taskAttributes = taskData.split(DELIMITER);
+            TaskObject task = new TaskObject( taskAttributes[0], Integer.parseInt(taskAttributes[7]));
+            task.setStartDate(Integer.parseInt(taskAttributes[1]));
+            task.setEndDate(Integer.parseInt(taskAttributes[2]));
+            task.setStartTime(Integer.parseInt(taskAttributes[3]));
+            task.setEndTime(Integer.parseInt(taskAttributes[4]));
+            task.setCategory(taskAttributes[5]);
+            task.setStatus(taskAttributes[6]);
+            taskList.add(task);
+        }
+        return taskList;
+    }
+    
+    private static void clearFile() throws IOException{
         String filePath = FilePath.getPath();
         FileWriter fileWriter = new FileWriter(filePath, false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.close();
     }
 
-    static void addTaskList (ArrayList<TaskObject> taskList) throws IOException {
+    private static void addTaskList (ArrayList<TaskObject> taskList) throws IOException {
         for (TaskObject task : taskList) {
             addTask(task);
         }
     }
+    
+    private static void addTaskList (ArrayList<TaskObject> taskList, String path) throws IOException {
+        for (TaskObject task : taskList) {
+            addTask(task, path);
+        }
+    }
 
-    static void addTask (TaskObject task) throws IOException{
+    private static void addTask(TaskObject task, String path) throws IOException {
+        FileWriter fileWriter = new FileWriter(path , true);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.print(task.getTitle().replace(";", ","));
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getStartDate());
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getEndDate());
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getStartTime());
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getEndTime());
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getCategory().replace(";", ","));
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getStatus().replace(";", ","));
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getTaskId());
+        printWriter.print(DELIMITER);
+        printWriter.print(NEW_LINE);
+        printWriter.close();
+    }
+
+    private static void addTask (TaskObject task) throws IOException{
         String filePath = FilePath.getPath();
         FileWriter fileWriter = new FileWriter(filePath , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -51,34 +117,5 @@ public class TaskData {
         printWriter.print(NEW_LINE);
         printWriter.close();
     }
-
-    static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
-        ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
-        for (String taskData : taskDataList) {
-            String[] taskAttributes = taskData.split(DELIMITER);
-            TaskObject task = new TaskObject( taskAttributes[0], Integer.parseInt(taskAttributes[7]));
-            task.setStartDate(Integer.parseInt(taskAttributes[1]));
-            task.setEndDate(Integer.parseInt(taskAttributes[2]));
-            task.setStartTime(Integer.parseInt(taskAttributes[3]));
-            task.setEndTime(Integer.parseInt(taskAttributes[4]));
-            task.setCategory(taskAttributes[5]);
-            task.setStatus(taskAttributes[6]);
-            taskList.add(task);
-        }
-        return taskList;
-    }
-
-    static ArrayList<String> readData() throws FileNotFoundException , IOException {
-        ArrayList<String> taskDataList = new ArrayList<String>();  
-        String filePath = FilePath.getPath();
-        BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
-        String line = null;
-        while ((line = fileReader.readLine()) != null) {
-            taskDataList.add(line);
-        }
-        fileReader.close();
-        return taskDataList;
-    }
-
 
 }

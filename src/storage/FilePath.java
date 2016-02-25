@@ -13,7 +13,6 @@ public class FilePath {
         private static final String SAVE_FILE_NAME = "saveInfo.txt";
         private static final String DATA_FILE_NAME = "data.csv";
     
-        
         /**
          * Changes the default directory location to store the data file to the provided path.
          * Path provided MUST be valid.
