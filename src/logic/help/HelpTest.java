@@ -15,6 +15,8 @@ import java.io.IOException;
 public class HelpTest {
 
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	// File Path
+	public static String FILE_PATH = "/src/logic/help/";
 
 	@Test
 	// For invalid search string
@@ -42,7 +44,9 @@ public class HelpTest {
 		ArrayList<String> toDisp = new ArrayList<String>();
 		toDisp = help.run();
 		try {
-			File file = new File(HelpTopic.FILE_PATH + "helpfile.txt");
+			File fakeFile = new File("");
+			String path = fakeFile.getAbsolutePath(); // To obtain working directory
+			File file = new File(path + FILE_PATH + "helpfile.txt");
 			FileReader fileReader = new FileReader(file);
 			BufferedReader reader = new BufferedReader(fileReader);
 			text = reader.readLine();

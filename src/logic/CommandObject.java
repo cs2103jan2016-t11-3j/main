@@ -2,28 +2,31 @@ package logic;
 
 public class CommandObject {
 	
-	private int command;
+	private int commandType;
 	private TaskObject taskObj;
 	
-	public CommandObject(int command, TaskObject taskObj) {
-		this.command = command;
+	public CommandObject() {
+	}
+	
+	public CommandObject(int commandType, TaskObject taskObj) {
+		this.commandType = commandType;
 		this.taskObj = taskObj;
 	}
 	
-	public int getCommand() {
-		return command;
+	public int getCommandType() {
+		return commandType;
 	}
 	
 	public TaskObject getTaskObject() {
 		return taskObj;
 	}
 	
-	public void setCommand(int newCommand) {
-		this.command = newCommand;
+	public void setCommandType(int newCommandType) {
+		this.commandType = newCommandType;
 	}
 	
-	public void setTask(TaskObject newTask) {
-		this.taskObj = newTask;
+	public void setTaskObject(TaskObject newTaskObject) {
+		this.taskObj = newTaskObject;
 	}
 
 }
