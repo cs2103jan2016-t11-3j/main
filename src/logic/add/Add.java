@@ -128,12 +128,7 @@ public class Add {
 	// NEEDS CHECKING
 	public void addExternal() {
 		FileStorage storage = FileStorage.getInstance();
-		try {
-			storage.save(taskList);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int success = storage.save(taskList);
 		addedExternal = true;
 	}
 

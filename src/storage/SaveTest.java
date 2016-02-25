@@ -28,17 +28,12 @@ public class SaveTest {
         taskList.add(task2);
         
         Storage testStorage = FileStorage.getInstance();
-        try {
-            testStorage.save(taskList);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
-        }        
+        int result = testStorage.save(taskList);        
+        
         
         ArrayList<String> writtenList = readFile();
         
-        
+        assertEquals("Success" , result , 0);
         assertEquals("Line 1", "task1;0;0;0;0;;;1;" , writtenList.get(0));
         assertEquals("Line 2", "task2;0;0;0;0;;;2;" , writtenList.get(1));
         assertEquals("Length", 2, writtenList.size());
@@ -53,18 +48,12 @@ public class SaveTest {
         taskList.add(task2);
         
         Storage testStorage = FileStorage.getInstance();
-        try {
-            testStorage.save(taskList);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }        
-        
+        int result = testStorage.save(taskList);        
         
         ArrayList<String> writtenList = readFile();
         
         
-        
+        assertEquals("Success" , result , 0);
         assertEquals("Line 3", "task3;0;0;0;0;;;3;" , writtenList.get(0));
         assertEquals("Line 4", "task4;0;0;0;0;;;4;" , writtenList.get(1));
         assertEquals("Length", 2, writtenList.size());
