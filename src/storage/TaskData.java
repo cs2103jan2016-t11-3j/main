@@ -52,7 +52,7 @@ public class TaskData {
         printWriter.close();
     }
 
-    public static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
+    static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         for (String taskData : taskDataList) {
             String[] taskAttributes = taskData.split(DELIMITER);
@@ -68,7 +68,7 @@ public class TaskData {
         return taskList;
     }
 
-    public static ArrayList<String> readData() throws FileNotFoundException , IOException {
+    static ArrayList<String> readData() throws FileNotFoundException , IOException {
         ArrayList<String> taskDataList = new ArrayList<String>();  
         String filePath = FilePath.getPath();
         BufferedReader fileReader = new BufferedReader(new FileReader(filePath));

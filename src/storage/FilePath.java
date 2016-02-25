@@ -20,7 +20,7 @@ public class FilePath {
          * <p>
          * @param saveDir Location of new directory to contain data file for saved tasks
          */
-        public static void changeDirectory(Path saveDir) {
+        static void changeDirectory(Path saveDir) {
             //boolean isValidDir = checkValidDir();
             
             FileWriter fileWriter = null;
@@ -55,10 +55,6 @@ public class FilePath {
             }
             Path filePath = Paths.get(saveDir.toString(), DATA_FILE_NAME);
             return filePath.toString();
-        }
-        
-        public static void copyFile(String copyDirectory) {
-            
         }
         
 }
