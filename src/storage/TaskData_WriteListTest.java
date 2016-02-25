@@ -71,7 +71,7 @@ public class TaskData_WriteListTest extends TaskData {
     
     @Test
     public void testAbsolute() {
-        String path = Paths.get("C:\\").toString();
+        String path = Paths.get("C:/").toString();
         int result = testWrite(path);
         assertEquals("success", 0 , result);
         try {

@@ -38,7 +38,7 @@ public class FileStorage implements Storage {
     }
     
     @Override
-    public int createCopy(String filePath) {
+    public int createCopy(String filePath , String fileName) {
         ArrayList<TaskObject> taskList;
         try {
             taskList = load();
@@ -48,7 +48,7 @@ public class FileStorage implements Storage {
             return 2;
         }
         try {
-            TaskData.writeList(taskList, filePath);
+            TaskData.writeList(taskList, filePath + "/" + fileName);
         } catch (IOException e) {
             return 3;
         }
