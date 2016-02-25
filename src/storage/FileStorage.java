@@ -24,14 +24,12 @@ public class FileStorage implements Storage {
         try {
             TaskData.clearFile();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return 1;
         }
         try {
             TaskData.addTaskList(taskList);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return 1;
         }
         return 0;   
     }
