@@ -54,4 +54,8 @@ public class FileStorage implements Storage {
         }
         return 0;
     }
+    
+    public void changeSaveLocation(String savePath) {
+        
+    }
 }

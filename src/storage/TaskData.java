@@ -71,8 +71,8 @@ public class TaskData {
         }
     }
 
-    private static void addTask(TaskObject task, String path) throws IOException {
-        FileWriter fileWriter = new FileWriter(path , true);
+    private static void addTask(TaskObject task, String filePath) throws IOException {
+        FileWriter fileWriter = new FileWriter(filePath , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(task.getTitle().replace(";", ","));
         printWriter.print(DELIMITER);
