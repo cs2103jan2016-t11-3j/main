@@ -29,12 +29,14 @@ public class Search {
 	
 	ArrayList<String> run() {
 		String searchKeyword = getSearchKeyword();
+		
 		searchForMatches(searchKeyword);
 		outputSearchResults(searchKeyword);
 		
 		return output;
 	}
 
+	// This needs to be improved 
 	private String getSearchKeyword() {
 		return taskObj.getTitle();
 	}

@@ -1,8 +1,5 @@
 package logic;
 
-import java.util.Date;
-
-
 public class TaskObject {
 
 	private String title;
@@ -34,6 +31,11 @@ public class TaskObject {
 		this.category = "";
 		this.status = "";
 		this.taskId = taskId;
+	}
+	
+	// empty constructor
+	public TaskObject() {
+		
 	}
 	
 	public String getTitle() {
@@ -98,6 +100,13 @@ public class TaskObject {
 	
 	public void setTaskId(int newTaskId) {
 		this.taskId = newTaskId;
+	}
+	
+	// Checks if title, dates and times are invalid values
+	public boolean isSearchKeywordPresent() {
+		if (title == null && startDate == -1 && endDate == -1 && startTime == -1 && endTime == -1)
+			return false;
+		return true;
 	}
 
 }
