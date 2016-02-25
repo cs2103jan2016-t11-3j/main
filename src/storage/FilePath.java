@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -54,6 +57,24 @@ public class FilePath {
             }
             Path filePath = Paths.get(saveDir.toString(), DATA_FILE_NAME);
             return filePath.toString();
+        }
+        
+        static void deleteData() {
+            Path path = Paths.get(".", DATA_FILE_NAME);
+            try {
+                Files.delete(path);
+            } catch (NoSuchFileException x) {
+                System.err.format("%s: no such" + " file or directory%n", path);
+            } catch (DirectoryNotEmptyException x) {
+                System.err.format("%s not empty%n", path);
+            } catch (IOException x) {
+                // File permission problems are caught here.
+                System.err.println(x);
+            }
+        }
+
+        static String setPath(String filePath, String fileName) {
+            return Paths.get(filePath, fileName).toString();
         }
         
 }

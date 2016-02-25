@@ -35,6 +35,6 @@ public interface Storage {
      * @return 3 if unable to create copy
      */
     //TODO: test
-    public abstract int createCopy(String filePath, String fileName);
+    public abstract int createCopy(String directory, String fileName);
     
 }

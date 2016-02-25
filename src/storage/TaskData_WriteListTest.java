@@ -32,46 +32,30 @@ public class TaskData_WriteListTest extends TaskData {
     @Test
     public void testSubDir() {
         String path = "./bin/testData.csv";
-        int result = testWrite(path);
-        assertEquals("success", 0 , result);
-        try {
-            Files.delete(Paths.get(path));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        writeToPath(path);
     }
     
     @Test
     public void testCurDir() {
         String path = "./testData.csv";
-        int result = testWrite(path);
-        assertEquals("success", 0 , result);
-        try {
-            Files.delete(Paths.get(path));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        writeToPath(path);
     }
     
     @Test
     public void testParentDir() {
         Path curDir = Paths.get(".").toAbsolutePath();
         String path = Paths.get( curDir.getParent().toString(), "testData.csv").toString();
-        int result = testWrite(path);
-        assertEquals("success", 0 , result);
-        try {
-            Files.delete(Paths.get(path));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        writeToPath(path);
     }
     
     @Test
     public void testAbsolute() {
-        String path = Paths.get("C:/").toString();
+        Path curDir = Paths.get(".", "testData.csv").toAbsolutePath();
+        String path = curDir.toString();
+        writeToPath(path);
+    }
+
+    private void writeToPath(String path) {
         int result = testWrite(path);
         assertEquals("success", 0 , result);
         try {
@@ -82,7 +66,7 @@ public class TaskData_WriteListTest extends TaskData {
         }
     }
 
-    public int testWrite(String filePath) {
+    private int testWrite(String filePath) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         ArrayList<String> taskDataList = new ArrayList<String>();
         TaskObject task1 = testTask.getTask();
