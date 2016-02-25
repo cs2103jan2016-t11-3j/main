@@ -28,6 +28,10 @@ public class Search extends Display {
 		return output;
 	}
 	
+	public ArrayList<TaskObject> getLastOutputTaskList() {
+		return super.getLastOutputTaskList();
+	}
+	
 	public ArrayList<String> run() {
 		String searchKeyword = getSearchKeyword();
 		

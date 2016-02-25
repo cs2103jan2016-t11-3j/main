@@ -20,6 +20,7 @@ public class Display {
 	private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
 	
 	private ArrayList<TaskObject> taskList;
+	private ArrayList<TaskObject> outputTaskList = new ArrayList<TaskObject>();
 	private ArrayList<String> output = new ArrayList<String>();
 	
 	public Display() {
@@ -28,6 +29,10 @@ public class Display {
 
 	public Display(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;
+	}
+	
+	public ArrayList<TaskObject> getLastOutputTaskList() {
+		return outputTaskList;
 	}
 	
 	// For search function
@@ -46,6 +51,7 @@ public class Display {
 		} else {
 			for (int i = 0; i < taskList.size(); i++) {
 				TaskObject task = taskList.get(i);
+				outputTaskList.add(task);
 				
 				String taskCategory = task.getCategory();
 				String taskTitle = task.getTitle();

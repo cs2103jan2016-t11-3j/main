@@ -1,6 +1,10 @@
 package logic;
 import parser.Parser;
-import logic.display.Display;
+import logic.add.*;
+import logic.delete.*;
+import logic.display.*;
+import logic.edit.*;
+import logic.search.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -17,8 +21,13 @@ public class Logic {
 	private CommandObject commandObj;
 	private TaskObject taskObj;
 	
- 	private ArrayList<String> output; // Output is to be returned to UI after each command
-	
+	// Output is to be returned to UI after each command
+ 	private ArrayList<String> output;
+ 	/* Keeps track of the last output task list returned from display/search 
+ 	 * For editing purposes
+ 	 */
+ 	private ArrayList<TaskObject> lastOutputTaskList;
+ 	
 	public Logic(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
@@ -36,8 +45,12 @@ public class Logic {
 		this.output = newOutput;
 	}
 	
+	public void setLastOutputTaskList(ArrayList<TaskObject> newLastOutputTaskList) {
+		this.lastOutputTaskList = newLastOutputTaskList;
+	}
 	
-	// Calling Parser
+	
+	// Calling Parser to parse the user input
 	Parser parser = new Parser(userInput);
 	commandObj = parser.run();
 	
@@ -48,15 +61,18 @@ public class Logic {
 		switch (command) {
 			case 1 :
 				addFunction();
+				addToUndoList();
 				break;
 			case 2 :
 				checkDisplayOrSearch();
 				break;
 			case 3 :
 				editFunction();
+				addToUndoList();
 				break;
 			case 4 :
 				deleteFunction();
+				addToUndoList();
 				break;
 			case 5 :
 				undoFunction();
@@ -96,16 +112,19 @@ public class Logic {
 	private void displayFunction() {
 		Display display = new Display(taskList);
 		setOutput(display.run());
+		setLastOutputTaskList(display.getLastOutputTaskList());
 	}
 	
 	// Outputs only the tasks that match the search keyword
 	private void searchFunction() {
 		Search search = new Search(taskObj, taskList);
 		setOutput(search.run());
+		setLastOutputTaskList(search.getLastOutputTaskList());
 	}
 	
 	private void editFunction() {
-		
+		Edit edit = new Edit(taskObj, lastOutputTaskList, taskList);
+		setOutput(edit.run());
 	}
 	
 	private void deleteFunction() {
@@ -129,6 +148,8 @@ public class Logic {
 	private void helpFunction() {
 		
 	}
+	
+
 	
 	private void printInvalidCommandMessage() {
 		output.add(MESSAGE_INVALID_COMMAND);
