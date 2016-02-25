@@ -1,5 +1,6 @@
 package logic;
 import parser.Parser;
+import logic.display.Display;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -78,7 +79,7 @@ public class Logic {
 	private void addFunction() {
 		Add add = new Add(taskObj, taskList);
 		setOutput(add.run());
-	}
+	}	
 	
 	/* This method checks for the presence of a search keyword in TaskObject.
 	 * If there is a keyword, search function will be called.
