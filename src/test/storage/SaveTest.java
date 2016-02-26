@@ -19,8 +19,6 @@ public class SaveTest {
     static String DELIMITER = ";";
     static String NEW_LINE = "\n";
 
-
-
     @Test
     public void testWrite() {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
@@ -63,9 +61,6 @@ public class SaveTest {
 
 
     }
-
-
-
 
     private static ArrayList<String> readFile() {
         ArrayList<String> writtenList = new ArrayList<String>();
