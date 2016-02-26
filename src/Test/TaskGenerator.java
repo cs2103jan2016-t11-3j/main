@@ -10,7 +10,7 @@ public class TaskGenerator {
         TaskObject task = new TaskObject("task" + taskId.toString(), taskId);
         return task;
     }
-    
+     
     public String getLastData() {
         if (taskId == 0) {
             return null;
