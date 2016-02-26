@@ -63,7 +63,32 @@ public class FileStorage implements Storage {
         return taskList;
     }
     
-    public void changeSaveLocation(String filePath) {
+    @Override
+    public int changeSaveLocation (String directory) {
+        createCopy(directory, "data.csv");
+        try {
+            TaskData.deleteData();
+        } catch (NoSuchFileException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 1;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 2;
+        }
+        try {
+            FilePath.changeDirectory(directory);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 3;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 4;
+        }
+        return 0;
         
     }
     

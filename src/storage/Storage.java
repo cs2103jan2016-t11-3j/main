@@ -1,5 +1,7 @@
 package storage;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import logic.TaskObject;
@@ -48,5 +50,12 @@ public interface Storage {
      * <li> 3 - if unable to create copy
      */
     public abstract int createCopy(String directory, String fileName);
+    
+    /**
+     * to test
+     * @param filePath
+     * @return status
+     */
+    public abstract int changeSaveLocation(String filePath);
     
 }
