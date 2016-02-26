@@ -2,6 +2,7 @@ package storage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import logic.TaskObject;
@@ -24,7 +25,7 @@ public class FileStorage implements Storage {
     @Override
     public int save(ArrayList<TaskObject> newTaskList) {
         try {
-            TaskData.overWriteList(taskList);
+            TaskData.overWriteList(newTaskList);
         } catch (IOException e) {
             return 1;
         }
@@ -37,7 +38,7 @@ public class FileStorage implements Storage {
         ArrayList<String> taskDataList = new ArrayList<String>();
         try {
             taskDataList = TaskData.readData();
-        } catch (FileNotFoundException e) {
+        } catch (NoSuchFileException e) {
             return 1;
         } catch (IOException e) {
             return 2;
@@ -48,7 +49,7 @@ public class FileStorage implements Storage {
     
     @Override
      public int createCopy(String directory , String fileName) {
-        String filePath = FilePath.setPath(directory, fileName);
+        String filePath = FilePath.formPath(directory, fileName);
         try {
             TaskData.writeList(taskList, filePath);
         } catch (IOException e) {

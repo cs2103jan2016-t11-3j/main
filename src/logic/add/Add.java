@@ -127,7 +127,7 @@ public class Add {
 
 	// NEEDS CHECKING
 	public void addExternal() {
-		FileStorage storage = FileStorage.getInstance();
+		Storage storage = FileStorage.getInstance();
 		int success = storage.save(taskList);
 		addedExternal = true;
 	}

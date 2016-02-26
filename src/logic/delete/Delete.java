@@ -49,8 +49,9 @@ public class Delete {
 	}
 	
 	public void deleteExternal() {
-		FileStorage storage = FileStorage.getInstance();
+		Storage storage = FileStorage.getInstance();
 		int success = storage.save(taskList);
+		storage.
 	}
 	
 	public void createOutput() {
