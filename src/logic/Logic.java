@@ -6,6 +6,10 @@ import logic.display.*;
 import logic.edit.*;
 import logic.search.*;
 import logic.undo.*;
+<<<<<<< HEAD
+=======
+import logic.save.*;
+>>>>>>> 91140d92beeccb5d971c7202abb494b054a012e8
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -109,7 +113,11 @@ public class Logic {
 				undoFunction();
 				break;
 			case INDEX_SAVE :
+<<<<<<< HEAD
 				saveFunction();
+=======
+				saveFunction(taskObj);
+>>>>>>> 91140d92beeccb5d971c7202abb494b054a012e8
 				break;
 			case INDEX_EXIT :
 				exitFunction();
@@ -161,7 +169,11 @@ public class Logic {
 	}
 	
 	private void deleteFunction(TaskObject taskObj) {
+<<<<<<< HEAD
 		Delete delete = new Delete(taskObj, taskList);
+=======
+		Delete delete = new Delete(taskObj, taskList, lastOutputTaskList);
+>>>>>>> 91140d92beeccb5d971c7202abb494b054a012e8
 		setOutput(delete.run());
 	}
 	
@@ -170,8 +182,9 @@ public class Logic {
 		undo.run();
 	}
 	
-	private void saveFunction() {
-		
+	private void saveFunction(TaskObject taskObj) {
+		Save save = new Save(taskObj, taskList);
+		setOutput(save.run());
 	}
 	
 	private void exitFunction() {

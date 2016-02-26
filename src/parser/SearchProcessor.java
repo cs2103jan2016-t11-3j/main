@@ -61,7 +61,6 @@ public class SearchProcessor {
 	private static ArrayList<String> list = new ArrayList<String>();
 	
 	private static boolean isPM;
-	private static boolean isAlternativeFormat;
 	
 	public void processSearchTerm(String input) {
 		input = removeSearchKeyword(input);
@@ -113,11 +112,7 @@ public class SearchProcessor {
 	
 	
 	private static boolean isDate(String input) {
-		if (hasMonth(input)) {
-			isAlternativeFormat = false;
-			return true;
-		} else if (isAlternativeDateFormat(input)) {
-			isAlternativeFormat = true;
+		if (hasMonth(input) || isAlternativeDateFormat(input)) {
 			return true;
 		} else {
 			return false;
@@ -225,6 +220,26 @@ public class SearchProcessor {
 		}
 		
 		return false;
+	}
+	
+	public String getTask() {
+		return _task;
+	}
+	
+	public int getStartDate() {
+		return _startDate;
+	}
+	
+	public int getEndDate() {
+		return _endDate;
+	}
+	
+	public int getStartTime() {
+		return _startTime;
+	}
+	
+	public int getEndTime() {
+		return _endTime;
 	}
 	
 }
