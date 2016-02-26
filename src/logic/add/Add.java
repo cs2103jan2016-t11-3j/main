@@ -20,6 +20,7 @@ public class Add {
 	private TaskObject task;
 	private boolean addedInternal = false;
 	private boolean addedExternal = false;
+	private boolean isClash = false;
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private String clashedTaskTitle = "";
@@ -34,20 +35,14 @@ public class Add {
 	}
 
 	public ArrayList<String> run() {
-		boolean isClash = false;
+
 		String taskType = task.getCategory();
 		if (taskType.equals("event")) {
 			isClash = checkIfClash();
 			// check for clash only necessary if task is an event
 		}
-
-		if (!isClash) {
-			addTask();
-			createOutput();
-		} else {
-			createClashOutput();
-		}
-
+		addTask();
+		createOutput();
 		return output;
 	}
 
@@ -129,7 +124,9 @@ public class Add {
 	public void addExternal() {
 		FileStorage storage = FileStorage.getInstance();
 		int success = storage.save(taskList);
-		addedExternal = true;
+		if (success == 0) {
+			addedExternal = true;
+		}
 	}
 
 	public void createOutput() {
@@ -137,15 +134,19 @@ public class Add {
 			String title = task.getTitle();
 			String text = MESSAGE_ADD.concat(title);
 			output.add(text);
+			if (isClash) {
+				String clashMessage = createClashOutput();
+				output.add(clashMessage);
+			}
 		} else {
 			output.add(MESSAGE_FAIL);
 		}
 	}
 
-	public void createClashOutput() {
+	public String createClashOutput() {
 		String text = "";
 		text = String.format(MESSAGE_CLASH, task.getTitle(), clashedTaskTitle);
-		output.add(text);
+		return text;
 	}
 
 	// GETTERS, SETTERS

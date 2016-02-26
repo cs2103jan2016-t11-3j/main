@@ -81,6 +81,7 @@ public class AddTest {
 		actualOutput = addFourth.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Task added: Dinner at home");
 		expectedOutput.add("Task: Dinner at home clashes with Hitachi D&D");
 		
 		assertEquals(expectedOutput, actualOutput);
@@ -102,6 +103,7 @@ public class AddTest {
 		actualOutput = addFifth.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Task added: Phuket trip");
 		expectedOutput.add("Task: Phuket trip clashes with Hitachi D&D");
 		
 		assertEquals(expectedOutput, actualOutput);
