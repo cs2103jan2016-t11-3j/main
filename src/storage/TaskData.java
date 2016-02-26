@@ -6,6 +6,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import logic.TaskObject;
@@ -15,20 +20,34 @@ public class TaskData {
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
     
+    /**
+     * 
+     * @param taskList
+     * @throws IOException Unable to edit existing file
+     */
     static void overWriteList(ArrayList<TaskObject> taskList) throws IOException {
-        clearFile();
-        addTaskList(taskList);
+        try {
+            deleteData();
+        } catch (NoSuchFileException e) {
+            // Nothing to delete
+        }
+            addTaskList(taskList);
+
     }
     
     static ArrayList<String> readData() throws FileNotFoundException , IOException {
         ArrayList<String> taskDataList = new ArrayList<String>();  
         String filePath = FilePath.getPath();
+        try {
         BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
         String line = null;
         while ((line = fileReader.readLine()) != null) {
             taskDataList.add(line);
         }
         fileReader.close();
+        } catch (FileNotFoundException e) {
+            return taskDataList;
+        }
         return taskDataList;
     }
     
@@ -52,12 +71,19 @@ public class TaskData {
         return taskList;
     }
     
-    private static void clearFile() throws IOException{
-        String filePath = FilePath.getPath();
-        FileWriter fileWriter = new FileWriter(filePath, false);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.close();
-    }
+    static void deleteData() throws NoSuchFileException , IOException{
+        Path path = Paths.get(FilePath.getPath());
+        try {
+            Files.delete(path);
+        } catch (NoSuchFileException x) {
+            // System.err.format("%s: no such" + " file or directory%n", path);
+        } catch (DirectoryNotEmptyException x) {
+            // System.err.format("%s not empty%n", path);
+        } catch (IOException x) {
+            // File permission problems are caught here.
+            System.err.println(x);
+        }
+    } 
 
     private static void addTaskList (ArrayList<TaskObject> taskList) throws IOException {
         for (TaskObject task : taskList) {
@@ -94,7 +120,7 @@ public class TaskData {
         printWriter.close();
     }
 
-    private static void addTask (TaskObject task) throws IOException{
+    private static void addTask (TaskObject task) throws FileNotFoundException, IOException {
         String filePath = FilePath.getPath();
         FileWriter fileWriter = new FileWriter(filePath , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);

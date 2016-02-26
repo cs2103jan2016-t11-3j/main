@@ -20,9 +20,10 @@ public class Add {
 	private TaskObject task;
 	private boolean addedInternal = false;
 	private boolean addedExternal = false;
+	private boolean isClash = false;
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
-	private String clashedTaskTitle = "";
+	private ArrayList<String> clashedTasks = new ArrayList<String> ();
 
 	public Add() {
 
@@ -34,37 +35,32 @@ public class Add {
 	}
 
 	public ArrayList<String> run() {
-		boolean isClash = false;
+
 		String taskType = task.getCategory();
 		if (taskType.equals("event")) {
 			isClash = checkIfClash();
 			// check for clash only necessary if task is an event
 		}
-
-		if (!isClash) {
-			addTask();
-			createOutput();
-		} else {
-			createClashOutput();
-		}
-
+		addTask();
+		createOutput();
 		return output;
 	}
 
-	public boolean checkIfClash() {
+	private boolean checkIfClash() {
+		boolean hasClashes = false;
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals("event")) {
 				// only check with events
 				if (checkTimeClash(taskList.get(i))) {
-					clashedTaskTitle = taskList.get(i).getTitle();
-					return true;
+					clashedTasks.add(taskList.get(i).getTitle());
+					hasClashes = true;
 				}
 			}
 		}
-		return false;
+		return hasClashes;
 	}
 
-	public boolean checkTimeClash(TaskObject current) {
+	private boolean checkTimeClash(TaskObject current) {
 		int currentStartDate = current.getStartDate();
 		int currentStartTime = current.getStartTime();
 		int currentEndDate = current.getEndDate();
@@ -112,12 +108,12 @@ public class Add {
 		return false;
 	}
 
-	public void addTask() {
+	private void addTask() {
 		addInternal();
 		addExternal();
 	}
 
-	public void addInternal() {
+	private void addInternal() {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
 		taskList.add(task);
@@ -125,27 +121,34 @@ public class Add {
 			addedInternal = true;
 	}
 
-	// NEEDS CHECKING
-	public void addExternal() {
-		FileStorage storage = FileStorage.getInstance();
+	private void addExternal() {
+		Storage storage = FileStorage.getInstance();
 		int success = storage.save(taskList);
-		addedExternal = true;
+		if (success == 0) {
+			addedExternal = true;
+		}
 	}
 
-	public void createOutput() {
+	private void createOutput() {
 		if (addedInternal && addedExternal) {
 			String title = task.getTitle();
 			String text = MESSAGE_ADD.concat(title);
 			output.add(text);
+			if (isClash) {
+				for(int i = 0; i < clashedTasks.size(); i++) {
+					String clashMessage = createClashOutput(i);
+					output.add(clashMessage);
+				}
+			}
 		} else {
 			output.add(MESSAGE_FAIL);
 		}
 	}
 
-	public void createClashOutput() {
+	private String createClashOutput(int i) {
 		String text = "";
-		text = String.format(MESSAGE_CLASH, task.getTitle(), clashedTaskTitle);
-		output.add(text);
+		text = String.format(MESSAGE_CLASH, task.getTitle(), clashedTasks.get(i));
+		return text;
 	}
 
 	// GETTERS, SETTERS
@@ -155,10 +158,6 @@ public class Add {
 
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
-	}
-
-	public String getClashedTaskTitle() {
-		return clashedTaskTitle;
 	}
 
 	public TaskObject getTask() {
@@ -171,10 +170,6 @@ public class Add {
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;
-	}
-
-	public void setClashedTaskTitle(String clashedTaskTitle) {
-		this.clashedTaskTitle = clashedTaskTitle;
 	}
 
 	public void setTask(TaskObject task) {
