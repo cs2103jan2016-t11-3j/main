@@ -47,11 +47,7 @@ public class TaskObject {
 		this.taskId = taskId;
 	}
 	
-<<<<<<< HEAD
-	// Constructor for search keyword and for edit functions
-=======
 	// Constructor for search keyword, delete, save and for edit functions
->>>>>>> 91140d92beeccb5d971c7202abb494b054a012e8
 	public TaskObject(String title){
 		this.title = title;
 		this.startDate = -1;
