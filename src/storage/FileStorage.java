@@ -54,8 +54,10 @@ public class FileStorage implements Storage {
         String filePath = FilePath.formPath(directory, fileName);
         try {
             TaskData.writeList(taskList, filePath);
+        } catch (NoSuchFileException e) {
+           return 1;
         } catch (IOException e) {
-            return 1;
+           return 2;
         }
         return 0;
     }

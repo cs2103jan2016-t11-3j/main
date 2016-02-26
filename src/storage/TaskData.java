@@ -70,7 +70,11 @@ public class TaskData {
         return taskDataList;
     }
     
-    protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
+    protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws NoSuchFileException 
+                                                                                            , IOException {
+        if ( filePath == null ) {
+            throw new NoSuchFileException(filePath);
+        }
         addTaskList(taskList, filePath);
     }
     

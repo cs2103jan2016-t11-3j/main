@@ -62,7 +62,11 @@ public class FilePath {
         }
         
         static String formPath(String filePath, String fileName) {
-            return Paths.get(filePath, fileName).toString();
+            Path path = Paths.get(filePath);
+            if (!isValidPath(path)) {
+                return null;
+            }
+            return path.resolve(fileName).toString();
         }
         
 }

@@ -44,9 +44,8 @@ public interface Storage {
      * @param fileName Name of file to be created
      * @return Status
      * <li> 0 - If successful
-     * <li> 1 - if existing file does not exist
-     * <li> 2 - if unable to read existing file
-     * <li> 3 - if unable to create copy
+     * <li> 1 - If specified directory is invalid
+     * <li> 2 - if unable to write specified file
      */
     public abstract int createCopy(String directory, String fileName);
     
