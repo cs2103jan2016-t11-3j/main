@@ -83,6 +83,7 @@ public class AddTest {
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
 		expectedOutput.add("Task added: Dinner at home");
 		expectedOutput.add("Task: Dinner at home clashes with Hitachi D&D");
+		expectedOutput.add("Task: Dinner at home clashes with Phuket trip");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -105,6 +106,7 @@ public class AddTest {
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
 		expectedOutput.add("Task added: Phuket trip");
 		expectedOutput.add("Task: Phuket trip clashes with Hitachi D&D");
+		// Strange thing is that test 5 runs ahead of test 4, hence expected output changes
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
