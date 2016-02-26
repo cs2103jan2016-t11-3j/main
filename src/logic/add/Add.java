@@ -122,7 +122,7 @@ public class Add {
 	}
 
 	private void addExternal() {
-		FileStorage storage = FileStorage.getInstance();
+		Storage storage = FileStorage.getInstance();
 		int success = storage.save(taskList);
 		if (success == 0) {
 			addedExternal = true;
