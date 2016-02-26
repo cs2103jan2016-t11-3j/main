@@ -55,7 +55,7 @@ public class EditProcessor {
 		String clean_string = cleanString();
 		if (isDate() && isNotTask()) {
 			//make string 
-			DP.processDate(clean_string);
+			DP.processDate(clean_string, false);
 			setDate(clean_string);
 		} else if (isTime() && isNotTask()) {
 			TP.processTime(clean_string);
@@ -208,7 +208,7 @@ public class EditProcessor {
 		}
 	}
 	
-	public static String getTask() {
+	public String getTask() {
 		return _task;
 	}
 
@@ -216,7 +216,7 @@ public class EditProcessor {
 		EditProcessor._task = _task;
 	}
 
-	public static Integer getStartDate() {
+	public Integer getStartDate() {
 		return _startDate;
 	}
 
@@ -224,7 +224,7 @@ public class EditProcessor {
 		EditProcessor._startDate = _startDate;
 	}
 
-	public static Integer getEndDate() {
+	public Integer getEndDate() {
 		return _endDate;
 	}
 
@@ -232,7 +232,7 @@ public class EditProcessor {
 		EditProcessor._endDate = _endDate;
 	}
 
-	public static Integer getStartTime() {
+	public Integer getStartTime() {
 		return _startTime;
 	}
 
@@ -240,7 +240,7 @@ public class EditProcessor {
 		EditProcessor._startTime = _startTime;
 	}
 
-	public static Integer getEndTime() {
+	public Integer getEndTime() {
 		return _endTime;
 	}
 

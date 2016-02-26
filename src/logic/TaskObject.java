@@ -1,8 +1,5 @@
 package logic;
 
-import java.util.Date;
-
-
 public class TaskObject {
 
 	private String title;
@@ -14,6 +11,7 @@ public class TaskObject {
 	private String status;
 	private int taskId;
 	
+	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
 		this.title = title;
 		this.startDate = startDate;
@@ -25,6 +23,42 @@ public class TaskObject {
 		this.taskId = taskId;
 	}
 	
+	// Constructor for deadline tasks
+	public TaskObject(String title, int endDate, int endTime, String category, String status, int taskId){
+		this.title = title;
+		this.startDate = endDate;
+		this.endDate = endDate;
+		this.startTime = endTime;
+		this.endTime = endTime;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// Constructor for floating tasks
+	public TaskObject(String title, String category, String status, int taskId) {
+		this.title = title;
+		this.startDate = -1;
+		this.endDate = -1;
+		this.startTime = -1;
+		this.endTime = -1;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// Constructor for search keyword and for edit functions
+	public TaskObject(String title){
+		this.title = title;
+		this.startDate = -1;
+		this.endDate = -1;
+		this.startTime = -1;
+		this.endTime = -1;
+		this.category = null;
+		this.status = null;
+		this.taskId = -1;
+	}
+	
 	public TaskObject(String title, int taskId){
 		this.title = title;
 		this.startDate = 0;
@@ -34,6 +68,11 @@ public class TaskObject {
 		this.category = "";
 		this.status = "";
 		this.taskId = taskId;
+	}
+	
+	// empty constructor
+	public TaskObject() {
+		
 	}
 	
 	public String getTitle() {
@@ -98,6 +137,13 @@ public class TaskObject {
 	
 	public void setTaskId(int newTaskId) {
 		this.taskId = newTaskId;
+	}
+	
+	// Checks if title, dates and times are invalid values
+	public boolean isSearchKeywordPresent() {
+		if (title == null && startDate == -1 && endDate == -1 && startTime == -1 && endTime == -1)
+			return false;
+		return true;
 	}
 
 }

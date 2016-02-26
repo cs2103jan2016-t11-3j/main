@@ -59,12 +59,14 @@ public class DateProcessor {
 	private static int startDate = -1;
 	private static int endDate = -1;
 	
+	private static boolean isUsedForSearch;
+	
 	/**
 	 * this method takes in a string input and processes it
 	 * 
 	 * @param input    date string that is in the format
 	 */
-	public void processDate(String input) {
+	public void processDate(String input, boolean isUsedForSearch) {
 		convertToArray(input);
 		if (list.size() == 2 || list.size() == 1) {
 			//event
@@ -78,14 +80,10 @@ public class DateProcessor {
 			start_month = end_month;
 		}
 		
-		if (start_year == -1) {
-			start_year = DEFAULT_YEAR;
+		if (!isUsedForSearch) {
+			setDates();
 		}
-		
-		if (end_year == -1) {
-			end_year = DEFAULT_YEAR;
-		}
-		setDates();	
+			
 	}
 	
 	/**
@@ -260,6 +258,14 @@ public class DateProcessor {
 	}
 	
 	private static void setDates() {
+		if (start_year == -1) {
+			start_year = DEFAULT_YEAR;
+		}
+		
+		if (end_year == -1) {
+			end_year = DEFAULT_YEAR;
+		}
+		
 		if (start_day != -1 && start_month != -1 && start_year != -1) {
 			startDate = start_day + start_month * 100 + start_year * 10000;
 		}
@@ -267,6 +273,19 @@ public class DateProcessor {
 		if (end_day != -1 && end_month != -1 && end_year != -1) {
 			endDate = end_day + end_month * 100 + end_year * 10000;
 		}		
+	}
+	
+	
+	public int getSearchDate() {
+		if (start_year == -1) {
+			start_year = 0;
+		} 
+		
+		if (start_month == -1) {
+			start_month = 0;
+		}
+		
+		return start_day + start_month * 100 + start_year * 10000;
 	}
 	
 	public int getStartDate() {
