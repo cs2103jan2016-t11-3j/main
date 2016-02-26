@@ -19,53 +19,55 @@ public class SaveTest {
     static String DELIMITER = ";";
     static String NEW_LINE = "\n";
 
-    
-    
+
+
     @Test
     public void testWrite() {
-        ArrayList<TaskObject> taskList = new ArrayList<TaskObject>(); 
+        ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         TaskObject task1 = new TaskObject("task1", 1);
         TaskObject task2 = new TaskObject("task2", 2);
         taskList.add(task1);
         taskList.add(task2);
-        
+
         Storage testStorage = FileStorage.getInstance();
-        int result = testStorage.save(taskList);        
-        
-        
+        int result = testStorage.save(taskList);
+
+
         ArrayList<String> writtenList = readFile();
-        
+
         assertEquals("Success" , 0 , result);
+        assertEquals("Length", 2, writtenList.size());
         assertEquals("Line 1", "task1;0;0;0;0;;;1;" , writtenList.get(0));
         assertEquals("Line 2", "task2;0;0;0;0;;;2;" , writtenList.get(1));
-        assertEquals("Length", 2, writtenList.size());
+
     }
 
     @Test
     public void testOverwrite(){
-        ArrayList<TaskObject> taskList = new ArrayList<TaskObject>(); 
+        ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         TaskObject task1 = new TaskObject("task3", 3);
         TaskObject task2 = new TaskObject("task4", 4);
         taskList.add(task1);
         taskList.add(task2);
-        
+
         Storage testStorage = FileStorage.getInstance();
-        int result = testStorage.save(taskList);        
-        
+        int result = testStorage.save(taskList);
+
         ArrayList<String> writtenList = readFile();
-        
-        
+
+
         assertEquals("Success" , result , 0);
+        assertEquals("Length", 2, writtenList.size());
         assertEquals("Line 3", "task3;0;0;0;0;;;3;" , writtenList.get(0));
         assertEquals("Line 4", "task4;0;0;0;0;;;4;" , writtenList.get(1));
-        assertEquals("Length", 2, writtenList.size());
-        
-    }
-    
-    
-    
 
-    private static ArrayList<String> readFile() { 
+
+    }
+
+
+
+
+    private static ArrayList<String> readFile() {
         ArrayList<String> writtenList = new ArrayList<String>();
         BufferedReader fileReader = null;
         String line = "e";
@@ -76,7 +78,7 @@ public class SaveTest {
             }
             fileReader.close();
         }
-        catch (IOException ex) { 
+        catch (IOException ex) {
             ex.printStackTrace();
         }
         return writtenList;

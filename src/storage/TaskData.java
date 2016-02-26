@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import logic.TaskObject;
 
 public class TaskData {
-    
+
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
-    
+
     /**
-     * 
+     *
      * @param taskList
      * @throws NoSuchFileException Default location invalid
      * @throws IOException Unable to edit existing file/Unable read default location
@@ -33,7 +33,7 @@ public class TaskData {
             // Nothing to delete
         } catch (IOException e) {
             // Unable to overwrite existing data
-        } 
+        }
         String path = null;
         try {
             path = FilePath.getPath();
@@ -43,41 +43,52 @@ public class TaskData {
             // Unable to get location to write file
         }
         try {
-            addTaskList(taskList, path);
+            writeList(taskList, path);
         } catch (IOException e) {
             // Unable to overwrite existing data
         }
     }
     /**
-     * 
+     *
      * @return
      * @throws NoSuchFileException Specified default file does not exist
      * @throws IOException Error reading from existing file
      */
     static ArrayList<String> readData() throws NoSuchFileException, IOException {
-        ArrayList<String> taskDataList = new ArrayList<String>();  
+        ArrayList<String> taskDataList = new ArrayList<String>();
         String filePath = FilePath.getPath();
         try {
-        BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
-        String line = null;
-        while ((line = fileReader.readLine()) != null) {
-            taskDataList.add(line);
-        }
-        fileReader.close();
+            BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
+            String line = null;
+            while ((line = fileReader.readLine()) != null) {
+                taskDataList.add(line);
+            }
+            fileReader.close();
         } catch (FileNotFoundException e) {
             return taskDataList;
         }
         return taskDataList;
     }
-    
-    protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws NoSuchFileException 
-                                                                                            , IOException {
-        if ( filePath == null ) {
-            throw new NoSuchFileException(filePath);
+
+    /**
+     * Writes given tasks into specified path
+     * <p>
+     * @param taskList
+     * @param filePath
+     * @throws NoSuchFileException Invalid specified path
+     * @throws IOException Error writing to specified path
+     */
+    protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
+        for (TaskObject task : taskList) {
+            writeTask(task, filePath);
         }
-        addTaskList(taskList, filePath);
     }
-    
+
+    /**
+     * Convert task data into task objects
+     * @param taskDataList
+     * @return
+     */
     static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         for (String taskData : taskDataList) {
@@ -93,6 +104,7 @@ public class TaskData {
         }
         return taskList;
     }
+
     /**
      * Deletes the file containing Stored Information
      * @throws NoSuchFileException No existing file
@@ -110,15 +122,9 @@ public class TaskData {
             // File permission problems are caught here.
             System.err.println(x);
         }
-    } 
-    
-    private static void addTaskList (ArrayList<TaskObject> taskList, String path) throws IOException {
-        for (TaskObject task : taskList) {
-            addTask(task, path);
-        }
     }
 
-    private static void addTask(TaskObject task, String filePath) throws IOException {
+    private static void writeTask(TaskObject task, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(task.getTitle().replace(";", ","));

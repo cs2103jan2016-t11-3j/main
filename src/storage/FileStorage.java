@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import logic.TaskObject;
 
 public class FileStorage implements Storage {
-    
+
     private static FileStorage instance = null;
     private static ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 
@@ -20,7 +20,7 @@ public class FileStorage implements Storage {
             instance = new FileStorage();
         }
         return instance;
-    }    
+    }
 
     @Override
     public int save(ArrayList<TaskObject> newTaskList) {
@@ -32,7 +32,7 @@ public class FileStorage implements Storage {
             return 2;
         }
         taskList = newTaskList;
-        return 0;   
+        return 0;
     }
 
     @Override
@@ -48,25 +48,29 @@ public class FileStorage implements Storage {
         taskList = TaskData.parseData(taskDataList);
         return 0;
     }
-    
+
     @Override
-     public int createCopy(String directory , String fileName) {
+    public int createCopy(String directory , String fileName) {
+        if ( taskList.isEmpty() ) {
+            return 1;
+        }
+        if ( !FilePath.isValidPath(directory) ) {
+            return 2;
+        }
         String filePath = FilePath.formPath(directory, fileName);
         try {
             TaskData.writeList(taskList, filePath);
-        } catch (NoSuchFileException e) {
-           return 1;
-        } catch (IOException e) {
-           return 2;
+        }  catch (IOException e) {
+            return 3;
         }
         return 0;
     }
-    
+
     @Override
     public ArrayList<TaskObject> getTaskList() {
         return taskList;
     }
-    
+
     @Override
     public int changeSaveLocation (String directory) {
         if ( createCopy(directory, "data.csv") != 0 ) {
@@ -87,11 +91,11 @@ public class FileStorage implements Storage {
             return 5;
         }
         return 0;
-        
+
     }
-    
+
     public void load(String directory) {
-        
+
     }
 
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package test.storage;
 
 import static org.junit.Assert.*;
@@ -29,28 +26,29 @@ public class TaskData_WriteListTest extends TaskData {
     TaskGenerator testTask = new TaskGenerator();
     /**
      * Test method for {@link storage.TaskData#writeList(java.util.ArrayList, java.lang.String)}.
+     * @throws IOException
      */
     @Test
-    public void testSubDir() {
+    public void testSubDir() throws IOException {
         String path = "./bin/testData.csv";
         writeToPath(path);
     }
-    
+
     @Test
-    public void testCurDir() {
+    public void testCurDir() throws IOException {
         String path = "./testData.csv";
         writeToPath(path);
     }
-    
+
     @Test
-    public void testParentDir() {
+    public void testParentDir() throws IOException {
         Path curDir = Paths.get(".").toAbsolutePath();
         String path = Paths.get( curDir.getParent().toString(), "testData.csv").toString();
         writeToPath(path);
     }
-    
+
     @Test
-    public void testAbsolute() {
+    public void testAbsolute() throws IOException {
         Path curDir = Paths.get(".", "testData.csv").toAbsolutePath();
         String path = curDir.toString();
         writeToPath(path);
