@@ -23,6 +23,14 @@ public class Edit {
 		this.taskList = taskList;
 	}
 	
+	public int getEditItemNumber() {
+		return editItemNumber;
+	}
+	
+	public String getOriginalTitle() {
+		return originalTitle;
+	}
+	
 	public ArrayList<String> run() {
 		parseTaskObjectTitle();
 		int returnedTaskId = getTaskIdOfTaskToBeEdited();
