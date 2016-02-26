@@ -38,10 +38,11 @@ public class FilePath {
          * the directory containing the program unless another directory has been defined. 
          * <p>
          * @return String of path of the file containing saved tasks.
-         * <li> <code>null</code> If the current path specified is invalid.
+         * Returns the default location if no file has been specified.
+         * @throws NoSuchFileException Existing file path is invalid.
          * @throws IOException Error reading file containing default path
          */
-        static String getPath() throws IOException {
+        static String getPath() throws NoSuchFileException, IOException {
             Path path = Paths.get(".");
             try {
                 BufferedReader fileReader = new BufferedReader(new FileReader (SAVE_FILE_NAME));

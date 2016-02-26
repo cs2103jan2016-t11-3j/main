@@ -1,7 +1,5 @@
 package storage;
 
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import logic.TaskObject;
@@ -14,7 +12,8 @@ public interface Storage {
      * @param taskList - The list of tasksObjects to be written
      * @return Status. 
      * <li> 0 - If successful. 
-     * <li> 1 - If error writing to storage.
+     * <li> 1 - If existing default location is invalid
+     * <li> 2 - Error writing to default save location/Unable to locate default location
      */
     public abstract int save(ArrayList<TaskObject> taskList);
     
@@ -55,6 +54,12 @@ public interface Storage {
      * to test
      * @param filePath
      * @return status
+     * <li> 0 - If successful
+     * <li> 1 - If unable to create copy at new location
+     * <li> 2 - If no existing file to copy
+     * <li> 3 - Cannot delete existing file
+     * <li> 4 - Specified directory is invalid
+     * <li> 5 - Error writing to specified directory
      */
     public abstract int changeSaveLocation(String filePath);
     

@@ -26,8 +26,10 @@ public class FileStorage implements Storage {
     public int save(ArrayList<TaskObject> newTaskList) {
         try {
             TaskData.overWriteList(newTaskList);
-        } catch (IOException e) {
+        } catch (NoSuchFileException e) {
             return 1;
+        } catch (IOException e) {
+            return 2;
         }
         taskList = newTaskList;
         return 0;   
@@ -71,23 +73,15 @@ public class FileStorage implements Storage {
         try {
             TaskData.deleteData();
         } catch (NoSuchFileException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             return 2;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             return 3;
         }
         try {
             FilePath.changeDirectory(directory);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             return 4;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             return 5;
         }
         return 0;
