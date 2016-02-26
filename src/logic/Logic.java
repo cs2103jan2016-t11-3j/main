@@ -162,7 +162,7 @@ public class Logic {
 	}
 	
 	private void deleteFunction(TaskObject taskObj) {
-		Delete delete = new Delete(taskObj, taskList);
+		Delete delete = new Delete(taskObj, taskList, lastOutputTaskList);
 		setOutput(delete.run());
 	}
 	
@@ -172,7 +172,8 @@ public class Logic {
 	}
 	
 	private void saveFunction(TaskObject taskObj) {
-		Save save = new Save(taskObj);
+		Save save = new Save(taskObj, taskList);
+		setOutput(save.run());
 	}
 	
 	private void exitFunction() {
