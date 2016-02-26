@@ -66,15 +66,7 @@ public class Parser {
 		} else if(command.startsWith(UNDO_COMMAND)) {
 			commandObject.setCommandType(UNDO_INDEX);
 		} else if(command.startsWith(EDIT_COMMAND)) {
-			commandObject.setCommandType(EDIT_INDEX);
-			EditProcessor EP = new EditProcessor();
-			EP.processEdit(command);
-			taskObject.setTitle(EP.getTask());
-			taskObject.setStartTime(EP.getStartTime());
-			taskObject.setEndTime(EP.getEndTime());
-			taskObject.setStartDate(EP.getStartDate());
-			taskObject.setEndDate(EP.getEndDate());
-			commandObject.setTaskObject(taskObject);
+			parseEdit(command);
 		} else if(command.startsWith(SAVE_COMMAND)) {
 			commandObject.setCommandType(SAVE_INDEX);
 			setCommandObjectToSave(command);
@@ -82,22 +74,47 @@ public class Parser {
 			commandObject.setCommandType(DELETE_INDEX);
 			setCommandObjectToDelete(command);
 		} else if(command.startsWith(ADD_COMMAND)) {
-			commandObject.setCommandType(ADD_INDEX);
-			AddProcessor AP = new AddProcessor();
-			AP.addCommand(command);
-			//add these 5 main attributes
-			taskObject.setTitle(AP.getTask());
-			taskObject.setStartTime(AP.getStartTime());
-			taskObject.setEndTime(AP.getEndTime());
-			taskObject.setStartDate(AP.getStartDate());
-			taskObject.setEndDate(AP.getEndDate());
-			commandObject.setTaskObject(taskObject);
+			parseAdd(command);
 		} else if(isSearch(command)) {
-			commandObject.setCommandType(SEARCH_INDEX);
-			SearchProcessor SP = new SearchProcessor();
-			SP.processSearchTerm(command);
+			parseSearch(command);
 		}
  	}
+	
+	public static void parseEdit(String command) {
+		commandObject.setCommandType(EDIT_INDEX);
+		EditProcessor EP = new EditProcessor();
+		EP.processEdit(command);
+		taskObject.setTitle(EP.getTask());
+		taskObject.setStartTime(EP.getStartTime());
+		taskObject.setEndTime(EP.getEndTime());
+		taskObject.setStartDate(EP.getStartDate());
+		taskObject.setEndDate(EP.getEndDate());
+		commandObject.setTaskObject(taskObject);
+	}
+	public static void parseAdd(String command) {
+		commandObject.setCommandType(ADD_INDEX);
+		AddProcessor AP = new AddProcessor();
+		AP.addCommand(command);
+		//add these 5 main attributes
+		taskObject.setTitle(AP.getTask());
+		taskObject.setStartTime(AP.getStartTime());
+		taskObject.setEndTime(AP.getEndTime());
+		taskObject.setStartDate(AP.getStartDate());
+		taskObject.setEndDate(AP.getEndDate());
+		commandObject.setTaskObject(taskObject);
+	}
+	
+	public static void parseSearch(String command) {
+		commandObject.setCommandType(SEARCH_INDEX);
+		SearchProcessor SP = new SearchProcessor();
+		SP.processSearchTerm(command);
+		taskObject.setTitle(SP.getTask());
+		taskObject.setStartTime(SP.getStartTime());
+		taskObject.setEndTime(SP.getEndTime());
+		taskObject.setStartDate(SP.getStartDate());
+		taskObject.setEndDate(SP.getEndDate());
+		commandObject.setTaskObject(taskObject);
+	}
 	
 	/**
 	 * method checks if the search keyword is present
@@ -137,5 +154,5 @@ public class Parser {
  		commandObject.setTaskObject(taskObject);
  	}
 
- 	
+ 
 }
