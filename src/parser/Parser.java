@@ -50,7 +50,7 @@ public class Parser {
 	public Parser(String command) {
 		_command = command;
 	}
-	public static CommandObject run() {
+	public CommandObject run() {
 		return parseInput(_command);
 	}
 	private static CommandObject parseInput(String command) {
