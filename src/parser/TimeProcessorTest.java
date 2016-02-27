@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TimeProcessorTest {
+	
 	private TimeProcessor TP = new TimeProcessor();
 	
 	@Test
@@ -129,6 +130,14 @@ public class TimeProcessorTest {
 		assertEquals(1500, TP.getEndTime());
 		reset();
 		
+		/*
+		 * test case 5: "5 to 17"
+		 * purpose: test if function recognise time without am/pm keywords
+		 */
+		TP.processTime("5 to 17");
+		assertEquals(500, TP.getStartTime());
+		assertEquals(1700, TP.getEndTime());
+		reset();
 		
 	}
 

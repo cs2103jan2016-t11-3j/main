@@ -17,6 +17,11 @@ public class TimeProcessor {
 	private static int startTime = -1;
 	private static int endTime = -1;
 	
+	/**
+	 * this method takes in the user's input from add/edit/search processor
+	 * 
+	 *@param input  time input from user
+	 */
 	public void processTime(String input) {
 		convertToArray(input);
 		if (list.size() == 2 || list.size() == 1) {
@@ -28,6 +33,8 @@ public class TimeProcessor {
 	 * this method splits string into array list for easy manipulation.
 	 * ideally the start and end date if any, will be split into two elements of the arraylist (events)
 	 * if there is only one date, there will be no splitting
+	 * 
+	 * @param input  time input by user
 	 */
 	public void convertToArray(String input) {
 		if (input.contains("-")) {
@@ -43,19 +50,20 @@ public class TimeProcessor {
 		}
 	}
 	
+	/**
+	 * this method will check process the time input by recognizing am/pm and if the time is 
+	 * in order (8-5pm is recognized as 8am to 5pm)
+	 */
 	public void furtherProcessTime() {
-		boolean isCross = false, isPM = false;
+		boolean isCross = false;
 		for (int i = 0; i < list.size(); i++) {
 			String temp = list.get(i);
 			String tempNext = list.get(1);
-			if (temp.contains(TIME_AM_1) || temp.contains(TIME_AM_2) ||
-					temp.contains(TIME_AM_3) || temp.contains(TIME_AM_4)) {
+			if (isAM(temp)) {
 				setTime(temp, i, false);
-			} else if (temp.contains(TIME_PM_1) || temp.contains(TIME_PM_2) ||
-					temp.contains(TIME_PM_3) || temp.contains(TIME_PM_4)) {
+			} else if (isPM(temp)) {
 				setTime(temp, i, true);
-			} else if (tempNext.contains(TIME_AM_1) || tempNext.contains(TIME_AM_2) ||
-			tempNext.contains(TIME_AM_3) || tempNext.contains(TIME_AM_4)) {
+			} else if (isAM(tempNext)) {
 				isCross = checkIfCrossover(temp, tempNext);
 				if (isCross) {
 					setTime(temp, i, true);
@@ -63,19 +71,37 @@ public class TimeProcessor {
 					setTime(temp, i, false);
 				}
 				
-			} else if (tempNext.contains(TIME_PM_1) || tempNext.contains(TIME_PM_2) ||
-			tempNext.contains(TIME_PM_3) || tempNext.contains(TIME_PM_4)) {
+			} else if (isPM(tempNext)) {
 				isCross = checkIfCrossover(temp, tempNext);
 				if (isCross) {
 					setTime(temp, i, false);
 				} else {
 					setTime(temp, i, true);
 				}
+			} else {
+				setTime(temp, i, false);
 			}
 			}
 	}
+
+	public boolean isPM(String temp) {
+		return temp.contains(TIME_PM_1) || temp.contains(TIME_PM_2) ||
+				temp.contains(TIME_PM_3) || temp.contains(TIME_PM_4);
+	}
+
+	public boolean isAM(String temp) {
+		return temp.contains(TIME_AM_1) || temp.contains(TIME_AM_2) ||
+				temp.contains(TIME_AM_3) || temp.contains(TIME_AM_4);
+	}
 	
 	
+	/**
+	 * this method checks if the two time are in running order, meaning 8-1pm would
+	 * mean 8am to 1pm instead of 8pm to 1pm
+	 * 
+	 * @param temp      start time
+	 * @param tempNext  end time
+	 */
 	private static boolean checkIfCrossover(String temp, String tempNext) {
 		int first, second;
 		temp = temp.replaceAll("[:!-/a-zA-Z]+", "");
@@ -130,21 +156,22 @@ public class TimeProcessor {
 		return endTime;
 	}
 	
-	//method for testing 
+	//method used to obtain the size of the list for testing 
 	public int getListSize() {
 		return list.size();
 	}
 	
-	//method for testing
+	//method used to get the ith element in the list for testing
 	public String getListElement(int i) {
 		return list.get(i);
 	}
 	
-	//met
+	//method used to get the ith element in the list for testing
 	public void clearList() {
 		list.clear();
 	}
 	
+	//method used to reset all dates for testing
 	public void resetTime() {
 		startTime = -1;
 		endTime = -1;
