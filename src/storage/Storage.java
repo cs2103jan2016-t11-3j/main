@@ -52,7 +52,7 @@ public interface Storage {
 
     /**
      * <p>
-     * @param filePath
+     * @param directory
      * @return status
      * <li> 0 - If successful
      * <li> 1 - If unable to create copy at new location
@@ -61,6 +61,6 @@ public interface Storage {
      * <li> 4 - Specified directory is invalid
      * <li> 5 - Error writing to specified directory
      */
-    public abstract int changeSaveLocation(String filePath);
+    public abstract int changeSaveLocation(String directory);
 
 }

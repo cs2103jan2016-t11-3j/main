@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import logic.TaskObject;
@@ -31,6 +32,26 @@ public class AssertHelper {
         ArrayList<String> actualTaskDataList = new ArrayList<String>();
         try {
             BufferedReader fileReader = new BufferedReader(new FileReader(path.toString()));
+            String line = null;
+            while ((line = fileReader.readLine()) != null) {
+                actualTaskDataList.add(line);
+            }
+            fileReader.close();
+        } catch (FileNotFoundException e) {
+            //blocked by assertEquals for file Exist
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertDataListEquals(testDescription + "dataList", expectedTaskDataList.size() , expectedTaskDataList, actualTaskDataList);
+    }
+    
+    public static void assertFileEquals(String testDescription, String filePath, ArrayList<String> expectedTaskDataList) {
+        Path path = Paths.get(filePath);
+        assertEquals(testDescription + " File Exist" , true , Files.exists(path));
+        
+        ArrayList<String> actualTaskDataList = new ArrayList<String>();
+        try {
+            BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
             String line = null;
             while ((line = fileReader.readLine()) != null) {
                 actualTaskDataList.add(line);
