@@ -14,17 +14,13 @@ public class TimeProcessor {
 	
 	private static final ArrayList<String> list = new ArrayList<String>();
 
-	private static int startTime;
-	private static int endTime;
+	private static int startTime = -1;
+	private static int endTime = -1;
 	
 	public void processTime(String input) {
 		convertToArray(input);
 		if (list.size() == 2 || list.size() == 1) {
-			//event
 			furtherProcessTime();
-		} else if (list.isEmpty()) {
-			//floating task
-			//start and end date = -1
 		}
 	}
 	
@@ -33,36 +29,73 @@ public class TimeProcessor {
 	 * ideally the start and end date if any, will be split into two elements of the arraylist (events)
 	 * if there is only one date, there will be no splitting
 	 */
-	private static void convertToArray(String input) {
+	public void convertToArray(String input) {
 		if (input.contains("-")) {
 			for (String temp: input.split("-")) {
+				temp = temp.replaceAll(" ", "");
 				list.add(temp);
 				}
 		} else if (input.contains("to")) {
 			for (String temp: input.split("to")) {
+				temp = temp.replaceAll(" ", "");
 	 			list.add(temp);
 	 			}
 		}
 	}
 	
-	private static void furtherProcessTime() {
+	public void furtherProcessTime() {
+		boolean isCross = false, isPM = false;
 		for (int i = 0; i < list.size(); i++) {
 			String temp = list.get(i);
+			String tempNext = list.get(1);
 			if (temp.contains(TIME_AM_1) || temp.contains(TIME_AM_2) ||
 					temp.contains(TIME_AM_3) || temp.contains(TIME_AM_4)) {
 				setTime(temp, i, false);
 			} else if (temp.contains(TIME_PM_1) || temp.contains(TIME_PM_2) ||
 					temp.contains(TIME_PM_3) || temp.contains(TIME_PM_4)) {
 				setTime(temp, i, true);
+			} else if (tempNext.contains(TIME_AM_1) || tempNext.contains(TIME_AM_2) ||
+			tempNext.contains(TIME_AM_3) || tempNext.contains(TIME_AM_4)) {
+				isCross = checkIfCrossover(temp, tempNext);
+				if (isCross) {
+					setTime(temp, i, true);
+				} else {
+					setTime(temp, i, false);
+				}
+				
+			} else if (tempNext.contains(TIME_PM_1) || tempNext.contains(TIME_PM_2) ||
+			tempNext.contains(TIME_PM_3) || tempNext.contains(TIME_PM_4)) {
+				isCross = checkIfCrossover(temp, tempNext);
+				if (isCross) {
+					setTime(temp, i, false);
+				} else {
+					setTime(temp, i, true);
+				}
 			}
+			}
+	}
+	
+	
+	private static boolean checkIfCrossover(String temp, String tempNext) {
+		int first, second;
+		temp = temp.replaceAll("[:!-/a-zA-Z]+", "");
+		tempNext = tempNext.replaceAll("[:!-/a-zA-Z]+", "");
+		first = Integer.parseInt(temp);
+		second = Integer.parseInt(tempNext);
+		
+		if (first > second) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
 	/**
 	 * this method cleans the string and converts to the integer form. It will be manipulated into HHMM format
 	 */
-	private static void setTime(String input, int position, boolean isPM) {
-		input.replaceAll("[!-/a-zA-Z]", "");
+	public void setTime(String input, int position, boolean isPM) {
+		input = input.replaceAll("[:!-/a-zA-Z]+", "");
+		input = input.replaceAll(" ", "");
 		int temp = 0;
 		temp = Integer.parseInt(input);
 		if (temp < 100) {
@@ -77,13 +110,17 @@ public class TimeProcessor {
 			temp = 0000;
 		}
 		
+		if (temp > 2400) {
+			return;
+		}
+		
 		if (position == 0) {
 			startTime = temp;
 			endTime = startTime;
 		} else if (position == 1) {
 			endTime = temp;
 		}
-		}
+	}
 	
 	public int getStartTime() {
 		return startTime;
@@ -91,5 +128,25 @@ public class TimeProcessor {
 	
 	public int getEndTime() {
 		return endTime;
+	}
+	
+	//method for testing 
+	public int getListSize() {
+		return list.size();
+	}
+	
+	//method for testing
+	public String getListElement(int i) {
+		return list.get(i);
+	}
+	
+	//met
+	public void clearList() {
+		list.clear();
+	}
+	
+	public void resetTime() {
+		startTime = -1;
+		endTime = -1;
 	}
 }
