@@ -14,6 +14,7 @@ import org.junit.Test;
 import logic.TaskObject;
 import storage.FileStorage;
 import storage.Storage;
+import test.AssertHelper;
 
 public class LoadTest {
 
@@ -46,8 +47,8 @@ public class LoadTest {
         }
         catch (IOException e){
         }
-        compareTasks("task1", task1 , loadedTasks.get(0));
-        compareTasks("task2", task2 , loadedTasks.get(1));
+        AssertHelper.assertTaskEquals("task1", task1 , loadedTasks.get(0));
+        AssertHelper.assertTaskEquals("task2", task2 , loadedTasks.get(1));
         assertEquals("Length", 2, loadedTasks.size());
     }
     
@@ -86,17 +87,5 @@ public class LoadTest {
         Files.delete(Paths.get(SAVE_FILE_NAME));
     }
     */
-
-
-    private void compareTasks(String testDescription, TaskObject task1, TaskObject task2) {
-        assertEquals(testDescription + " title", task1.getTitle(), task2.getTitle());
-        assertEquals(testDescription + " start date", task1.getStartDate(), task2.getStartDate());
-        assertEquals(testDescription + " end date", task1.getEndDate(), task2.getEndDate());
-        assertEquals(testDescription + " start time", task1.getStartTime(), task2.getStartTime());
-        assertEquals(testDescription + " end time", task1.getEndTime(), task2.getEndTime());
-        assertEquals(testDescription + " category", task1.getCategory(), task2.getCategory());
-        assertEquals(testDescription + " Status", task1.getStatus(), task2.getStatus());
-        assertEquals(testDescription + " taskId", task1.getTaskId(), task2.getTaskId());
-    }
 
 }

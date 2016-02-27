@@ -15,6 +15,7 @@ import org.junit.Test;
 import logic.TaskObject;
 import storage.FileStorage;
 import storage.Storage;
+import test.AssertHelper;
 import test.TaskGenerator;
 
 public class CreateCopyTest {
@@ -59,7 +60,7 @@ public class CreateCopyTest {
         dataList = readFile(path.toString());
         assertEquals(dir + "exists", true , Files.exists(path));
         Files.delete(path);
-        assertArrayEquals( "subdir" ,size , expectedDataList, dataList);
+        AssertHelper.assertDataListEquals( "subdir" ,size , expectedDataList, dataList);
     }
 
     @Test
@@ -95,14 +96,7 @@ public class CreateCopyTest {
         assertEquals(dir + "exists", true , Files.exists(path));
         Files.delete(path);
         Files.delete(defaultPath);
-        assertArrayEquals( "subdir" ,size , expectedDataList, dataList);
-    }
-
-    private void assertArrayEquals(String message, int size, ArrayList<String> expectedDataList, ArrayList<String> dataList) {
-        assertEquals(message + "listSize" , expectedDataList.size(), dataList.size());
-        for (int i = 0; i < size; i++) {
-            assertEquals( message+ "dataListContent" , expectedDataList.get(i) , dataList.get(i));
-        }
+        AssertHelper.assertDataListEquals( "subdir" ,size , expectedDataList, dataList);
     }
 
     public ArrayList<String> readFile( String filePath ) throws IOException {
