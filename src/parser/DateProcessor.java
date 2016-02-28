@@ -192,7 +192,7 @@ public class DateProcessor {
 	 */
 	public void splitStringAndProcess(String input, int i) {
 		ArrayList<String> templist = new ArrayList<String>();
-		int _day = 0, _year = -1;
+		int _day = -1, _year = -1;
 		if (input.startsWith(" ")) {
 			input = input.replaceFirst(" ", "");
 		}

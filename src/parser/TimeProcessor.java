@@ -47,6 +47,8 @@ public class TimeProcessor {
 				temp = temp.replaceAll(" ", "");
 	 			list.add(temp);
 	 			}
+		} else {
+			list.add(input);
 		}
 	}
 	
@@ -58,28 +60,38 @@ public class TimeProcessor {
 		boolean isCross = false;
 		for (int i = 0; i < list.size(); i++) {
 			String temp = list.get(i);
-			String tempNext = list.get(1);
-			if (isAM(temp)) {
-				setTime(temp, i, false);
-			} else if (isPM(temp)) {
-				setTime(temp, i, true);
-			} else if (isAM(tempNext)) {
-				isCross = checkIfCrossover(temp, tempNext);
-				if (isCross) {
+			if (list.size() > 1) {
+				String tempNext = list.get(1);
+				if (isAM(temp)) {
+					setTime(temp, i, false);
+				} else if (isPM(temp)) {
 					setTime(temp, i, true);
+				} else if (isAM(tempNext)) {
+					isCross = checkIfCrossover(temp, tempNext);
+					if (isCross) {
+						setTime(temp, i, true);
+					} else {
+						setTime(temp, i, false);
+					}
+					
+				} else if (isPM(tempNext)) {
+					isCross = checkIfCrossover(temp, tempNext);
+					if (isCross) {
+						setTime(temp, i, false);
+					} else {
+						setTime(temp, i, true);
+					}
 				} else {
 					setTime(temp, i, false);
-				}
-				
-			} else if (isPM(tempNext)) {
-				isCross = checkIfCrossover(temp, tempNext);
-				if (isCross) {
-					setTime(temp, i, false);
-				} else {
-					setTime(temp, i, true);
 				}
 			} else {
-				setTime(temp, i, false);
+				if (isAM(temp)) {
+					setTime(temp, i, false);
+				} else if (isPM(temp)) {
+					setTime(temp, i, true);
+				} else {
+					setTime(temp, i, false);
+				}
 			}
 			}
 	}
@@ -108,6 +120,14 @@ public class TimeProcessor {
 		tempNext = tempNext.replaceAll("[:!-/a-zA-Z]+", "");
 		first = Integer.parseInt(temp);
 		second = Integer.parseInt(tempNext);
+		
+		if (first < 100) {
+			first = first * 100;
+		}
+		
+		if (second < 100) {
+			second = second * 100;
+		}
 		
 		if (first > second) {
 			return true;

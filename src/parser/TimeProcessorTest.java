@@ -139,6 +139,16 @@ public class TimeProcessorTest {
 		assertEquals(1700, TP.getEndTime());
 		reset();
 		
+		TP.processTime("12-4.15pm");
+		assertEquals(1200, TP.getStartTime());
+		assertEquals(1615, TP.getEndTime());
+		reset();
+		
+		TP.processTime("3.45pm");
+		assertEquals(1, TP.getListSize());
+		assertEquals(1545, TP.getStartTime());
+		assertEquals(1545, TP.getEndTime());
+		reset();
 	}
 
 	

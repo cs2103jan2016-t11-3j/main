@@ -24,73 +24,106 @@ public class AddProcessor {
 	 * @param input    string input from user
 	 */
 	public void addCommand(String input) {
-		//splits add command into arraylist
+		//splits add command into array list
+		convertToArray(input);
+		//get the task stuff
+		readTask();
+	}
+
+	public void convertToArray(String input) {
 		for (String temp: input.split(" ")) {
  			list.add(temp);
  		}
-		//get the task stuff
-		readTask(list);
 	}
 	
 	/**
 	 * this method extracts out the string from the array list for tasks
 	 */
-	private static void readTask(ArrayList <String>tempList) {
- 		int i = 1;
+	public void readTask() {
+ 		int i;
  		String _task = null;
- 		while (!isStartOfDate(tempList.get(i)) && i < tempList.size()) {
- 			_task = _task + tempList.get(i);
- 			i++;
+ 		for (i = 1; i < list.size(); i++) {
+ 			if (isStartOfDate(list.get(i))) {
+ 				break;
+ 			}
+ 			
+ 			if (i == 1) {
+ 				_task = list.get(i);
+ 			} else {
+ 				_task = _task + " " + list.get(i);	
+ 			}
  		}
+ 		
  		task = _task;
- 		readDate(list, i+1);
+ 		if (i == list.size()){
+ 			return;
+ 		} else {
+ 			readDate(i+1);
+ 		}
 	}
 	
 	// this method checks for first occurrence of the keyword indicating date input
- 	private static boolean isStartOfDate(String input) {
- 		return input == "date:";
+ 	public boolean isStartOfDate(String input) {
+ 		return input.matches("date:");
  	}
 	
  	/**
  	 * this method will extract out the string from the arraylist for date
  	 */
- 	private static void readDate(ArrayList<String> list, int index) {
+ 	public void readDate(int index) {
  		String _date = null;
+ 		int i = 0;
  		//forms the date string
- 		while (!isStartOfTime(list.get(index)) && index < list.size()) {
- 			_date = _date + list.get(index);
- 			index++;
+ 		for (i = index; i < list.size(); i++) {
+ 			if (isStartOfTime(list.get(i))) {
+ 				break;
+ 			}
+ 			
+ 			if (i == index) {
+ 				_date = list.get(i);
+ 			} else {
+ 				_date = _date + " " + list.get(i);	
+ 			}
  		}
  		DP.processDate(_date, false);
  		setDate();
- 		readTime(list, index);
+ 		index = i;
+ 		if (i == list.size()){
+ 			return;
+ 		} else {
+ 			readTime(index+1);
+ 		}
+ 		
  	}
  	
  	//checks for the "time:" keyword
- 	private static boolean isStartOfTime(String input) {
- 		return input == "time:";
+ 	public boolean isStartOfTime(String input) {
+ 		return input.matches("time:");
  	}
  	
  	/**
  	 * this method will extract the string from the array list for time
  	 */
- 	private static void readTime(ArrayList<String> list, int index) {
+ 	public void readTime(int index) {
  		String _time = null;
- 		
- 		while (index < list.size()) {
- 			_time = _time + list.get(index);
- 			index++;
+ 		int i;
+ 		for (i = index; i < list.size(); i++) { 			
+ 			if (i == index) {
+ 				_time = list.get(i);
+ 			} else {
+ 				_time = _time + " " + list.get(i);	
+ 			}
  		}
  		TP.processTime(_time);
  		setTime();
  	}
  	
- 	private static void setDate() {
+ 	public static void setDate() {
 		startDate = DP.getStartDate();
 		endDate = DP.getEndDate();
  	}
  	
- 	private static void setTime() {
+ 	public static void setTime() {
  		startTime = TP.getStartTime();
  		endTime = TP.getEndTime();
  	}
@@ -115,6 +148,37 @@ public class AddProcessor {
  		return endTime;
  	}
  	
+ 	//method used to obtain the size of the list for testing 
+	public int getListSize() {
+		return list.size();
+	}
+	
+	//method used to get the ith element in the list for testing
+	public String getListElement(int i) {
+		return list.get(i);
+	}
+	
+	//method used to get the ith element in the list for testing
+	public void clearList() {
+		list.clear();
+	}
  	
+ 	public void reset() {
+ 		task = null;
+ 		startDate = -1;
+ 		endDate = -1;
+ 		startTime = -1;
+ 		endTime = -1;
+ 	}
+ 	
+ 	public void clearDP() {
+ 		DP.clearList();
+ 		DP.resetDate();
+ 	}
+ 	
+ 	public void clearTP() {
+ 		TP.clearList();
+ 		TP.resetTime();
+ 	}
  	
 }
