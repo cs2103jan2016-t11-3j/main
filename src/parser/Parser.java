@@ -110,13 +110,22 @@ public class Parser {
 	public void parseSearch(String command) {
 		commandObject.setCommandType(SEARCH_INDEX);
 		SearchProcessor SP = new SearchProcessor();
-		command = command.substring(command.indexOf(" "));
-		SP.processSearchTerm(command);
-		taskObject.setTitle(SP.getTask());
-		taskObject.setStartTime(SP.getStartTime());
-		taskObject.setEndTime(SP.getEndTime());
-		taskObject.setStartDate(SP.getStartDate());
-		taskObject.setEndDate(SP.getEndDate());
+		
+		// if there is no search keyword, set TaskObject values to null/-1
+		if (command.indexOf(" ") == -1) {
+			taskObject.setStartTime(-1);
+			taskObject.setEndTime(-1);
+			taskObject.setStartDate(-1);
+			taskObject.setEndDate(-1);
+		} else {
+			command = command.substring(command.indexOf(" "));
+			SP.processSearchTerm(command);
+			taskObject.setTitle(SP.getTask());
+			taskObject.setStartTime(SP.getStartTime());
+			taskObject.setEndTime(SP.getEndTime());
+			taskObject.setStartDate(SP.getStartDate());
+			taskObject.setEndDate(SP.getEndDate());
+		}
 		commandObject.setTaskObject(taskObject);
 	}
 	
