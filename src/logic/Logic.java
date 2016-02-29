@@ -28,7 +28,8 @@ public class Logic {
 
 	private ArrayList<TaskObject> taskList;
 	private Stack<CommandObject> undoList;
-	
+	private int taskId = 1;
+		
 	// FOR TESTING
 	private CommandObject commandObj;
 	private TaskObject taskObj;
@@ -84,7 +85,8 @@ public class Logic {
 	}
 	// Calling Parser to parse the user input
 	protected CommandObject callParser() {
-		Parser parser = new Parser(userInput);
+		Parser parser = new Parser(userInput, taskId);
+		taskId++;
 		return parser.run();
 	}
 
@@ -94,7 +96,7 @@ public class Logic {
 
 		// FOR TESTING
 		//System.out.println("command = " + command);
-		//if (command == 3)	printTaskObjectFields(taskObj);
+		//printTaskObjectFields(taskObj);
 		//System.out.println();
 		
 		switch (command) {
@@ -127,6 +129,8 @@ public class Logic {
 				// Needs editing as the TaskObject added to undoList is the
 				// wrong TaskObject
 			}
+			// printTaskObjectFields(removedTask);	// DEBUG
+			
 			if (!isUndoAction) {
 				if (removedTask.getTitle().equals("")) {
 					addToUndoList(command, removedTask);
@@ -191,7 +195,6 @@ public class Logic {
 	private TaskObject deleteFunction(TaskObject taskObj) {
 		TaskObject removedTask = new TaskObject();
 		Delete delete = new Delete(taskObj, taskList, lastOutputTaskList);
-		printTaskObjectFields(taskObj);	// DEBUG
 		setOutput(delete.run());
 		removedTask = delete.getRemovedTask();
 		return removedTask;
@@ -224,9 +227,15 @@ public class Logic {
 	// Add <-> delete
 	private void addToUndoList(int command, TaskObject taskObj) {
 		if (command == INDEX_ADD) {
-			undoList.push(new CommandObject(INDEX_DELETE, taskObj));
+			// For the corresponding delete object, the title of the TaskObject
+			// should be the index number of the task that is just added
+			TaskObject undoTaskObj = new TaskObject("" + taskList.size());
+			//printTaskObjectFields(undoTaskObj);		// DEBUG DEBUG DEBUG DEBUG DEBUG
+			undoList.push(new CommandObject(INDEX_DELETE, undoTaskObj));
 		} else if (command == INDEX_DELETE) {
-			undoList.push(new CommandObject(INDEX_ADD, taskObj));
+			// For the corresponding add object, the title of the TaskObject
+			// should be the name of the task that is just deleted
+			//undoList.push(new CommandObject(INDEX_ADD, taskObj));
 		}
 	}
 

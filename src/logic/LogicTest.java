@@ -35,23 +35,42 @@ public class LogicTest {
 		logic.run(testUserInput3);
 		printOutput();
 		
-		// GOOD NEWS: EDIT FUNCTION WORKS
-		// BAD NEWS: IT EDITS EVERYTHING IN THE LIST, BECAUSE THERE IS NO TASKID
+		// EDIT FUNCTION WORKS
 		String testUserInput4 = "edit 2 changed to this";
 		logic.run(testUserInput4);
 		printOutput();
 		
+		String testUserInput5 = "display";
+		logic.run(testUserInput5);
+		printOutput();
+		
 		// SEARCH FOR SPECIFIC KEYWORD WORKS
-		String testUserInput5 = "search float";
-		logic.run(testUserInput5);
+		String testUserInput6 = "search float";
+		logic.run(testUserInput6);
 		printOutput();
 		
-		
-		/* DELETE AND UNDO FUNCTION CANNOT BE TESTED UNTIL TASKID IS INPUT
-		String testUserInput5 = "undo";
-		logic.run(testUserInput5);
+		String testUserInput7 = "add water is healthy";
+		logic.run(testUserInput7);
 		printOutput();
-		*/
+		
+		String testUserInput8 = "add water occupies 70% of your body";
+		logic.run(testUserInput8);
+		printOutput();
+		
+		// DELETE FUNCTION WORKS
+		String testUserInput9 = "delete 4";
+		logic.run(testUserInput9);
+		printOutput();
+		
+/*		String testUserInput8 = "view";
+		logic.run(testUserInput8);
+		printOutput();
+		
+		String testUserInput9 = "undo";
+		logic.run(testUserInput9);
+		printOutput();
+*/	
+		
 		
 		
 	}
@@ -88,7 +107,7 @@ public class LogicTest {
 	private void printTaskList() {
 		System.out.println("Task list:");
 		for (int i = 0; i < taskList.size(); i++) {
-			System.out.println("i = " + i + ", task item = " + taskList.get(i));
+			System.out.println("i = " + i + ", task item = " + taskList.get(i) + ", task id = " + taskList.get(i).getTaskId());
 			printTaskObjectFields(taskList.get(i));
 		}
 	}

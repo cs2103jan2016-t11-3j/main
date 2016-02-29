@@ -116,9 +116,11 @@ public class Delete {
 	private void obtainTaskId() {
 		String line = task.getTitle();
 		int num = Integer.parseInt(line);
-		if (num > 0 && num <= lastOutputTaskList.size()) {
+		// CHANGED LASTOUTPUTTASKLIST TO TASKLIST
+		// because 'undo' does not have a display command before it
+		if (num > 0 && num <= taskList.size()) { 
 			num--;
-			taskIdToDelete = lastOutputTaskList.get(num).getTaskId();
+			taskIdToDelete = taskList.get(num).getTaskId();
 		}
 	}
 
