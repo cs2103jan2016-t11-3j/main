@@ -44,12 +44,14 @@ public class Parser {
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
 	
 	private String _command;
+	private int _taskId;	// ADDED TASKID VARIABLE 
 	
 	public Parser() {
 	}
 	
-	public Parser(String command) {
+	public Parser(String command, int taskId) {
 		_command = command;
+		_taskId = taskId;	// ADDED INITIALISATION FOR TASKID
 	}
 	public CommandObject run() {
 		return parseInput(_command);
@@ -103,6 +105,7 @@ public class Parser {
 		taskObject.setEndTime(AP.getEndTime());
 		taskObject.setStartDate(AP.getStartDate());
 		taskObject.setEndDate(AP.getEndDate());
+		taskObject.setTaskId(_taskId);	// ADDED
 		commandObject.setTaskObject(taskObject);
 		AP.reset();
 	}
