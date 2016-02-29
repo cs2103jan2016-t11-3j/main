@@ -94,7 +94,7 @@ public class Logic {
 
 		// FOR TESTING
 		//System.out.println("command = " + command);
-		//if (command != 5)	printTaskObjectFields(taskObj);
+		//if (command == 3)	printTaskObjectFields(taskObj);
 		//System.out.println();
 		
 		switch (command) {

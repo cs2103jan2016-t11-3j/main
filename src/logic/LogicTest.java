@@ -21,7 +21,8 @@ public class LogicTest {
 	@Test
 	public void test() {
 		
-		String testUserInput = "add floatfloatfloat";
+		// ADD FUNCTION WORKS
+		String testUserInput = "add float float float";
 		logic.run(testUserInput);
 		printOutput();
 
@@ -29,15 +30,30 @@ public class LogicTest {
 		logic.run(testUserInput2);
 		printOutput();
 				
-		String testUserInput3 = "undo";
-		logic.run(testUserInput3);
-		printOutput();
-		
-		/* SEARCH FUNCTION WORKS
+		// SEARCH FUNCTION WORKS, BUT 'CATEGORY' AND 'STATUS' ARE NOT FILLED
 		String testUserInput3 = "search";
 		logic.run(testUserInput3);
 		printOutput();
+		
+		// GOOD NEWS: EDIT FUNCTION WORKS
+		// BAD NEWS: IT EDITS EVERYTHING IN THE LIST, BECAUSE THERE IS NO TASKID
+		String testUserInput4 = "edit 2 changed to this";
+		logic.run(testUserInput4);
+		printOutput();
+		
+		// SEARCH FOR SPECIFIC KEYWORD WORKS
+		String testUserInput5 = "search float";
+		logic.run(testUserInput5);
+		printOutput();
+		
+		
+		/* DELETE AND UNDO FUNCTION CANNOT BE TESTED UNTIL TASKID IS INPUT
+		String testUserInput5 = "undo";
+		logic.run(testUserInput5);
+		printOutput();
 		*/
+		
+		
 	}
 		
 	
@@ -66,6 +82,7 @@ public class LogicTest {
 		for (int i = 0; i< output.size(); i++) {
 			System.out.println(output.get(i));
 		}
+		System.out.println();
 	}
 	
 	private void printTaskList() {

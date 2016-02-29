@@ -43,7 +43,7 @@ public class Search extends Display {
 
 	// This needs to be improved 
 	private String getSearchKeyword() {
-		return taskObj.getTitle();
+		return taskObj.getTitle().trim();
 	}
 
 	// Searches the task names based on the search keyword 
