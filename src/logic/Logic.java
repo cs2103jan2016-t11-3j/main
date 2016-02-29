@@ -1,4 +1,5 @@
 package logic;
+
 import parser.*;
 import logic.add.*;
 import logic.delete.*;
@@ -10,6 +11,8 @@ import logic.save.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
+
+// Parent class for Undo
 
 public class Logic {
 	
@@ -69,20 +72,19 @@ public class Logic {
 	// Takes in a String argument from UI component
 	void run(String userInput) {
 		setUserInput(userInput);
-		CommandObject commandObj = callParser();
+		CommandObject commandObj = callParser();	
 		parseCommandObject(commandObj, false);
 	}
 	
-	
 	// Calling Parser to parse the user input
-	private CommandObject callParser() {
+	protected CommandObject callParser() {
 		Parser parser = new Parser(userInput);
 		return parser.run();
 	}
 	
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction) {
 		int command = commandObj.getCommandType();
-		TaskObject taskObj = commandObj.getTaskObject();
+		TaskObject taskObj = commandObj.getTaskObject();	
 
 		switch (command) {
 			case INDEX_ADD :
