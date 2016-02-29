@@ -2,7 +2,7 @@ package logic;
 
 public class TaskObject {
 
-	private String title;
+	private String title = "";
 	private int startDate;
 	private int endDate;
 	private int startTime;

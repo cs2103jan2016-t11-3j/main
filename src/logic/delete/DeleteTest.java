@@ -1,11 +1,11 @@
 package logic.delete;
 
 import logic.*;
-import storage.*;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.junit.Test;
 
@@ -17,7 +17,10 @@ public class DeleteTest {
 	private TaskObject taskTwo = new TaskObject("Nonsense", 178);
 	private TaskObject taskThree = new TaskObject("Dinner tonight", 20160226, 1900, "deadline", "incomplete", 24);
 	private TaskObject delete = new TaskObject("1");
-	
+	private TaskObject deleteQuick = new TaskObject("");
+	private Stack<CommandObject> testUndoList = new Stack<CommandObject>();
+
+	/* For all NORMAL Delete **************************************************/
 	@Test
 	// Delete an applicable task
 	public void testSuccess() {
@@ -47,7 +50,35 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Error deleting task 3 from TaskFinder");
+		expectedOutput.add("Error deleting task from TaskFinder");
+		
+		assertEquals(expectedOutput, actualOutput);
+	}
+	
+	/* For all QUICK Delete **************************************************/
+	@Test
+	//Failed Quick delete test
+	public void testQuickFail() {
+		testArray.add(taskOne);
+		testUndoList.push(new CommandObject(Logic.INDEX_ADD, deleteQuick));
+		Delete deleteLast = new Delete(testArray, testUndoList);
+		ArrayList<String> actualOutput = deleteLast.run();
+		
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Error deleting task from TaskFinder");
+		
+		assertEquals(expectedOutput, actualOutput);
+	}
+	@Test
+	//Successful Quick delete test
+	public void testQuickSuccess() {
+		testArray.add(taskOne);
+		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
+		Delete deleteLast = new Delete(testArray, testUndoList);
+		ArrayList<String> actualOutput = deleteLast.run();
+		
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Task deleted from TaskFinder: Hello");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
