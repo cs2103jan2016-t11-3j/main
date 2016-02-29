@@ -45,19 +45,22 @@ public class EditProcessor {
 	private static DateProcessor DP = new DateProcessor();
 	
 	private static String _task = null;
-	private static Integer _startDate = -1;
-	private static Integer _endDate = -1;
-	private static Integer _startTime = -1;
-	private static Integer _endTime = -1;
+	private static int _startDate = -1;
+	private static int _endDate = -1;
+	private static int _startTime = -1;
+	private static int _endTime = -1;
 	
+	/**
+	 * this method will take in the string from the parser 
+	 * and break down its component, determining if it is a task, time or date edit
+	 */
 	public void processEdit(String input) {
 		convertToArray(input);
 		String clean_string = cleanString();
-		if (isDate() && isNotTask()) {
-			//make string 
+		if (isDate() && !isTask()) {
 			DP.processDate(clean_string, false);
 			setDate(clean_string);
-		} else if (isTime() && isNotTask()) {
+		} else if (isTime() && !isTask()) {
 			TP.processTime(clean_string);
 			setTime(clean_string);
 		} else {
@@ -69,7 +72,7 @@ public class EditProcessor {
 	 * this method will convert instruction into string array list
 	 * and remove the "edit" and number
 	 */
-	private static void convertToArray(String input) {
+	public void convertToArray(String input) {
 		for (String temp : input.split(" ")) {
 			list.add(temp);
 		}
@@ -79,29 +82,39 @@ public class EditProcessor {
 		list.remove(0);
 	}
 	
-	private static String cleanString() {
+	/**
+	 * this method will re-form the command that the user input
+	 * without "edit" and the index number
+	 */
+	public String cleanString() {
 		String toReturn = null;
 		for (int i = 0; i < list.size(); i++) {
-			toReturn = toReturn + " " + list.size();
+			if(i == 0) {
+				toReturn = list.get(i);
+			} else {
+				toReturn = toReturn + " " + list.get(i);
+			}
 		}
 		return toReturn.toLowerCase();
 	}
 	
-	private static boolean isDate() {
+	
+	public boolean isDate() {
 		for (int i = 0; i < list.size(); i++) {
 			String input = list.get(i);
-			if (input == MONTH_1_1 || input == MONTH_1_2 || 
-					input == MONTH_2_1 || input == MONTH_2_2 || 
-					input == MONTH_3_1 || input == MONTH_3_2 ||
-					input == MONTH_4_1 || input == MONTH_4_2 ||
-					input == MONTH_5_1 || input == MONTH_6_1 ||
-					input == MONTH_6_2 || input == MONTH_7_1 ||
-					input == MONTH_7_2 || input == MONTH_8_1 ||
-					input == MONTH_8_2 || input == MONTH_9_1 ||
-					input == MONTH_9_2 || input == MONTH_10_1 ||
-					input == MONTH_10_2 || input == MONTH_11_1 ||
-					input == MONTH_11_2 || input == MONTH_12_1 ||
-					input == MONTH_12_2) {
+			input.toLowerCase();
+			if (input.contains(MONTH_1_1) || input.contains(MONTH_1_2) || 
+					input.contains(MONTH_2_1) || input.contains(MONTH_2_2) || 
+					input.contains(MONTH_3_1) || input.contains(MONTH_3_2) ||
+					input.contains(MONTH_4_1) || input.contains(MONTH_4_2) || 
+					input.contains(MONTH_5_1) || input.contains(MONTH_6_1) ||
+					input.contains(MONTH_6_2) || input.contains(MONTH_7_1) ||
+					input.contains(MONTH_7_2) || input.contains(MONTH_8_1) ||
+					input.contains(MONTH_8_2) || input.contains(MONTH_9_1) ||
+					input.contains(MONTH_9_2) || input.contains(MONTH_10_1) ||
+					input.contains(MONTH_10_2) || input.contains(MONTH_11_1) ||
+					input.contains(MONTH_11_2) || input.contains(MONTH_12_1) ||
+					input.contains(MONTH_12_2)) {
 				return true;
 			} else if (isAlternativeDate(input)) {
 				return true;
@@ -114,10 +127,10 @@ public class EditProcessor {
 	 * this method checks if the string is a date in the "dd/mm/yyyy" 
 	 * or "dd/mm" format
 	 */
-	private static boolean isAlternativeDate(String input) {
+	public boolean isAlternativeDate(String input) {
 		if (input.contains("/")) {
-			input.replaceAll("/", "");
-			input.replaceAll("[a-zA-Z]", "");
+			input = input.replaceAll("/", "");
+			input = input.replaceAll("[a-zA-Z]+", "");
 			if (!input.isEmpty()) {
 				return true;
 			} else {
@@ -128,65 +141,96 @@ public class EditProcessor {
 		}
 	}
 	
-	private static boolean isNotTask() {
+	//this method checks if the string input is task
+	public boolean isTask() {
 		//form string
 		String command = null;
 		for (int i = 0; i < list.size(); i++) {
-			command = command + list.get(i);
+			if (i == 0) {
+				command = list.get(i);
+			} else {
+				command = command + list.get(i);
+			}
 		}
-		//remove date numbers
-		command.replaceAll("[0-9]+", "");
+		//remove date
+		command = command.replaceAll("\\d", "");
+		command = command.replaceAll("/", "");
 		command = removeMonths(command);
-		
 		if (command.length() > NOT_TASK_CONSTANT) {
-			return false;
-		} else {
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
-	private static String removeMonths(String input) {
+	//this method will remove month keywords 
+	public String removeMonths(String input) {
 		input.toLowerCase();
-		input.replace("jan", "");
-		input.replace("january", "");
-		input.replace("feb", "");
-		input.replace("february", "");
-		input.replace("march", "");
-		input.replace("mar", "");
-		input.replace("apr", "");
-		input.replace("april", "");
-		input.replace("may", "");
-		input.replace("june", "");
-		input.replace("jun", "");
-		input.replace("july", "");
-		input.replace("jul", "");
-		input.replace("august", "");
-		input.replace("aug", "");
-		input.replace("september", "");
-		input.replace("sept", "");
-		input.replace("oct", "");
-		input.replace("october", "");
-		input.replace("november", "");
-		input.replace("nov", "");
-		input.replace("december", "");
-		input.replace("dec", "");
+		input = input.replaceFirst("january", "");
+		input = input.replace("jan", "");
+		input = input.replace("february", "");
+		input = input.replace("feb", "");
+		input = input.replace("march", "");
+		input = input.replace("mar", "");
+		input = input.replace("april", "");
+		input = input.replace("apr", "");
+		input = input.replace("may", "");
+		input = input.replace("june", "");
+		input = input.replace("jun", "");
+		input = input.replace("july", "");
+		input = input.replace("jul", "");
+		input = input.replace("august", "");
+		input = input.replace("aug", "");
+		input = input.replace("september", "");
+		input = input.replace("sept", "");
+		input = input.replace("oct", "");
+		input = input.replace("october", "");
+		input = input.replace("november", "");
+		input = input.replace("nov", "");
+		input = input.replace("december", "");
+		input = input.replace("dec", "");
 		return input;
 	}
 	
-	private static boolean isTime() {
+	/**
+	 * this method check if the string passed in is a time input
+	 * 
+	 * comment -> go and refactor further
+	 */
+	public boolean isTime() {
 		for (int i = 0; i < list.size(); i++) {
 			String temp = list.get(i);
-			if (temp.contains(TIME_AM_1) || temp.contains(TIME_AM_2)
-					|| temp.contains(TIME_AM_3) || temp.contains(TIME_AM_4)
-					|| temp.contains(TIME_PM_1) || temp.contains(TIME_PM_2)
-					|| temp.contains(TIME_PM_3) || temp.contains(TIME_PM_4)) {
-				return true;
-			} 
+			if (i > 0) {
+				String tempPrev = list.get(i-1);
+				if (hasAMPM(temp) && hasNumber(temp)) {
+					return true;
+				} else if (hasAMPM(temp) && hasNumber(tempPrev)) {
+					return true;
+				}
+			} else {
+				if (hasAMPM(temp) && hasNumber(temp)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
+
+	public boolean hasNumber(String temp) {
+		return temp.matches(".*\\d.*");
+	}
 	
-	private static void setDate(String input) {
+	//this method checks if the string contains any indicator of time
+	public boolean hasAMPM(String temp) {
+		return temp.contains(TIME_AM_1) || temp.contains(TIME_AM_2)
+				|| temp.contains(TIME_AM_3) || temp.contains(TIME_AM_4)
+				|| temp.contains(TIME_PM_1) || temp.contains(TIME_PM_2)
+				|| temp.contains(TIME_PM_3) || temp.contains(TIME_PM_4);
+	}
+	
+	//this method sets the date for the object by using the date processor 
+	//class to performing the processing
+	public void setDate(String input) {
 		if (input.contains("start")) {
 			setStartDate(DP.getStartDate());
 		} else if (input.contains("end")) {
@@ -197,7 +241,9 @@ public class EditProcessor {
 		}
 	}
 	
-	private static void setTime(String input) {
+	//this method sets the time for the object by using the time processor 
+	//class to performing the processing
+	public void setTime(String input) {
 		if (input.contains("start")) {
 			setStartTime(TP.getStartTime());
 		} else if (input.contains("end")) {
@@ -216,35 +262,62 @@ public class EditProcessor {
 		EditProcessor._task = _task;
 	}
 
-	public Integer getStartDate() {
+	public int getStartDate() {
 		return _startDate;
 	}
 
-	public static void setStartDate(Integer _startDate) {
+	public void setStartDate(int _startDate) {
 		EditProcessor._startDate = _startDate;
 	}
 
-	public Integer getEndDate() {
+	public int getEndDate() {
 		return _endDate;
 	}
 
-	public static void setEndDate(Integer _endDate) {
+	public void setEndDate(int _endDate) {
 		EditProcessor._endDate = _endDate;
 	}
 
-	public Integer getStartTime() {
+	public int getStartTime() {
 		return _startTime;
 	}
 
-	public static void setStartTime(Integer _startTime) {
+	public void setStartTime(int _startTime) {
 		EditProcessor._startTime = _startTime;
 	}
 
-	public Integer getEndTime() {
+	public int getEndTime() {
 		return _endTime;
 	}
 
-	public static void setEndTime(Integer _endTime) {
+	public void setEndTime(int _endTime) {
 		EditProcessor._endTime = _endTime;
 	}
+	
+	//method used to obtain the size of the list for testing 
+	public int getListSize() {
+		return list.size();
+	}
+	
+	//method used to get the ith element in the list for testing
+	public String getListElement(int i) {
+		return list.get(i);
+	}
+	
+	//method used to get the ith element in the list for testing
+	public void clearList() {
+		list.clear();
+	}
+ 	
+ 	public void resetAll() {
+ 		setTask(null);
+ 		setStartDate(-1);
+ 		setEndDate(-1);
+ 		setStartTime(-1);
+ 		setEndTime(-1);
+ 		TP.resetTime();
+ 		TP.clearList();
+ 		DP.clearList();
+ 		DP.resetDate();
+ 	}
 }

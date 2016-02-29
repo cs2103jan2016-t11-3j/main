@@ -89,7 +89,6 @@ public class DateProcessor {
 		if (!isUsedForSearch) {
 			setDates();
 		}
-			
 	}
 	
 	/**
@@ -231,10 +230,10 @@ public class DateProcessor {
 		//split date into new arraylist
 		for (String temp : input.split("/")) {
 			temp = temp.replaceAll(" ", "");
+			temp = temp.replaceAll("[a-zA-Z]+", "");
 			int tempInt = Integer.parseInt(temp);
 			list.add(tempInt);
 		}
-		
 		
 		if (i == 0) {
 			start_day = list.get(0);

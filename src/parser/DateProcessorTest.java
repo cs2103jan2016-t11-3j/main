@@ -44,6 +44,13 @@ public class DateProcessorTest {
 		assertEquals(2016, DP.getStartYear());
 		assertEquals(20160229, DP.getStartDate());
 		reset();
+		
+		DP.processDate("29feb to 14march", true);
+		assertEquals(2, DP.getStartMonth());
+		assertEquals(29, DP.getStartDay());
+		assertEquals(2016, DP.getStartYear());
+		assertEquals(20160229, DP.getStartDate());
+		reset();
 	}
 
 	@Test
