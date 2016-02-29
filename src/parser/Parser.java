@@ -2,8 +2,6 @@ package parser;
 import logic.CommandObject;
 import logic.TaskObject;
 
-import java.util.ArrayList;
-
 /*
 parser takes in string
 
@@ -41,11 +39,14 @@ public class Parser {
 	private static final String HELP_COMMAND = "help";
 	private static final int HELP_INDEX = 8;	
 	
-	private static CommandObject commandObject = new CommandObject();
-	private static TaskObject taskObject = new TaskObject();
+	private CommandObject commandObject = new CommandObject();
+	private TaskObject taskObject = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
 	
-	private static String _command;
+	private String _command;
+	
+	public Parser() {
+	}
 	
 	public Parser(String command) {
 		_command = command;
@@ -53,12 +54,12 @@ public class Parser {
 	public CommandObject run() {
 		return parseInput(_command);
 	}
-	private static CommandObject parseInput(String command) {
+	private CommandObject parseInput(String command) {
 		allocateCommandType(command);
 		return commandObject;
 	}
 
-	private static void allocateCommandType(String command) {
+	public void allocateCommandType(String command) {
 		if(command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			commandObject.setCommandType(EXIT_INDEX);
 		} else if(command.startsWith(HELP_COMMAND)) {
@@ -80,7 +81,7 @@ public class Parser {
 		}
  	}
 	
-	public static void parseEdit(String command) {
+	public void parseEdit(String command) {
 		commandObject.setCommandType(EDIT_INDEX);
 		EditProcessor EP = new EditProcessor();
 		EP.processEdit(command);
@@ -90,8 +91,9 @@ public class Parser {
 		taskObject.setStartDate(EP.getStartDate());
 		taskObject.setEndDate(EP.getEndDate());
 		commandObject.setTaskObject(taskObject);
+		EP.resetAll();
 	}
-	public static void parseAdd(String command) {
+	public void parseAdd(String command) {
 		commandObject.setCommandType(ADD_INDEX);
 		AddProcessor AP = new AddProcessor();
 		AP.addCommand(command);
@@ -102,11 +104,13 @@ public class Parser {
 		taskObject.setStartDate(AP.getStartDate());
 		taskObject.setEndDate(AP.getEndDate());
 		commandObject.setTaskObject(taskObject);
+		AP.reset();
 	}
 	
-	public static void parseSearch(String command) {
+	public void parseSearch(String command) {
 		commandObject.setCommandType(SEARCH_INDEX);
 		SearchProcessor SP = new SearchProcessor();
+		command = command.substring(command.indexOf(" "));
 		SP.processSearchTerm(command);
 		taskObject.setTitle(SP.getTask());
 		taskObject.setStartTime(SP.getStartTime());
@@ -119,7 +123,7 @@ public class Parser {
 	/**
 	 * method checks if the search keyword is present
 	 */
- 	private static boolean isSearch(String command) {
+ 	public boolean isSearch(String command) {
  		if(command.startsWith(SEARCH_COMMAND_1) || command.startsWith(SEARCH_COMMAND_2) 
  			|| command.startsWith(SEARCH_COMMAND_3) || command.startsWith(SEARCH_COMMAND_4) 
  			|| command.startsWith(SEARCH_COMMAND_5) || command.startsWith(SEARCH_COMMAND_6)) {
@@ -129,7 +133,7 @@ public class Parser {
  		}
  	}
  	
- 	private static void setCommandObjectToDelete(String command) {
+ 	public void setCommandObjectToDelete(String command) {
  		String index;
  		index = extractDeleteIndex(command);
  		taskObject.setTitle(index);
@@ -139,20 +143,46 @@ public class Parser {
  	/**
  	 * this method returns the number that is after the delete command as an integer
  	 */
- 	private static String extractDeleteIndex(String command) {		
+ 	public String extractDeleteIndex(String command) {		
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
  		return newString;
  	}
 
- 	private static void setCommandObjectToSave(String command) {
+ 	public void setCommandObjectToSave(String command) {
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
  		taskObject.setTitle(newString);
  		commandObject.setTaskObject(taskObject);
  	}
+ 	
+ 	public int getCommandType() {
+ 		return commandObject.getCommandType();
+ 	}
 
- 
+ 	public String getTask() {
+ 		return taskObject.getTitle();
+ 	}
+ 	
+ 	public int getStartDate() {
+ 		return taskObject.getStartDate();
+ 	}
+ 	
+ 	public int getStartTime() {
+ 		return taskObject.getStartTime();
+ 	}
+ 	
+ 	public int getEndDate() {
+ 		return taskObject.getEndDate();
+ 	}
+ 	
+ 	public int getEndTime() {
+ 		return taskObject.getEndTime();
+ 	}
+ 	
+ 	public void resetTaskObj() {
+ 		taskObject.resetAttributes();
+ 	}
 }

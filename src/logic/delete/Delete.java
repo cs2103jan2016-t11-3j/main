@@ -1,27 +1,31 @@
 package logic.delete;
 
+import logic.*;
 import storage.*;
 
-import java.io.IOException;
+import java.util.Stack;
 import java.util.ArrayList;
 
-import logic.*;
-
+// Needs delete function for last added code
 public class Delete {
 
 	// Deletes by searching for the unique taskID
 	private static String MESSAGE_DELETE = "Task deleted from TaskFinder: %1s";
-	private static String MESSAGE_ERROR = "Error deleting task %1s from TaskFinder";
+	private static String MESSAGE_ERROR = "Error deleting task from TaskFinder";
 
 	// This is the delete task that should only contain the displayed line
-	// number to delete
-	private TaskObject task;
+	// number to delete, or nothing inside at all
+	private TaskObject task = new TaskObject();
+	
+	// This is the task which is actually removed from TaskFinder
+	private TaskObject removedTask = new TaskObject();
 
 	// Attributes that should be passed in when the delete object is first
 	// constructed
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
+	private Stack<CommandObject> undoList = new Stack<CommandObject>();
 
 	// Internal checkers to ensure that deletion has occurred
 	private boolean hasDeletedInternal = false;
@@ -37,14 +41,52 @@ public class Delete {
 	public Delete() {
 
 	}
+	
+	public Delete(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
+		this.taskList = taskList;
+		this.undoList = undoList;
+	}
 
 	public Delete(TaskObject task, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.task = task;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
-
+	
 	public ArrayList<String> run() {
+		if(task.getTitle().equals("")) {
+			runQuickDelete();
+		} else {
+			runNormalDelete();
+		}
+		return output;
+	}
+	
+	private void runQuickDelete() {
+		if(undoList.empty()) {
+			createErrorOutput();
+		}
+		if(undoList.peek().getCommandType() == Logic.INDEX_DELETE) {
+			// delete the last item in taskList as it shows that the item had just been added
+			int index = taskList.size() - 1;
+			taskName = taskList.get(index).getTitle();
+			taskList.remove((index));
+			if(taskList.size() == index) {
+				// To check if taskList has shrunk by 1
+				hasDeletedInternal = true;
+			}
+			hasDeletedExternal = deleteExternal();
+			if(hasDeletedInternal && hasDeletedExternal) {
+				createOutput();
+			} else {
+				createErrorOutput();
+			}
+		} else {
+			createErrorOutput();
+		}
+	}
+
+	private void runNormalDelete() {
 		hasDeletedInternal = deleteInternal();
 		if (hasDeletedInternal) {
 			hasDeletedExternal = deleteExternal();
@@ -54,7 +96,6 @@ public class Delete {
 		} else {
 			createErrorOutput();
 		}
-		return output;
 	}
 
 	private boolean deleteInternal() {
@@ -63,6 +104,7 @@ public class Delete {
 			for (int i = 0; i < taskList.size(); i++) {
 				if (taskList.get(i).getTaskId() == taskIdToDelete) {
 					taskName = taskList.get(i).getTitle();
+					removedTask = taskList.get(i);
 					taskList.remove(i);
 					return true;
 				}
@@ -96,13 +138,16 @@ public class Delete {
 	}
 
 	private void createErrorOutput() {
-		String text = String.format(MESSAGE_ERROR, task.getTitle());
-		output.add(text);
+		output.add(MESSAGE_ERROR);
 	}
 
 	// GETTERS AND SETTERS
 	public TaskObject getTask() {
 		return task;
+	}
+	
+	public TaskObject getRemovedTask() {
+		return removedTask;
 	}
 
 	public ArrayList<String> getOutput() {

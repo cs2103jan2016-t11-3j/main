@@ -46,7 +46,7 @@ public class Help {
 	// Class methods
 
 	// Imports manual from text files using objects called HelpTopics
-	public void importManual() {
+	private void importManual() {
 		for (int i = 1; i <= MAX_TOPIC_NUMBER; i++) {
 			manual.add(new HelpTopic(i));
 		}
@@ -74,7 +74,7 @@ public class Help {
 		}
 	}
 
-	public void createDisplay(int num) {
+	private void createDisplay(int num) {
 		int i = 0;
 		String text = "";
 		display.add(manual.get(num).getTopicName());
@@ -85,7 +85,7 @@ public class Help {
 		}
 	}
 
-	public void runSearch() {
+	private void runSearch() {
 		String name;
 		for (int i = 0; i < MAX_TOPIC_NUMBER; i++) {
 			name = manual.get(i).getTopicName();

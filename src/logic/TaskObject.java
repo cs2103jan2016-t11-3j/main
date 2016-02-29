@@ -2,7 +2,7 @@ package logic;
 
 public class TaskObject {
 
-	private String title;
+	private String title = "";
 	private int startDate;
 	private int endDate;
 	private int startTime;
@@ -144,6 +144,15 @@ public class TaskObject {
 		if (title == null && startDate == -1 && endDate == -1 && startTime == -1 && endTime == -1)
 			return false;
 		return true;
+	}
+	
+	//for testing purpose
+	public void resetAttributes() {
+		setTitle(null);
+		setStartDate(-1);
+		setEndDate(-1);
+		setStartTime(-1);
+		setEndTime(-1);
 	}
 
 }
