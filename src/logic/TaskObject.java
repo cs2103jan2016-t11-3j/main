@@ -76,6 +76,8 @@ public class TaskObject {
 	}
 	
 	public String getTitle() {
+		if (title == null)
+			return "null";
 		return title;
 	}
 	
@@ -96,10 +98,14 @@ public class TaskObject {
 	}
 	
 	public String getCategory() {
+		if (category == null) 
+			return "null";
 		return category;
 	}
 	
 	public String getStatus() {
+		if (status == null)
+			return "null";
 		return status;
 	}
 	
@@ -141,7 +147,7 @@ public class TaskObject {
 	
 	// Checks if title, dates and times are invalid values
 	public boolean isSearchKeywordPresent() {
-		if (title == null && startDate == -1 && endDate == -1 && startTime == -1 && endTime == -1)
+		if (title.equals("") && startDate == -1 && endDate == -1 && startTime == -1 && endTime == -1)
 			return false;
 		return true;
 	}

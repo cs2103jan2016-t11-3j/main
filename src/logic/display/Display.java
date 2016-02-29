@@ -74,7 +74,7 @@ public class Display {
 						taskEndDateInOutputFormat = parseDate(taskEndDate);
 						outputEventTask(i+1, taskTitle, taskStartDateInOutputFormat, taskEndDateInOutputFormat, taskStartTime, taskEndTime, taskStatus);
 						break;
-					case "floating":
+					case "floating": case "null": // REMOVE NULL AFTER TESTING
 						outputFloatingTask(i+1, taskTitle, taskStatus);
 						break;
 					default:

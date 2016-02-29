@@ -28,6 +28,12 @@ public class Logic {
 
 	private ArrayList<TaskObject> taskList;
 	private Stack<CommandObject> undoList;
+	
+	// FOR TESTING
+	private CommandObject commandObj;
+	private TaskObject taskObj;
+	public CommandObject getCommandObject() { return commandObj;	}
+	public TaskObject getTaskObject() { return taskObj; }
 
 	// This will get repeatedly updated by UI for each input
 	private String userInput;
@@ -73,10 +79,9 @@ public class Logic {
 	// Takes in a String argument from UI component
 	void run(String userInput) {
 		setUserInput(userInput);
-		CommandObject commandObj = callParser();	
+		commandObj = callParser();		// CHANGE BACK AFTER TESTING
 		parseCommandObject(commandObj, false);
 	}
-
 	// Calling Parser to parse the user input
 	protected CommandObject callParser() {
 		Parser parser = new Parser(userInput);
@@ -85,8 +90,13 @@ public class Logic {
 
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction) {
 		int command = commandObj.getCommandType();
-		TaskObject taskObj = commandObj.getTaskObject();	
+		taskObj = commandObj.getTaskObject();	// CHANGE BACK AFTER TESTING
 
+		// FOR TESTING
+		//System.out.println("command = " + command);
+		//if (command != 5)	printTaskObjectFields(taskObj);
+		//System.out.println();
+		
 		switch (command) {
 		case INDEX_ADD:
 			addFunction(command, taskObj);
@@ -144,7 +154,6 @@ public class Logic {
 	private void addFunction(int command, TaskObject taskObj) {
 		Add add = new Add(taskObj, taskList);
 		setOutput(add.run());
-		addToUndoList(command, taskObj);
 	}
 
 	/*
@@ -182,6 +191,7 @@ public class Logic {
 	private TaskObject deleteFunction(TaskObject taskObj) {
 		TaskObject removedTask = new TaskObject();
 		Delete delete = new Delete(taskObj, taskList, lastOutputTaskList);
+		printTaskObjectFields(taskObj);	// DEBUG
 		setOutput(delete.run());
 		removedTask = delete.getRemovedTask();
 		return removedTask;
@@ -193,8 +203,8 @@ public class Logic {
 	}
 
 	private void undoFunction() {
-		Undo undo = new Undo();
-		undo.run();
+		Undo undo = new Undo(undoList);
+		setOutput(undo.run());
 	}
 
 	private void saveFunction(TaskObject taskObj) {
@@ -207,8 +217,10 @@ public class Logic {
 		exit.run();
 	}
 
-	// The following 2 methods stores the reverse of the user input in the
-	// stack.
+	/*
+	 *  The following 2 methods stores the reverse of the user input in the stack.
+	 */
+
 	// Add <-> delete
 	private void addToUndoList(int command, TaskObject taskObj) {
 		if (command == INDEX_ADD) {
@@ -234,4 +246,16 @@ public class Logic {
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
 
+	
+	private void printTaskObjectFields(TaskObject taskObj) {
+		System.out.println("title = " + taskObj.getTitle());
+		System.out.println("start date = " + taskObj.getStartDate());
+		System.out.println("end date = " + taskObj.getEndDate());
+		System.out.println("start time = " + taskObj.getStartTime());
+		System.out.println("end time = " + taskObj.getEndTime());
+		System.out.println("category = " + taskObj.getCategory());
+		System.out.println("status = " + taskObj.getStatus());
+		System.out.println("task id = " + taskObj.getTaskId());
+	}
+	
 }

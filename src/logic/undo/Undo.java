@@ -1,6 +1,5 @@
 package logic.undo;
 import logic.*;
-import logic.CommandObject;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -12,8 +11,8 @@ public class Undo extends Logic {
 	private Stack<CommandObject> undoList;
 	private ArrayList<String> output = new ArrayList<String>();
 
-	public Undo() {
-		this.undoList = super.getUndoList();
+	public Undo(Stack<CommandObject> undoList) {
+		this.undoList = undoList;
 	}
 	
 	public ArrayList<String> run() {
