@@ -79,7 +79,7 @@ public class EditProcessor {
 		
 		//remove "edit" and "number"
 		list.remove(0);
-		list.remove(0);
+		//list.remove(0); 	// REMOVED THIS BECAUSE EDIT FUNCTION NEEDS THE INDEX NUMBER
 	}
 	
 	/**
