@@ -50,13 +50,11 @@ public class SearchProcessor {
 	private static final int VALUE_NOV = 11;
 	private static final int VALUE_DEC = 12;
 	
-	
-	
 	private static String _task = null;
-	private static Integer _startDate = -1;
-	private static Integer _endDate = -1;
-	private static Integer _startTime = -1;
-	private static Integer _endTime = -1;
+	private static int _startDate = -1;
+	private static int _endDate = -1;
+	private static int _startTime = -1;
+	private static int _endTime = -1;
 	
 	private static ArrayList<String> list = new ArrayList<String>();
 	
@@ -77,19 +75,17 @@ public class SearchProcessor {
 		_task = input;
 	}
 	
-	private static boolean hasNumber() {
+	public boolean hasNumber() {
 		for (String testing : list) {
-			if (testing.contains("[0-9]+")) {
+			if (testing.matches(".*\\d.*")) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private static String removeSearchKeyword(String input) {
-		input.replaceFirst("search", "");
-		input.replaceFirst(" ", "");
-		return input;
+	public String removeSearchKeyword(String input) {
+		return input.replaceFirst("search ", "");
 	}
 	
 	/**
@@ -97,21 +93,21 @@ public class SearchProcessor {
 	 * 
 	 */
 	private static boolean isTime(String input) {
-			input.toLowerCase();
-			if (input.contains(TIME_AM_1) || input.contains(TIME_AM_2) || 
-					input.contains(TIME_AM_3) || input.contains(TIME_AM_4)) {
-				isPM = false;
-				return true;
-			} else if (input.contains(TIME_PM_1) || input.contains(TIME_PM_2)|| 
-					input.contains(TIME_PM_3) || input.contains(TIME_PM_4)) {
-				isPM = true;
-				return true;
-			}
+		input.toLowerCase();
+		if (input.contains(TIME_AM_1) || input.contains(TIME_AM_2) || 
+				input.contains(TIME_AM_3) || input.contains(TIME_AM_4)) {
+			isPM = false;
+			return true;
+		} else if (input.contains(TIME_PM_1) || input.contains(TIME_PM_2)|| 
+				input.contains(TIME_PM_3) || input.contains(TIME_PM_4)) {
+			isPM = true;
+			return true;
+		}
 		return false;
 	}
 	
 	
-	private static boolean isDate(String input) {
+	public boolean isDate(String input) {
 		if (hasMonth(input) || isAlternativeDateFormat(input)) {
 			return true;
 		} else {
@@ -119,7 +115,7 @@ public class SearchProcessor {
 		}
 	}
 	
-	private static void convertToArray(String input) {
+	public void convertToArray(String input) {
 			for (String temp: input.split(" ")) {
 				list.add(temp);
 			}
@@ -129,8 +125,9 @@ public class SearchProcessor {
 	 * this method converts a string into an integer that represents
 	 * time in HHMM format
 	 */
-	private static void convertToTime(String input, boolean isPM) {
-		input.replaceAll("[!-/a-zA-Z]+", "");
+	public void convertToTime(String input, boolean isPM) {
+		input = input.replaceAll("[!-/a-zA-Z]+", "");
+		input = input.replaceAll(" ", "");
 		if (!input.isEmpty()) { 
 		int time = Integer.parseInt(input);
 			if (time < 100) {
@@ -149,56 +146,59 @@ public class SearchProcessor {
 		}
 	}
 	
-	private static void convertToDate(String input) {
+	public void convertToDate(String input) {
 		DateProcessor DP = new DateProcessor();
 		DP.processDate(input, true);
 		_startDate = DP.getSearchDate();
 		_endDate = _startDate;
+		DP.resetDate();
+		DP.clearList();
 	}
 	
-	private static boolean hasMonth(String input) {
-		if (input == MONTH_1_1 || input == MONTH_1_2 || 
-				input == MONTH_2_1 || input == MONTH_2_2 || 
-				input == MONTH_3_1 || input == MONTH_3_2 ||
-				input == MONTH_4_1 || input == MONTH_4_2 ||
-				input == MONTH_5_1 || input == MONTH_6_1 ||
-				input == MONTH_6_2 || input == MONTH_7_1 ||
-				input == MONTH_7_2 || input == MONTH_8_1 ||
-				input == MONTH_8_2 || input == MONTH_9_1 ||
-				input == MONTH_9_2 || input == MONTH_10_1 ||
-				input == MONTH_10_2 || input == MONTH_11_1 ||
-				input == MONTH_11_2 || input == MONTH_12_1 ||
-				input == MONTH_12_2) {
+	public boolean hasMonth(String input) {
+		if (input == MONTH_1_1 || input.contains(MONTH_1_2) || 
+				input == MONTH_2_1 || input.contains(MONTH_2_2) || 
+				input == MONTH_3_1 || input.contains(MONTH_3_2) ||
+				input == MONTH_4_1 || input.contains(MONTH_3_2) ||
+				input.contains(MONTH_5_1) || input == MONTH_6_1 ||
+				input.contains(MONTH_6_2) || input == MONTH_7_1 ||
+				input.contains(MONTH_7_2) || input == MONTH_8_1 ||
+				input.contains(MONTH_8_2) || input == MONTH_9_1 ||
+				input.contains(MONTH_9_2) || input == MONTH_10_1 ||
+				input.contains(MONTH_10_2) || input == MONTH_11_1 ||
+				input.contains(MONTH_11_2) || input == MONTH_12_1 ||
+				input.contains(MONTH_12_2)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	private static int setMonthInDataProcessor(String month) {
-		if (month == MONTH_1_1 || month == MONTH_1_2) {
+	public int setMonthInDataProcessor(String month) {
+		month = month.toLowerCase();
+		if (month == MONTH_1_1 || month.contains(MONTH_1_2)) {
 			return VALUE_JAN;
-		} else if (month == MONTH_2_1 || month == MONTH_2_2) {
+		} else if (month == MONTH_2_1 || month.contains(MONTH_2_2)) {
 			return VALUE_FEB;
-		} else if (month == MONTH_3_1 || month == MONTH_3_2) {
+		} else if (month == MONTH_3_1 || month.contains(MONTH_3_2)) {
 			return VALUE_MAR;
-		} else if (month == MONTH_4_1 || month == MONTH_4_2) {
+		} else if (month == MONTH_4_1 || month.contains(MONTH_4_2)) {
 			return VALUE_APR;
-		} else if (month == MONTH_5_1) {
+		} else if (month.contains(MONTH_5_1)) {
 			return VALUE_MAY;
-		} else if (month == MONTH_6_1 || month == MONTH_6_2) {
+		} else if (month == MONTH_6_1 || month.contains(MONTH_6_2)) {
 			return VALUE_JUN;
-		} else if (month == MONTH_7_1 || month == MONTH_7_2) {
+		} else if (month == MONTH_7_1 || month.contains(MONTH_7_2)) {
 			return VALUE_JUL;
-		} else if (month == MONTH_8_1 || month == MONTH_8_2) {
+		} else if (month == MONTH_8_1 || month.contains(MONTH_8_2)) {
 			return VALUE_AUG;
-		} else if (month == MONTH_9_1 || month == MONTH_9_2) {
+		} else if (month == MONTH_9_1 || month.contains(MONTH_9_2)) {
 			return VALUE_SEPT;
-		} else if (month == MONTH_10_1 || month == MONTH_10_2) {
+		} else if (month == MONTH_10_1 || month.contains(MONTH_10_2)) {
 			return VALUE_OCT;
-		} else if (month == MONTH_11_1 || month == MONTH_11_2) {
+		} else if (month == MONTH_11_1 || month.contains(MONTH_11_2)) {
 			return VALUE_NOV;
-		} else if (month == MONTH_12_1 || month == MONTH_12_2) {
+		} else if (month == MONTH_12_1 || month.contains(MONTH_12_2)) {
 			return VALUE_DEC;
 		} else {
 			return -1;
@@ -241,5 +241,28 @@ public class SearchProcessor {
 	public int getEndTime() {
 		return _endTime;
 	}
+	
+	//method used to obtain the size of the list for testing 
+	public int getListSize() {
+		return list.size();
+	}
+	
+	//method used to get the ith element in the list for testing
+	public String getListElement(int i) {
+		return list.get(i);
+	}
+	
+	//method used to get the ith element in the list for testing
+	public void clearList() {
+		list.clear();
+	}
+ 	
+ 	public void resetAll() {
+ 		_task = null;
+ 		_startDate = -1;
+ 		_endDate = -1;
+ 		_startTime = -1;
+ 		_endTime = -1;
+ 	}
 	
 }
