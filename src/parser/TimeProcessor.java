@@ -12,10 +12,10 @@ public class TimeProcessor {
 	private static final String TIME_PM_3 = "pm";
 	private static final String TIME_PM_4 = "p.m.";
 	
-	private static final ArrayList<String> list = new ArrayList<String>();
+	private final ArrayList<String> list = new ArrayList<String>();
 
-	private static int startTime = -1;
-	private static int endTime = -1;
+	private int startTime = -1;
+	private int endTime = -1;
 	
 	/**
 	 * this method takes in the user's input from add/edit/search processor

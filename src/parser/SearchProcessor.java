@@ -50,27 +50,26 @@ public class SearchProcessor {
 	private static final int VALUE_NOV = 11;
 	private static final int VALUE_DEC = 12;
 	
-	private static String _task = null;
-	private static int _startDate = -1;
-	private static int _endDate = -1;
-	private static int _startTime = -1;
-	private static int _endTime = -1;
+	private String _task = null;
+	private int _startDate = -1;
+	private int _endDate = -1;
+	private int _startTime = -1;
+	private int _endTime = -1;
 	
-	private static ArrayList<String> list = new ArrayList<String>();
+	private ArrayList<String> list = new ArrayList<String>();
 	
-	private static boolean isPM;
+	private boolean isPM;
 	
 	public void processSearchTerm(String input) {
 		input = removeSearchKeyword(input);
 		convertToArray(input);
-		if (isTime(input) || hasNumber()) {
+		if (isTime(input) && hasNumber()) {
 			//process and set time
 			convertToTime(input, isPM);
-		} else if (isDate(input) || hasNumber()) {
+		} else if (isDate(input) && hasNumber()) {
 			//process and set date
 			convertToDate(input);
 		}
-		
 		//set task
 		_task = input;
 	}
@@ -92,7 +91,7 @@ public class SearchProcessor {
 	 * this method checks for presence of time-keywords in the string 
 	 * 
 	 */
-	private static boolean isTime(String input) {
+	private boolean isTime(String input) {
 		input.toLowerCase();
 		if (input.contains(TIME_AM_1) || input.contains(TIME_AM_2) || 
 				input.contains(TIME_AM_3) || input.contains(TIME_AM_4)) {

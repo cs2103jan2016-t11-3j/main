@@ -39,16 +39,16 @@ public class EditProcessor {
 	
 	private static final Integer NOT_TASK_CONSTANT = 5;
 	
-	private static ArrayList<String> list = new ArrayList<String>();
+	private ArrayList<String> list = new ArrayList<String>();
 	
-	private static TimeProcessor TP = new TimeProcessor();
-	private static DateProcessor DP = new DateProcessor();
+	private TimeProcessor TP = new TimeProcessor();
+	private DateProcessor DP = new DateProcessor();
 	
-	private static String _task = null;
-	private static int _startDate = -1;
-	private static int _endDate = -1;
-	private static int _startTime = -1;
-	private static int _endTime = -1;
+	private String _task = null;
+	private int _startDate = -1;
+	private int _endDate = -1;
+	private int _startTime = -1;
+	private int _endTime = -1;
 	
 	/**
 	 * this method will take in the string from the parser 
@@ -258,40 +258,40 @@ public class EditProcessor {
 		return _task;
 	}
 
-	public static void setTask(String _task) {
-		EditProcessor._task = _task;
+	public void setTask(String task) {
+		_task = task;
 	}
 
 	public int getStartDate() {
 		return _startDate;
 	}
 
-	public void setStartDate(int _startDate) {
-		EditProcessor._startDate = _startDate;
+	public void setStartDate(int startDate) {
+		_startDate = startDate;
 	}
 
 	public int getEndDate() {
 		return _endDate;
 	}
 
-	public void setEndDate(int _endDate) {
-		EditProcessor._endDate = _endDate;
+	public void setEndDate(int endDate) {
+		_endDate = endDate;
 	}
 
 	public int getStartTime() {
 		return _startTime;
 	}
 
-	public void setStartTime(int _startTime) {
-		EditProcessor._startTime = _startTime;
+	public void setStartTime(int startTime) {
+		_startTime = startTime;
 	}
 
 	public int getEndTime() {
 		return _endTime;
 	}
 
-	public void setEndTime(int _endTime) {
-		EditProcessor._endTime = _endTime;
+	public void setEndTime(int endTime) {
+		_endTime = endTime;
 	}
 	
 	//method used to obtain the size of the list for testing 

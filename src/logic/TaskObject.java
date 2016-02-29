@@ -145,5 +145,14 @@ public class TaskObject {
 			return false;
 		return true;
 	}
+	
+	//for testing purpose
+	public void resetAttributes() {
+		setTitle(null);
+		setStartDate(-1);
+		setEndDate(-1);
+		setStartTime(-1);
+		setEndTime(-1);
+	}
 
 }

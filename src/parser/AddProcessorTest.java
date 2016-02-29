@@ -17,6 +17,14 @@ public class AddProcessorTest {
 		assertEquals(2230, AP.getEndTime());
 		reset();
 		
+		AP.addCommand("add homework IE2100 date: 7/6-9/10 time: 9-1pm");
+		assertEquals("homework IE2100", AP.getTask());
+		assertEquals(20160607, AP.getStartDate());
+		assertEquals(20161009, AP.getEndDate());
+		assertEquals(900, AP.getStartTime());
+		assertEquals(1300, AP.getEndTime());
+		reset();
+		
 		AP.addCommand("add make merrel study date: 5/6 time: 3.45pm");
 		assertEquals("make merrel study", AP.getTask());
 		assertEquals(20160605, AP.getStartDate());

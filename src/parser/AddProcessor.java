@@ -5,17 +5,17 @@ import java.util.ArrayList;
 
 public class AddProcessor {
 	
-	public static ArrayList<String> list = new ArrayList<String>();
-	public static ArrayList<Integer> dateList = new ArrayList<Integer>();
+	public ArrayList<String> list = new ArrayList<String>();
+	public ArrayList<Integer> dateList = new ArrayList<Integer>();
 	
-	private static String task;
-	private static int startDate = -1;
-	private static int endDate = -1;
-	private static int startTime = -1;
-	private static int endTime = -1;
+	private String task;
+	private int startDate = -1;
+	private int endDate = -1;
+	private int startTime = -1;
+	private int endTime = -1;
 	
-	private static TimeProcessor TP = new TimeProcessor();
-	private static DateProcessor DP = new DateProcessor();
+	private TimeProcessor TP = new TimeProcessor();
+	private DateProcessor DP = new DateProcessor();
 	
 	/**
 	 * this method will take in the command and allocate the correct information
@@ -118,12 +118,12 @@ public class AddProcessor {
  		setTime();
  	}
  	
- 	public static void setDate() {
+ 	public void setDate() {
 		startDate = DP.getStartDate();
 		endDate = DP.getEndDate();
  	}
  	
- 	public static void setTime() {
+ 	public void setTime() {
  		startTime = TP.getStartTime();
  		endTime = TP.getEndTime();
  	}

@@ -55,17 +55,17 @@ public class DateProcessor {
 	//changeable default year
 	private static final int DEFAULT_YEAR = 2016;
 	
-	private static final ArrayList<String> list = new ArrayList<String>();
+	private final ArrayList<String> list = new ArrayList<String>();
 	
-	private static int start_day = -1;
-	private static int start_month = -1;
-	private static int start_year = -1;
-	private static int end_day = -1;
-	private static int end_month = -1;
-	private static int end_year = -1;
+	private int start_day = -1;
+	private int start_month = -1;
+	private int start_year = -1;
+	private int end_day = -1;
+	private int end_month = -1;
+	private int end_year = -1;
 	
-	private static int startDate = -1;
-	private static int endDate = -1;
+	private int startDate = -1;
+	private int endDate = -1;
 	
 	/**
 	 * This method takes in a string input and processes it. Called by the add processor
@@ -321,7 +321,7 @@ public class DateProcessor {
 	}
 	
 	//method sets the date in yyyymmdd format
-	public static void setDates() {
+	public void setDates() {
 		if (start_month == -1) {
 			end_month = start_month;
 		}
