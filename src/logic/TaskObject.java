@@ -8,7 +8,7 @@ public class TaskObject {
 	private int startTime;
 	private int endTime;
 	private String category; // deadline, event, or floating
-	private String status;
+	private String status; //completed, overdue or undone
 	private int taskId;
 	
 	// Constructor for event tasks

@@ -39,6 +39,11 @@ public class Parser {
 	private static final String HELP_COMMAND = "help";
 	private static final int HELP_INDEX = 8;	
 	
+	private static final String DONE_COMMAND_1 = "done";
+	private static final String DONE_COMMAND_2 = "finish";
+	private static final String DONE_COMMAND_3 = "completed";
+	private static final int DONE_INDEX = 9;	
+	
 	private CommandObject commandObject = new CommandObject();
 	private TaskObject taskObject = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
@@ -62,26 +67,29 @@ public class Parser {
 	}
 
 	public void allocateCommandType(String command) {
-		if(command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
+		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			commandObject.setCommandType(EXIT_INDEX);
-		} else if(command.startsWith(HELP_COMMAND)) {
+		} else if (command.startsWith(HELP_COMMAND)) {
 			commandObject.setCommandType(HELP_INDEX);
-		} else if(command.startsWith(UNDO_COMMAND)) {
+		} else if (command.startsWith(UNDO_COMMAND)) {
 			commandObject.setCommandType(UNDO_INDEX);
-		} else if(command.startsWith(EDIT_COMMAND)) {
+		} else if (command.startsWith(EDIT_COMMAND)) {
 			parseEdit(command);
-		} else if(command.startsWith(SAVE_COMMAND)) {
+		} else if (command.startsWith(SAVE_COMMAND)) {
 			commandObject.setCommandType(SAVE_INDEX);
 			setCommandObjectToSave(command);
-		} else if(command.startsWith(DELETE_COMMAND)) {
+		} else if (command.startsWith(DELETE_COMMAND)) {
 			commandObject.setCommandType(DELETE_INDEX);
 			setCommandObjectToDelete(command);
-		} else if(command.startsWith(ADD_COMMAND)) {
+		} else if (command.startsWith(ADD_COMMAND)) {
 			parseAdd(command);
-		} else if(isSearch(command)) {
+		} else if (isSearch(command)) {
 			parseSearch(command);
+		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_1)
+				|| command.startsWith(DONE_COMMAND_3)) {
+			commandObject.setCommandType(DONE_INDEX);
 		}
- 	}
+  	}
 	
 	public void parseEdit(String command) {
 		commandObject.setCommandType(EDIT_INDEX);
