@@ -76,23 +76,21 @@ public class Parser {
 		} else if (command.startsWith(EDIT_COMMAND)) {
 			parseEdit(command);
 		} else if (command.startsWith(SAVE_COMMAND)) {
-			commandObject.setCommandType(SAVE_INDEX);
 			setCommandObjectToSave(command);
 		} else if (command.startsWith(DELETE_COMMAND)) {
-			commandObject.setCommandType(DELETE_INDEX);
 			setCommandObjectToDelete(command);
 		} else if (command.startsWith(ADD_COMMAND)) {
 			parseAdd(command);
 		} else if (isSearch(command)) {
 			parseSearch(command);
-		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_1)
+		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
 				|| command.startsWith(DONE_COMMAND_3)) {
-			commandObject.setCommandType(DONE_INDEX);
 			parseDone(command);
 		}
   	}
 	
 	public void parseDone(String command) {
+		commandObject.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
 		command = command.substring(temp);
 		taskObject.setTitle("command");
@@ -191,6 +189,7 @@ public class Parser {
  	}
  	
  	public void setCommandObjectToDelete(String command) {
+ 		commandObject.setCommandType(DELETE_INDEX);
  		String index;
  		index = extractDeleteIndex(command);
  		taskObject.setTitle(index);
@@ -208,6 +207,7 @@ public class Parser {
  	}
 
  	public void setCommandObjectToSave(String command) {
+ 		commandObject.setCommandType(SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
