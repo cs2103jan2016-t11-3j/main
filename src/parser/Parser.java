@@ -88,8 +88,16 @@ public class Parser {
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_1)
 				|| command.startsWith(DONE_COMMAND_3)) {
 			commandObject.setCommandType(DONE_INDEX);
+			parseDone(command);
 		}
   	}
+	
+	public void parseDone(String command) {
+		int temp = command.indexOf(" ");
+		command = command.substring(temp);
+		taskObject.setTitle("command");
+		commandObject.setTaskObject(taskObject);
+	}
 	
 	public void parseEdit(String command) {
 		commandObject.setCommandType(EDIT_INDEX);
@@ -115,6 +123,7 @@ public class Parser {
 		taskObject.setEndDate(AP.getEndDate());
 		taskObject.setTaskId(_taskId);	// ADDED
 		commandObject.setTaskObject(taskObject);
+		setCategory();
 		AP.reset();
 	}
 	
@@ -138,6 +147,34 @@ public class Parser {
 			taskObject.setEndDate(SP.getEndDate());
 		}
 		commandObject.setTaskObject(taskObject);
+	}
+	
+	public void setCategory() {
+		if (isFloating()) {
+			taskObject.setCategory("floating");
+		} else if (isDeadline()) {
+			taskObject.setCategory("deadline");
+		} else {
+			taskObject.setCategory("deadline");
+		}
+	}
+	
+	public boolean isFloating() {
+		if (taskObject.getStartDate() == -1 && taskObject.getEndDate() == -1
+				&& taskObject.getStartTime() == -1 && taskObject.getEndTime() ==-1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isDeadline() {
+		if (taskObject.getStartDate() == taskObject.getEndDate()
+				&& taskObject.getStartTime() == taskObject.getEndTime()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
