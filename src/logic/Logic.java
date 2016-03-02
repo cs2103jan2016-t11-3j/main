@@ -5,15 +5,19 @@ import logic.add.*;
 import logic.delete.*;
 import logic.display.*;
 import logic.edit.*;
+import logic.mark.*;
 import logic.search.*;
 import logic.undo.*;
 import logic.save.*;
-import logic.done.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
 
 // Parent class for Undo
+
+/* On startup, should load taskList automatically from storage, and mark all events which are
+ * overdue. Consider displaying all overdue tasks or alert
+ */
 
 public class Logic {
 
@@ -25,18 +29,28 @@ public class Logic {
 	public static final int INDEX_SAVE = 6;
 	public static final int INDEX_EXIT = 7;
 	public static final int INDEX_HELP = 8;
+	// A set of indicators for task status modifiers;
 	public static final int INDEX_DONE = 9;
+	public static final int INDEX_OVERDUE = 10;
+	public static final int INDEX_UNDONE = 11;
+
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
 	private ArrayList<TaskObject> taskList;
 	private Stack<CommandObject> undoList;
 	private int taskId = 1;
-		
+
 	// FOR TESTING
 	private CommandObject commandObj;
 	private TaskObject taskObj;
-	public CommandObject getCommandObject() { return commandObj;	}
-	public TaskObject getTaskObject() { return taskObj; }
+
+	public CommandObject getCommandObject() {
+		return commandObj;
+	}
+
+	public TaskObject getTaskObject() {
+		return taskObj;
+	}
 
 	// This will get repeatedly updated by UI for each input
 	private String userInput;
@@ -82,9 +96,10 @@ public class Logic {
 	// Takes in a String argument from UI component
 	void run(String userInput) {
 		setUserInput(userInput);
-		commandObj = callParser();		// CHANGE BACK AFTER TESTING
+		commandObj = callParser(); // CHANGE BACK AFTER TESTING
 		parseCommandObject(commandObj, false);
 	}
+
 	// Calling Parser to parse the user input
 	protected CommandObject callParser() {
 		Parser parser = new Parser(userInput, taskId);
@@ -94,13 +109,13 @@ public class Logic {
 
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction) {
 		int command = commandObj.getCommandType();
-		taskObj = commandObj.getTaskObject();	// CHANGE BACK AFTER TESTING
+		taskObj = commandObj.getTaskObject(); // CHANGE BACK AFTER TESTING
 
 		// FOR TESTING
-		//System.out.println("command = " + command);
-		//printTaskObjectFields(taskObj);
-		//System.out.println();
-		
+		// System.out.println("command = " + command);
+		// printTaskObjectFields(taskObj);
+		// System.out.println();
+
 		switch (command) {
 		case INDEX_ADD:
 			addFunction(command, taskObj);
@@ -131,8 +146,8 @@ public class Logic {
 				// Needs editing as the TaskObject added to undoList is the
 				// wrong TaskObject
 			}
-			// printTaskObjectFields(removedTask);	// DEBUG
-			
+			// printTaskObjectFields(removedTask); // DEBUG
+
 			if (!isUndoAction) {
 				if (removedTask.getTitle().equals("")) {
 					addToUndoList(command, removedTask);
@@ -153,6 +168,10 @@ public class Logic {
 			break;
 		case INDEX_DONE:
 			doneFunction(taskObj);
+			break;
+		case INDEX_OVERDUE:
+			overdueFunction(taskObj);
+			break;
 		default:
 			printInvalidCommandMessage();
 			break;
@@ -223,18 +242,49 @@ public class Logic {
 		Exit exit = new Exit();
 		exit.run();
 	}
-	
+
 	private void doneFunction(TaskObject taskObj) {
-		Done done = new Done(taskObj, taskList, lastOutputTaskList);
+		Mark done = new Mark(taskObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
-		if(done.getTaskIdToMark() != -1) { // If successfully marked as done
+		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
 			String pastStatus = done.getStatusToChange();
-			addToUndoList(INDEX_DONE, new TaskObject(pastStatus, done.getTaskIdToMark()));
+			int commandIndex = getCommandIndex(pastStatus);
+			if (commandIndex != 0) {
+				addToUndoList(commandIndex, new TaskObject(pastStatus, done.getTaskIdToMark()));
+			}
 		}
 	}
 
+	private void overdueFunction(TaskObject taskObj) {
+		Overdue overdue = new Overdue(taskObj, taskList, lastOutputTaskList);
+		setOutput(overdue.run());
+		if (overdue.getTaskIdToMark() != -1) {
+			String pastStatus = overdue.getStatusToChange();
+			int commandIndex = getCommandIndex(pastStatus);
+			if(commandIndex != 0) {
+				addToUndoList(commandIndex, new TaskObject(pastStatus, overdue.getTaskIdToMark()));
+			}
+		}
+	}
+
+	private int getCommandIndex(String pastStatus) {
+		if (pastStatus.equals("overdue")) {
+			return INDEX_OVERDUE;
+		} else {
+			if (pastStatus.equals("completed")) {
+				return INDEX_DONE;
+			} else {
+				if (pastStatus.equals("undone")) {
+					return INDEX_UNDONE;
+				}
+			}
+		}
+		return 0;
+	}
+
 	/*
-	 *  The following 2 methods stores the reverse of the user input in the stack.
+	 * The following 2 methods stores the reverse of the user input in the
+	 * stack.
 	 */
 
 	// Add <-> delete
@@ -243,12 +293,13 @@ public class Logic {
 			// For the corresponding delete object, the title of the TaskObject
 			// should be the index number of the task that is just added
 			TaskObject undoTaskObj = new TaskObject("" + taskList.size());
-			//printTaskObjectFields(undoTaskObj);		// DEBUG DEBUG DEBUG DEBUG DEBUG
+			// printTaskObjectFields(undoTaskObj); // DEBUG DEBUG DEBUG DEBUG
+			// DEBUG
 			undoList.push(new CommandObject(INDEX_DELETE, undoTaskObj));
 		} else if (command == INDEX_DELETE) {
 			// For the corresponding add object, the title of the TaskObject
 			// should be the name of the task that is just deleted
-			//undoList.push(new CommandObject(INDEX_ADD, taskObj));
+			// undoList.push(new CommandObject(INDEX_ADD, taskObj));
 		} else if (command == INDEX_DONE) {
 			undoList.push(new CommandObject(INDEX_UNDO, taskObj));
 		}
@@ -270,7 +321,6 @@ public class Logic {
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
 
-	
 	private void printTaskObjectFields(TaskObject taskObj) {
 		System.out.println("title = " + taskObj.getTitle());
 		System.out.println("start date = " + taskObj.getStartDate());
@@ -281,5 +331,5 @@ public class Logic {
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
 	}
-	
+
 }

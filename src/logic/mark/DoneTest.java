@@ -1,4 +1,4 @@
-package logic.done;
+package logic.mark;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
