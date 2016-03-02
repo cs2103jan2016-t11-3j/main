@@ -8,6 +8,7 @@ import logic.edit.*;
 import logic.search.*;
 import logic.undo.*;
 import logic.save.*;
+import logic.done.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -24,6 +25,7 @@ public class Logic {
 	public static final int INDEX_SAVE = 6;
 	public static final int INDEX_EXIT = 7;
 	public static final int INDEX_HELP = 8;
+	public static final int INDEX_DONE = 9;
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
 	private ArrayList<TaskObject> taskList;
@@ -149,6 +151,8 @@ public class Logic {
 		case INDEX_HELP:
 			helpFunction();
 			break;
+		case INDEX_DONE:
+			doneFunction(taskObj);
 		default:
 			printInvalidCommandMessage();
 			break;
@@ -219,6 +223,15 @@ public class Logic {
 		Exit exit = new Exit();
 		exit.run();
 	}
+	
+	private void doneFunction(TaskObject taskObj) {
+		Done done = new Done(taskObj, taskList, lastOutputTaskList);
+		setOutput(done.run());
+		if(done.getTaskIdToMark() != -1) { // If successfully marked as done
+			String pastStatus = done.getStatusToChange();
+			addToUndoList(INDEX_DONE, new TaskObject(pastStatus, done.getTaskIdToMark()));
+		}
+	}
 
 	/*
 	 *  The following 2 methods stores the reverse of the user input in the stack.
@@ -236,6 +249,8 @@ public class Logic {
 			// For the corresponding add object, the title of the TaskObject
 			// should be the name of the task that is just deleted
 			//undoList.push(new CommandObject(INDEX_ADD, taskObj));
+		} else if (command == INDEX_DONE) {
+			undoList.push(new CommandObject(INDEX_UNDO, taskObj));
 		}
 	}
 
