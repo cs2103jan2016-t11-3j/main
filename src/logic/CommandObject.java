@@ -4,6 +4,7 @@ public class CommandObject {
 	
 	private int commandType;
 	private TaskObject taskObj;
+	private int index;
 	
 	public CommandObject() {
 	}
@@ -27,6 +28,14 @@ public class CommandObject {
 	
 	public void setTaskObject(TaskObject newTaskObject) {
 		this.taskObj = newTaskObject;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 }
