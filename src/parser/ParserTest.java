@@ -11,6 +11,7 @@ public class ParserTest {
 	@Test
 	public void testAllocateCommandType() {
 		tempParser.allocateCommandType("add homework IE2100 date: 29feb time: 9am");
+		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals(900, tempParser.getStartTime());
 		assertEquals(900, tempParser.getEndTime());
@@ -27,7 +28,7 @@ public class ParserTest {
 		reset();
 		
 		tempParser.allocateCommandType("search 7/9/1403");
-		//assertEquals("7/9/1403", tempParser.getTask());
+		assertEquals("7/9/1403", tempParser.getTask());
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(14030907, tempParser.getStartDate());
@@ -35,7 +36,7 @@ public class ParserTest {
 		reset();
 		
 		tempParser.allocateCommandType("edit 2 755pm");
-		assertEquals(null, tempParser.getTask());
+		assertEquals("", tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
 		assertEquals(1955, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
@@ -47,7 +48,7 @@ public class ParserTest {
 	@Test
 	public void testParseEdit() {
 		tempParser.parseEdit("edit 2 755pm");
-		assertEquals(null, tempParser.getTask());
+		//assertEquals(null, tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
 		assertEquals(1955, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());

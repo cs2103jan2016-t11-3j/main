@@ -17,7 +17,7 @@ public class EditProcessorTest {
 		assertEquals(800, EP.getEndTime());
 		assertEquals(-1, EP.getStartDate());
 		assertEquals(-1, EP.getEndDate());
-		assertEquals(null, EP.getTask());
+		assertEquals("", EP.getTask());
 		reset();
 		
 		EP.processEdit("edit 1 6pm");
@@ -25,7 +25,7 @@ public class EditProcessorTest {
 		assertEquals(1800, EP.getEndTime());
 		assertEquals(-1, EP.getStartDate());
 		assertEquals(-1, EP.getEndDate());
-		assertEquals(null, EP.getTask());
+		assertEquals("", EP.getTask());
 		reset();
 		
 		EP.processEdit("edit 1 6pm testing testing");
@@ -41,7 +41,7 @@ public class EditProcessorTest {
 		assertEquals(-1, EP.getEndTime());
 		assertEquals(20161106, EP.getStartDate());
 		assertEquals(20161106, EP.getEndDate());
-		assertEquals(null, EP.getTask());
+		assertEquals("", EP.getTask());
 		reset();
 		
 		EP.processEdit("edit 1 11/6 end");
@@ -49,7 +49,7 @@ public class EditProcessorTest {
 		assertEquals(-1, EP.getEndTime());
 		assertEquals(-1, EP.getStartDate());
 		assertEquals(20160611, EP.getEndDate());
-		assertEquals(null, EP.getTask());
+		assertEquals("", EP.getTask());
 		reset();
 		
 		
@@ -58,7 +58,7 @@ public class EditProcessorTest {
 		assertEquals(-1, EP.getEndTime());
 		assertEquals(40201, EP.getStartDate());
 		assertEquals(-1, EP.getEndDate());
-		assertEquals(null, EP.getTask());
+		assertEquals("", EP.getTask());
 		reset();
 		
 	}
