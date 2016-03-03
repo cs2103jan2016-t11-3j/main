@@ -44,11 +44,12 @@ public class EditProcessor {
 	private TimeProcessor TP = new TimeProcessor();
 	private DateProcessor DP = new DateProcessor();
 	
-	private String _task = null;
+	private String _task = "";
 	private int _startDate = -1;
 	private int _endDate = -1;
 	private int _startTime = -1;
 	private int _endTime = -1;
+	private int _index = -1;
 	
 	/**
 	 * this method will take in the string from the parser 
@@ -79,7 +80,9 @@ public class EditProcessor {
 		
 		//remove "edit" and "number"
 		list.remove(0);
-		//list.remove(0); 	// REMOVED THIS BECAUSE EDIT FUNCTION NEEDS THE INDEX NUMBER
+		String index = list.get(0);
+		_index = Integer.parseInt(index);
+		list.remove(0); 	// REMOVED THIS BECAUSE EDIT FUNCTION NEEDS THE INDEX NUMBER
 	}
 	
 	/**
@@ -294,6 +297,10 @@ public class EditProcessor {
 		_endTime = endTime;
 	}
 	
+	public int getIndex() {
+		return _index;
+	}
+	
 	//method used to obtain the size of the list for testing 
 	public int getListSize() {
 		return list.size();
@@ -310,7 +317,7 @@ public class EditProcessor {
 	}
  	
  	public void resetAll() {
- 		setTask(null);
+ 		setTask("");
  		setStartDate(-1);
  		setEndDate(-1);
  		setStartTime(-1);

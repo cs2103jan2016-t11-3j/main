@@ -107,8 +107,10 @@ public class Parser {
 		taskObject.setStartDate(EP.getStartDate());
 		taskObject.setEndDate(EP.getEndDate());
 		commandObject.setTaskObject(taskObject);
+		commandObject.setIndex(EP.getIndex());
 		EP.resetAll();
 	}
+	
 	public void parseAdd(String command) {
 		commandObject.setCommandType(ADD_INDEX);
 		AddProcessor AP = new AddProcessor();
@@ -136,7 +138,7 @@ public class Parser {
 			taskObject.setStartDate(-1);
 			taskObject.setEndDate(-1);
 		} else {
-			command = command.substring(command.indexOf(" "));
+			command = command.substring(command.indexOf(" ")+1);
 			SP.processSearchTerm(command);
 			taskObject.setTitle(SP.getTask());
 			taskObject.setStartTime(SP.getStartTime());
@@ -190,20 +192,19 @@ public class Parser {
  	
  	public void setCommandObjectToDelete(String command) {
  		commandObject.setCommandType(DELETE_INDEX);
- 		String index;
+ 		int index;
  		index = extractDeleteIndex(command);
- 		taskObject.setTitle(index);
- 		commandObject.setTaskObject(taskObject);
+ 		commandObject.setIndex(index);
  	}
  	
  	/**
  	 * this method returns the number that is after the delete command as an integer
  	 */
- 	public String extractDeleteIndex(String command) {		
+ 	public int extractDeleteIndex(String command) {		
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
- 		return newString;
+ 		return Integer.parseInt(newString);
  	}
 
  	public void setCommandObjectToSave(String command) {
@@ -241,5 +242,9 @@ public class Parser {
  	
  	public void resetTaskObj() {
  		taskObject.resetAttributes();
+ 	}
+ 	
+ 	public int getCommandTask() {
+ 		return commandObject.getCommandType();
  	}
 }
