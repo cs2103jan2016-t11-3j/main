@@ -10,8 +10,9 @@ import javafx.scene.Scene;
 
 public class UIMain extends Application {
 	
-	Logic logic = new Logic();
+	static Logic logic = new Logic();
 	Stage window;
+	static String input;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -26,5 +27,7 @@ public class UIMain extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
+		input = Controller.getInput();
+		logic.setUserInput(input);
 	}
 }

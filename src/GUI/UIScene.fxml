@@ -10,7 +10,7 @@
 
 <BorderPane maxHeight="600.0" maxWidth="700.0" minHeight="400.0" minWidth="650.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <bottom>
-      <TextField fx:id="userInput" prefHeight="40.0" prefWidth="200.0" promptText="Enter Command" BorderPane.alignment="CENTER" />
+      <TextField fx:id="userInput" onKeyPressed="#handleEnterPressed" prefHeight="40.0" prefWidth="200.0" promptText="Enter Command" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
       <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
