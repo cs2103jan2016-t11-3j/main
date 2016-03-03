@@ -172,6 +172,9 @@ public class Logic {
 		case INDEX_OVERDUE:
 			overdueFunction(taskObj);
 			break;
+		case INDEX_UNDONE:
+			undoneFunction(taskObj);
+			break;
 		default:
 			printInvalidCommandMessage();
 			break;
@@ -244,7 +247,7 @@ public class Logic {
 	}
 
 	private void doneFunction(TaskObject taskObj) {
-		Mark done = new Mark(taskObj, taskList, lastOutputTaskList);
+		Done done = new Done(taskObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
 			String pastStatus = done.getStatusToChange();
@@ -263,6 +266,18 @@ public class Logic {
 			int commandIndex = getCommandIndex(pastStatus);
 			if(commandIndex != 0) {
 				addToUndoList(commandIndex, new TaskObject(pastStatus, overdue.getTaskIdToMark()));
+			}
+		}
+	}
+	
+	private void undoneFunction(TaskObject taskObj) {
+		Undone undone = new Undone(taskObj, taskList, lastOutputTaskList);
+		setOutput(undone.run());
+		if (undone.getTaskIdToMark() != -1) {
+			String pastStatus = undone.getStatusToChange();
+			int commandIndex = getCommandIndex(pastStatus);
+			if(commandIndex != 0) {
+				addToUndoList(commandIndex, new TaskObject(pastStatus, undone.getTaskIdToMark()));
 			}
 		}
 	}
