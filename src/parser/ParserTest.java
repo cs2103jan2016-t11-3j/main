@@ -43,6 +43,13 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
 		
+		tempParser.allocateCommandType("save as C://mac/desktop");
+		assertEquals("as C://mac/desktop", tempParser.getTask());
+		assertEquals(-1, tempParser.getStartTime());
+		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
+		reset();
 	}
 
 	@Test
