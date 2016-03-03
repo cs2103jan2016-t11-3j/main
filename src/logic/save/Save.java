@@ -13,7 +13,6 @@ public class Save {
 
 	private boolean isSaved = false;
 	private int saveCommand = 0;
-	private String filePath = "";
 	private String newFilePath = "";
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
@@ -34,7 +33,6 @@ public class Save {
 			}
 		}
 		newFilePath = cmd[1];
-		filePath = FilePath.getPath();
 		this.taskList = taskList;
 	}
 
@@ -59,9 +57,7 @@ public class Save {
 
 	private void saveAs() {
 		FileStorage storage = FileStorage.getInstance();
-		storage.changeSaveLocation(newFilePath);
-		storage.save(taskList);
-		storage.changeSaveLocation(filePath);
+		storage.createCopy(newFilePath, "filecopy.txt");
 		isSaved = true;
 	}
 
