@@ -12,7 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class Controller implements Initializable {
-	String input;
+	static String input;
 	
 	@FXML
 	private TextField userInput;
@@ -25,6 +25,9 @@ public class Controller implements Initializable {
     	userInput.clear();
     	}
 	}
+	
+	@FXML
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
