@@ -1,4 +1,5 @@
 package logic.edit;
+import logic.CommandObject;
 import logic.TaskObject;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ public class Edit {
 	
 	private static final String MESSAGE_EDIT = "Message title edited from '%1$s' to '%2$s'.";
 	
-	private TaskObject taskObj;
+	private CommandObject commandObj;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<TaskObject> taskList;
 	
@@ -17,8 +18,8 @@ public class Edit {
 	private String editTitle;
 	private String originalTitle;
 	
-	public Edit(TaskObject taskObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList) {
-		this.taskObj = taskObj;
+	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList) {
+		this.commandObj = commandObj;
 		this.lastOutputTaskList = lastOutputTaskList;
 		this.taskList = taskList;
 	}
@@ -32,7 +33,7 @@ public class Edit {
 	}
 	
 	public ArrayList<String> run() {
-		parseTaskObjectTitle();
+		setEditInformation();
 		int returnedTaskId = getTaskIdOfTaskToBeEdited();
 		editTask(returnedTaskId);
 		
@@ -40,16 +41,9 @@ public class Edit {
 		return output;
 	}
 	
-	/* Splits the title in TaskObject into its relevant components.
-	 * e.g. for command 'edit 2 dinner with mom',
-	 * '2' is mapped to editItemNumber, and
-	 * 'dinner with mom' is mapped to editTitle.
-	 */
-	private void parseTaskObjectTitle() {
-		String title = taskObj.getTitle();
-		String[] splitTitle = title.split(" ", 2);
-		editItemNumber = Integer.parseInt(splitTitle[0]);
-		editTitle = splitTitle[1];
+	private void setEditInformation() {
+		editItemNumber = commandObj.getIndex();
+		editTitle = commandObj.getTaskObject().getTitle();
 	}
 	
 	private int getTaskIdOfTaskToBeEdited() {

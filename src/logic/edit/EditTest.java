@@ -1,4 +1,5 @@
 package logic.edit;
+import logic.CommandObject;
 import logic.TaskObject;
 
 import static org.junit.Assert.*;
@@ -15,7 +16,8 @@ public class EditTest {
 	
 	@Test
 	public void test() {
-		TaskObject testTaskObject = new TaskObject("2 dinner with mom");
+		TaskObject testTaskObject = new TaskObject("dinner with mom");
+		CommandObject testCommandObject = new CommandObject(3, testTaskObject, 2);
 		
 		// Adding test values
 		testList.add(new TaskObject("Buy new washing machine", 20160313, 1530, "deadline", "pending", 1));
@@ -25,7 +27,7 @@ public class EditTest {
 		testLastOutputList.add(new TaskObject("Army", 20120131, 20131129, 1200, 1200, "event", "completed", 2));
 		testLastOutputList.add(new TaskObject("Buck up in army", "floating", "pending", 4));
 		
-		Edit testEdit = new Edit(testTaskObject, testLastOutputList, testList);
+		Edit testEdit = new Edit(testCommandObject, testLastOutputList, testList);
 		ArrayList<String> actualOutput = new ArrayList<String>();
 		actualOutput = testEdit.run();
 		
