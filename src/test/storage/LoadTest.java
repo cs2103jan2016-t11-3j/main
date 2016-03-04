@@ -14,6 +14,7 @@ import org.junit.Test;
 import logic.TaskObject;
 import storage.FileStorage;
 import storage.Storage;
+import storage.StorageTask;
 import test.AssertHelper;
 
 public class LoadTest {
@@ -28,8 +29,8 @@ public class LoadTest {
     @Test
     public void test() {
 
-        TaskObject task1 = new TaskObject("task1", 1);
-        TaskObject task2 = new TaskObject("task2", 2);
+        TaskObject task1 = new StorageTask("task1", 1);
+        TaskObject task2 = new StorageTask("task2", 2);
       
         try {
             FileWriter fileWriter = new FileWriter(TEST_FILE, false);

@@ -93,13 +93,7 @@ public class TaskData {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         for (String taskData : taskDataList) {
             String[] taskAttributes = taskData.split(DELIMITER);
-            TaskObject task = new TaskObject( taskAttributes[0], Integer.parseInt(taskAttributes[7]));
-            task.setStartDate(Integer.parseInt(taskAttributes[1]));
-            task.setEndDate(Integer.parseInt(taskAttributes[2]));
-            task.setStartTime(Integer.parseInt(taskAttributes[3]));
-            task.setEndTime(Integer.parseInt(taskAttributes[4]));
-            task.setCategory(taskAttributes[5]);
-            task.setStatus(taskAttributes[6]);
+            TaskObject task = new StorageTask(taskAttributes);
             taskList.add(task);
         }
         return taskList;

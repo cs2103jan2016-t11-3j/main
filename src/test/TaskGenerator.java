@@ -12,7 +12,8 @@ public class TaskGenerator {
 
     public TaskObject getTask() {
         taskId += 1;
-        TaskObject task = new TaskObject("task" + taskId.toString(), taskId);
+        TaskObject task = new TaskObject("task" + taskId.toString());
+        task.setTaskId(taskId);
         return task;
     }
 
@@ -20,7 +21,7 @@ public class TaskGenerator {
         if (taskId == 0) {
             return null;
         }
-        String data = "task" + taskId.toString() + ";0;0;0;0;;;" + taskId.toString() + ";";
+        String data = "task" + taskId.toString() + ";-1;-1;-1;-1;" + null + ";" + null + ";" + taskId.toString() + ";";
         return data;
     }
 

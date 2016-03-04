@@ -1,15 +1,15 @@
 package logic;
 
-public class TaskObject {
+public class TaskObject implements Comparable<TaskObject> {
 
-	private String title = "";
-	private int startDate;
-	private int endDate;
-	private int startTime;
-	private int endTime;
-	private String category; // deadline, event, or floating
-	private String status; //completed, overdue or undone
-	private int taskId;
+	protected String title = "";
+	protected int startDate;
+	protected int endDate;
+	protected int startTime;
+	protected int endTime;
+	protected String category; // deadline, event, or floating
+	protected String status; //completed, overdue or undone
+	protected int taskId;
 	
 	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
@@ -57,17 +57,6 @@ public class TaskObject {
 		this.category = null;
 		this.status = null;
 		this.taskId = -1;
-	}
-	
-	public TaskObject(String title, int taskId){
-		this.title = title;
-		this.startDate = 0;
-		this.endDate = 0;
-		this.startTime = 0;
-		this.endTime = 0;
-		this.category = "";
-		this.status = "";
-		this.taskId = taskId;
 	}
 	
 	// empty constructor
@@ -160,5 +149,11 @@ public class TaskObject {
 		setStartTime(-1);
 		setEndTime(-1);
 	}
+
+    @Override
+    public int compareTo(TaskObject task) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 }
