@@ -31,22 +31,10 @@ public class TaskData {
             deleteData();
         } catch (NoSuchFileException e) {
             // Nothing to delete
-        } catch (IOException e) {
-            // Unable to overwrite existing data
         }
         String path = null;
-        try {
-            path = FilePath.getPath();
-        } catch (NoSuchFileException e) {
-            // Invalid default location
-        } catch (IOException e) {
-            // Unable to get location to write file
-        }
-        try {
-            writeList(taskList, path);
-        } catch (IOException e) {
-            // Unable to overwrite existing data
-        }
+        path = FilePath.getPath();   
+        writeList(taskList, path);
     }
     /**
      *
@@ -93,13 +81,7 @@ public class TaskData {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         for (String taskData : taskDataList) {
             String[] taskAttributes = taskData.split(DELIMITER);
-            TaskObject task = new TaskObject( taskAttributes[0], Integer.parseInt(taskAttributes[7]));
-            task.setStartDate(Integer.parseInt(taskAttributes[1]));
-            task.setEndDate(Integer.parseInt(taskAttributes[2]));
-            task.setStartTime(Integer.parseInt(taskAttributes[3]));
-            task.setEndTime(Integer.parseInt(taskAttributes[4]));
-            task.setCategory(taskAttributes[5]);
-            task.setStatus(taskAttributes[6]);
+            TaskObject task = new StorageTask(taskAttributes);
             taskList.add(task);
         }
         return taskList;

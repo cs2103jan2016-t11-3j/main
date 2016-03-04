@@ -23,30 +23,17 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public int save(ArrayList<TaskObject> newTaskList) {
-        try {
-            TaskData.overWriteList(newTaskList);
-        } catch (NoSuchFileException e) {
-            return 1;
-        } catch (IOException e) {
-            return 2;
-        }
+    public  void save(ArrayList<TaskObject> newTaskList) throws NoSuchFileException, IOException {
+        TaskData.overWriteList(newTaskList);
         taskList = newTaskList;
-        return 0;
     }
 
     @Override
-    public int load() {
+    public ArrayList<TaskObject> load() throws NoSuchFileException, IOException {
         ArrayList<String> taskDataList = new ArrayList<String>();
-        try {
-            taskDataList = TaskData.readData();
-        } catch (NoSuchFileException e) {
-            return 1;
-        } catch (IOException e) {
-            return 2;
-        }
+        taskDataList = TaskData.readData();
         taskList = TaskData.parseData(taskDataList);
-        return 0;
+        return taskList;
     }
 
     @Override
