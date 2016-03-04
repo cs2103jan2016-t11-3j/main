@@ -9,18 +9,23 @@ public class LogicDriver {
     
     private static ArrayList<String> display = new ArrayList<String>();
     private static Scanner scanner = new Scanner(System.in);   
-
+    private static Logic logic = new Logic();
+    
     public static void main(String[] args) {
-        Logic logic = new Logic();
             while (true) {
                 System.out.print("Command: ");
                 String userCommand = scanner.nextLine();
-                logic.run(userCommand);
-                display = logic.getOutput();
+                display = execute(userCommand);
                 print(display);
             }
 
 
+    }
+
+    private static ArrayList<String> execute(String userCommand) {
+        logic.run(userCommand);
+        display = logic.getOutput();
+        return display;
     }
 
     private static void print(ArrayList<String> list) {
