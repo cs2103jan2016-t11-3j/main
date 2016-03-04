@@ -35,7 +35,7 @@ public class LogicTest {
 		logic.run(testUserInput3);
 		printOutput();
 		
-		// EDIT FUNCTION WORKS
+		/* EDIT FUNCTION WORKS
 		String testUserInput4 = "edit 2 changed to this";
 		logic.run(testUserInput4);
 		printOutput();
@@ -43,6 +43,7 @@ public class LogicTest {
 		String testUserInput5 = "display";
 		logic.run(testUserInput5);
 		printOutput();
+		*/
 		
 		// SEARCH FOR SPECIFIC KEYWORD WORKS
 		String testUserInput6 = "search float";
@@ -57,20 +58,25 @@ public class LogicTest {
 		logic.run(testUserInput8);
 		printOutput();
 		
-		// DELETE FUNCTION WORKS
+		/* DELETE FUNCTION WORKS
 		String testUserInput9 = "delete 4";
 		logic.run(testUserInput9);
 		printOutput();
+		*/
 		
-/*		String testUserInput8 = "view";
-		logic.run(testUserInput8);
-		printOutput();
-		
+
+/*
 		String testUserInput9 = "undo";
 		logic.run(testUserInput9);
 		printOutput();
 */	
+		String testUserInput11 = "add dinner with obama date:3/3/2015 time:8pm";
+		logic.run(testUserInput11);
+		printOutput();
 		
+		String testUserInput10 = "view";
+		logic.run(testUserInput10);
+		printOutput();
 		
 		
 	}

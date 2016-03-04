@@ -20,7 +20,7 @@ import java.util.Stack;
  */
 
 public class Logic {
-
+	
 	public static final int INDEX_ADD = 1;
 	public static final int INDEX_SEARCH_DISPLAY = 2;
 	public static final int INDEX_EDIT = 3;
@@ -61,7 +61,8 @@ public class Logic {
 	private ArrayList<TaskObject> lastOutputTaskList;
 
 	public Logic() {
-
+		taskList = new ArrayList<TaskObject>();
+		undoList = new Stack<CommandObject>();
 	}
 
 	public Logic(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
