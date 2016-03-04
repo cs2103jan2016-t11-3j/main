@@ -14,6 +14,12 @@ public class CommandObject {
 		this.taskObj = taskObj;
 	}
 	
+	public CommandObject(int commandType, TaskObject taskObj, int index) {
+		this.commandType = commandType;
+		this.taskObj = taskObj;
+		this.index = index;
+	}
+	
 	public int getCommandType() {
 		return commandType;
 	}
