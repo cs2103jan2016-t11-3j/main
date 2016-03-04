@@ -73,6 +73,7 @@ public class DateProcessor {
 	 * @param input    date string that is in the format
 	 */
 	public void processDate(String input, boolean isUsedForSearch) {
+		input = input.replaceFirst("date:", "");
 		convertToArray(input);
 		if (list.size() == 2 || list.size() == 1) {
 			//event

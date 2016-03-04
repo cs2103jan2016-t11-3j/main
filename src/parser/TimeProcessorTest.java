@@ -14,7 +14,7 @@ public class TimeProcessorTest {
 		/*
 		 * test case 1: 4.30pm in the 0th index should be 1630 start & end
 		 */
-		TP.setTime("4.30pm", 0, true);
+		TP.setTime("time: 4.30pm", 0, true);
 		assertEquals(1630, TP.getStartTime());
 		assertEquals(1630, TP.getEndTime());
 		reset();

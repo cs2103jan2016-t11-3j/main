@@ -58,13 +58,13 @@ public class AddProcessor {
  		if (i == list.size()){
  			return;
  		} else {
- 			readDate(i+1);
+ 			readDate(i);
  		}
 	}
 	
 	// this method checks for first occurrence of the keyword indicating date input
  	public boolean isStartOfDate(String input) {
- 		return input.matches("date:");
+ 		return input.contains("date:");
  	}
 	
  	/**
@@ -91,14 +91,14 @@ public class AddProcessor {
  		if (i == list.size()){
  			return;
  		} else {
- 			readTime(index+1);
+ 			readTime(index);
  		}
  		
  	}
  	
  	//checks for the "time:" keyword
  	public boolean isStartOfTime(String input) {
- 		return input.matches("time:");
+ 		return input.contains("time:");
  	}
  	
  	/**
