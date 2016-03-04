@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -54,22 +55,48 @@ public class LoadTest {
     }
     
     @Test
-    public void testNoFile() {
-        int status = storageTest.load();
-        loadedTasks = storageTest.getTaskList();
-        assertEquals("Invalid Load" , 0 , status );
+    public void testNoFile() throws NoSuchFileException, IOException {
+        boolean noFile = false;
+        try{
+        loadedTasks = storageTest.load();        
+        }
+        catch (NoSuchFileException e) {
+            noFile = true;
+        }
         assertEquals("Length",  0 , loadedTasks.size());
-    }
+        loadedTasks = storageTest.getTaskList();
+        assertEquals("Length",  0 , loadedTasks.size());
+        assertEquals("ExceptionNoFileCaught", false, noFile);
+        }
     
     @Test
-    public void testInvalidDefaultPath() throws IOException {
+    public void testInvalidDefaultPath() {
+        int exception = 0;
+        try {
         FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print("fail");
         printWriter.close();
-        assertEquals("Invalid Load" , 1 , storageTest.load() );
-        Files.delete(Paths.get(SAVE_FILE_NAME));
-        
+        }
+        catch (IOException e){
+            exception = 1;
+        }
+        try {
+            loadedTasks = storageTest.load();
+        } catch (NoSuchFileException e1) {
+            exception = 2;
+        } catch (IOException e1) {
+            exception = 3;
+        } 
+        try {
+            Files.delete(Paths.get(SAVE_FILE_NAME));
+        } catch (IOException e) {
+            exception = 4;
+        }
+        assertEquals("Length",  0 , loadedTasks.size());
+        loadedTasks = storageTest.getTaskList();
+        assertEquals("Length",  0 , loadedTasks.size());
+        assertEquals("ExceptionFailToReadPath", 2, exception);
     }
     /*
     @Test

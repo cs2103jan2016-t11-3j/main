@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class ChangeSaveTest {
     static final int moveSize = 7;
     
     @Test
-    public void testMoveSub() {
+    public void testMoveSub() throws NoSuchFileException, IOException {
         String dir = "./bin/";
         Path moved = Paths.get(dir, fileName);
         taskList = dummy.getTaskList(size);

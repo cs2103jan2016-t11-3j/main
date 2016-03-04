@@ -1,6 +1,7 @@
 package test.storage;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class StorageTest {
     }
 
     @Test
-    public void saveTest() {
+    public void saveTest() throws NoSuchFileException, IOException {
         for (int i = 0; i < 10; i++) {
             SaveTest save = new SaveTest();
             save.testWrite();

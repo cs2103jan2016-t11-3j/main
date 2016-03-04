@@ -59,6 +59,17 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = -1;
 	}
 	
+    public TaskObject(String title, int taskId){
+        this.title = title;
+        this.startDate = 0;
+        this.endDate = 0;
+        this.startTime = 0;
+        this.endTime = 0;
+        this.category = "";
+        this.status = "";
+        this.taskId = taskId;
+    }
+	
 	// empty constructor
 	public TaskObject() {
 		

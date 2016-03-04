@@ -4,6 +4,7 @@ import logic.*;
 import storage.*;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 public class Add {
@@ -123,10 +124,17 @@ public class Add {
 
 	private void addExternal() {
 		Storage storage = FileStorage.getInstance();
-		int success = storage.save(taskList);
-		if (success == 0) {
-			addedExternal = true;
-		}
+		try {
+            storage.save(taskList);
+        } catch (NoSuchFileException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		addedExternal = true;
+		
 	}
 
 	private void createOutput() {

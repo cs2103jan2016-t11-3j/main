@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class SaveTest {
     static String NEW_LINE = "\n";
 
     @Test
-    public void testWrite() {
+    public void testWrite() throws NoSuchFileException, IOException {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         TaskObject task1 = new StorageTask("task1", 1);
         TaskObject task2 = new StorageTask("task2", 2);
@@ -29,12 +30,10 @@ public class SaveTest {
         taskList.add(task2);
 
         Storage testStorage = FileStorage.getInstance();
-        int result = testStorage.save(taskList);
-
+        testStorage.save(taskList);
 
         ArrayList<String> writtenList = readFile();
 
-        assertEquals("Success" , 0 , result);
         assertEquals("Length", 2, writtenList.size());
         assertEquals("Line 1", "task1;0;0;0;0;;;1;" , writtenList.get(0));
         assertEquals("Line 2", "task2;0;0;0;0;;;2;" , writtenList.get(1));
@@ -42,7 +41,7 @@ public class SaveTest {
     }
 
     @Test
-    public void testOverwrite(){
+    public void testOverwrite() throws NoSuchFileException, IOException{
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         TaskObject task1 = new StorageTask("task3", 3);
         TaskObject task2 = new StorageTask("task4", 4);
@@ -50,12 +49,10 @@ public class SaveTest {
         taskList.add(task2);
 
         Storage testStorage = FileStorage.getInstance();
-        int result = testStorage.save(taskList);
+        testStorage.save(taskList);
 
         ArrayList<String> writtenList = readFile();
 
-
-        assertEquals("Success" , result , 0);
         assertEquals("Length", 2, writtenList.size());
         assertEquals("Line 3", "task3;0;0;0;0;;;3;" , writtenList.get(0));
         assertEquals("Line 4", "task4;0;0;0;0;;;4;" , writtenList.get(1));

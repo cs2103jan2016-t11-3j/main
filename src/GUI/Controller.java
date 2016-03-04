@@ -12,7 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class Controller implements Initializable {
-	String input;
+	static String input;
 	
 	@FXML
 	private TextField userInput;

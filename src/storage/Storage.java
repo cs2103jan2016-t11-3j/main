@@ -12,10 +12,11 @@ public interface Storage {
      * Writes tasks to storage. Overwrites existing tasks stored in storage.
      * <p>
      * @param taskList - The list of tasksObjects to be written
+     * @return 
      * @throws IOException writing to default save location/Unable to locate default location
      * @throws NoSuchFileException If existing default location is invalid
      */
-    public abstract int save(ArrayList<TaskObject> taskList) throws NoSuchFileException, IOException;
+    public abstract void save(ArrayList<TaskObject> taskList) throws NoSuchFileException, IOException;
 
     /**
      * Loads all saved tasks into storage from existing specified file.
