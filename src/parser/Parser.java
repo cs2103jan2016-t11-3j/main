@@ -20,7 +20,8 @@ public class Parser {
 	private static final String SEARCH_COMMAND_6 = "display";
 	private static final int SEARCH_INDEX = 2;
 
-	private static final String EDIT_COMMAND = "edit";
+	private static final String EDIT_COMMAND_1 = "edit";
+	private static final String EDIT_COMMAND_2 = "update";
 	private static final int EDIT_INDEX = 3;
 
 	private static final String DELETE_COMMAND = "delete";
@@ -73,7 +74,7 @@ public class Parser {
 			commandObject.setCommandType(HELP_INDEX);
 		} else if (command.startsWith(UNDO_COMMAND)) {
 			commandObject.setCommandType(UNDO_INDEX);
-		} else if (command.startsWith(EDIT_COMMAND)) {
+		} else if (command.startsWith(EDIT_COMMAND_1) || command.startsWith(EDIT_COMMAND_2)) {
 			parseEdit(command);
 		} else if (command.startsWith(SAVE_COMMAND)) {
 			setCommandObjectToSave(command);
@@ -202,9 +203,13 @@ public class Parser {
  	 */
  	public int extractDeleteIndex(String command) {		
  		String newString;
- 		int index = command.indexOf(" ") + 1;
- 		newString = command.substring(index);
- 		return Integer.parseInt(newString);
+ 		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
+ 			return -1;
+ 		} else {
+	 		int index = command.indexOf(" ") + 1;
+	 		newString = command.substring(index);
+ 		}
+	 	return Integer.parseInt(newString);
  	}
 
  	public void setCommandObjectToSave(String command) {
