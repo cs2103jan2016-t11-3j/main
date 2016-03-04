@@ -31,22 +31,10 @@ public class TaskData {
             deleteData();
         } catch (NoSuchFileException e) {
             // Nothing to delete
-        } catch (IOException e) {
-            // Unable to overwrite existing data
         }
         String path = null;
-        try {
-            path = FilePath.getPath();
-        } catch (NoSuchFileException e) {
-            // Invalid default location
-        } catch (IOException e) {
-            // Unable to get location to write file
-        }
-        try {
-            writeList(taskList, path);
-        } catch (IOException e) {
-            // Unable to overwrite existing data
-        }
+        path = FilePath.getPath();   
+        writeList(taskList, path);
     }
     /**
      *
