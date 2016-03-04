@@ -11,7 +11,8 @@ public class LogicTest {
 	// Initialisation of Logic class
 	ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	Stack<CommandObject> undoList = new Stack<CommandObject>();
-	Logic logic = new Logic(taskList, undoList);	
+	Stack<CommandObject> redoList = new Stack<CommandObject>();
+	Logic logic = new Logic(taskList, undoList, redoList);	
 
 	ArrayList<String> output = new ArrayList<String>();
 	ArrayList<String> expectedOutput = new ArrayList<String>();
@@ -42,7 +43,6 @@ public class LogicTest {
 		
 		logic.run(test5);
 		printOutput();
-		
 		logic.run(test5);
 		printOutput();
 		
@@ -50,6 +50,18 @@ public class LogicTest {
 		printOutput();
 		
 		logic.run(test5);
+		printOutput();
+		
+		String test6 = "redo";
+		logic.run(test6);
+		printOutput();
+		
+		logic.run(test6);
+		printOutput();
+		logic.run(test6);
+		printOutput();
+		
+		logic.run(test4);
 		printOutput();
 	}
 	
@@ -174,7 +186,7 @@ public class LogicTest {
 		for (int i = 0; i< output.size(); i++) {
 			System.out.println(output.get(i));
 		}
-		System.out.println();
+		// System.out.println();
 	}
 	
 	private void printTaskList() {
