@@ -2,6 +2,9 @@ package logic.save;
 
 import logic.*;
 import storage.*;
+
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 public class Save {
@@ -51,7 +54,15 @@ public class Save {
 	private void saveTo() {
 		FileStorage storage = FileStorage.getInstance();
 		storage.changeSaveLocation(newFilePath);
-		storage.save(taskList);
+		try {
+            storage.save(taskList);
+        } catch (NoSuchFileException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		isSaved = true;
 	}
 

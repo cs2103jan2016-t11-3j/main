@@ -1,5 +1,7 @@
 package storage;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import logic.TaskObject;
@@ -10,22 +12,20 @@ public interface Storage {
      * Writes tasks to storage. Overwrites existing tasks stored in storage.
      * <p>
      * @param taskList - The list of tasksObjects to be written
-     * @return Status.
-     * <li> 0 - If successful.
-     * <li> 1 - If existing default location is invalid
-     * <li> 2 - Error writing to default save location/Unable to locate default location
+     * @return 
+     * @throws IOException writing to default save location/Unable to locate default location
+     * @throws NoSuchFileException If existing default location is invalid
      */
-    public abstract int save(ArrayList<TaskObject> taskList);
+    public abstract void save(ArrayList<TaskObject> taskList) throws NoSuchFileException, IOException;
 
     /**
      * Loads all saved tasks into storage from existing specified file.
      * <p>
-     * @return Status.
-     * <li> 0 - If successful or if existing data present.
-     * <li> 1 - Invalid save location is specified
-     * <li> 2 - Error reading existing file
+     * @return List of TaskObjects
+     * @throws IOException Error reading from Existing File
+     * @throws NoSuchFileException Current save location cannot be accessed/invalid
      */
-    public abstract int load();
+    public abstract ArrayList<TaskObject> load() throws NoSuchFileException, IOException;
 
     /**
      * Returns loaded tasks stored in storage

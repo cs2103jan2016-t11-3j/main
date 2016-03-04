@@ -36,8 +36,8 @@ public class Logic {
 
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
-	private ArrayList<TaskObject> taskList;
-	private Stack<CommandObject> undoList;
+	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
+	private Stack<CommandObject> undoList = new Stack<CommandObject>();
 	private int taskId = 1;
 
 	// FOR TESTING
@@ -94,7 +94,7 @@ public class Logic {
 	}
 
 	// Takes in a String argument from UI component
-	void run(String userInput) {
+	public void run(String userInput) {
 		setUserInput(userInput);
 		commandObj = callParser(); // CHANGE BACK AFTER TESTING
 		parseCommandObject(commandObj, false);

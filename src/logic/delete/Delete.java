@@ -4,6 +4,8 @@ import logic.*;
 import storage.*;
 
 import java.util.Stack;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 // Needs delete function for last added code
@@ -126,12 +128,17 @@ public class Delete {
 
 	private boolean deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();
-		int success = storage.save(taskList);
-		if (success == 0) {
-			return true;
-		} else {
-			return false;
-		}
+		try {
+            storage.save(taskList);
+        } catch (NoSuchFileException e) {
+         // TODO Auto-generated catch block
+            //Ask user to specify new location or use default location
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		return true;
 	}
 
 	private void createOutput() {
