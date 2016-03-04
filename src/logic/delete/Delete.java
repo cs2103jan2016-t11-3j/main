@@ -15,9 +15,8 @@ public class Delete {
 	private static String MESSAGE_DELETE = "Task deleted from TaskFinder: %1s";
 	private static String MESSAGE_ERROR = "Error deleting task from TaskFinder";
 
-	// This is the delete task that should only contain the displayed line
-	// number to delete, or nothing inside at all
-	private TaskObject task = new TaskObject();
+	// This command object contains the index number of the line to be deleted
+	private CommandObject commandObj = new CommandObject();
 	
 	// This is the task which is actually removed from TaskFinder
 	private TaskObject removedTask = new TaskObject();
@@ -49,14 +48,14 @@ public class Delete {
 		this.undoList = undoList;
 	}
 
-	public Delete(TaskObject task, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
-		this.task = task;
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
 	
 	public ArrayList<String> run() {
-		if(task.getTitle().equals("")) {
+		if(commandObj.getIndex() == -1) {
 			runQuickDelete();
 		} else {
 			runNormalDelete();
@@ -72,7 +71,7 @@ public class Delete {
 			// delete the last item in taskList as it shows that the item had just been added
 			int index = taskList.size() - 1;
 			taskName = taskList.get(index).getTitle();
-			taskList.remove((index));
+			taskList.remove(index);
 			if(taskList.size() == index) {
 				// To check if taskList has shrunk by 1
 				hasDeletedInternal = true;
@@ -116,13 +115,10 @@ public class Delete {
 	}
 
 	private void obtainTaskId() {
-		String line = task.getTitle();
-		int num = Integer.parseInt(line);
-		// CHANGED LASTOUTPUTTASKLIST TO TASKLIST
-		// because 'undo' does not have a display command before it
-		if (num > 0 && num <= taskList.size()) { 
-			num--;
-			taskIdToDelete = taskList.get(num).getTaskId();
+		int index = commandObj.getIndex();
+		if (index > 0 && index <= taskList.size()) { 
+			index--;
+			taskIdToDelete = taskList.get(index).getTaskId();
 		}
 	}
 
@@ -151,8 +147,8 @@ public class Delete {
 	}
 
 	// GETTERS AND SETTERS
-	public TaskObject getTask() {
-		return task;
+	public CommandObject getCommandObject() {
+		return commandObj;
 	}
 	
 	public TaskObject getRemovedTask() {
@@ -175,8 +171,8 @@ public class Delete {
 		this.taskList = taskList;
 	}
 
-	public void setTask(TaskObject task) {
-		this.task = task;
+	public void setCommandObject(CommandObject commandObj) {
+		this.commandObj = commandObj;
 	}
 
 }
