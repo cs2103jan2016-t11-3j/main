@@ -36,23 +36,12 @@ public class Logic {
 
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
+	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Stack<CommandObject> undoList = new Stack<CommandObject>();
 	private int taskId = 1;
 
-	// FOR TESTING
-	private CommandObject commandObj;
-	private TaskObject taskObj;
-
-	public CommandObject getCommandObject() {
-		return commandObj;
-	}
-
-	public TaskObject getTaskObject() {
-		return taskObj;
-	}
-
-	// This will get repeatedly updated by UI for each input
+	// This variable will get repeatedly updated by UI for each input
 	private String userInput;
 	// Output is to be returned to UI after each command
 	private ArrayList<String> output;
@@ -70,16 +59,25 @@ public class Logic {
 		this.undoList = undoList;
 	}
 
+	// Getters and setters
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
-
+	
 	public Stack<CommandObject> getUndoList() {
 		return undoList;
 	}
-
+	
 	public ArrayList<String> getOutput() {
 		return output;
+	}
+	
+	public void setTaskList(ArrayList<TaskObject> taskList) {
+		this.taskList = taskList;
+	}
+	
+	public void setUndoList(Stack<CommandObject> undoList) {
+		this.undoList = undoList;
 	}
 
 	public void setUserInput(String newUserInput) {
@@ -97,12 +95,12 @@ public class Logic {
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
 		setUserInput(userInput);
-		commandObj = callParser(); // CHANGE BACK AFTER TESTING
+		CommandObject commandObj = callParser();
 		parseCommandObject(commandObj, false);
 	}
 
 	// Calling Parser to parse the user input
-	protected CommandObject callParser() {
+	private CommandObject callParser() {
 		Parser parser = new Parser(userInput, taskId);
 		taskId++;
 		return parser.run();
@@ -110,75 +108,74 @@ public class Logic {
 
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction) {
 		int command = commandObj.getCommandType();
-		taskObj = commandObj.getTaskObject(); // CHANGE BACK AFTER TESTING
+		TaskObject taskObj = commandObj.getTaskObject(); 
 
 		// FOR TESTING
-		// System.out.println("command = " + command);
+		// System.out.println("command = " + command + ", isUndoAction = " + isUndoAction);
 		// printTaskObjectFields(taskObj);
 		// System.out.println();
 
 		switch (command) {
-		case INDEX_ADD:
-			addFunction(command, taskObj);
-			if (!isUndoAction) {
-				addToUndoList(command, taskObj);
-			}
-			break;
-		case INDEX_SEARCH_DISPLAY:
-			checkDisplayOrSearch(taskObj);
-			break;
-		case INDEX_EDIT:
-			Edit editOriginal = editFunction(taskObj);
-			if (!isUndoAction) {
-				addToUndoList(editOriginal);
-			}
-			break;
-		case INDEX_DELETE:
-			TaskObject removedTask = new TaskObject();
-			if (taskObj.getTitle().equals("")) {
-				// Quick-delete function for item recently added in the last
-				// command
-				if (undoList.peek().getCommandType() == INDEX_DELETE) {
-					removedTask = undoList.peek().getTaskObject();
+			case INDEX_ADD:
+				addFunction(command, taskObj);
+				if (!isUndoAction) {
+					addToUndoList(command, taskObj);
 				}
-				deleteFunction(); // overloaded function
-			} else {
-				removedTask = deleteFunction(taskObj);
-				// Needs editing as the TaskObject added to undoList is the
-				// wrong TaskObject
-			}
-			// printTaskObjectFields(removedTask); // DEBUG
-
-			if (!isUndoAction) {
-				if (removedTask.getTitle().equals("")) {
-					addToUndoList(command, removedTask);
+				break;
+			case INDEX_SEARCH_DISPLAY:
+				checkDisplayOrSearch(taskObj);
+				break;
+			case INDEX_EDIT:
+				Edit editOriginal = editFunction(commandObj);
+				if (!isUndoAction) {
+					addToUndoList(editOriginal);
 				}
-			}
-			break;
-		case INDEX_UNDO:
-			undoFunction();
-			break;
-		case INDEX_SAVE:
-			saveFunction(taskObj);
-			break;
-		case INDEX_EXIT:
-			exitFunction();
-			break;
-		case INDEX_HELP:
-			helpFunction();
-			break;
-		case INDEX_DONE:
-			doneFunction(taskObj);
-			break;
-		case INDEX_OVERDUE:
-			overdueFunction(taskObj);
-			break;
-		case INDEX_UNDONE:
-			undoneFunction(taskObj);
-			break;
-		default:
-			printInvalidCommandMessage();
-			break;
+				break;
+			case INDEX_DELETE:
+				TaskObject removedTask = new TaskObject();
+				if (commandObj.getIndex() == -1) {
+					// Quick-delete function for item recently added in the last
+					// command
+					if (undoList.peek().getCommandType() == INDEX_DELETE) {
+						removedTask = undoList.peek().getTaskObject(); 	// NEED TO POP SOMEWHERE
+					}
+					deleteFunction(); // overloaded function
+				} else {
+					removedTask = deleteFunction(commandObj);
+					// Needs editing as the TaskObject added to undoList is the
+					// wrong TaskObject
+				}
+	
+				if (!isUndoAction) {
+					// if (removedTask.getTitle().equals("")) {	// WHAT IS THIS LINE FOR?
+						addToUndoList(command, removedTask);
+					// }
+				}
+				break;
+			case INDEX_UNDO:
+				undoFunction();
+				break;
+			case INDEX_SAVE:
+				saveFunction(taskObj);
+				break;
+			case INDEX_EXIT:
+				exitFunction();
+				break;
+			case INDEX_HELP:
+				helpFunction();
+				break;
+			case INDEX_DONE:
+				doneFunction(taskObj);
+				break;
+			case INDEX_OVERDUE:
+				overdueFunction(taskObj);
+				break;
+			case INDEX_UNDONE:
+				undoneFunction(taskObj);
+				break;
+			default:
+				printInvalidCommandMessage();
+				break;
 		}
 	}
 
@@ -213,15 +210,15 @@ public class Logic {
 		setLastOutputTaskList(search.getLastOutputTaskList());
 	}
 
-	private Edit editFunction(TaskObject taskObj) {
-		Edit edit = new Edit(taskObj, lastOutputTaskList, taskList);
+	private Edit editFunction(CommandObject commandObj) {
+		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList);
 		setOutput(edit.run());
 		return edit;
 	}
 
-	private TaskObject deleteFunction(TaskObject taskObj) {
+	private TaskObject deleteFunction(CommandObject commandObj) {
 		TaskObject removedTask = new TaskObject();
-		Delete delete = new Delete(taskObj, taskList, lastOutputTaskList);
+		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList);
 		setOutput(delete.run());
 		removedTask = delete.getRemovedTask();
 		return removedTask;
@@ -233,8 +230,13 @@ public class Logic {
 	}
 
 	private void undoFunction() {
-		Undo undo = new Undo(undoList);
+		Undo undo = new Undo(taskList, undoList);
 		setOutput(undo.run());
+		
+		// Update the task and undo lists
+		setTaskList(undo.getTaskList());
+		setUndoList(undo.getUndoList());
+		
 	}
 
 	private void saveFunction(TaskObject taskObj) {
@@ -306,16 +308,13 @@ public class Logic {
 	// Add <-> delete
 	private void addToUndoList(int command, TaskObject taskObj) {
 		if (command == INDEX_ADD) {
-			// For the corresponding delete object, the title of the TaskObject
-			// should be the index number of the task that is just added
-			TaskObject undoTaskObj = new TaskObject("" + taskList.size());
-			// printTaskObjectFields(undoTaskObj); // DEBUG DEBUG DEBUG DEBUG
-			// DEBUG
-			undoList.push(new CommandObject(INDEX_DELETE, undoTaskObj));
+			// For the corresponding delete object, the TaskObject is null
+			// the index number of the CommandObject is the index of the item that was just added
+			undoList.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
 		} else if (command == INDEX_DELETE) {
 			// For the corresponding add object, the title of the TaskObject
 			// should be the name of the task that is just deleted
-			// undoList.push(new CommandObject(INDEX_ADD, taskObj));
+			undoList.push(new CommandObject(INDEX_ADD, taskObj));
 		} else if (command == INDEX_DONE) {
 			undoList.push(new CommandObject(INDEX_UNDO, taskObj));
 		}
@@ -324,8 +323,8 @@ public class Logic {
 	// Edit <-> edit
 	// Saves the item number to be edited and the original title
 	private void addToUndoList(Edit editOriginal) {
-		String originalTitle = "" + editOriginal.getEditItemNumber() + " " + editOriginal.getOriginalTitle();
-		CommandObject newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle));
+		String originalTitle = editOriginal.getOriginalTitle();
+		CommandObject newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle), editOriginal.getEditItemNumber());
 		undoList.push(newCommandObj);
 	}
 
