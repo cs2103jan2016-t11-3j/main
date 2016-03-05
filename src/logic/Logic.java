@@ -108,7 +108,7 @@ public class Logic {
 	public void run(String userInput) {
 		setUserInput(userInput);
 		CommandObject commandObj = callParser();
-		parseCommandObject(commandObj, false);
+		parseCommandObject(commandObj, false, false);
 	}
 
 	// Calling Parser to parse the user input
@@ -118,18 +118,21 @@ public class Logic {
 		return parser.run();
 	}
 
-	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction) {
+	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		int command = commandObj.getCommandType();
 		TaskObject taskObj = commandObj.getTaskObject();
 		
+		// FOR TESTING
+		//System.out.println("Command = " + command);
+		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = " + undoList.size() + ", redo size = " + redoList.size());
+		// printTaskObjectFields(taskObj);
+		// System.out.println();
+		
 		// Clears the redo stack if it is a new command
-		if (!redoList.empty() && isListOperation(command) && !isUndoAction) {
+		if (!redoList.empty() && isListOperation(command) && !isUndoAction && !isRedoAction) {
 			clearRedoList();
 		}
 
-		// FOR TESTING
-		// printTaskObjectFields(taskObj);
-		// System.out.println();
 
 		switch (command) {
 			case INDEX_ADD:
@@ -138,6 +141,7 @@ public class Logic {
 					addToList(commandObj, redoList);
 				} else {
 					addToList(commandObj, undoList);
+					//System.out.println("command = " + command + ", added to undoList");
 				}
 				break;
 			case INDEX_SEARCH_DISPLAY:
@@ -171,6 +175,7 @@ public class Logic {
 					addToList(newCommandObj, redoList);
 				} else {
 					addToList(newCommandObj, undoList);
+					//System.out.println("command = " + command + ", added to undoList");
 				}
 				break;
 			case INDEX_UNDO: case INDEX_REDO:
