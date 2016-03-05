@@ -121,9 +121,10 @@ public class Logic {
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		int command = commandObj.getCommandType();
 		TaskObject taskObj = commandObj.getTaskObject();
+		int index = commandObj.getIndex();
 		
 		// FOR TESTING
-		//System.out.println("Command = " + command);
+		// System.out.println("CommandObject index = " + index);
 		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = " + undoList.size() + ", redo size = " + redoList.size());
 		// printTaskObjectFields(taskObj);
 		// System.out.println();
@@ -133,21 +134,19 @@ public class Logic {
 			clearRedoList();
 		}
 
-
 		switch (command) {
-			case INDEX_ADD:
-				addFunction(command, taskObj);
+			case INDEX_ADD :
+				addFunction(taskObj, index);
 				if (isUndoAction) {
 					addToList(commandObj, redoList);
 				} else {
 					addToList(commandObj, undoList);
-					//System.out.println("command = " + command + ", added to undoList");
 				}
 				break;
-			case INDEX_SEARCH_DISPLAY:
+			case INDEX_SEARCH_DISPLAY :
 				checkDisplayOrSearch(taskObj);
 				break;
-			case INDEX_EDIT:
+			case INDEX_EDIT :
 				Edit editOriginal = editFunction(commandObj);
 				if (isUndoAction) {
 					addToList(editOriginal, redoList);
@@ -155,7 +154,7 @@ public class Logic {
 					addToList(editOriginal, undoList);
 				}
 				break;
-			case INDEX_DELETE:
+			case INDEX_DELETE :
 				TaskObject removedTask = new TaskObject();
 				if (commandObj.getIndex() == -1) {
 					// Quick-delete function for item recently added in the last
@@ -170,33 +169,32 @@ public class Logic {
 					// wrong TaskObject
 				}
 				
-				CommandObject newCommandObj = new CommandObject(command, removedTask, -1);
+				CommandObject newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
 				if (isUndoAction) {
 					addToList(newCommandObj, redoList);
 				} else {
 					addToList(newCommandObj, undoList);
-					//System.out.println("command = " + command + ", added to undoList");
 				}
 				break;
-			case INDEX_UNDO: case INDEX_REDO:
+			case INDEX_UNDO : case INDEX_REDO :
 				undoRedoFunction(command);
 				break;
-			case INDEX_SAVE:
+			case INDEX_SAVE :
 				saveFunction(taskObj);
 				break;
-			case INDEX_EXIT:
+			case INDEX_EXIT :
 				exitFunction();
 				break;
-			case INDEX_HELP:
+			case INDEX_HELP :
 				helpFunction();
 				break;
-			case INDEX_DONE:
+			case INDEX_DONE :
 				doneFunction(taskObj);
 				break;
-			case INDEX_OVERDUE:
+			case INDEX_OVERDUE :
 				overdueFunction(taskObj);
 				break;
-			case INDEX_UNDONE:
+			case INDEX_UNDONE :
 				undoneFunction(taskObj);
 				break;
 			default:
@@ -205,8 +203,8 @@ public class Logic {
 		}
 	}
 
-	private void addFunction(int command, TaskObject taskObj) {
-		Add add = new Add(taskObj, taskList);
+	private void addFunction(TaskObject taskObj, int index) {
+		Add add = new Add(taskObj, index, taskList);
 		setOutput(add.run());
 	}
 
@@ -333,13 +331,13 @@ public class Logic {
 	// Add <-> delete
 	private void addToList(CommandObject commandObj, Stack<CommandObject> list) {
 		if (commandObj.getCommandType() == INDEX_ADD) {
-			// For the corresponding delete object, the TaskObject is null
+			// For the corresponding delete object, the TaskObject is null and
 			// the index number of the CommandObject is the index of the item that was just added
 			list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
 		} else if (commandObj.getCommandType() == INDEX_DELETE) {
 			// For the corresponding add object, the title of the TaskObject
 			// should be the name of the task that is just deleted
-			list.push(new CommandObject(INDEX_ADD, commandObj.getTaskObject()));
+			list.push(new CommandObject(INDEX_ADD, commandObj.getTaskObject(), commandObj.getIndex()));
 		} else if (commandObj.getCommandType() == INDEX_DONE) {
 			list.push(new CommandObject(INDEX_UNDO, commandObj.getTaskObject()));
 		}
