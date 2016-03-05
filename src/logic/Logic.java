@@ -9,6 +9,7 @@ import logic.mark.*;
 import logic.search.*;
 import logic.undo.*;
 import logic.save.*;
+import logic.help.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -183,7 +184,7 @@ public class Logic {
 				exitFunction();
 				break;
 			case INDEX_HELP :
-				helpFunction();
+				helpFunction(taskObj);
 				break;
 			case INDEX_DONE :
 				doneFunction(taskObj);
@@ -348,8 +349,10 @@ public class Logic {
 		list.push(newCommandObj);
 	}
 
-	private void helpFunction() {
-
+	private void helpFunction(TaskObject taskObj) {
+		String helpSearchKey = taskObj.getTitle();
+		Help help = new Help(helpSearchKey);
+		setOutput(help.run());
 	}
 	
 	// Returns true if the command is one which involves editing of the task lists
