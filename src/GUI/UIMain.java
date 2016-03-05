@@ -47,7 +47,6 @@ public class UIMain extends Application {
 		for (int i = 0; i < output.size(); i++) {
 			System.out.println(output.get(i));		
 		}
-
 	}
 
 	public String getOutput() {

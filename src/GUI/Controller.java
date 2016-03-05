@@ -30,6 +30,8 @@ public class Controller implements Initializable {
 	@FXML
 	private TextFlow feedbackBox;
 	@FXML
+	private Text feedbackMessage;
+	@FXML
 	private static TableView<ArrayList<TaskObject>> taskTable;
 	@FXML
 	private static TableColumn<ArrayList<TaskObject>, String> indexColumn;
@@ -53,7 +55,7 @@ public class Controller implements Initializable {
 	}
 	
 	private void displayMessage() {
-		Text feedbackMessage = new Text(_UI.getOutput());
+		feedbackMessage.setText(_UI.getOutput());
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
 
