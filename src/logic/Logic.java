@@ -9,6 +9,7 @@ import logic.mark.*;
 import logic.search.*;
 import logic.undo.*;
 import logic.save.*;
+import logic.help.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -20,7 +21,7 @@ import java.util.Stack;
  */
 
 public class Logic {
-	
+
 	public static final int INDEX_ADD = 1;
 	public static final int INDEX_SEARCH_DISPLAY = 2;
 	public static final int INDEX_EDIT = 3;
@@ -33,7 +34,7 @@ public class Logic {
 	// A set of indicators for task status modifiers;
 	public static final int INDEX_DONE = 10;
 	public static final int INDEX_OVERDUE = 11;
-	public static final int INDEX_UNDONE = 12;
+	public static final int INDEX_INCOMPLETE = 12;
 
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
@@ -67,27 +68,27 @@ public class Logic {
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
-	
+
 	public Stack<CommandObject> getUndoList() {
 		return undoList;
 	}
-	
+
 	public Stack<CommandObject> getRedoList() {
 		return redoList;
 	}
-	
+
 	public ArrayList<String> getOutput() {
 		return output;
 	}
-	
+
 	public void setTaskList(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;
 	}
-	
+
 	public void setUndoList(Stack<CommandObject> undoList) {
 		this.undoList = undoList;
 	}
-	
+
 	public void setRedoList(Stack<CommandObject> redoList) {
 		this.redoList = redoList;
 	}
@@ -122,84 +123,85 @@ public class Logic {
 		int command = commandObj.getCommandType();
 		TaskObject taskObj = commandObj.getTaskObject();
 		int index = commandObj.getIndex();
-		
+
 		// FOR TESTING
 		// System.out.println("CommandObject index = " + index);
-		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = " + undoList.size() + ", redo size = " + redoList.size());
-		//printTaskObjectFields(taskObj);
+		// System.out.println("isUndoAction = " + isUndoAction + ", undo size =
+		// " + undoList.size() + ", redo size = " + redoList.size());
+		// printTaskObjectFields(taskObj);
 		// System.out.println();
-		
+
 		// Clears the redo stack if it is a new command
 		if (!redoList.empty() && isListOperation(command) && !isUndoAction && !isRedoAction) {
 			clearRedoList();
 		}
 
 		switch (command) {
-			case INDEX_ADD :
-				addFunction(taskObj, index);
-				if (isUndoAction) {
-					addToList(commandObj, redoList);
-				} else {
-					addToList(commandObj, undoList);
+		case INDEX_ADD:
+			addFunction(taskObj, index);
+			if (isUndoAction) {
+				addToList(commandObj, redoList);
+			} else {
+				addToList(commandObj, undoList);
+			}
+			break;
+		case INDEX_SEARCH_DISPLAY:
+			checkDisplayOrSearch(taskObj);
+			break;
+		case INDEX_EDIT:
+			Edit editOriginal = editFunction(commandObj);
+			if (isUndoAction) {
+				addToList(editOriginal, redoList);
+			} else {
+				addToList(editOriginal, undoList);
+			}
+			break;
+		case INDEX_DELETE:
+			TaskObject removedTask = new TaskObject();
+			if (commandObj.getIndex() == -1) {
+				// Quick-delete function for item recently added
+				if (undoList.peek().getCommandType() == INDEX_DELETE) {
+					removedTask = undoList.peek().getTaskObject(); // NEED TO
+																	// POP
+																	// SOMEWHERE
 				}
-				break;
-			case INDEX_SEARCH_DISPLAY :
-				checkDisplayOrSearch(taskObj);
-				break;
-			case INDEX_EDIT :
-				Edit editOriginal = editFunction(commandObj);
-				if (isUndoAction) {
-					addToList(editOriginal, redoList);
-				} else {
-					addToList(editOriginal, undoList);
-				}
-				break;
-			case INDEX_DELETE :
-				TaskObject removedTask = new TaskObject();
-				if (commandObj.getIndex() == -1) {
-					// Quick-delete function for item recently added in the last
-					// command
-					if (undoList.peek().getCommandType() == INDEX_DELETE) {
-						removedTask = undoList.peek().getTaskObject(); 	// NEED TO POP SOMEWHERE
-					}
-					deleteFunction(); // overloaded function
-				} else {
-					removedTask = deleteFunction(commandObj);
-					// Needs editing as the TaskObject added to undoList is the
-					// wrong TaskObject
-				}
-				
-				CommandObject newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
-				if (isUndoAction) {
-					addToList(newCommandObj, redoList);
-				} else {
-					addToList(newCommandObj, undoList);
-				}
-				break;
-			case INDEX_UNDO : case INDEX_REDO :
-				undoRedoFunction(command);
-				break;
-			case INDEX_SAVE :
-				saveFunction(taskObj);
-				break;
-			case INDEX_EXIT :
-				exitFunction();
-				break;
-			case INDEX_HELP :
-				helpFunction();
-				break;
-			case INDEX_DONE :
-				doneFunction(taskObj);
-				break;
-			case INDEX_OVERDUE :
-				overdueFunction(taskObj);
-				break;
-			case INDEX_UNDONE :
-				undoneFunction(taskObj);
-				break;
-			default:
-				printInvalidCommandMessage();
-				break;
+				deleteFunction(); // overloaded function
+			} else {
+				removedTask = deleteFunction(commandObj);
+			}
+
+			CommandObject newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
+			if (isUndoAction) {
+				addToList(newCommandObj, redoList);
+			} else {
+				addToList(newCommandObj, undoList);
+			}
+			break;
+		case INDEX_UNDO:
+		case INDEX_REDO:
+			undoRedoFunction(command);
+			break;
+		case INDEX_SAVE:
+			saveFunction(taskObj);
+			break;
+		case INDEX_EXIT:
+			exitFunction();
+			break;
+		case INDEX_HELP:
+			helpFunction(taskObj);
+			break;
+		case INDEX_DONE:
+			doneFunction(taskObj);
+			break;
+		case INDEX_OVERDUE:
+			overdueFunction(taskObj);
+			break;
+		case INDEX_INCOMPLETE:
+			undoneFunction(taskObj);
+			break;
+		default:
+			printInvalidCommandMessage();
+			break;
 		}
 	}
 
@@ -256,7 +258,7 @@ public class Logic {
 	private void undoRedoFunction(int command) {
 		UndoRedo undoRedo = new UndoRedo(taskList, undoList, redoList);
 		setOutput(undoRedo.run(command));
-		
+
 		// Update the task and undo lists
 		setTaskList(undoRedo.getTaskList());
 		setUndoList(undoRedo.getUndoList());
@@ -277,11 +279,9 @@ public class Logic {
 		Done done = new Done(taskObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
-			String pastStatus = done.getStatusToChange();
-			int commandIndex = getCommandIndex(pastStatus);
-			if (commandIndex != 0) {
-				//addToUndoList(commandIndex, new TaskObject(pastStatus, done.getTaskIdToMark()));
-			}
+			CommandObject undoCommand = constructStatusCommandObject(done);
+			// addToUndoList(commandIndex, new TaskObject(pastStatus,
+			// done.getTaskIdToMark()));
 		}
 	}
 
@@ -289,24 +289,31 @@ public class Logic {
 		Overdue overdue = new Overdue(taskObj, taskList, lastOutputTaskList);
 		setOutput(overdue.run());
 		if (overdue.getTaskIdToMark() != -1) {
-			String pastStatus = overdue.getStatusToChange();
-			int commandIndex = getCommandIndex(pastStatus);
-			if(commandIndex != 0) {
-				//addToUndoList(commandIndex, new TaskObject(pastStatus, overdue.getTaskIdToMark()));
-			}
+			CommandObject undoCommand = constructStatusCommandObject(overdue);
+		}
+		// addToUndoList(commandIndex, new TaskObject(pastStatus,
+		// overdue.getTaskIdToMark()));
+	}
+
+	private void undoneFunction(TaskObject taskObj) {
+		Incomplete incomplete = new Incomplete(taskObj, taskList, lastOutputTaskList);
+		setOutput(incomplete.run());
+		if (incomplete.getTaskIdToMark() != -1) {
+			CommandObject undoCommand = constructStatusCommandObject(incomplete);
+			// addToUndoList(commandIndex, new TaskObject(pastStatus,
+			// undone.getTaskIdToMark()));
 		}
 	}
-	
-	private void undoneFunction(TaskObject taskObj) {
-		Undone undone = new Undone(taskObj, taskList, lastOutputTaskList);
-		setOutput(undone.run());
-		if (undone.getTaskIdToMark() != -1) {
-			String pastStatus = undone.getStatusToChange();
-			int commandIndex = getCommandIndex(pastStatus);
-			if(commandIndex != 0) {
-				//addToUndoList(commandIndex, new TaskObject(pastStatus, undone.getTaskIdToMark()));
-			}
+
+	private CommandObject constructStatusCommandObject(Mark statusChanger) {
+		CommandObject returnedCommand = new CommandObject();
+		String pastStatus = statusChanger.getStatusToChange();
+		int commandIndex = getCommandIndex(pastStatus);
+		if (commandIndex != 0) {
+			returnedCommand.setCommandType(commandIndex);
+			returnedCommand.setTaskObject(statusChanger.getMarkedTask());
 		}
+		return returnedCommand;
 	}
 
 	private int getCommandIndex(String pastStatus) {
@@ -316,8 +323,8 @@ public class Logic {
 			if (pastStatus.equals("completed")) {
 				return INDEX_DONE;
 			} else {
-				if (pastStatus.equals("undone")) {
-					return INDEX_UNDONE;
+				if (pastStatus.equals("incomplete")) {
+					return INDEX_INCOMPLETE;
 				}
 			}
 		}
@@ -332,35 +339,40 @@ public class Logic {
 	private void addToList(CommandObject commandObj, Stack<CommandObject> list) {
 		if (commandObj.getCommandType() == INDEX_ADD) {
 			// For the corresponding delete object, the TaskObject is null and
-			// the index number of the CommandObject is the index of the item that was just added
+			// the index number of the CommandObject is the index of the item
+			// that was just added
 			list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
 		} else if (commandObj.getCommandType() == INDEX_DELETE) {
 			// For the corresponding add object, the title of the TaskObject
 			// should be the name of the task that is just deleted
 			list.push(new CommandObject(INDEX_ADD, commandObj.getTaskObject(), commandObj.getIndex()));
-		} else if (commandObj.getCommandType() == INDEX_DONE) {
-			list.push(new CommandObject(INDEX_UNDO, commandObj.getTaskObject()));
-		}
+		} 
 	}
 
 	// Edit <-> edit
 	// Saves the item number to be edited and the original title
 	private void addToList(Edit editOriginal, Stack<CommandObject> list) {
 		String originalTitle = editOriginal.getOriginalTitle();
-		CommandObject newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle), editOriginal.getEditItemNumber());
+		CommandObject newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
+				editOriginal.getEditItemNumber());
 		list.push(newCommandObj);
 	}
-
-	private void helpFunction() {
-
-	}
 	
-	// Returns true if the command is one which involves editing of the task lists
+	// Done <-> Incomplete <-> Overdue needs one function
+
+	private void helpFunction(TaskObject taskObj) {
+		String helpSearchKey = taskObj.getTitle();
+		Help help = new Help(helpSearchKey);
+		setOutput(help.run());
+	}
+
+	// Returns true if the command is one which involves editing of the task
+	// lists
 	private boolean isListOperation(int command) {
-		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE ||
-				command == INDEX_DONE || command == INDEX_OVERDUE || command == INDEX_UNDONE;
+		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE || command == INDEX_DONE
+				|| command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
 	}
-	
+
 	private void clearRedoList() {
 		while (!redoList.empty()) {
 			redoList.pop();

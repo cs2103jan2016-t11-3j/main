@@ -16,7 +16,8 @@ public class DeleteTest {
 	private TaskObject taskOne = new TaskObject("Hello", 200);
 	private TaskObject taskTwo = new TaskObject("Nonsense", 178);
 	private TaskObject taskThree = new TaskObject("Dinner tonight", 20160226, 1900, "deadline", "incomplete", 24);
-	private TaskObject delete = new TaskObject("1");
+	private CommandObject delete = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 1);
+	private CommandObject deleteFail = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 2);
 	private TaskObject deleteQuick = new TaskObject("");
 	private Stack<CommandObject> testUndoList = new Stack<CommandObject>();
 
@@ -42,11 +43,8 @@ public class DeleteTest {
 	@Test
 	// Delete an inapplicable task
 	public void testFail() {
-		testArray.add(taskOne);
-		
-		TaskObject taskTwo = new TaskObject("3");
-		
-		Delete deleteFirst = new Delete(taskTwo, testArray, lastOutputList);
+		testArray.add(taskOne);		
+		Delete deleteFirst = new Delete(deleteFail, testArray, lastOutputList);
 		ArrayList<String> actualOutput = deleteFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
