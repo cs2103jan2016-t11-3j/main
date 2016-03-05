@@ -51,9 +51,11 @@ public class UIMain extends Application {
 	}
 
 	public String getOutput() {
-
-		ArrayList<String> output = logic.getOutput();
-		return output.get(0);		
 		
+		ArrayList<String> output = logic.getOutput();
+		if(output.size() == 1) {
+			return output.get(0);
+		}
+		return "";
 	}
 }
