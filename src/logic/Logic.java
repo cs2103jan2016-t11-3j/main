@@ -126,7 +126,7 @@ public class Logic {
 		// FOR TESTING
 		// System.out.println("CommandObject index = " + index);
 		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = " + undoList.size() + ", redo size = " + redoList.size());
-		// printTaskObjectFields(taskObj);
+		//printTaskObjectFields(taskObj);
 		// System.out.println();
 		
 		// Clears the redo stack if it is a new command
