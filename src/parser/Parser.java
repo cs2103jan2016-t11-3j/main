@@ -20,7 +20,8 @@ public class Parser {
 	private static final String SEARCH_COMMAND_6 = "display";
 	private static final int SEARCH_INDEX = 2;
 
-	private static final String EDIT_COMMAND = "edit";
+	private static final String EDIT_COMMAND_1 = "edit";
+	private static final String EDIT_COMMAND_2 = "update";
 	private static final int EDIT_INDEX = 3;
 
 	private static final String DELETE_COMMAND = "delete";
@@ -28,21 +29,24 @@ public class Parser {
 
 	private static final String UNDO_COMMAND = "undo";
 	private static final int UNDO_INDEX = 5;
+	
+	private static final String REDO_COMMAND = "redo";
+	private static final int REDO_INDEX = 6;
 
 	private static final String SAVE_COMMAND = "save";
-	private static final int SAVE_INDEX = 6;
+	private static final int SAVE_INDEX = 7;
 
 	private static final String EXIT_COMMAND_1 = "exit";
 	private static final String EXIT_COMMAND_2 = "quit";
-	private static final int EXIT_INDEX = 7;
+	private static final int EXIT_INDEX = 8;
 
 	private static final String HELP_COMMAND = "help";
-	private static final int HELP_INDEX = 8;	
+	private static final int HELP_INDEX = 9;	
 	
 	private static final String DONE_COMMAND_1 = "done";
 	private static final String DONE_COMMAND_2 = "finish";
 	private static final String DONE_COMMAND_3 = "completed";
-	private static final int DONE_INDEX = 9;	
+	private static final int DONE_INDEX = 10;
 	
 	private CommandObject commandObject = new CommandObject();
 	private TaskObject taskObject = new TaskObject();
@@ -73,7 +77,9 @@ public class Parser {
 			commandObject.setCommandType(HELP_INDEX);
 		} else if (command.startsWith(UNDO_COMMAND)) {
 			commandObject.setCommandType(UNDO_INDEX);
-		} else if (command.startsWith(EDIT_COMMAND)) {
+		} else if (command.startsWith(REDO_COMMAND)) {
+			commandObject.setCommandType(REDO_INDEX);
+		} else if (command.startsWith(EDIT_COMMAND_1) || command.startsWith(EDIT_COMMAND_2)) {
 			parseEdit(command);
 		} else if (command.startsWith(SAVE_COMMAND)) {
 			parseSave(command);
@@ -204,9 +210,13 @@ public class Parser {
  	 */
  	public int extractDeleteIndex(String command) {		
  		String newString;
- 		int index = command.indexOf(" ") + 1;
- 		newString = command.substring(index);
- 		return Integer.parseInt(newString);
+ 		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
+ 			return -1;
+ 		} else {
+	 		int index = command.indexOf(" ") + 1;
+	 		newString = command.substring(index);
+ 		}
+	 	return Integer.parseInt(newString);
  	}
 
  	public void parseSave(String command) {

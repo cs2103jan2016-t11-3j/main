@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class Display {
 	
-	private static final String MESSAGE_EMPTY_LIST = "Task list is empty";
+	private static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
+	private static final String MESSAGE_SEARCH_RESULTS = "Search results:";
 	private static final String DISPLAY_RESULT_DEADLINE = "%1$s. %2$s, %3$s, %4$shrs, %5$s";
 	private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
 	private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
@@ -49,6 +50,7 @@ public class Display {
 		if (taskList.isEmpty()) {
 			outputEmptyMessage();
 		} else {
+			output.add(MESSAGE_SEARCH_RESULTS);
 			for (int i = 0; i < taskList.size(); i++) {
 				TaskObject task = taskList.get(i);
 				outputTaskList.add(task);

@@ -19,6 +19,7 @@ public class Add {
 	private final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
 
 	private TaskObject task;
+	private int index;
 	private boolean addedInternal = false;
 	private boolean addedExternal = false;
 	private boolean isClash = false;
@@ -30,13 +31,14 @@ public class Add {
 
 	}
 
-	public Add(TaskObject task, ArrayList<TaskObject> taskList) {
-		this.task = task;
+	public Add(TaskObject taskObj, int index, ArrayList<TaskObject> taskList) {
+		this.task = taskObj;
+		this.index = index;
 		this.taskList = taskList;
 	}
 
 	public ArrayList<String> run() {
-
+		
 		String taskType = task.getCategory();
 		if (taskType.equals("event")) {
 			isClash = checkIfClash();
@@ -46,7 +48,7 @@ public class Add {
 		createOutput();
 		return output;
 	}
-
+	
 	private boolean checkIfClash() {
 		boolean hasClashes = false;
 		for (int i = 0; i < taskList.size(); i++) {
@@ -117,7 +119,12 @@ public class Add {
 	private void addInternal() {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
-		taskList.add(task);
+		if (index != 0) { 	// must add at a specific point
+			taskList.add(index-1, task);
+		} else {
+			taskList.add(task);
+		}
+		
 		if (taskList.size() == newSize)
 			addedInternal = true;
 	}

@@ -11,12 +11,89 @@ public class LogicTest {
 	// Initialisation of Logic class
 	ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	Stack<CommandObject> undoList = new Stack<CommandObject>();
-	Logic logic = new Logic(taskList, undoList);	
+	Stack<CommandObject> redoList = new Stack<CommandObject>();
+	Logic logic = new Logic(taskList, undoList, redoList);	
 
 	ArrayList<String> output = new ArrayList<String>();
 	ArrayList<String> expectedOutput = new ArrayList<String>();
 	CommandObject commandObj;
 	TaskObject taskObj;
+	
+	@Test
+	public void testUndoAfterAdd() {
+		String test1 = "add lunch with bill clinton date: 8/3/2015 time: 12pm";
+		logic.run(test1);
+		printOutput();
+		
+		String test2 = "add visit the old folks' home date: 9/3/2015 time: 4pm";
+		logic.run(test2);
+		printOutput();
+		
+		String test3 = "add get my shit together";
+		logic.run(test3);
+		printOutput();
+		
+		String display = "display";
+		logic.run(display);
+		printOutput();
+		
+		String undo = "undo";
+		logic.run(undo);
+		printOutput();
+		logic.run(undo);
+		printOutput();
+		
+		logic.run(display);
+		printOutput();
+		
+		//logic.run(test5);
+		//printOutput();
+		
+		String redo = "redo";
+		logic.run(redo);
+		printOutput();
+		
+		logic.run(display);
+		printOutput();
+		
+		logic.run(undo);
+		printOutput();
+		
+		logic.run(display);
+		printOutput();
+		
+	}
+	
+	/*
+	@Test
+	public void test() {
+		String test1 = "add lunch with bill clinton date: 8/3/2015 time: 12pm";
+		logic.run(test1);
+		printOutput();
+		
+		String test2 = "add visit the old folks' home date: 9/3/2015 time: 4pm";
+		logic.run(test2);
+		printOutput();
+		
+		String test3 = "add get my shit together";
+		logic.run(test3);
+		printOutput();
+		
+		String test4 = "display";
+		logic.run(test4);
+		printOutput();
+		
+		String test5 = "undo";
+		logic.run(test5);
+		printOutput();
+		
+		String test6 = "display";
+		logic.run(test6);
+		printOutput();
+	}
+	
+	
+	
 	
 	@Test
 	public void test() {
@@ -44,6 +121,7 @@ public class LogicTest {
 		logic.run(testUserInput5);
 		printOutput();
 		
+		
 		// SEARCH FOR SPECIFIC KEYWORD WORKS
 		String testUserInput6 = "search float";
 		logic.run(testUserInput6);
@@ -62,18 +140,24 @@ public class LogicTest {
 		logic.run(testUserInput9);
 		printOutput();
 		
-/*		String testUserInput8 = "view";
-		logic.run(testUserInput8);
+		
+
+
+		String testUserInput19 = "undo";
+		logic.run(testUserInput19);
+		printOutput();
+	
+		String testUserInput11 = "add dinner with obama date:3/3/2015 time:8pm";
+		logic.run(testUserInput11);
 		printOutput();
 		
-		String testUserInput9 = "undo";
-		logic.run(testUserInput9);
+		String testUserInput10 = "view";
+		logic.run(testUserInput10);
 		printOutput();
-*/	
-		
 		
 		
 	}
+*/
 		
 	
 	private void printersForDebugging() {
