@@ -14,13 +14,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import logic.TaskObject;
 
 public class Controller implements Initializable {
 	static String _input;
 	static UIMain _UI = new UIMain();
+	
 	@FXML
 	private TextField userInput;
+	@FXML 
+	private static BorderPane layout;
+	@FXML
+	private TextFlow feedbackBox;
 	@FXML
 	private static TableView<ArrayList<TaskObject>> taskTable;
 	@FXML
@@ -33,15 +41,22 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
-    	if (event.getCode() == KeyCode.ENTER) {
+    	feedbackBox.getChildren().clear();
+		if (event.getCode() == KeyCode.ENTER) {
     	System.out.println(userInput.getText());
     	_input = userInput.getText();
-    	UIMain.passInput(_input);
+    	_UI.passInput(_input);
     	userInput.clear();
+    	displayMessage();
  
     	}
 	}
 	
+	private void displayMessage() {
+		Text feedbackMessage = new Text(_UI.getOutput());
+		feedbackBox.getChildren().add(feedbackMessage);
+	}
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -49,17 +64,10 @@ public class Controller implements Initializable {
 		deadlineColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 		indexColumn.setCellValueFactory(new PropertyValueFactory<>("taskId"));
 		
-		taskTable.getItems().setAll(getTaskList());
+		taskTable.getItems().setAll(_UI.getTaskList());
 		*/
+		
 	}
 
-	private ArrayList<TaskObject> getTaskList() {
-		return UIMain.getTaskList();
-	}
-
-
-	public static String getInput() {
-		return _input;
-	}
 	
 } 

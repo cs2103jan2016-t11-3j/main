@@ -37,7 +37,7 @@ public class UIMain extends Application {
 		return taskList;
 	}
 
-	public static void passInput(String input) {
+	public void passInput(String input) {
 		logic.run(input);
 		printOutput();
 	}
@@ -45,7 +45,15 @@ public class UIMain extends Application {
 	private static void printOutput() {
 		ArrayList<String> output = logic.getOutput();
 		for (int i = 0; i < output.size(); i++) {
-			System.out.println(output.get(i));		}
+			System.out.println(output.get(i));		
+		}
 
+	}
+
+	public String getOutput() {
+
+		ArrayList<String> output = logic.getOutput();
+		return output.get(0);		
+		
 	}
 }
