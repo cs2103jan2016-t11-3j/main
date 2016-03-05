@@ -1,9 +1,12 @@
 package GUI;
 	
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import logic.Logic;
+import logic.TaskObject;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
@@ -13,6 +16,7 @@ public class UIMain extends Application {
 	static Logic logic = new Logic();
 	Stage window;
 	static String input;
+	static ArrayList<TaskObject> taskList;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -27,7 +31,21 @@ public class UIMain extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
-		input = Controller.getInput();
-		logic.setUserInput(input);
+	}
+	
+	public static ArrayList<TaskObject> getTaskList() {
+		return taskList;
+	}
+
+	public static void passInput(String input) {
+		logic.run(input);
+		printOutput();
+	}
+
+	private static void printOutput() {
+		ArrayList<String> output = logic.getOutput();
+		for (int i = 0; i < output.size(); i++) {
+			System.out.println(output.get(i));		}
+
 	}
 }

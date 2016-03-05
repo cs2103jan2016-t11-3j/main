@@ -13,12 +13,15 @@
       <TextField fx:id="userInput" onKeyPressed="#handleEnterPressed" prefHeight="40.0" prefWidth="200.0" promptText="Enter Command" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn prefWidth="100.0" text="Index" />
-          <TableColumn maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Task Name" />
-            <TableColumn maxWidth="200.0" minWidth="150.0" prefWidth="200.0" text="Date Due" />
+          <TableColumn fx:id="indexColumn" prefWidth="100.0" text="Index" />
+          <TableColumn fx:id="taskColumn" prefWidth="350.0" text="Task Name" />
+            <TableColumn fx:id="deadlineColumn" prefWidth="200.0" text="Date Due" />
         </columns>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </TableView>
    </center>
    <top>
