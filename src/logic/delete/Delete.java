@@ -16,7 +16,7 @@ public class Delete {
 	private static String MESSAGE_ERROR = "Error deleting task from TaskFinder";
 
 	// This command object contains the index number of the line to be deleted
-	private CommandObject commandObj = new CommandObject();
+	private CommandObject commandObj;
 	
 	// This is the task which is actually removed from TaskFinder
 	private TaskObject removedTask = new TaskObject();
@@ -46,6 +46,7 @@ public class Delete {
 	public Delete(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
+		this.commandObj = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), -1);
 	}
 
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
@@ -55,6 +56,7 @@ public class Delete {
 	}
 	
 	public ArrayList<String> run() {
+		assert(!taskList.isEmpty());
 		if(commandObj.getIndex() == -1) {
 			runQuickDelete();
 		} else {
@@ -118,7 +120,7 @@ public class Delete {
 		int index = commandObj.getIndex();
 		if (index > 0 && index <= taskList.size()) { 
 			index--;
-			taskIdToDelete = taskList.get(index).getTaskId();
+			taskIdToDelete = lastOutputTaskList.get(index).getTaskId();
 		}
 	}
 
