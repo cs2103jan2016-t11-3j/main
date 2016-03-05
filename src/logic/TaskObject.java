@@ -8,7 +8,7 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected int startTime;
 	protected int endTime;
 	protected String category; // deadline, event, or floating
-	protected String status; //completed, overdue or undone
+	protected String status; //completed, overdue or incomplete
 	protected int taskId;
 	
 	// Constructor for event tasks

@@ -33,7 +33,7 @@ public class Logic {
 	// A set of indicators for task status modifiers;
 	public static final int INDEX_DONE = 10;
 	public static final int INDEX_OVERDUE = 11;
-	public static final int INDEX_UNDONE = 12;
+	public static final int INDEX_INCOMPLETE = 12;
 
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
@@ -157,16 +157,13 @@ public class Logic {
 			case INDEX_DELETE :
 				TaskObject removedTask = new TaskObject();
 				if (commandObj.getIndex() == -1) {
-					// Quick-delete function for item recently added in the last
-					// command
+					// Quick-delete function for item recently added
 					if (undoList.peek().getCommandType() == INDEX_DELETE) {
 						removedTask = undoList.peek().getTaskObject(); 	// NEED TO POP SOMEWHERE
 					}
 					deleteFunction(); // overloaded function
 				} else {
 					removedTask = deleteFunction(commandObj);
-					// Needs editing as the TaskObject added to undoList is the
-					// wrong TaskObject
 				}
 				
 				CommandObject newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
@@ -194,7 +191,7 @@ public class Logic {
 			case INDEX_OVERDUE :
 				overdueFunction(taskObj);
 				break;
-			case INDEX_UNDONE :
+			case INDEX_INCOMPLETE :
 				undoneFunction(taskObj);
 				break;
 			default:
@@ -298,7 +295,7 @@ public class Logic {
 	}
 	
 	private void undoneFunction(TaskObject taskObj) {
-		Undone undone = new Undone(taskObj, taskList, lastOutputTaskList);
+		Incomplete undone = new Incomplete(taskObj, taskList, lastOutputTaskList);
 		setOutput(undone.run());
 		if (undone.getTaskIdToMark() != -1) {
 			String pastStatus = undone.getStatusToChange();
@@ -316,8 +313,8 @@ public class Logic {
 			if (pastStatus.equals("completed")) {
 				return INDEX_DONE;
 			} else {
-				if (pastStatus.equals("undone")) {
-					return INDEX_UNDONE;
+				if (pastStatus.equals("incomplete")) {
+					return INDEX_INCOMPLETE;
 				}
 			}
 		}
@@ -358,7 +355,7 @@ public class Logic {
 	// Returns true if the command is one which involves editing of the task lists
 	private boolean isListOperation(int command) {
 		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE ||
-				command == INDEX_DONE || command == INDEX_OVERDUE || command == INDEX_UNDONE;
+				command == INDEX_DONE || command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
 	}
 	
 	private void clearRedoList() {
