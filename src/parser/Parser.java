@@ -76,9 +76,9 @@ public class Parser {
 		} else if (command.startsWith(EDIT_COMMAND)) {
 			parseEdit(command);
 		} else if (command.startsWith(SAVE_COMMAND)) {
-			setCommandObjectToSave(command);
+			parseSave(command);
 		} else if (command.startsWith(DELETE_COMMAND)) {
-			setCommandObjectToDelete(command);
+			parseDelete(command);
 		} else if (command.startsWith(ADD_COMMAND)) {
 			parseAdd(command);
 		} else if (isSearch(command)) {
@@ -93,8 +93,9 @@ public class Parser {
 		commandObject.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
 		command = command.substring(temp);
-		taskObject.setTitle("command");
-		commandObject.setTaskObject(taskObject);
+		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+		temp = Integer.parseInt(command);
+		commandObject.setIndex(temp);
 	}
 	
 	public void parseEdit(String command) {
@@ -122,6 +123,7 @@ public class Parser {
 		taskObject.setStartDate(AP.getStartDate());
 		taskObject.setEndDate(AP.getEndDate());
 		taskObject.setTaskId(_taskId);	// ADDED
+		taskObject.setStatus("undone");
 		commandObject.setTaskObject(taskObject);
 		setCategory();
 		AP.reset();
@@ -155,7 +157,7 @@ public class Parser {
 		} else if (isDeadline()) {
 			taskObject.setCategory("deadline");
 		} else {
-			taskObject.setCategory("deadline");
+			taskObject.setCategory("event"); //edited mistake here
 		}
 	}
 	
@@ -190,7 +192,7 @@ public class Parser {
  		}
  	}
  	
- 	public void setCommandObjectToDelete(String command) {
+ 	public void parseDelete(String command) {
  		commandObject.setCommandType(DELETE_INDEX);
  		int index;
  		index = extractDeleteIndex(command);
@@ -207,7 +209,7 @@ public class Parser {
  		return Integer.parseInt(newString);
  	}
 
- 	public void setCommandObjectToSave(String command) {
+ 	public void parseSave(String command) {
  		commandObject.setCommandType(SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
@@ -238,6 +240,10 @@ public class Parser {
  	
  	public int getEndTime() {
  		return taskObject.getEndTime();
+ 	}
+ 	
+ 	public String getStatus() {
+ 		return taskObject.getStatus();
  	}
  	
  	public void resetTaskObj() {
