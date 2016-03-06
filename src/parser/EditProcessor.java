@@ -3,61 +3,21 @@ package parser;
 import java.util.ArrayList;
 import logic.TaskObject;
 
-public class EditProcessor {
-	
-	private static final String TIME_AM_1 = "AM";
-	private static final String TIME_AM_2 = "A.M.";
-	private static final String TIME_AM_3 = "am";
-	private static final String TIME_AM_4 = "a.m.";
-	private static final String TIME_PM_1 = "PM";
-	private static final String TIME_PM_2 = "A.M.";
-	private static final String TIME_PM_3 = "pm";
-	private static final String TIME_PM_4 = "p.m.";
-	
-	private static final String MONTH_1_1 = "january";
-	private static final String MONTH_1_2 = "jan";
-	private static final String MONTH_2_1 = "february";
-	private static final String MONTH_2_2 = "feb";
-	private static final String MONTH_3_1 = "march";
-	private static final String MONTH_3_2 = "mar";
-	private static final String MONTH_4_1 = "april";
-	private static final String MONTH_4_2 = "apr";
-	private static final String MONTH_5_1 = "may";
-	private static final String MONTH_6_1 = "june";
-	private static final String MONTH_6_2 = "jun";
-	private static final String MONTH_7_1 = "july";
-	private static final String MONTH_7_2 = "jul";
-	private static final String MONTH_8_1 = "august";
-	private static final String MONTH_8_2 = "aug";
-	private static final String MONTH_9_1 = "september";
-	private static final String MONTH_9_2 = "sept";
-	private static final String MONTH_10_1 = "october";
-	private static final String MONTH_10_2 = "oct";
-	private static final String MONTH_11_1 = "november";
-	private static final String MONTH_11_2 = "nov";
-	private static final String MONTH_12_1 = "december";
-	private static final String MONTH_12_2 = "dec";
-	
-	private static final Integer NOT_TASK_CONSTANT = 5;
+public class EditProcessor extends CommandProcessor {
 	
 	private ArrayList<String> list = new ArrayList<String>();
 	
 	private TimeProcessor TP = new TimeProcessor();
 	private DateProcessor DP = new DateProcessor();
 	public TaskObject TO = new TaskObject();
-	
-	private String _task = "";
-	private int _startDate = -1;
-	private int _endDate = -1;
-	private int _startTime = -1;
-	private int _endTime = -1;
+
 	private int _index = -1;
 	
 	/**
 	 * this method will take in the string from the parser 
 	 * and break down its component, determining if it is a task, time or date edit
 	 */
-	public TaskObject processEdit(String input) {
+	public TaskObject process(String input) {
 		convertToArray(input);
 		String clean_string = cleanString();
 		if (isDate() && !isTask()) {
@@ -328,7 +288,7 @@ public class EditProcessor {
 		list.clear();
 	}
  	
- 	public void resetAll() {
+ 	public void reset() {
  		setTask("");
  		setStartDate(-1);
  		setEndDate(-1);
