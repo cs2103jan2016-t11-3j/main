@@ -72,9 +72,8 @@ public class Logic {
 	private String userInput;
 	// Output is to be returned to UI after each command
 	private ArrayList<String> output;
-	// Keeps track of the last output task list returned from display/search;
-	// for editing purposes
-	private ArrayList<TaskObject> lastOutputTaskList;
+	// Keeps track of the list that is constantly displayed in UI
+	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 
 	public Logic() {
 		taskList = new ArrayList<TaskObject>();
@@ -246,6 +245,7 @@ public class Logic {
 	private void addFunction(TaskObject taskObj, int index) {
 		Add add = new Add(taskObj, index, taskList);
 		setOutput(add.run());
+		setLastOutputTaskList(taskList);
 	}
 
 	/*
@@ -277,6 +277,7 @@ public class Logic {
 	private Edit editFunction(CommandObject commandObj) {
 		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList);
 		setOutput(edit.run());
+		setLastOutputTaskList(taskList);
 		return edit;
 	}
 
@@ -284,6 +285,7 @@ public class Logic {
 		TaskObject removedTask = new TaskObject();
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList);
 		setOutput(delete.run());
+		setLastOutputTaskList(taskList);
 		removedTask = delete.getRemovedTask();
 		return removedTask;
 	}
@@ -291,6 +293,7 @@ public class Logic {
 	private void deleteFunction() {
 		Delete delete = new Delete(taskList, undoList);
 		setOutput(delete.run());
+		setLastOutputTaskList(taskList);
 	}
 
 	private void undoRedoFunction(int command) {
@@ -301,6 +304,7 @@ public class Logic {
 		setTaskList(undoRedo.getTaskList());
 		setUndoList(undoRedo.getUndoList());
 		setRedoList(undoRedo.getRedoList());
+		setLastOutputTaskList(taskList);
 	}
 
 	private void saveFunction(TaskObject taskObj) {
@@ -316,6 +320,7 @@ public class Logic {
 	private void doneFunction(TaskObject taskObj) {
 		Done done = new Done(taskObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
+		setLastOutputTaskList(taskList);
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
 			CommandObject undoCommand = constructStatusCommandObject(done);
 			// addToUndoList(commandIndex, new TaskObject(pastStatus,
@@ -326,6 +331,7 @@ public class Logic {
 	private void overdueFunction(TaskObject taskObj) {
 		Overdue overdue = new Overdue(taskObj, taskList, lastOutputTaskList);
 		setOutput(overdue.run());
+		setLastOutputTaskList(taskList);
 		if (overdue.getTaskIdToMark() != -1) {
 			CommandObject undoCommand = constructStatusCommandObject(overdue);
 		}
@@ -336,6 +342,7 @@ public class Logic {
 	private void undoneFunction(TaskObject taskObj) {
 		Incomplete incomplete = new Incomplete(taskObj, taskList, lastOutputTaskList);
 		setOutput(incomplete.run());
+		setLastOutputTaskList(taskList);
 		if (incomplete.getTaskIdToMark() != -1) {
 			CommandObject undoCommand = constructStatusCommandObject(incomplete);
 			// addToUndoList(commandIndex, new TaskObject(pastStatus,
