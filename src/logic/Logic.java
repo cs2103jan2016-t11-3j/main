@@ -23,6 +23,27 @@ import java.util.Stack;
  * overdue. Consider displaying all overdue tasks or alert
  */
 
+/**
+ * Main driver for Adult TaskFinder. Upon initialisation of the object, retrieves all
+ * existing tasks from an external file source and places them into an ArrayList of 
+ * TaskObjects. The main Logic object initialised in the GUI will exist until exit command is
+ * inputted. <br>
+ * Alternatively, secondary Logic objects may be initialised when Undo or Redo commands are
+ * given. In this case, secondary Logic objects will only carry out the specific task 
+ * required before it "dies".
+ * @param taskList - Initialised as an empty list of TaskObjects,
+ * will maintain all TaskObjects existing in Adult TaskFinder internally throughout the 
+ * runtime of the program.
+ * @param undoList - Stack of CommandObjects stored for undoing. Every
+ * time a command is executed, the reverse of that command will be pushed into undoList in 
+ * the form of a CommandObject.
+ * @param redoList - Stack of CommandObjects stored for redoing. Every 
+ * time a command is popped from the undoList for undoing, the reverse of that command 
+ * will be pushed into the redoList as an CommandObject. Clears itself whenever the user
+ * inputs a command which is not "undo".
+ * @author ChongYan
+ *
+ */
 public class Logic {
 
 	public static final int INDEX_ADD = 1;
