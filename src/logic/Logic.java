@@ -138,6 +138,7 @@ public class Logic {
 		try {
 			FileStorage storage = FileStorage.getInstance();
 			taskList = storage.load();
+			setLastOutputTaskList(taskList);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
