@@ -1,6 +1,7 @@
 package parser;
 
 import java.util.ArrayList;
+import logic.TaskObject;
 
 public class EditProcessor {
 	
@@ -43,6 +44,7 @@ public class EditProcessor {
 	
 	private TimeProcessor TP = new TimeProcessor();
 	private DateProcessor DP = new DateProcessor();
+	public TaskObject TO = new TaskObject();
 	
 	private String _task = "";
 	private int _startDate = -1;
@@ -55,7 +57,7 @@ public class EditProcessor {
 	 * this method will take in the string from the parser 
 	 * and break down its component, determining if it is a task, time or date edit
 	 */
-	public void processEdit(String input) {
+	public TaskObject processEdit(String input) {
 		convertToArray(input);
 		String clean_string = cleanString();
 		if (isDate() && !isTask()) {
@@ -67,6 +69,16 @@ public class EditProcessor {
 		} else {
 			setTask(clean_string);
 		}
+		setTaskObject();
+		return TO;
+	}
+	
+	private void setTaskObject() {
+		TO.setTitle(_task);
+		TO.setStartTime(_startTime);
+		TO.setEndTime(_endTime);
+		TO.setEndDate(_endDate);
+		TO.setStartDate(_startDate);
 	}
 	
 	/**

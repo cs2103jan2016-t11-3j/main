@@ -48,8 +48,8 @@ public class Parser {
 	private static final String DONE_COMMAND_3 = "completed";
 	private static final int DONE_INDEX = 10;
 	
-	private CommandObject commandObject = new CommandObject();
-	private TaskObject taskObject = new TaskObject();
+	public CommandObject commandObject = new CommandObject();
+	public TaskObject taskObject = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
 	
 	private String _command;
@@ -70,6 +70,12 @@ public class Parser {
 		return commandObject;
 	}
 
+	
+	/**
+	 * method reads string and trigger the relevant method to process string's information
+	 * 
+	 * @param command  is the user's input to the program
+	 */
 	public void allocateCommandType(String command) {
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			commandObject.setCommandType(EXIT_INDEX);
@@ -92,9 +98,17 @@ public class Parser {
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
 				|| command.startsWith(DONE_COMMAND_3)) {
 			parseDone(command);
+		} else {
+			//error message? 
 		}
   	}
 	
+	
+	/**
+	 * method sets command type and index of the task to be marked as done
+	 * 
+	 * @param  command   user's input
+	 */
 	public void parseDone(String command) {
 		commandObject.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
@@ -104,36 +118,53 @@ public class Parser {
 		commandObject.setIndex(temp);
 	}
 	
+	/**
+	 * method sets command type, index of task to edit and parts of the task to edit
+	 * 
+	 * @param command   user's input
+	 */
 	public void parseEdit(String command) {
 		commandObject.setCommandType(EDIT_INDEX);
 		EditProcessor EP = new EditProcessor();
-		EP.processEdit(command);
-		taskObject.setTitle(EP.getTask());
-		taskObject.setStartTime(EP.getStartTime());
-		taskObject.setEndTime(EP.getEndTime());
-		taskObject.setStartDate(EP.getStartDate());
-		taskObject.setEndDate(EP.getEndDate());
+		taskObject = EP.processEdit(command);
 		commandObject.setTaskObject(taskObject);
 		commandObject.setIndex(EP.getIndex());
 		EP.resetAll();
 	}
 	
+	/*
+	 * taskObject.setTitle(EP.getTask());
+		taskObject.setStartTime(EP.getStartTime());
+		taskObject.setEndTime(EP.getEndTime());
+		taskObject.setStartDate(EP.getStartDate());
+		taskObject.setEndDate(EP.getEndDate());*/
+	
+	/**
+	 * method sets command type and creates task object with details keyed in by user
+	 * 
+	 * @param command   user's input
+	 */
 	public void parseAdd(String command) {
 		commandObject.setCommandType(ADD_INDEX);
 		AddProcessor AP = new AddProcessor();
-		AP.addCommand(command);
+		taskObject = AP.addCommand(command);
 		//add these 5 main attributes
-		taskObject.setTitle(AP.getTask());
+		taskObject.setTaskId(_taskId);
+		commandObject.setTaskObject(taskObject);
+		setCategory();
+		AP.reset();
+	}
+	
+	/*keep here temporarily (under arts)
+	 * taskObject.setTitle(AP.getTask());
 		taskObject.setStartTime(AP.getStartTime());
 		taskObject.setEndTime(AP.getEndTime());
 		taskObject.setStartDate(AP.getStartDate());
 		taskObject.setEndDate(AP.getEndDate());
 		taskObject.setTaskId(_taskId);	// ADDED
 		taskObject.setStatus("undone");
-		commandObject.setTaskObject(taskObject);
-		setCategory();
-		AP.reset();
-	}
+	 */
+	
 	
 	public void parseSearch(String command) {
 		commandObject.setCommandType(SEARCH_INDEX);
@@ -147,15 +178,18 @@ public class Parser {
 			taskObject.setEndDate(-1);
 		} else {
 			command = command.substring(command.indexOf(" ")+1);
-			SP.processSearchTerm(command);
-			taskObject.setTitle(SP.getTask());
-			taskObject.setStartTime(SP.getStartTime());
-			taskObject.setEndTime(SP.getEndTime());
-			taskObject.setStartDate(SP.getStartDate());
-			taskObject.setEndDate(SP.getEndDate());
+			taskObject = SP.processSearchTerm(command);
+			
 		}
 		commandObject.setTaskObject(taskObject);
 	}
+	
+	/*taskObject.setTitle(SP.getTask());
+	taskObject.setStartTime(SP.getStartTime());
+	taskObject.setEndTime(SP.getEndTime());
+	taskObject.setStartDate(SP.getStartDate());
+	taskObject.setEndDate(SP.getEndDate());
+	*/
 	
 	public void setCategory() {
 		if (isFloating()) {

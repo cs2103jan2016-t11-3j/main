@@ -1,12 +1,14 @@
 package parser;
 
 import java.util.ArrayList;
+import logic.TaskObject;
 
 
 public class AddProcessor {
 	
 	public ArrayList<String> list = new ArrayList<String>();
 	public ArrayList<Integer> dateList = new ArrayList<Integer>();
+	
 	
 	private String task;
 	private int startDate = -1;
@@ -16,6 +18,7 @@ public class AddProcessor {
 	
 	private TimeProcessor TP = new TimeProcessor();
 	private DateProcessor DP = new DateProcessor();
+	public TaskObject TO = new TaskObject();
 	
 	/**
 	 * this method will take in the command and allocate the correct information
@@ -23,14 +26,25 @@ public class AddProcessor {
 	 * 
 	 * @param input    string input from user
 	 */
-	public void addCommand(String input) {
+	public TaskObject addCommand(String input) {
 		//splits add command into array list
 		convertToArray(input);
 		//get the task stuff
 		readTask();
+		setTaskObject();
+		return TO;
+	}
+	
+	private void setTaskObject() {
+		TO.setTitle(task);
+		TO.setStartTime(startTime);
+		TO.setEndTime(endTime);
+		TO.setEndDate(endDate);
+		TO.setStartDate(startDate);
+		TO.setStatus("undone");
 	}
 
-	public void convertToArray(String input) {
+	private void convertToArray(String input) {
 		for (String temp: input.split(" ")) {
  			list.add(temp);
  		}
@@ -39,7 +53,7 @@ public class AddProcessor {
 	/**
 	 * this method extracts out the string from the array list for tasks
 	 */
-	public void readTask() {
+	private void readTask() {
  		int i;
  		String _task = null;
  		for (i = 1; i < list.size(); i++) {
@@ -63,14 +77,14 @@ public class AddProcessor {
 	}
 	
 	// this method checks for first occurrence of the keyword indicating date input
- 	public boolean isStartOfDate(String input) {
+ 	private boolean isStartOfDate(String input) {
  		return input.contains("date:");
  	}
 	
  	/**
  	 * this method will extract out the string from the arraylist for date
  	 */
- 	public void readDate(int index) {
+ 	private void readDate(int index) {
  		String _date = null;
  		int i = 0;
  		//forms the date string
@@ -97,14 +111,14 @@ public class AddProcessor {
  	}
  	
  	//checks for the "time:" keyword
- 	public boolean isStartOfTime(String input) {
+ 	private boolean isStartOfTime(String input) {
  		return input.contains("time:");
  	}
  	
  	/**
  	 * this method will extract the string from the array list for time
  	 */
- 	public void readTime(int index) {
+ 	private void readTime(int index) {
  		String _time = null;
  		int i;
  		for (i = index; i < list.size(); i++) { 			
@@ -118,12 +132,12 @@ public class AddProcessor {
  		setTime();
  	}
  	
- 	public void setDate() {
+ 	private void setDate() {
 		startDate = DP.getStartDate();
 		endDate = DP.getEndDate();
  	}
  	
- 	public void setTime() {
+ 	private void setTime() {
  		startTime = TP.getStartTime();
  		endTime = TP.getEndTime();
  	}

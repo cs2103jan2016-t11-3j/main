@@ -1,6 +1,7 @@
 package parser;
 
 import java.util.ArrayList;
+import logic.TaskObject;
 
 public class SearchProcessor {
 	
@@ -57,10 +58,11 @@ public class SearchProcessor {
 	private int _endTime = -1;
 	
 	private ArrayList<String> list = new ArrayList<String>();
+	public TaskObject TO = new TaskObject();
 	
 	private boolean isPM;
 	
-	public void processSearchTerm(String input) {
+	public TaskObject processSearchTerm(String input) {
 		input = removeSearchKeyword(input);
 		convertToArray(input);
 		if (isTime(input) && hasNumber()) {
@@ -72,6 +74,16 @@ public class SearchProcessor {
 		}
 		//set task
 		_task = input;
+		setTaskObject();
+		return TO;
+	}
+	
+	private void setTaskObject() {
+		TO.setTitle(_task);
+		TO.setStartTime(_startTime);
+		TO.setEndTime(_endTime);
+		TO.setEndDate(_endDate);
+		TO.setStartDate(_startDate);
 	}
 	
 	public boolean hasNumber() {
