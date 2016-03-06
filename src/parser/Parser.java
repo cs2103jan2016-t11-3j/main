@@ -2,11 +2,7 @@ package parser;
 import logic.CommandObject;
 import logic.TaskObject;
 
-/*
-parser takes in string
 
-
-*/
 public class Parser {
 
 	private static final String ADD_COMMAND = "add";
@@ -63,12 +59,14 @@ public class Parser {
 		_taskId = taskId;	// ADDED INITIALISATION FOR TASKID
 	}
 	public CommandObject run() {
-		return parseInput(_command);
-	}
-	private CommandObject parseInput(String command) {
-		allocateCommandType(command);
+		allocate(_command);
 		return commandObject;
 	}
+	
+	/*private CommandObject parseInput(String command) {
+		allocateCommandType(command);
+		return commandObject;
+	}*/
 
 	
 	/**
@@ -76,7 +74,7 @@ public class Parser {
 	 * 
 	 * @param command  is the user's input to the program
 	 */
-	public void allocateCommandType(String command) {
+	public void allocate(String command) {
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			commandObject.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {
