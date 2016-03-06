@@ -30,6 +30,7 @@ public abstract class Mark {
 
 	public abstract ArrayList<String> run();
 
+	// May need to change if parser changes the way this command object is constructed
 	protected void obtainTaskId() {
 		int lineNumber = Integer.parseInt(instructionTask.getTitle());
 		lineNumber--;
