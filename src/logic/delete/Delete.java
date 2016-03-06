@@ -106,7 +106,7 @@ public class Delete {
 			// delete the last item in taskList as it shows that the item had just been added
 			int index = taskList.size() - 1;
 			taskName = taskList.get(index).getTitle();
-			taskList.remove(index);
+			removedTask = taskList.remove(index);
 			if(taskList.size() == index) {
 				// To check if taskList has shrunk by 1
 				hasDeletedInternal = true;
@@ -178,6 +178,7 @@ public class Delete {
 	}
 
 	private void createErrorOutput() {
+		removedTask = null;
 		output.add(MESSAGE_ERROR);
 	}
 

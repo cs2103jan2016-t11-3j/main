@@ -75,62 +75,20 @@ public class Logic {
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 
+	// Constructor loaded by UI
 	public Logic() {
 		taskList = new ArrayList<TaskObject>();
 		undoList = new Stack<CommandObject>();
 		redoList = new Stack<CommandObject>();
 		loadTaskList();
 	}
-
+	
+	// Constructor for the secondary logic class that is to be loaded within Undo/Redo
 	public Logic(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList, Stack<CommandObject> redoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
-	}
-
-	// Getters and setters
-	public ArrayList<TaskObject> getTaskList() {
-		return taskList;
-	}
-
-	public Stack<CommandObject> getUndoList() {
-		return undoList;
-	}
-
-	public Stack<CommandObject> getRedoList() {
-		return redoList;
-	}
-
-	public ArrayList<String> getOutput() {
-		return output;
-	}
-	
-	public ArrayList<TaskObject> getLastOutputTaskList() {
-		return lastOutputTaskList;
-	}
-
-	public void setTaskList(ArrayList<TaskObject> taskList) {
-		this.taskList = taskList;
-	}
-
-	public void setUndoList(Stack<CommandObject> undoList) {
-		this.undoList = undoList;
-	}
-
-	public void setRedoList(Stack<CommandObject> redoList) {
-		this.redoList = redoList;
-	}
-
-	public void setUserInput(String newUserInput) {
-		this.userInput = newUserInput;
-	}
-
-	public void setOutput(ArrayList<String> newOutput) {
-		this.output = newOutput;
-	}
-
-	public void setLastOutputTaskList(ArrayList<TaskObject> newLastOutputTaskList) {
-		this.lastOutputTaskList = newLastOutputTaskList;
+		this.lastOutputTaskList = taskList;
 	}
 
 	// Loads all existing tasks into the program from Storage
@@ -164,9 +122,9 @@ public class Logic {
 		int index = commandObj.getIndex();
 
 		// FOR TESTING
-		// System.out.println("CommandObject index = " + index);
-		// System.out.println("isUndoAction = " + isUndoAction + ", undo size =
-		// " + undoList.size() + ", redo size = " + redoList.size());
+		//System.out.println("CommandObject command = " + command + ", index = " + index);
+		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = "
+		//+ undoList.size() + ", redo size = " + redoList.size());
 		//printTaskObjectFields(taskObj);
 		// System.out.println();
 
@@ -200,19 +158,13 @@ public class Logic {
 			if (commandObj.getIndex() == -1) {
 				// Quick-delete function for item recently added
 				if (undoList.peek().getCommandType() == INDEX_DELETE) {
-					removedTask = undoList.peek().getTaskObject();
+					removedTask = deleteFunction(); // overloaded function
 				}
-				deleteFunction(); // overloaded function
 			} else {
 				removedTask = deleteFunction(commandObj);
 			}
-
-			CommandObject newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
-			if (isUndoAction) {
-				addToList(newCommandObj, redoList);
-			} else {
-				addToList(newCommandObj, undoList);
-			}
+			
+			processUndoForDelete(command, removedTask, commandObj, isUndoAction);
 			break;
 		case INDEX_UNDO:
 		case INDEX_REDO:
@@ -286,14 +238,33 @@ public class Logic {
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
-		removedTask = delete.getRemovedTask();
-		return removedTask;
+		
+		return delete.getRemovedTask();
 	}
 
-	private void deleteFunction() {
+	private TaskObject deleteFunction() {
 		Delete delete = new Delete(taskList, undoList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
+		
+		return delete.getRemovedTask();
+	}
+	
+	private void processUndoForDelete(int command, TaskObject removedTask, CommandObject commandObj, boolean isUndoAction) {
+		if (removedTask != null) {
+			CommandObject newCommandObj;
+			if (commandObj.getIndex() == -1) {
+				newCommandObj = new CommandObject(command, removedTask, taskList.size()+1);
+			} else {
+				newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
+			}
+			
+			if (isUndoAction) {
+				addToList(newCommandObj, redoList);
+			} else {
+				addToList(newCommandObj, undoList);
+			}
+		}
 	}
 
 	private void undoRedoFunction(int command) {
@@ -386,7 +357,11 @@ public class Logic {
 			// For the corresponding delete object, the TaskObject is null and
 			// the index number of the CommandObject is the index of the item
 			// that was just added
-			list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
+			if (commandObj.getIndex() == 0) {	// if the task had been added to the end of the list
+				list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
+			} else {
+				list.push(new CommandObject(INDEX_DELETE, new TaskObject(), commandObj.getIndex()));
+			}
 		} else if (commandObj.getCommandType() == INDEX_DELETE) {
 			// For the corresponding add object, the title of the TaskObject
 			// should be the name of the task that is just deleted
@@ -404,7 +379,6 @@ public class Logic {
 	}
 	
 	// Done <-> Incomplete <-> Overdue needs one function
-
 	private void helpFunction(TaskObject taskObj) {
 		String helpSearchKey = taskObj.getTitle();
 		Help help = new Help(helpSearchKey);
@@ -428,7 +402,53 @@ public class Logic {
 		output.clear();
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
+	
+	// Getters and setters
+	public ArrayList<TaskObject> getTaskList() {
+		return taskList;
+	}
 
+	public Stack<CommandObject> getUndoList() {
+		return undoList;
+	}
+
+	public Stack<CommandObject> getRedoList() {
+		return redoList;
+	}
+
+	public ArrayList<String> getOutput() {
+		return output;
+	}
+	
+	public ArrayList<TaskObject> getLastOutputTaskList() {
+		return lastOutputTaskList;
+	}
+
+	public void setTaskList(ArrayList<TaskObject> taskList) {
+		this.taskList = taskList;
+	}
+
+	public void setUndoList(Stack<CommandObject> undoList) {
+		this.undoList = undoList;
+	}
+
+	public void setRedoList(Stack<CommandObject> redoList) {
+		this.redoList = redoList;
+	}
+
+	public void setUserInput(String newUserInput) {
+		this.userInput = newUserInput;
+	}
+
+	public void setOutput(ArrayList<String> newOutput) {
+		this.output = newOutput;
+	}
+
+	public void setLastOutputTaskList(ArrayList<TaskObject> newLastOutputTaskList) {
+		this.lastOutputTaskList = newLastOutputTaskList;
+	}
+
+	// For testing
 	private void printTaskObjectFields(TaskObject taskObj) {
 		System.out.println("title = " + taskObj.getTitle());
 		System.out.println("start date = " + taskObj.getStartDate());
