@@ -3,13 +3,17 @@ import logic.TaskObject;
 
 import java.util.ArrayList;
 
-/* Sample output formats are listed as follows.
- * (a) Example output for deadline: 
- *	   1. CS2103 v0.1, 11/03/2016, 1600hrs, pending
- * (b) Example output for event:
- *     2. Pulau Ubin Camp, 15/06/2009-17/06/2009, 0800hrs-1300hrs, completed
- * (c) Example output for floating task:
- * 	   3. Study more, pending
+/**
+ *  Creates a "Display" object which imports the existing task list into an ArrayList of 
+ *  Strings, in the format shown below: <br>
+ * (a) Example output for deadline: <br>
+ *	   1. CS2103 v0.1, 11/03/2016, 1600hrs, incomplete <br>
+ * (b) Example output for event: <br>
+ *     2. Pulau Ubin Camp, 15/06/2009-17/06/2009, 0800hrs-1300hrs, completed <br>
+ * (c) Example output for floating task: <br>
+ * 	   3. Study more, incomplete <br>
+ * @author ChongYan
+ *
  */
 
 public class Display {
@@ -28,6 +32,11 @@ public class Display {
 		
 	}
 
+	/**
+	 * Default constructor for a Display object
+	 * @param taskList - existing ArrayList of TaskObjects, sent by default outside control
+	 * of the user
+	 */
 	public Display(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;
 	}
@@ -42,10 +51,22 @@ public class Display {
 		return this.display();
 	}
 	
+	/**
+	 * Key method of the Display object which does the actual transferring of the task list
+	 * into the output format
+	 * @return output: ArrayList<String>
+	 */
 	public ArrayList<String> run() {
 		return this.display();
 	}
 	
+	/**
+	 * Extracts task information from each TaskObject and puts them into an ArrayList
+	 * of Strings, and updates the private output attribute in the Display Object. <br>
+	 * If the task list is empty, a default message for an empty task list will be added the
+	 * output.
+	 * @return output: ArrayList<String>
+	 */
 	private ArrayList<String> display() {
 		if (taskList.isEmpty()) {
 			outputEmptyMessage();
