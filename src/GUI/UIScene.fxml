@@ -55,7 +55,7 @@
                <padding>
                   <Insets left="5.0" top="10.0" />
                </padding></TextFlow>
-            <TextField fx:id="userInput" onKeyPressed="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Enter Command" style="-fx-background-radius: 0.5em;" />
+            <TextField fx:id="userInput" onKeyPressed="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command" style="-fx-background-radius: 0.5em;" />
          </children>
       </VBox>
    </bottom>
