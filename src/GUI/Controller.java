@@ -53,12 +53,12 @@ public class Controller implements Initializable {
     	userInput.clear();
     	displayMessage();
     	display();
- 
     	}
 	}
 	
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getOutput());
+		feedbackBox.getChildren().clear();
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
 
