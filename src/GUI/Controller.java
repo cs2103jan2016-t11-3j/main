@@ -46,7 +46,6 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
-    	feedbackBox.getChildren().clear();
 		if (event.getCode() == KeyCode.ENTER) {
     	System.out.println(userInput.getText());
     	_input = userInput.getText();
@@ -54,12 +53,12 @@ public class Controller implements Initializable {
     	userInput.clear();
     	displayMessage();
     	display();
- 
     	}
 	}
 	
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getOutput());
+		feedbackBox.getChildren().clear();
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
 
