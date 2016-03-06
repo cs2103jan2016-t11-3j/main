@@ -8,6 +8,20 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
+/**
+ * Creates a "Delete" object to facilitate the deletion of a task from task list internally,
+ * before updating the file at its default location. <br>
+ * There are two ways which Delete can be run: <br>
+ * 1) Normal delete <br> Pre-condition that user has to use a search/display function 
+ * first. With that task list which was displayed, the user proceeds to decide which item
+ * in the list he wishes to delete. <br>
+ * 2) Quick delete <br> Pre-condition that user has to add a task in his last command. Quick
+ * delete does not require the user to input an index for deletion, it automatically deletes
+ * the last added task.
+ * @author ChongYan
+ *
+ */
+
 // Needs delete function for last added code
 public class Delete {
 
@@ -43,18 +57,37 @@ public class Delete {
 
 	}
 	
+	/**
+	 * Default constructor for Quick Delete. <br> There will be an additional CommandObject 
+	 * initialised, with an index of -1.
+	 * @param taskList - Existing list of tasks in Adult TaskFinder
+	 * @param undoList - Current stack of CommandObjects with the purpose of undoing
+	 * previous actions
+	 */
 	public Delete(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.commandObj = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), -1);
 	}
 
+	/**
+	 * Default constructor for Normal Delete. 
+	 * @param commandObj - Contains the index to delete from the last outputted task list
+	 * @param taskList - Existing list of tasks in Adult TaskFinder
+	 * @param lastOutputTaskList - List of tasks outputted in the last command (e.g. Search, Display)
+	 */
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
 	
+	/**
+	 * Called by logic to find and delete an object in the task list. Automatically decides
+	 * whether to use quick delete or normal delete based on the index of the CommandObject 
+	 * in the Delete object.
+	 * @return output: ArrayList<String> - Contains all the output that the user will see
+	 */
 	public ArrayList<String> run() {
 		assert(!taskList.isEmpty());
 		if(commandObj.getIndex() == -1) {

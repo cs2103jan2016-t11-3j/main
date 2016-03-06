@@ -2,6 +2,18 @@ package logic.help;
 
 import java.util.ArrayList;
 
+/**
+ * Creates a Help object to display the user guide. There are two ways which the manual
+ * can be displayed: <br>
+ * 1) Entire user guide - The user does not key in any search keys. Entire manual will be
+ * transferred to the output ArrayList for displaying <br>
+ * 2) Parts related to the topic of interest - Based on the search keys entered by the 
+ * user, the program searches for topics related and displays all sections related to it.
+ * If the topic of interest does not exist, an error message will be returned to the user
+ * will be returned through the same output channel.
+ * @author ChongYan
+ *
+ */
 public class Help {
 
 	// Messages used within the function
@@ -52,13 +64,11 @@ public class Help {
 		}
 	}
 
-	// If a searchKey is absent, method automatically moves everything from the
-	// manual over to
-	// the display arrayList. Else it will search for all the topics containing
-	// the searchKey.
-	// If searchKey does not match with any help topic, method returns a message
-	// contained in
-	// the arrayList
+	/**
+	 * Main method in Help which copies all information related to the topic requested,
+	 * or all information if no topics were requested, to the output ArrayList
+	 * @return output: ArrayList<String>
+	 */
 	public ArrayList<String> run() {
 		if (searchKey == "") {
 			for (int i = 0; i < MAX_TOPIC_NUMBER; i++) {

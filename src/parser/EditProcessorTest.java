@@ -159,7 +159,6 @@ public class EditProcessorTest {
 		EP.cleanString();
 		assertTrue(EP.isTime());
 		reset();
-		
 	}
 	
 	private void reset() {

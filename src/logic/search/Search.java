@@ -5,15 +5,27 @@ import logic.TaskObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/* Currently search function only supports for searching of the task name.
- * Can consider implementing the search function for a date/time in the future, 
- * e.g. 'search 24 feb' will return the list of deadlines due on 24th Feb.
+/**
+ * Creates a Search object which facilitates the finding of tasks matching the search strings.
+ * Search is a subclass of Display
+ * <br> Search can be implemented in two ways
+ * <br> 1) Search within the title of each task. If the task contains the search strings,
+ * this task will be added to an ArrayList of matched tasks.
+ * <br> 2) Search within the start/end dates of each task. If the task contains either the start
+ * or the end time, it will be added to the same ArrayList of matched tasks. Only applies
+ * for deadlines and events.
+ * @author ChongYan, RuiBin
+ *
  */
 public class Search extends Display {
 	
 	private static final String MESSAGE_NO_TITLE_RESULTS_FOUND = "Keyword \'%1$s\' not found.";
 	private static final String MESSAGE_NO_DATE_RESULTS_FOUND = "No task found for the specified date.";
 	
+	/**
+	 * @param matchedTasks - a list maintained by the search object which contains
+	 * all the relevant tasks to the search strings
+	 */
 	private TaskObject taskObj;
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> matchedTasks = new ArrayList<TaskObject>();
@@ -22,6 +34,11 @@ public class Search extends Display {
 	String searchKeyword;
 	int searchDate;
 	
+	/**
+	 * Constructor for a Search object
+	 * @param taskObj - Contains the search strings which the user keyed in
+	 * @param taskList - Contains all tasks in Adult TaskFinder
+	 */
 	public Search(TaskObject taskObj, ArrayList<TaskObject> taskList) {
 		this.taskObj = taskObj;
 		this.taskList = taskList;
@@ -35,6 +52,11 @@ public class Search extends Display {
 		return super.getLastOutputTaskList();
 	}
 	
+	/** 
+	 * Overrides Display's run(). <br>
+	 * First searches within the titles of each task, if no results obtained,
+	 * it will search within the start/end dates of each task.
+	 */
 	public ArrayList<String> run() {
 		
 		if (taskObj.getStartDate() == -1) { // it is a title search

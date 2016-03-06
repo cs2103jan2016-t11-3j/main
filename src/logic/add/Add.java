@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 /**
  * Creates an "Add" object to facilitate adding of a task into Adult TaskFinder's TaskList.
+ * Tasks will be added internally before being saved to its default file location. <br>
  * Events to be added will be checked against all existing events - the names of clashing 
  * events will be generated in the output list, but the user will not be stopped from 
- * adding the event.
+ * adding the event. <br>
  * Deadlines to be added will be checked if it is already overdue - overdue deadlines will 
  * have their status toggled to "overdue" before being added.
  * @author ChongYan

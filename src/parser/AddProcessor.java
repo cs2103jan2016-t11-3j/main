@@ -1,21 +1,17 @@
 package parser;
 
 import java.util.ArrayList;
+import logic.TaskObject;
 
 
-public class AddProcessor {
+public class AddProcessor extends CommandProcessor{
 	
 	public ArrayList<String> list = new ArrayList<String>();
 	public ArrayList<Integer> dateList = new ArrayList<Integer>();
 	
-	private String task;
-	private int startDate = -1;
-	private int endDate = -1;
-	private int startTime = -1;
-	private int endTime = -1;
-	
 	private TimeProcessor TP = new TimeProcessor();
 	private DateProcessor DP = new DateProcessor();
+	public TaskObject TO = new TaskObject();
 	
 	/**
 	 * this method will take in the command and allocate the correct information
@@ -23,14 +19,25 @@ public class AddProcessor {
 	 * 
 	 * @param input    string input from user
 	 */
-	public void addCommand(String input) {
+	public TaskObject process(String input) {
 		//splits add command into array list
 		convertToArray(input);
 		//get the task stuff
 		readTask();
+		setTaskObject();
+		return TO;
+	}
+	
+	private void setTaskObject() {
+		TO.setTitle(_task);
+		TO.setStartTime(_startTime);
+		TO.setEndTime(_endTime);
+		TO.setEndDate(_endDate);
+		TO.setStartDate(_startDate);
+		TO.setStatus("undone");
 	}
 
-	public void convertToArray(String input) {
+	private void convertToArray(String input) {
 		for (String temp: input.split(" ")) {
  			list.add(temp);
  		}
@@ -39,22 +46,22 @@ public class AddProcessor {
 	/**
 	 * this method extracts out the string from the array list for tasks
 	 */
-	public void readTask() {
+	private void readTask() {
  		int i;
- 		String _task = null;
+ 		String _newtask = null;
  		for (i = 1; i < list.size(); i++) {
  			if (isStartOfDate(list.get(i))) {
  				break;
  			}
  			
  			if (i == 1) {
- 				_task = list.get(i);
+ 				_newtask = list.get(i);
  			} else {
- 				_task = _task + " " + list.get(i);	
+ 				_newtask = _newtask + " " + list.get(i);	
  			}
  		}
  		
- 		task = _task;
+ 		_task = _newtask;
  		if (i == list.size()){
  			return;
  		} else {
@@ -63,14 +70,14 @@ public class AddProcessor {
 	}
 	
 	// this method checks for first occurrence of the keyword indicating date input
- 	public boolean isStartOfDate(String input) {
+ 	private boolean isStartOfDate(String input) {
  		return input.contains("date:");
  	}
 	
  	/**
  	 * this method will extract out the string from the arraylist for date
  	 */
- 	public void readDate(int index) {
+ 	private void readDate(int index) {
  		String _date = null;
  		int i = 0;
  		//forms the date string
@@ -97,14 +104,14 @@ public class AddProcessor {
  	}
  	
  	//checks for the "time:" keyword
- 	public boolean isStartOfTime(String input) {
+ 	private boolean isStartOfTime(String input) {
  		return input.contains("time:");
  	}
  	
  	/**
  	 * this method will extract the string from the array list for time
  	 */
- 	public void readTime(int index) {
+ 	private void readTime(int index) {
  		String _time = null;
  		int i;
  		for (i = index; i < list.size(); i++) { 			
@@ -118,34 +125,34 @@ public class AddProcessor {
  		setTime();
  	}
  	
- 	public void setDate() {
-		startDate = DP.getStartDate();
-		endDate = DP.getEndDate();
+ 	private void setDate() {
+		_startDate = DP.getStartDate();
+		_endDate = DP.getEndDate();
  	}
  	
- 	public void setTime() {
- 		startTime = TP.getStartTime();
- 		endTime = TP.getEndTime();
+ 	private void setTime() {
+ 		_startTime = TP.getStartTime();
+ 		_endTime = TP.getEndTime();
  	}
  	
  	public String getTask() {
- 		return task;
+ 		return _task;
  	}
  	
  	public int getStartDate() {
- 		return startDate;
+ 		return _startDate;
  	}
  	
  	public int getEndDate() {
- 		return endDate;
+ 		return _endDate;
  	}
  	
  	public int getStartTime() {
- 		return startTime;
+ 		return _startTime;
  	}
  	
  	public int getEndTime() {
- 		return endTime;
+ 		return _endTime;
  	}
  	
  	//method used to obtain the size of the list for testing 
@@ -164,11 +171,11 @@ public class AddProcessor {
 	}
  	
  	public void reset() {
- 		task = null;
- 		startDate = -1;
- 		endDate = -1;
- 		startTime = -1;
- 		endTime = -1;
+ 		_task = null;
+ 		_startDate = -1;
+ 		_endDate = -1;
+ 		_startTime = -1;
+ 		_endTime = -1;
  	}
  	
  	public void clearDP() {
@@ -180,5 +187,11 @@ public class AddProcessor {
  		TP.clearList();
  		TP.resetTime();
  	}
+
+	@Override
+	public int getIndex() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
  	
 }

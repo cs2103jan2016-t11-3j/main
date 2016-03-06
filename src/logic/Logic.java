@@ -1,6 +1,7 @@
 package logic;
 
 import parser.*;
+import storage.FileStorage;
 import logic.add.*;
 import logic.delete.*;
 import logic.display.*;
@@ -11,6 +12,8 @@ import logic.undo.*;
 import logic.save.*;
 import logic.help.*;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -56,6 +59,7 @@ public class Logic {
 		taskList = new ArrayList<TaskObject>();
 		undoList = new Stack<CommandObject>();
 		redoList = new Stack<CommandObject>();
+		loadTaskList();
 	}
 
 	public Logic(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList, Stack<CommandObject> redoList) {
@@ -105,6 +109,15 @@ public class Logic {
 		this.lastOutputTaskList = newLastOutputTaskList;
 	}
 
+	// Loads all existing tasks into the program from Storage
+	private void loadTaskList() {
+		try {
+			FileStorage storage = FileStorage.getInstance();
+			taskList = storage.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
 		setUserInput(userInput);

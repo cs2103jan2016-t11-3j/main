@@ -17,6 +17,7 @@ public class ParserTest {
 		assertEquals(900, tempParser.getEndTime());
 		assertEquals(20160229, tempParser.getStartDate());
 		assertEquals(20160229, tempParser.getEndDate());
+		assertEquals("undone", tempParser.getStatus());
 		reset();
 		
 		tempParser.allocateCommandType("add homework IE2100 date: 7/6-9/10 time: 10-1pm");
@@ -111,20 +112,14 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testSetCommandObjectToDelete() {
-		tempParser.setCommandObjectToDelete("delete 2");
-		assertEquals("2", tempParser.getTask());
-	}
-
-	@Test
 	public void testExtractDeleteIndex() {
-		assertEquals("2", tempParser.extractDeleteIndex("delete 2"));
-		assertEquals("5", tempParser.extractDeleteIndex("delete 5"));
+		assertEquals(2, tempParser.extractDeleteIndex("delete 2"));
+		assertEquals(5, tempParser.extractDeleteIndex("delete 5"));
 	}
 
 	@Test
 	public void testSetCommandObjectToSave() {
-		tempParser.setCommandObjectToSave("save C://afagdagda");
+		tempParser.parseSave("save C://afagdagda");
 		assertEquals("C://afagdagda", tempParser.getTask());
 	}
 	
