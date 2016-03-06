@@ -142,6 +142,7 @@ public class Logic {
 			e.printStackTrace();
 		}
 	}
+	
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
 		setUserInput(userInput);
@@ -165,7 +166,7 @@ public class Logic {
 		// System.out.println("CommandObject index = " + index);
 		// System.out.println("isUndoAction = " + isUndoAction + ", undo size =
 		// " + undoList.size() + ", redo size = " + redoList.size());
-		// printTaskObjectFields(taskObj);
+		//printTaskObjectFields(taskObj);
 		// System.out.println();
 
 		// Clears the redo stack if it is a new command
@@ -198,9 +199,7 @@ public class Logic {
 			if (commandObj.getIndex() == -1) {
 				// Quick-delete function for item recently added
 				if (undoList.peek().getCommandType() == INDEX_DELETE) {
-					removedTask = undoList.peek().getTaskObject(); // NEED TO
-																	// POP
-																	// SOMEWHERE
+					removedTask = undoList.peek().getTaskObject();
 				}
 				deleteFunction(); // overloaded function
 			} else {
@@ -425,6 +424,7 @@ public class Logic {
 	}
 
 	private void printInvalidCommandMessage() {
+		output.clear();
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
 
