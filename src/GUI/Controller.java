@@ -46,7 +46,6 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
-    	feedbackBox.getChildren().clear();
 		if (event.getCode() == KeyCode.ENTER) {
     	System.out.println(userInput.getText());
     	_input = userInput.getText();
