@@ -125,11 +125,11 @@ public class Parser {
 	 */
 	public void parseEdit(String command) {
 		commandObject.setCommandType(EDIT_INDEX);
-		EditProcessor EP = new EditProcessor();
-		taskObject = EP.processEdit(command);
+		CommandProcessor EP = new EditProcessor();
+		taskObject = EP.process(command);
 		commandObject.setTaskObject(taskObject);
 		commandObject.setIndex(EP.getIndex());
-		EP.resetAll();
+		EP.reset();
 	}
 	
 	/*
@@ -146,8 +146,8 @@ public class Parser {
 	 */
 	public void parseAdd(String command) {
 		commandObject.setCommandType(ADD_INDEX);
-		AddProcessor AP = new AddProcessor();
-		taskObject = AP.addCommand(command);
+		CommandProcessor AP = new AddProcessor();
+		taskObject = AP.process(command);
 		//add these 5 main attributes
 		taskObject.setTaskId(_taskId);
 		commandObject.setTaskObject(taskObject);
@@ -168,7 +168,7 @@ public class Parser {
 	
 	public void parseSearch(String command) {
 		commandObject.setCommandType(SEARCH_INDEX);
-		SearchProcessor SP = new SearchProcessor();
+		CommandProcessor SP = new SearchProcessor();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
 		if (command.indexOf(" ") == -1) {
@@ -178,7 +178,7 @@ public class Parser {
 			taskObject.setEndDate(-1);
 		} else {
 			command = command.substring(command.indexOf(" ")+1);
-			taskObject = SP.processSearchTerm(command);
+			taskObject = SP.process(command);
 			
 		}
 		commandObject.setTaskObject(taskObject);

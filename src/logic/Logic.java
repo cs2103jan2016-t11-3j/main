@@ -105,6 +105,10 @@ public class Logic {
 	public ArrayList<String> getOutput() {
 		return output;
 	}
+	
+	public ArrayList<TaskObject> getLastOutputTaskList() {
+		return lastOutputTaskList;
+	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;

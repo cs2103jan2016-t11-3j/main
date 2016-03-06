@@ -33,7 +33,8 @@ public class UIMain extends Application {
 		launch(args);
 	}
 	
-	public static ArrayList<TaskObject> getTaskList() {
+	public ArrayList<TaskObject> getTaskList() {
+		taskList = logic.getTaskList();
 		return taskList;
 	}
 

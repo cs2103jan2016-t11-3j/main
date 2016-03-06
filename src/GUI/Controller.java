@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -22,6 +24,7 @@ import logic.TaskObject;
 public class Controller implements Initializable {
 	static String _input;
 	static UIMain _UI = new UIMain();
+	ArrayList<TaskObject> taskList = _UI.getTaskList();
 	
 	@FXML
 	private TextField userInput;
@@ -32,13 +35,13 @@ public class Controller implements Initializable {
 	@FXML
 	private Text feedbackMessage;
 	@FXML
-	private static TableView<ArrayList<TaskObject>> taskTable;
+	private TableView<TaskObject> taskTable;
 	@FXML
-	private static TableColumn<ArrayList<TaskObject>, String> indexColumn;
+	private TableColumn<TaskObject, Integer> indexColumn;
 	@FXML
-	private static TableColumn<ArrayList<TaskObject>, String> taskColumn;
+	private TableColumn<TaskObject, String> taskColumn;
 	@FXML
-	private static TableColumn<ArrayList<TaskObject>, Integer> deadlineColumn;
+	private TableColumn<TaskObject, Integer> deadlineColumn;
 	
 	
 	@FXML
@@ -50,6 +53,7 @@ public class Controller implements Initializable {
     	_UI.passInput(_input);
     	userInput.clear();
     	displayMessage();
+    	display();
  
     	}
 	}
@@ -59,16 +63,18 @@ public class Controller implements Initializable {
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
 
+	private void display() {
+		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);
+		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
+		deadlineColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+		indexColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("taskId"));
+
+		taskTable.setItems(groupData);
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		/**taskColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
-		deadlineColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-		indexColumn.setCellValueFactory(new PropertyValueFactory<>("taskId"));
-		
-		taskTable.getItems().setAll(_UI.getTaskList());
-		*/
-		
+		display();
 	}
 
 	
