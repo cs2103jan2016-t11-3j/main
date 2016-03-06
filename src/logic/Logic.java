@@ -71,7 +71,7 @@ public class Logic {
 	// This variable will get repeatedly updated by UI for each input
 	private String userInput;
 	// Output is to be returned to UI after each command
-	private ArrayList<String> output;
+	private ArrayList<String> output = new ArrayList<String>();
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 
