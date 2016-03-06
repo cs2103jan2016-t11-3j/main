@@ -11,11 +11,11 @@
 
 <BorderPane fx:id="layout" prefHeight="600" prefWidth="450.0" style="-fx-background-color: #FCEBB6; -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <center>
-      <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-radius: 50em; -fx-background-radius: 1.2em;" BorderPane.alignment="CENTER">
+      <TableView fx:id="taskTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #78C0A8; -fx-border-radius: 50em; -fx-background-radius: 1.2em;" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="indexColumn" prefWidth="100.0" style="-fx-background-color: #78C0A8; -fx-border-width: 1em;" text="Index" />
-          <TableColumn fx:id="taskColumn" prefWidth="350.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Task Name" />
-            <TableColumn fx:id="deadlineColumn" prefWidth="200.0" style="-fx-background-color: #78C0A8;" text="Date Due" />
+          <TableColumn fx:id="indexColumn" prefWidth="155.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Index" />
+          <TableColumn fx:id="taskColumn" prefWidth="310.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Task Name" />
+            <TableColumn fx:id="statusColumn" prefWidth="155.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Status" />
         </columns>
          <BorderPane.margin>
             <Insets />
@@ -26,7 +26,7 @@
       </TableView>
    </center>
    <top>
-      <Label alignment="CENTER" text="Adult TaskFinder" textFill="#5e412f" BorderPane.alignment="BOTTOM_CENTER">
+      <Label alignment="CENTER" text="AdultTaskFinder" textFill="#5e412f" BorderPane.alignment="BOTTOM_CENTER">
          <font>
             <Font name="Agency FB Bold" size="30.0" />
          </font>
