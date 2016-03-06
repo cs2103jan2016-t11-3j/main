@@ -41,7 +41,7 @@ public class Controller implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, String> taskColumn;
 	@FXML
-	private TableColumn<TaskObject, Integer> deadlineColumn;
+	private TableColumn<TaskObject, Integer> statusColumn;
 	
 	
 	@FXML
@@ -66,9 +66,10 @@ public class Controller implements Initializable {
 	private void display() {
 		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
-		deadlineColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("status"));
 		indexColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("taskId"));
 
+		
 		taskTable.setItems(groupData);
 	}
 
