@@ -4,6 +4,8 @@ import logic.*;
 
 import java.util.ArrayList;
 
+import common.TaskObject;
+
 /**
  * An abstract class. Inherited by Done, Incomplete and Overdue. This set of classes 
  * serve to facilitate switching the status of a selected task between three set statuses - 

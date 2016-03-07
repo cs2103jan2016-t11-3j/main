@@ -1,6 +1,6 @@
 package parser;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public abstract class CommandProcessor {
 	

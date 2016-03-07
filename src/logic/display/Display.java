@@ -1,7 +1,7 @@
 package logic.display;
-import logic.TaskObject;
-
 import java.util.ArrayList;
+
+import common.TaskObject;
 
 /**
  *  Creates a "Display" object which imports the existing task list into an ArrayList of 

@@ -17,6 +17,9 @@ import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import common.CommandObject;
+import common.TaskObject;
+
 // Parent class for Undo
 
 /* On startup, should load taskList automatically from storage, and mark all events which are

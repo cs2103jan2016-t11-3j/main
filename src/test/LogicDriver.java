@@ -24,7 +24,12 @@ public class LogicDriver {
 
     }
 
-    private static ArrayList<String> execute(String userCommand) {
+    /**
+     * Method for testing
+     * @param userCommand
+     * @return
+     */
+    public static ArrayList<String> execute(String userCommand) {
         logic.run(userCommand);
         display = logic.getOutput();
         return display;

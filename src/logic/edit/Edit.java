@@ -1,11 +1,12 @@
 package logic.edit;
 
-import logic.CommandObject;
-import logic.TaskObject;
 import storage.FileStorage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import common.CommandObject;
+import common.TaskObject;
 
 /**
  * Creates an Edit object which will edit the title of a selected task to the

@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import common.TaskObject;
+
 public class AddTest {
 	
 	// static declaration for continuous adding to the testArray

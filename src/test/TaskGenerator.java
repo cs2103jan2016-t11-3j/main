@@ -2,7 +2,7 @@ package test;
 
 import java.util.ArrayList;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public class TaskGenerator {
     public static Integer taskId = 0;
