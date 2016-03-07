@@ -3,7 +3,6 @@ package logic.undo;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.EmptyStackException;
-import java.util.Stack;
 
 import common.CommandObject;
 import common.TaskObject;

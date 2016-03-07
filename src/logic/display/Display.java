@@ -117,9 +117,9 @@ public class Display {
 	// Returns the date in DD/MM/YY format
 	private String parseDate(int date) {
 		String dateInString = "" + date;
-		String day = dateInString.substring(4, 6);
-		String month = dateInString.substring(2, 4);
-		String year = dateInString.substring(0, 2);
+		String day = dateInString.substring(6, 8);
+		String month = dateInString.substring(4, 6);
+		String year = dateInString.substring(0, 4);
 		
 		return day + "/" + month + "/" + year;
 	}
