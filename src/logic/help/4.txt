@@ -1,0 +1,12 @@
+4.	Viewing/Searching for existing tasks by due date or event time
+
+Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the date or time.
+
+The program will display all events/tasks due before the date or time, sorted in order of time. 
+
+To display all events/tasks due after the date or time, enter any of the following commands: “view”, “find”, “search”, “display”, “list”, followed by “after” and the date or time.
+
+Usage Examples:
+view Friday		Searches and displays all tasks, events and deadlines which are due by the nearest upcoming Friday in the future.
+view next week		Searches and displays all tasks, events and deadlines which are due by the Sunday of the next week.
+view after next week	Searches and displays all tasks, events and deadlines which are due after the Sunday of the next week.

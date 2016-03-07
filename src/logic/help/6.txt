@@ -1,0 +1,10 @@
+6.	Edit an existing event/task description
+With precondition that list of event/task is displayed after a number. Enter the command “edit” followed by the ordered number of the selected event/task on the display. Enter the new description for the task. The task description will be updated to the new description.
+
+Note that if there is no command after the number of the selected task, no changes will be made.
+
+Usage Examples:
+Input	Action
+edit 1 Dinner with John		Edits the task currently displayed at slot number 1 such that the task description now is “Dinner with John”
+edit 5 complete assignment 2	Edits the task currently displayed at slot number 5 such that the task description now is “complete assignment 2”
+edit 3				Nothing happens
