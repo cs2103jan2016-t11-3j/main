@@ -30,6 +30,7 @@ public class Controller implements Initializable {
 	static String _input;
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getTaskList();
+	HelpPopupController popupController = new HelpPopupController();
 	
 	@FXML
 	private TextField userInput;
@@ -71,10 +72,9 @@ public class Controller implements Initializable {
 	@FXML
 	public void handleHelpPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
-			
 			_UI.passInput("help");
 			ArrayList<String> helpManualList = _UI.getHelpOutput();
-			HelpPopupController.setHelpStage(helpManualList);
+			popupController.setHelpStage(helpManualList);
 			System.out.println("help activated");
 		}
 	}

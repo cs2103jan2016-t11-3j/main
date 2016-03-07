@@ -3,7 +3,6 @@ package GUI;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -14,14 +13,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class HelpPopupController implements Initializable {
 	
 	static Stage helpStage = new Stage();
-	
+	static ArrayList<String> displayList;
+	  
 	@FXML
-	private static TextArea helpText;
+	private TextArea helpMessageBox;
 	
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
@@ -32,18 +34,18 @@ public class HelpPopupController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-	}
-	
-	private static void loadHelpText(ArrayList<String> helpManualList) {
 	
 	}
-
-	public static void setHelpStage(ArrayList<String> helpManualList) throws IOException {		
+	
+	public void setHelpStage(ArrayList<String> helpManualList) throws IOException {		
 		Parent help = FXMLLoader.load(UIMain.class.getResource("HelpPopup.fxml"));
 		helpStage.setScene(new Scene(help));
-		loadHelpText(helpManualList);
+		
+		displayList = helpManualList;
 		helpStage.show();
+		
 	}
+
+	
 
 }
