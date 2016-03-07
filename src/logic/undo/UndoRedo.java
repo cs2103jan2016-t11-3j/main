@@ -1,6 +1,7 @@
 package logic.undo;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Stack;
 
 import common.CommandObject;
@@ -15,11 +16,11 @@ public class UndoRedo {
 	private static final int INDEX_REDO = 6;
 	
 	protected ArrayList<TaskObject> taskList;
-	protected Stack<CommandObject> undoList;
-	protected Stack<CommandObject> redoList;
+	protected Deque<CommandObject> undoList;
+	protected Deque<CommandObject> redoList;
 	protected ArrayList<String> output = new ArrayList<String>();
 
-	public UndoRedo(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList, Stack<CommandObject> redoList) {
+	public UndoRedo(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
@@ -29,11 +30,11 @@ public class UndoRedo {
 		return taskList;
 	}
 	
-	public Stack<CommandObject> getUndoList() {
+	public Deque<CommandObject> getUndoList() {
 		return undoList;
 	}
 	
-	public Stack<CommandObject> getRedoList() {
+	public Deque<CommandObject> getRedoList() {
 		return redoList;
 	}
 	
