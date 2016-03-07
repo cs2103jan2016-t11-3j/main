@@ -372,9 +372,16 @@ public class Logic {
 	// Edit <-> edit
 	// Saves the item number to be edited and the original title
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
-		String originalTitle = editOriginal.getOriginalTitle();
-		CommandObject newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
-				editOriginal.getEditItemNumber());
+		CommandObject newCommandObj = new CommandObject();
+		if (editOriginal.getIsEditTitle()) {
+			String originalTitle = editOriginal.getOriginalTitle();
+			newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
+					editOriginal.getEditItemNumber());
+		} else if (editOriginal.getIsEditDate()) {
+			int originalDate = editOriginal.getOriginalDate();
+			newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalDate),
+					editOriginal.getEditItemNumber());
+		}
 		list.push(newCommandObj);
 	}
 	

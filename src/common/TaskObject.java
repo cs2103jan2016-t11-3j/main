@@ -47,11 +47,23 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = taskId;
 	}
 	
-	// Constructor for search keyword, delete, save and for edit functions
+	// Constructor for search keyword, delete, save and for edit-title functions
 	public TaskObject(String title){
 		this.title = title;
 		this.startDate = -1;
 		this.endDate = -1;
+		this.startTime = -1;
+		this.endTime = -1;
+		this.category = null;
+		this.status = null;
+		this.taskId = -1;
+	}
+	
+	// Constructor for edit-date functions
+	public TaskObject(int date) {
+		this.title = "";
+		this.startDate = date;
+		this.endDate = date;
 		this.startTime = -1;
 		this.endTime = -1;
 		this.category = null;
