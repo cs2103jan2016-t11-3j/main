@@ -1,5 +1,6 @@
 package GUI;
 	
+import java.io.IOException;
 import java.util.ArrayList;
 
 import common.TaskObject;
@@ -15,6 +16,7 @@ public class UIMain extends Application {
 	
 	static Logic logic = new Logic();
 	Stage window;
+	static Stage helpStage = new Stage();
 	static String input;
 	static ArrayList<TaskObject> taskList;
 	
@@ -50,7 +52,7 @@ public class UIMain extends Application {
 		}
 	}
 
-	public String getOutput() {
+	public String getMessage() {
 		
 		ArrayList<String> output = logic.getOutput();
 		if(output.size() == 1) {
@@ -63,4 +65,9 @@ public class UIMain extends Application {
 		taskList = logic.getLastOutputTaskList();
 		return taskList;
 	}
+
+	public ArrayList<String> getHelpOutput() {
+		return logic.getOutput();
+	}
+
 }
