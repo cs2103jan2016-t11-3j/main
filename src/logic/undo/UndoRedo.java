@@ -50,17 +50,4 @@ public class UndoRedo {
 		return output;
 	}
 	
-	protected String getUndoneCommandType(CommandObject commandObj) {
-		switch (commandObj.getCommandType()) {
-			case INDEX_ADD :
-				return "Delete";
-			case INDEX_DELETE :
-				return "Add";
-			case INDEX_EDIT :
-				return "Edit";
-			default :
-				return "";
-		}
-	}
-	
 }

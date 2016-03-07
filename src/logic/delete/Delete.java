@@ -8,6 +8,20 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
+/**
+ * Creates a "Delete" object to facilitate the deletion of a task from task list internally,
+ * before updating the file at its default location. <br>
+ * There are two ways which Delete can be run: <br>
+ * 1) Normal delete <br> Pre-condition that user has to use a search/display function 
+ * first. With that task list which was displayed, the user proceeds to decide which item
+ * in the list he wishes to delete. <br>
+ * 2) Quick delete <br> Pre-condition that user has to add a task in his last command. Quick
+ * delete does not require the user to input an index for deletion, it automatically deletes
+ * the last added task.
+ * @author ChongYan
+ *
+ */
+
 // Needs delete function for last added code
 public class Delete {
 
@@ -16,7 +30,7 @@ public class Delete {
 	private static String MESSAGE_ERROR = "Error deleting task from TaskFinder";
 
 	// This command object contains the index number of the line to be deleted
-	private CommandObject commandObj = new CommandObject();
+	private CommandObject commandObj;
 	
 	// This is the task which is actually removed from TaskFinder
 	private TaskObject removedTask = new TaskObject();
@@ -43,18 +57,39 @@ public class Delete {
 
 	}
 	
+	/**
+	 * Default constructor for Quick Delete. <br> There will be an additional CommandObject 
+	 * initialised, with an index of -1.
+	 * @param taskList - Existing list of tasks in Adult TaskFinder
+	 * @param undoList - Current stack of CommandObjects with the purpose of undoing
+	 * previous actions
+	 */
 	public Delete(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
+		this.commandObj = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), -1);
 	}
 
+	/**
+	 * Default constructor for Normal Delete. 
+	 * @param commandObj - Contains the index to delete from the last outputted task list
+	 * @param taskList - Existing list of tasks in Adult TaskFinder
+	 * @param lastOutputTaskList - List of tasks outputted in the last command (e.g. Search, Display)
+	 */
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
 	
+	/**
+	 * Called by logic to find and delete an object in the task list. Automatically decides
+	 * whether to use quick delete or normal delete based on the index of the CommandObject 
+	 * in the Delete object.
+	 * @return output: ArrayList<String> - Contains all the output that the user will see
+	 */
 	public ArrayList<String> run() {
+		assert(!taskList.isEmpty());
 		if(commandObj.getIndex() == -1) {
 			runQuickDelete();
 		} else {
@@ -71,7 +106,7 @@ public class Delete {
 			// delete the last item in taskList as it shows that the item had just been added
 			int index = taskList.size() - 1;
 			taskName = taskList.get(index).getTitle();
-			taskList.remove(index);
+			removedTask = taskList.remove(index);
 			if(taskList.size() == index) {
 				// To check if taskList has shrunk by 1
 				hasDeletedInternal = true;
@@ -116,9 +151,9 @@ public class Delete {
 
 	private void obtainTaskId() {
 		int index = commandObj.getIndex();
-		if (index > 0 && index <= taskList.size()) { 
+		if (index > 0 && index <= lastOutputTaskList.size()) { 
 			index--;
-			taskIdToDelete = taskList.get(index).getTaskId();
+			taskIdToDelete = lastOutputTaskList.get(index).getTaskId();
 		}
 	}
 
@@ -143,6 +178,7 @@ public class Delete {
 	}
 
 	private void createErrorOutput() {
+		removedTask = null;
 		output.add(MESSAGE_ERROR);
 	}
 

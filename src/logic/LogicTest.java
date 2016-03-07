@@ -33,36 +33,35 @@ public class LogicTest {
 		logic.run(test3);
 		printOutput();
 		
-		String test4 = "display";
-		logic.run(test4);
+		String display = "display";
+		logic.run(display);
 		printOutput();
 		
-		String test5 = "undo";
-		logic.run(test5);
+		String undo = "undo";
+		logic.run(undo);
+		printOutput();
+		logic.run(undo);
 		printOutput();
 		
-		logic.run(test5);
-		printOutput();
-		logic.run(test5);
+		logic.run(display);
 		printOutput();
 		
-		logic.run(test4);	// Should be empty here
+		//logic.run(test5);
+		//printOutput();
+		
+		String redo = "redo";
+		logic.run(redo);
 		printOutput();
 		
-		logic.run(test5);
+		logic.run(display);
 		printOutput();
 		
-		String test6 = "redo";
-		logic.run(test6);
+		logic.run(undo);
 		printOutput();
 		
-		logic.run(test6);
-		printOutput();
-		logic.run(test6);
+		logic.run(display);
 		printOutput();
 		
-		logic.run(test4);
-		printOutput();
 	}
 	
 	/*
@@ -186,7 +185,7 @@ public class LogicTest {
 		for (int i = 0; i< output.size(); i++) {
 			System.out.println(output.get(i));
 		}
-		// System.out.println();
+		System.out.println();
 	}
 	
 	private void printTaskList() {

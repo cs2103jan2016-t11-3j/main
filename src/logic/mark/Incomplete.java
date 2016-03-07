@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import logic.TaskObject;
 
-public class Undone extends Mark {
+public class Incomplete extends Mark {
 
-	private final String MESSAGE_UNDONE = "Task: %1s is marked as incomplete";
+	private final String MESSAGE_INCOMPLETE = "Task: %1s is marked as incomplete";
 
-	public Undone(TaskObject taskObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+	public Incomplete(TaskObject taskObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		instructionTask = taskObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
@@ -32,7 +32,7 @@ public class Undone extends Mark {
 			if (taskList.get(i).getTaskId() == taskIdToMark) {
 				taskName = taskList.get(i).getTitle();
 				statusBeforeChange = taskList.get(i).getStatus();
-				taskList.get(i).setStatus("undone");
+				taskList.get(i).setStatus("incomplete");
 				return true;
 			}
 		}
@@ -40,7 +40,7 @@ public class Undone extends Mark {
 	}
 
 	private void createOutput() {
-		String text = String.format(MESSAGE_UNDONE, taskName);
+		String text = String.format(MESSAGE_INCOMPLETE, taskName);
 		output.add(text);
 	}
 
