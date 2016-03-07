@@ -13,6 +13,7 @@ import logic.save.*;
 import logic.help.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -78,12 +79,16 @@ public class Logic {
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 
-	// Constructor loaded by UI
+	/**
+	 * Constructor called by UI. Loads all existing tasks and checks each task to see
+	 * whether any of them are overdue, and updates their corresponding statuses.
+	 */
 	public Logic() {
 		taskList = new ArrayList<TaskObject>();
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
 		loadTaskList();
+		checkOverdue();
 	}
 	
 	// Constructor for the secondary logic class that is to be loaded within Undo/Redo
@@ -465,6 +470,29 @@ public class Logic {
 		System.out.println("category = " + taskObj.getCategory());
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
+	}
+	
+	public void checkOverdue() {
+		Overdue.markAllOverdueTasks(taskList);
+	}
+
+	/**
+	 * Combines and converts date and time strings stored in TaskObjects 
+	 * into LocalDateTime format for easier comparison and greater usability.
+	 * @param date series of numbers representing the date in the format
+	 * YYYYMMDD
+	 * @param time series of numbers representing the time in the 24hr format
+	 * HHMM
+	 * @return LocalDateTime object containing all the above information
+	 */
+	public static LocalDateTime obtainDateTime(int date, int time) {
+		int year = date / 10000;
+		int month = (date % 10000) / 100;
+		int dayOfMonth = date % 100;
+		int hour = time / 100;
+		int min = time % 100;
+		LocalDateTime formattedTime = LocalDateTime.of(year, month, dayOfMonth, hour, min);
+		return formattedTime;
 	}
 
 }

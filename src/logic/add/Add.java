@@ -1,6 +1,7 @@
 package logic.add;
 
 import logic.*;
+import logic.mark.*;
 import storage.*;
 
 import java.io.IOException;
@@ -86,13 +87,14 @@ public class Add {
 
 	/**
 	 * Precondition: Deadline to be added has a valid date and time in its
-	 * TaskObject
-	 * 
+	 * TaskObject <br>
+	 * Converts date and time to the LocalDateTime format by calling static
+	 * method in Logic class.
 	 * @return isOverdue: boolean - True if deadline is before current time
 	 */
 	private boolean checkIfOverdue() {
 		boolean isOverdue = false;
-		LocalDateTime deadline = obtainDateTime(task.getEndDate(), task.getEndTime());
+		LocalDateTime deadline = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
 		if (deadline.isBefore(LocalDateTime.now())) {
 			isOverdue = true;
 		}
@@ -120,6 +122,7 @@ public class Add {
 	}
 
 	/**
+	 * LocalDateTime format obtained by calling static method in Logic class
 	 * Checks if two events clash. Achieves this by: <br>
 	 * 1) Checking if event 1's start time is between event 2's start and end time <br>
 	 * 2) Checking if event 1's end time is between event 2's start and end time <br>
@@ -129,10 +132,10 @@ public class Add {
 	 * @return
 	 */
 	private boolean checkTimeClash(TaskObject current) {
-		LocalDateTime currentStart = obtainDateTime(current.getStartDate(), current.getStartTime());
-		LocalDateTime currentEnd = obtainDateTime(current.getEndDate(), current.getEndTime());
-		LocalDateTime newStart = obtainDateTime(task.getStartDate(), task.getStartTime());
-		LocalDateTime newEnd = obtainDateTime(task.getEndDate(), task.getEndTime());
+		LocalDateTime currentStart = Logic.obtainDateTime(current.getStartDate(), current.getStartTime());
+		LocalDateTime currentEnd = Logic.obtainDateTime(current.getEndDate(), current.getEndTime());
+		LocalDateTime newStart = Logic.obtainDateTime(task.getStartDate(), task.getStartTime());
+		LocalDateTime newEnd = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
 		
 		if(currentStart.isAfter(newStart)) {
 			if(currentStart.isBefore(newEnd)) {
@@ -155,16 +158,6 @@ public class Add {
 			}
 		}
 		return false;
-	}
-
-	private LocalDateTime obtainDateTime(int date, int time) {
-		int year = date / 10000;
-		int month = (date % 10000) / 100;
-		int dayOfMonth = date % 100;
-		int hour = time / 100;
-		int min = time % 100;
-		LocalDateTime formattedTime = LocalDateTime.of(year, month, dayOfMonth, hour, min);
-		return formattedTime;
 	}
 
 	private void addTask() {
