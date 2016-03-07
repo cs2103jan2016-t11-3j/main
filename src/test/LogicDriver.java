@@ -1,5 +1,7 @@
 package test;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,7 +13,8 @@ public class LogicDriver {
     private static Scanner scanner = new Scanner(System.in);   
     private static Logic logic = new Logic();
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchFileException, IOException {
+        logic.load();
             while (true) {
                 System.out.print("Command: ");
                 String userCommand = scanner.nextLine();

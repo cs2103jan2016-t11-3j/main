@@ -57,6 +57,14 @@ public class FilePath {
         return path.resolve(DATA_FILE_NAME).toString();
     }
 
+    static String getPath(String filePath, String fileName) {
+        Path path = Paths.get(filePath);
+        if (!isValidPath(path)) {
+            return null;
+        }
+        return path.resolve(fileName).toString();
+    }
+    
     static boolean isValidPath (Path path) {
         return Files.exists(path);
     }
@@ -64,14 +72,6 @@ public class FilePath {
     static boolean isValidPath (String filePath) {
         Path path = Paths.get(filePath);
         return Files.exists(path);
-    }
-
-    static String formPath(String filePath, String fileName) {
-        Path path = Paths.get(filePath);
-        if (!isValidPath(path)) {
-            return null;
-        }
-        return path.resolve(fileName).toString();
     }
 
 }

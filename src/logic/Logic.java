@@ -1,6 +1,7 @@
 package logic;
 
 import parser.*;
+import storage.FileStorage;
 import logic.add.*;
 import logic.delete.*;
 import logic.display.*;
@@ -10,6 +11,8 @@ import logic.search.*;
 import logic.undo.*;
 import logic.save.*;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -378,5 +381,12 @@ public class Logic {
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
 	}
+
+    public void load() throws NoSuchFileException, IOException {
+        FileStorage storage = FileStorage.getInstance();
+        taskList = storage.load();
+        // TODO Auto-generated method stub
+        
+    }
 
 }
