@@ -1,5 +1,6 @@
 package GUI;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -8,10 +9,14 @@ import common.TaskObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -19,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
 public class Controller implements Initializable {
 	static String _input;
@@ -63,14 +69,18 @@ public class Controller implements Initializable {
 	}
 	
 	@FXML
-	public void handleHelpPressed(KeyEvent event) {
+	public void handleHelpPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
+			
+			_UI.passInput("help");
+			ArrayList<String> helpManualList = _UI.getHelpOutput();
+			HelpPopupController.setHelpStage(helpManualList);
 			System.out.println("help activated");
 		}
 	}
 	
 	private void displayMessage() {
-		feedbackMessage.setText(_UI.getOutput());
+		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
