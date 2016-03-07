@@ -112,4 +112,26 @@ public class AddTest {
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
+	
+	@Test
+	// Add overdue deadline
+	public void testSix() {
+	ArrayList<String> actualOutput = new ArrayList<String> ();
+		
+		TaskObject taskSix = new TaskObject("CE2", 5);
+		taskSix.setTitle("CE2"); // This line due to error in TaskObject
+		taskSix.setCategory("deadline");
+		taskSix.setEndDate(20160227);
+		taskSix.setEndTime(1600);
+		Add addSixth = new Add(taskSix, -1, testArray);
+		actualOutput = addSixth.run();
+		
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Task added: CE2");
+		
+		assertEquals(expectedOutput, actualOutput);
+		
+		String taskStatus = addSixth.getTask().getStatus();
+		assertEquals("overdue", taskStatus);
+	}
 }
