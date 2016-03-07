@@ -1,6 +1,7 @@
 package logic.undo;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -16,7 +17,7 @@ public class Redo extends UndoRedo {
 	private static final String MESSAGE_REDO = "%1$s redone.";
 	private static final String MESSAGE_REDO_ERROR = "Nothing to redo!";
 
-	public Redo(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList, Stack<CommandObject> redoList) {
+	public Redo(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		super(taskList, undoList, redoList);
 	}
 	
