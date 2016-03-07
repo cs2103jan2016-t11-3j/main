@@ -1,8 +1,10 @@
-package parser;
+package parsertest;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import parser.Parser;
 
 public class ParserTest {
 	
@@ -28,12 +30,12 @@ public class ParserTest {
 		assertEquals(20161009, tempParser.getEndDate());
 		reset();
 		
-		tempParser.allocate("search 7/9/1403");
-		assertEquals("7/9/1403", tempParser.getTask());
+		tempParser.allocate("search 7/9");
+		assertEquals("7/9", tempParser.getTask());
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(14030907, tempParser.getStartDate());
-		assertEquals(14030907, tempParser.getEndDate());
+		assertEquals(907, tempParser.getStartDate());
+		assertEquals(907, tempParser.getEndDate());
 		reset();
 		
 		tempParser.allocate("edit 2 755pm");

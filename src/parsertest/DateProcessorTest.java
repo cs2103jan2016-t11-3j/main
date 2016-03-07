@@ -1,8 +1,10 @@
-package parser;
+package parsertest;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import parser.DateProcessor;
 
 public class DateProcessorTest {
 
