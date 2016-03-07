@@ -59,7 +59,6 @@ public class Search extends Display {
 	 * it will search within the start/end dates of each task.
 	 */
 	public ArrayList<String> run() {
-		
 		if (taskObj.getStartDate() == -1) { // it is a title search
 			searchKeyword = getSearchKeyword();
 			searchByTitle(searchKeyword);
@@ -69,7 +68,6 @@ public class Search extends Display {
 			searchByDate(searchDate);
 			outputSearchResults(searchDate);
 		}
-		
 		
 		return output;
 	}
