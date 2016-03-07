@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import logic.TaskObject;
+import common.TaskObject;
 import storage.FileStorage;
 import storage.Storage;
 import test.AssertHelper;

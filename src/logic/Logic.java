@@ -14,8 +14,13 @@ import logic.help.*;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Stack;
+
+import common.CommandObject;
+import common.TaskObject;
 
 // Parent class for Undo
 
@@ -64,8 +69,8 @@ public class Logic {
 
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
-	private Stack<CommandObject> undoList = new Stack<CommandObject>();
-	private Stack<CommandObject> redoList = new Stack<CommandObject>();
+	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
+	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
 	private int taskId = 1;
 
 	// This variable will get repeatedly updated by UI for each input
@@ -78,13 +83,13 @@ public class Logic {
 	// Constructor loaded by UI
 	public Logic() {
 		taskList = new ArrayList<TaskObject>();
-		undoList = new Stack<CommandObject>();
-		redoList = new Stack<CommandObject>();
+		undoList = new ArrayDeque<CommandObject>();
+		redoList = new ArrayDeque<CommandObject>();
 		loadTaskList();
 	}
 	
 	// Constructor for the secondary logic class that is to be loaded within Undo/Redo
-	public Logic(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList, Stack<CommandObject> redoList) {
+	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
@@ -129,7 +134,7 @@ public class Logic {
 		// System.out.println();
 
 		// Clears the redo stack if it is a new command
-		if (!redoList.empty() && isListOperation(command) && !isUndoAction && !isRedoAction) {
+		if (!redoList.isEmpty() && isListOperation(command) && !isUndoAction && !isRedoAction) {
 			clearRedoList();
 		}
 
@@ -352,7 +357,7 @@ public class Logic {
 	 */
 
 	// Add <-> delete
-	private void addToList(CommandObject commandObj, Stack<CommandObject> list) {
+	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
 		if (commandObj.getCommandType() == INDEX_ADD) {
 			// For the corresponding delete object, the TaskObject is null and
 			// the index number of the CommandObject is the index of the item
@@ -371,7 +376,7 @@ public class Logic {
 
 	// Edit <-> edit
 	// Saves the item number to be edited and the original title
-	private void addToList(Edit editOriginal, Stack<CommandObject> list) {
+	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
 		String originalTitle = editOriginal.getOriginalTitle();
 		CommandObject newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
 				editOriginal.getEditItemNumber());
@@ -393,7 +398,7 @@ public class Logic {
 	}
 
 	private void clearRedoList() {
-		while (!redoList.empty()) {
+		while (!redoList.isEmpty()) {
 			redoList.pop();
 		}
 	}
@@ -408,11 +413,11 @@ public class Logic {
 		return taskList;
 	}
 
-	public Stack<CommandObject> getUndoList() {
+	public Deque<CommandObject> getUndoList() {
 		return undoList;
 	}
 
-	public Stack<CommandObject> getRedoList() {
+	public Deque<CommandObject> getRedoList() {
 		return redoList;
 	}
 
@@ -428,11 +433,11 @@ public class Logic {
 		this.taskList = taskList;
 	}
 
-	public void setUndoList(Stack<CommandObject> undoList) {
+	public void setUndoList(Deque<CommandObject> undoList) {
 		this.undoList = undoList;
 	}
 
-	public void setRedoList(Stack<CommandObject> redoList) {
+	public void setRedoList(Deque<CommandObject> redoList) {
 		this.redoList = redoList;
 	}
 
@@ -459,12 +464,5 @@ public class Logic {
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
 	}
-
-    public void load() throws NoSuchFileException, IOException {
-        FileStorage storage = FileStorage.getInstance();
-        taskList = storage.load();
-        // TODO Auto-generated method stub
-        
-    }
 
 }

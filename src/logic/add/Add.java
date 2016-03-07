@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
+import common.TaskObject;
+
 /**
  * Creates an "Add" object to facilitate adding of a task into Adult TaskFinder's TaskList.
  * Tasks will be added internally before being saved to its default file location. <br>

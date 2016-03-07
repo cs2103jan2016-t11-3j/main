@@ -1,6 +1,6 @@
 package parser;
-import logic.CommandObject;
-import logic.TaskObject;
+import common.CommandObject;
+import common.TaskObject;
 
 
 public class Parser {

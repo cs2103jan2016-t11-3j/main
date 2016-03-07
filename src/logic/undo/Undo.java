@@ -1,12 +1,13 @@
 package logic.undo;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-import logic.CommandObject;
+import common.CommandObject;
+import common.TaskObject;
 import logic.Logic;
-import logic.TaskObject;
 
 public class Undo extends UndoRedo {
 
@@ -16,7 +17,7 @@ public class Undo extends UndoRedo {
 	private static final String MESSAGE_UNDO = "%1$s undone.";
 	private static final String MESSAGE_UNDO_ERROR = "Nothing to undo!";
 
-	public Undo(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList, Stack<CommandObject> redoList) {
+	public Undo(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		super(taskList, undoList, redoList);
 	}
 	

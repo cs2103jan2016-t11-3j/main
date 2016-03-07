@@ -9,6 +9,9 @@ import java.util.Stack;
 
 import org.junit.Test;
 
+import common.CommandObject;
+import common.TaskObject;
+
 public class DeleteTest {
 
 	private final ArrayList<TaskObject> testArray = new ArrayList<TaskObject> ();

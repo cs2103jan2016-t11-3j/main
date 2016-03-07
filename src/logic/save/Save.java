@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
+import common.TaskObject;
+
 /**
  * Creates a Save object to perform two main types of operations. <br>
  * 1) Save to - Permanently changes the default location for the file to be saved. Also saves

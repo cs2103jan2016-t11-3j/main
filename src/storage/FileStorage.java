@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public class FileStorage implements Storage {
 

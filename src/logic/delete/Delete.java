@@ -4,9 +4,15 @@ import logic.*;
 import storage.*;
 
 import java.util.Stack;
+
+import common.CommandObject;
+import common.TaskObject;
+
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 
 /**
  * Creates a "Delete" object to facilitate the deletion of a task from task list internally,
@@ -40,7 +46,7 @@ public class Delete {
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
-	private Stack<CommandObject> undoList = new Stack<CommandObject>();
+	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
 
 	// Internal checkers to ensure that deletion has occurred
 	private boolean hasDeletedInternal = false;
@@ -64,7 +70,7 @@ public class Delete {
 	 * @param undoList - Current stack of CommandObjects with the purpose of undoing
 	 * previous actions
 	 */
-	public Delete(ArrayList<TaskObject> taskList, Stack<CommandObject> undoList) {
+	public Delete(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.commandObj = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), -1);
@@ -99,7 +105,7 @@ public class Delete {
 	}
 	
 	private void runQuickDelete() {
-		if(undoList.empty()) {
+		if(undoList.isEmpty()) {
 			createErrorOutput();
 		}
 		if(undoList.peek().getCommandType() == Logic.INDEX_DELETE) {

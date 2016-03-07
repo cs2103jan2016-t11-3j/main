@@ -1,6 +1,6 @@
 package storage;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public class StorageTask extends TaskObject {
     

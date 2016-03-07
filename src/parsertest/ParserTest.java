@@ -1,8 +1,10 @@
-package parser;
+package parsertest;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import parser.Parser;
 
 public class ParserTest {
 	
@@ -10,7 +12,7 @@ public class ParserTest {
 
 	@Test
 	public void testAllocateCommandType() {
-		tempParser.allocateCommandType("add homework IE2100 date: 29feb time: 9am");
+		tempParser.allocate("add homework IE2100 date: 29feb time: 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals(900, tempParser.getStartTime());
@@ -20,7 +22,7 @@ public class ParserTest {
 		assertEquals("undone", tempParser.getStatus());
 		reset();
 		
-		tempParser.allocateCommandType("add homework IE2100 date: 7/6-9/10 time: 10-1pm");
+		tempParser.allocate("add homework IE2100 date: 7/6-9/10 time: 10-1pm");
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals(1000, tempParser.getStartTime());
 		assertEquals(1300, tempParser.getEndTime());
@@ -28,15 +30,15 @@ public class ParserTest {
 		assertEquals(20161009, tempParser.getEndDate());
 		reset();
 		
-		tempParser.allocateCommandType("search 7/9/1403");
-		assertEquals("7/9/1403", tempParser.getTask());
+		tempParser.allocate("search 7/9");
+		assertEquals("7/9", tempParser.getTask());
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(14030907, tempParser.getStartDate());
-		assertEquals(14030907, tempParser.getEndDate());
+		assertEquals(907, tempParser.getStartDate());
+		assertEquals(907, tempParser.getEndDate());
 		reset();
 		
-		tempParser.allocateCommandType("edit 2 755pm");
+		tempParser.allocate("edit 2 755pm");
 		assertEquals("", tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
 		assertEquals(1955, tempParser.getEndTime());
@@ -44,7 +46,7 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
 		
-		tempParser.allocateCommandType("save as C://mac/desktop");
+		tempParser.allocate("save as C://mac/desktop");
 		assertEquals("as C://mac/desktop", tempParser.getTask());
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
@@ -56,7 +58,7 @@ public class ParserTest {
 	@Test
 	public void testParseEdit() {
 		tempParser.parseEdit("edit 2 755pm");
-		//assertEquals(null, tempParser.getTask());
+		assertEquals("", tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
 		assertEquals(1955, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());

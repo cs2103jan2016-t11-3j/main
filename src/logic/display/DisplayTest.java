@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import common.TaskObject;
+
 public class DisplayTest {
 
 	private static ArrayList<TaskObject> testList = new ArrayList<TaskObject> ();

@@ -2,11 +2,11 @@ package GUI;
 	
 import java.util.ArrayList;
 
+import common.TaskObject;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import logic.Logic;
-import logic.TaskObject;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 

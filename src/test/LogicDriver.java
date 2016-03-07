@@ -14,7 +14,6 @@ public class LogicDriver {
     private static Logic logic = new Logic();
     
     public static void main(String[] args) throws NoSuchFileException, IOException {
-        logic.load();
             while (true) {
                 System.out.print("Command: ");
                 String userCommand = scanner.nextLine();
@@ -25,7 +24,12 @@ public class LogicDriver {
 
     }
 
-    private static ArrayList<String> execute(String userCommand) {
+    /**
+     * Method for testing
+     * @param userCommand
+     * @return
+     */
+    public static ArrayList<String> execute(String userCommand) {
         logic.run(userCommand);
         display = logic.getOutput();
         return display;
