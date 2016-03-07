@@ -460,11 +460,4 @@ public class Logic {
 		System.out.println("task id = " + taskObj.getTaskId());
 	}
 
-    public void load() throws NoSuchFileException, IOException {
-        FileStorage storage = FileStorage.getInstance();
-        taskList = storage.load();
-        // TODO Auto-generated method stub
-        
-    }
-
 }

@@ -14,7 +14,6 @@ public class LogicDriver {
     private static Logic logic = new Logic();
     
     public static void main(String[] args) throws NoSuchFileException, IOException {
-        logic.load();
             while (true) {
                 System.out.print("Command: ");
                 String userCommand = scanner.nextLine();
