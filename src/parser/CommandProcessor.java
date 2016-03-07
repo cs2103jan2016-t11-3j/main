@@ -50,6 +50,10 @@ public abstract class CommandProcessor {
 	protected static final int VALUE_NOV = 11;
 	protected static final int VALUE_DEC = 12;
 	
+	protected static final String KEYWORD_AT = "at";
+	protected static final String KEYWORD_BY = "by";
+	protected static final String KEYWORD_ON = "on";
+	
 	protected static final Integer NOT_TASK_CONSTANT = 5;
 	
 	protected String _task = "";
