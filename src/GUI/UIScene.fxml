@@ -11,12 +11,15 @@
 
 <BorderPane fx:id="layout" prefHeight="600" prefWidth="450.0" style="-fx-background-color: #FCEBB6; -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <center>
-      <TableView fx:id="taskTable" onKeyPressed="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #78C0A8; -fx-border-radius: 50em; -fx-background-radius: 1.2em;" BorderPane.alignment="CENTER">
+      <TableView fx:id="taskTable" onKeyPressed="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="indexColumn" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Index" />
-          <TableColumn fx:id="taskColumn" prefWidth="300.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Task Name" />
-            <TableColumn fx:id="statusColumn" prefWidth="120.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Status" />
-            <TableColumn fx:id="deadlineColumn" prefWidth="150.0" style="-fx-background-color: #78C0A8; -fx-text-fill: white;" text="Date Due" />
+          <TableColumn fx:id="indexColumn" prefWidth="30.0" text="No." />
+          <TableColumn fx:id="taskColumn" prefWidth="150.0" text="Task Name" />
+            <TableColumn fx:id="statusColumn" prefWidth="80.0" text="Status" />
+            <TableColumn fx:id="startDateColumn" prefWidth="80.0" text="Start Date" />
+            <TableColumn fx:id="endDateColumn" prefWidth="80.0" text="Date Due" />
+            <TableColumn fx:id="startTimeColumn" prefWidth="80.0" text="Start Time" />
+            <TableColumn fx:id="endTimeColumn" prefWidth="80.0" text="End Time" />
         </columns>
          <BorderPane.margin>
             <Insets />

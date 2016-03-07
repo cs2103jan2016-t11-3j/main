@@ -40,9 +40,15 @@ public class Controller implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, String> taskColumn;
 	@FXML
-	private TableColumn<TaskObject, Integer> statusColumn;
+	private TableColumn<TaskObject, String> statusColumn;
 	@FXML
-	private TableColumn<TaskObject, Integer> deadlineColumn;
+	private TableColumn<TaskObject, Integer> startDateColumn;
+	@FXML
+	private TableColumn<TaskObject, Integer> endDateColumn;
+	@FXML
+	private TableColumn<TaskObject, Integer> startTimeColumn;
+	@FXML
+	private TableColumn<TaskObject, Integer> endTimeColumn;
 	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
@@ -87,9 +93,12 @@ public class Controller implements Initializable {
 		
 		//populate task and status column
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
-		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("status"));
-		deadlineColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
-			
+		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
+		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
+		startTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startTime"));
+		endTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endTime"));
+				
 		taskTable.setItems(groupData);
 	}
 
