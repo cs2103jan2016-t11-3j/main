@@ -347,7 +347,7 @@ public class DateProcessor {
 	//this method returns the date for search query
 	public int getSearchDate() {
 		if (start_year == -1) {
-			start_year = 0;
+			start_year = DEFAULT_YEAR;
 		} 
 		
 		if (start_month == -1) {

@@ -30,12 +30,12 @@ public class ParserTest {
 		assertEquals(20161009, tempParser.getEndDate());
 		reset();
 		
-		tempParser.allocate("search 7/9");
-		assertEquals("7/9", tempParser.getTask());
+		tempParser.allocate("search 7/9/2016");
+		assertEquals("7/9/2016", tempParser.getTask());
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(907, tempParser.getStartDate());
-		assertEquals(907, tempParser.getEndDate());
+		assertEquals(20160907, tempParser.getStartDate());
+		assertEquals(20160907, tempParser.getEndDate());
 		reset();
 		
 		tempParser.allocate("edit 2 755pm");
