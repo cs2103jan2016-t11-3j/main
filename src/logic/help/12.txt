@@ -1,0 +1,5 @@
+12.	Exiting the programme
+
+Enter “exit” or “quit”. 
+
+Data will automatically be saved to default file location before exiting.

@@ -329,10 +329,14 @@ public class DateProcessor {
 		
 		if (end_year == -1) {
 			end_year = DEFAULT_YEAR;
+		} else if (end_year < 100) {
+			end_year = 2000 + end_year;
 		}
 		
 		if (start_year == -1) {
 			start_year = end_year;
+		} else if (start_year < 100) {
+			start_year = 2000 + start_year;
 		}
 		
 		if (start_day != -1 && start_month != -1 && start_year != -1) {
@@ -347,8 +351,20 @@ public class DateProcessor {
 	//this method returns the date for search query
 	public int getSearchDate() {
 		if (start_year == -1) {
-			start_year = 0;
-		} 
+			start_year = DEFAULT_YEAR;
+		}
+		
+		if (end_year == -1) {
+			end_year = DEFAULT_YEAR;
+		} else if (end_year < 100) {
+			end_year = 2000 + end_year;
+		}
+		
+		if (start_year == -1) {
+			start_year = end_year;
+		} else if (start_year < 100) {
+			start_year = 2000 + start_year;
+		}
 		
 		if (start_month == -1) {
 			start_month = 0;

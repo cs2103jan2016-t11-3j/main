@@ -1,0 +1,96 @@
+1.	Adding a new event/floating task: 
+You can add a new event/floating task to be tracked by the program. 
+
+Enter “add”, followed by the event/floating task description. The start and end date time can also be included with the event/floating task and the information will automatically be added to the event details.
+
+Note that if two conflicting events are scheduled (i.e. The timing of the event to be scheduled overlaps with any part of any existing event), there will be a notification requesting you to confirm if these two events are to be scheduled together despite the conflict. 
+
+Usage Examples:
+add Dinner with John 7pm - 8pm	Creates an event named “Dinner with John”, scheduled between 7pm to 8pm on the day this was created
+add Dinner with John	Creates a floating task named “Dinner with John” 
+2.	Adding a new deadline:
+
+Tasks with a deadline can also be added by using the command “by” followed by an indication of a date after the task description. The date indicated can be flexible in its format, such as keying in the exact date or simply something like “next Tuesday”. Examples are provided below.
+
+Note that tasks without any deadlines written will be automatically added as a floating task. 
+
+Usage Examples:
+add Complete Assignment 1 by next Monday	Creates a deadline for “Complete Assignment 1” with due date on the Monday of the next week
+add Complete Project Report by 25 Feb	Creates a deadline for “Complete Project Report”, with due date on the nearest 25 February in the future (If task was added on 26 February 2015, due date will be 25 February 2016)
+3.	Viewing/Searching for an existing event/task using task description
+
+Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the search keywords. The search keywords should contain at least one word from the task description, although the search terms do not have to be case-sensitive. 
+
+The program will display a list of events/tasks that matches the search terms, sorted in order of time. If there are no tasks matching the search terms, the software will display “No tasks found”.
+
+Please note that entering only the command without any search terms displays all events/tasks, sorted in order of time.
+
+Usage Examples: 
+view dinner	Searches and displays all tasks, events and deadlines including the word “dinner”, non case-sensitive.
+view Project	Searches and displays all tasks, events and deadlines including the word “Project”, non case-sensitive.
+4.	Viewing/Searching for existing tasks by due date or event time
+
+Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the date or time.
+
+The program will display all events/tasks due before the date or time, sorted in order of time. 
+
+To display all events/tasks due after the date or time, enter any of the following commands: “view”, “find”, “search”, “display”, “list”, followed by “after” and the date or time.
+
+Usage Examples:
+view Friday	Searches and displays all tasks, events and deadlines which are due by the nearest upcoming Friday in the future.
+view next week	Searches and displays all tasks, events and deadlines which are due by the Sunday of the next week.
+view after next week	Searches and displays all tasks, events and deadlines which are due after the Sunday of the next week.
+5.	Scroll the display while viewing the task list
+
+Use the arrow keys up and down to display the previous and next pages in the display.
+6.	Edit an existing event/task description
+With precondition that list of event/task is displayed after a number. Enter the command “edit” followed by the ordered number of the selected event/task on the display. Enter the new description for the task. The task description will be updated to the new description.
+
+Note that if there is no command after the number of the selected task, no changes will be made.
+
+Usage Examples:
+edit 1 Dinner with John	Edits the task currently displayed at slot number 1 such that the task description now is “Dinner with John”
+edit 5 complete assignment 2	Edits the task currently displayed at slot number 5 such that the task description now is “complete assignment 2”
+edit 3	Nothing happens
+7.	Edit an existing event/task date/time
+With precondition that list of event/task is displayed after a number. Enter the command “edit” followed by the ordered number of the selected event/task on the display. Enter either “time” or “date” followed by the new event time and date or task due date. 
+
+Note that the type of task will automatically update itself according to the format of the time being edited.
+
+Usage Examples:
+edit 2 time 8pm - 9pm
+	Edits the task currently displayed at slot number 2 to become an event, from 8pm to 9pm today
+edit 2 date 27/2/16
+	Edits the task currently displayed at slot number 2 to become a deadline, with the due date on 27/2/2016
+edit 2 date	Removes all deadlines, timings for the task currently displayed at slot number 2. This task becomes a floating task.
+8.	Delete an existing event/task
+
+Deletes the corresponding task in the numbered list of displayed tasks. 
+
+With the precondition that the list of events/tasks is displayed after a number, enter the command “delete” followed by the number of the selected event/task on the display. This deletes the task corresponding to the number displayed
+
+Usage Examples:
+delete 1	Deletes the task currently displayed at slot number 1
+9.	Undo the last command
+
+Enter “undo”. This automatically restores the state of the task scheduler to what it was before the last command was entered. Do note that the “undo” command can only undo up to 3 actions before the most recent action. 
+10.	Change default save location
+
+Enter “save to” followed by the path to set a new default save location
+
+Usage Examples:
+save to C:\Program Files	Sets TaskFinder to, by default, save files containing task information at the folder Program Files in C:
+11.	Create a backup copy of the saved events/task
+
+Enter “save as” followed by file to save a copy of the saved events/tasks list into the selected location.
+
+Usage Examples:
+save as C:\Program Files	Sets TaskFinder to save file containing task information at the folder Program Files in C:. This only happens once
+12.	Exiting the programme
+
+Enter “exit” or “quit”. 
+
+Data will automatically be saved to default file location before exiting.
+13.	Accessing user manual
+
+Enter “help” to displays user manual/guide and “help” followed by a command to display additional information for the command
