@@ -385,7 +385,7 @@ public class Logic {
 	
 	// Done <-> Incomplete <-> Overdue needs one function
 	private void helpFunction(TaskObject taskObj) {
-		String helpSearchKey = taskObj.getTitle();
+		String helpSearchKey = "";
 		Help help = new Help(helpSearchKey);
 		setOutput(help.run());
 	}
