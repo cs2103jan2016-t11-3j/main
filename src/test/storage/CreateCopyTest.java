@@ -60,7 +60,7 @@ public class CreateCopyTest {
         dataList = readFile(path.toString());
         assertEquals(dir + "exists", true , Files.exists(path));
         Files.delete(path);
-        AssertHelper.assertDataListEquals( "subdir" ,size , expectedDataList, dataList);
+        AssertHelper.assertArrayListEquals( "subdir" ,size , expectedDataList, dataList);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class CreateCopyTest {
         assertEquals(dir + "exists", true , Files.exists(path));
         Files.delete(path);
         Files.delete(defaultPath);
-        AssertHelper.assertDataListEquals( "subdir" ,size , expectedDataList, dataList);
+        AssertHelper.assertArrayListEquals( "subdir" ,size , expectedDataList, dataList);
     }
 
     public ArrayList<String> readFile( String filePath ) throws IOException {

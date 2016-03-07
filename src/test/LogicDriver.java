@@ -3,23 +3,19 @@ package test;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import logic.Logic;
 
 public class LogicDriver {
     
     private static ArrayList<String> display = new ArrayList<String>();
-    private static Scanner scanner = new Scanner(System.in);   
     private static Logic logic = new Logic();
     
     public static void main(String[] args) throws NoSuchFileException, IOException {
-            while (true) {
-                System.out.print("Command: ");
-                String userCommand = scanner.nextLine();
-                display = execute(userCommand);
-                print(display);
-            }
+            
+        for (String command : args) {
+            display = execute(command);
+            print(display);
+        }
 
 
     }
