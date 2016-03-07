@@ -1,9 +1,10 @@
 package logic.search;
 import logic.display.Display;
-import logic.TaskObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import common.TaskObject;
 
 /**
  * Creates a Search object which facilitates the finding of tasks matching the search strings.

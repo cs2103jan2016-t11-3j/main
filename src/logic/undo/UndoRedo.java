@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Stack;
 
-import logic.CommandObject;
-import logic.TaskObject;
+import common.CommandObject;
+import common.TaskObject;
 
 public class UndoRedo {
 

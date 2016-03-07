@@ -2,6 +2,8 @@ package logic.mark;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+
+import common.TaskObject;
 import logic.*;
 
 import java.util.ArrayList;

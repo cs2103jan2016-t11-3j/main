@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public class TaskData {
 

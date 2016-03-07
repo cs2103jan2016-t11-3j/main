@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public class FileStorage implements Storage {
 
@@ -44,7 +44,7 @@ public class FileStorage implements Storage {
         if ( !FilePath.isValidPath(directory) ) {
             return 2;
         }
-        String filePath = FilePath.formPath(directory, fileName);
+        String filePath = FilePath.getPath(directory, fileName);
         try {
             TaskData.writeList(taskList, filePath);
         }  catch (IOException e) {

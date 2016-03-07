@@ -1,8 +1,8 @@
 package logic.search;
-import logic.TaskObject;
-
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import common.TaskObject;
 
 import java.util.ArrayList;
 

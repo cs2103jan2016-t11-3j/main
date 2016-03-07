@@ -3,6 +3,10 @@ package logic;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import common.CommandObject;
+import common.TaskObject;
+
 import java.util.ArrayList;
 import java.util.Stack;
 

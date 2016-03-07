@@ -5,9 +5,9 @@ import java.util.Deque;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-import logic.CommandObject;
+import common.CommandObject;
+import common.TaskObject;
 import logic.Logic;
-import logic.TaskObject;
 
 public class Redo extends UndoRedo {
 	

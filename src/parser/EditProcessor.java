@@ -1,7 +1,8 @@
 package parser;
 
 import java.util.ArrayList;
-import logic.TaskObject;
+
+import common.TaskObject;
 
 public class EditProcessor extends CommandProcessor {
 	

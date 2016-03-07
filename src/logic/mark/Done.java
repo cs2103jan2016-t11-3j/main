@@ -2,7 +2,7 @@ package logic.mark;
 
 import java.util.ArrayList;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 /**
  * Creates a Done object, which is a Mark object. However, it specifically changes the status

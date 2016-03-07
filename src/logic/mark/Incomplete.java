@@ -2,7 +2,7 @@ package logic.mark;
 
 import java.util.ArrayList;
 
-import logic.TaskObject;
+import common.TaskObject;
 
 public class Incomplete extends Mark {
 

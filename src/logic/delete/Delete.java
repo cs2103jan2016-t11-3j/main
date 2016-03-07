@@ -4,6 +4,10 @@ import logic.*;
 import storage.*;
 
 import java.util.Stack;
+
+import common.CommandObject;
+import common.TaskObject;
+
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayDeque;
