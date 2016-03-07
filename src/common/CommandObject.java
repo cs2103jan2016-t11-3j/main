@@ -4,7 +4,7 @@ public class CommandObject {
 	
 	private int commandType;
 	private TaskObject taskObj;
-	private int index;
+	private int index = -1;
 	
 	public CommandObject() {
 	}

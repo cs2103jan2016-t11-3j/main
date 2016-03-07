@@ -2,7 +2,7 @@ package logic.undo;
 
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.EmptyStackException;
+import java.util.NoSuchElementException;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -29,7 +29,7 @@ public class Undo extends UndoRedo {
 			secondaryLogic.parseCommandObject(commandObj, true, false);
 			
 			output.add(String.format(MESSAGE_UNDO, getUndoneCommandType(commandObj)));
-		} catch (EmptyStackException e) {
+		} catch (NoSuchElementException e) {
 			System.out.println(MESSAGE_UNDO_ERROR);
 		}
 		

@@ -13,11 +13,9 @@ import logic.save.*;
 import logic.help.*;
 
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Stack;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -162,9 +160,7 @@ public class Logic {
 			TaskObject removedTask = new TaskObject();
 			if (commandObj.getIndex() == -1) {
 				// Quick-delete function for item recently added
-				if (undoList.peek().getCommandType() == INDEX_DELETE) {
-					removedTask = deleteFunction(); // overloaded function
-				}
+				removedTask = deleteFunction(); // overloaded function
 			} else {
 				removedTask = deleteFunction(commandObj);
 			}
@@ -239,7 +235,6 @@ public class Logic {
 	}
 
 	private TaskObject deleteFunction(CommandObject commandObj) {
-		TaskObject removedTask = new TaskObject();
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
@@ -259,7 +254,7 @@ public class Logic {
 		if (removedTask != null) {
 			CommandObject newCommandObj;
 			if (commandObj.getIndex() == -1) {
-				newCommandObj = new CommandObject(command, removedTask, taskList.size()+1);
+				newCommandObj = new CommandObject(command, removedTask, -1);
 			} else {
 				newCommandObj = new CommandObject(command, removedTask, commandObj.getIndex());
 			}
@@ -362,7 +357,7 @@ public class Logic {
 			// For the corresponding delete object, the TaskObject is null and
 			// the index number of the CommandObject is the index of the item
 			// that was just added
-			if (commandObj.getIndex() == 0) {	// if the task had been added to the end of the list
+			if (commandObj.getIndex() == -1) {	// if the task had been added to the end of the list
 				list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
 			} else {
 				list.push(new CommandObject(INDEX_DELETE, new TaskObject(), commandObj.getIndex()));
@@ -385,7 +380,7 @@ public class Logic {
 	
 	// Done <-> Incomplete <-> Overdue needs one function
 	private void helpFunction(TaskObject taskObj) {
-		String helpSearchKey = taskObj.getTitle();
+		String helpSearchKey = "";
 		Help help = new Help(helpSearchKey);
 		setOutput(help.run());
 	}

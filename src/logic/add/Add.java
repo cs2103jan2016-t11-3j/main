@@ -137,7 +137,7 @@ public class Add {
 	private void addInternal() {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
-		if (index != 0) { 	// must add at a specific point
+		if (index != -1) { 	// must add at a specific point
 			taskList.add(index-1, task);
 		} else {
 			taskList.add(task);

@@ -34,6 +34,7 @@ public class Delete {
 	// Deletes by searching for the unique taskID
 	private static String MESSAGE_DELETE = "Task deleted from TaskFinder: %1s";
 	private static String MESSAGE_ERROR = "Error deleting task from TaskFinder";
+	private static String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
 
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
@@ -105,10 +106,9 @@ public class Delete {
 	}
 	
 	private void runQuickDelete() {
-		if(undoList.isEmpty()) {
+		if (undoList.isEmpty()) {
 			createErrorOutput();
-		}
-		if(undoList.peek().getCommandType() == Logic.INDEX_DELETE) {
+		} else if (undoList.peek().getCommandType() == Logic.INDEX_DELETE) {
 			// delete the last item in taskList as it shows that the item had just been added
 			int index = taskList.size() - 1;
 			taskName = taskList.get(index).getTitle();
@@ -124,7 +124,7 @@ public class Delete {
 				createErrorOutput();
 			}
 		} else {
-			createErrorOutput();
+			createQuickDeleteUnavailableErrorOutput();
 		}
 	}
 
@@ -186,6 +186,11 @@ public class Delete {
 	private void createErrorOutput() {
 		removedTask = null;
 		output.add(MESSAGE_ERROR);
+	}
+	
+	private void createQuickDeleteUnavailableErrorOutput() {
+		removedTask = null;
+		output.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
 	}
 
 	// GETTERS AND SETTERS
