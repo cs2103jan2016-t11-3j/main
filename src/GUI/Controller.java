@@ -41,7 +41,8 @@ public class Controller implements Initializable {
 	private TableColumn<TaskObject, String> taskColumn;
 	@FXML
 	private TableColumn<TaskObject, Integer> statusColumn;
-	
+	@FXML
+	private TableColumn<TaskObject, Integer> deadlineColumn;
 	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
@@ -55,6 +56,13 @@ public class Controller implements Initializable {
     	}
 	}
 	
+	@FXML
+	public void handleHelpPressed(KeyEvent event) {
+		if (event.getCode() == KeyCode.F1) {
+			System.out.println("help activated");
+		}
+	}
+	
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getOutput());
 		feedbackBox.getChildren().clear();
@@ -63,8 +71,8 @@ public class Controller implements Initializable {
 
 	private void display() {
 		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);
-		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
-		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("status"));
+		
+		//populate the index column
 		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
 		    @Override
 			public void updateIndex(int index) {
@@ -76,13 +84,17 @@ public class Controller implements Initializable {
 		        }
 		    }
 		});
+		
+		//populate task and status column
+		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
+		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("status"));
+		deadlineColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+			
 		taskTable.setItems(groupData);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		display();
-	}
-
-	
+	}	
 } 
