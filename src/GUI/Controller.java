@@ -6,10 +6,9 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -37,7 +36,7 @@ public class Controller implements Initializable {
 	@FXML
 	private TableView<TaskObject> taskTable;
 	@FXML
-	private TableColumn<TaskObject, Integer> indexColumn;
+	private TableColumn<TaskObject, String> indexColumn;
 	@FXML
 	private TableColumn<TaskObject, String> taskColumn;
 	@FXML
@@ -66,9 +65,17 @@ public class Controller implements Initializable {
 		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("status"));
-		indexColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("taskId"));
-
-		
+		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
+		    @Override
+			public void updateIndex(int index) {
+		        super.updateIndex(index);
+		        if (isEmpty() || index < 0) {
+		            setText(null);
+		        } else {
+		            setText(Integer.toString(index+1));
+		        }
+		    }
+		});
 		taskTable.setItems(groupData);
 	}
 
