@@ -9,19 +9,21 @@ import org.junit.Test;
 import logic.Logic;
 
 public class LogicTest {
+    
+    private final String MESSAGE_ADD = "Task added: ";
 
     @Test
     public void testAddTasks() {
         ArrayList<String> commands = new ArrayList<String>();
         ArrayList<String> display = new ArrayList<String>();
-        commands.add("add task1");
-        commands.add("add task2");
+        ArrayList<String> output = new ArrayList<String>();
         Logic logic = new Logic();
         for (String command : commands) {
             display = excecute(logic, command);
-            AssertHelper.assertArrayListEquals( command , commands, display);
+            output.clear();
+            output.add(MESSAGE_ADD + "task");
+            AssertHelper.assertArrayListEquals( command , display, output);
         }
-        
     }
 
     
