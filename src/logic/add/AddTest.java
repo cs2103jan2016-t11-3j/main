@@ -20,7 +20,7 @@ public class AddTest {
 		TaskObject taskOne = new TaskObject("Dinner tonight", 1);
 		taskOne.setTitle("Dinner tonight"); // This line due to error in TaskObject
 		taskOne.setCategory("floating");
-		Add addFirst = new Add(taskOne, testArray);
+		Add addFirst = new Add(taskOne, -1, testArray);
 		actualOutput = addFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
@@ -38,7 +38,7 @@ public class AddTest {
 		taskTwo.setCategory("deadline");
 		taskTwo.setEndDate(20160229);
 		taskTwo.setEndTime(1500);
-		Add addSecond = new Add(taskTwo, testArray);
+		Add addSecond = new Add(taskTwo, -1, testArray);
 		actualOutput = addSecond.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
@@ -58,7 +58,7 @@ public class AddTest {
 		taskThree.setStartTime(1700);
 		taskThree.setEndDate(20160226);
 		taskThree.setEndTime(2200);
-		Add addThird = new Add(taskThree, testArray);
+		Add addThird = new Add(taskThree, -1, testArray);
 		actualOutput = addThird.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
@@ -79,7 +79,7 @@ public class AddTest {
 		taskFour.setStartTime(1800);
 		taskFour.setEndDate(20160226);
 		taskFour.setEndTime(2100);
-		Add addFourth = new Add(taskFour, testArray);
+		Add addFourth = new Add(taskFour, -1, testArray);
 		actualOutput = addFourth.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
@@ -102,7 +102,7 @@ public class AddTest {
 		taskFive.setStartTime(1200);
 		taskFive.setEndDate(20160227);
 		taskFive.setEndTime(1600);
-		Add addFifth = new Add(taskFive, testArray);
+		Add addFifth = new Add(taskFive, -1, testArray);
 		actualOutput = addFifth.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
