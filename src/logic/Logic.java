@@ -91,7 +91,13 @@ public class Logic {
 		checkOverdue();
 	}
 	
-	// Constructor for the secondary logic class that is to be loaded within Undo/Redo
+	/**
+	 * Constructor called by Undo/Redo. This is a secondary logic class which only performs
+	 * one operation before being deactivated.
+	 * @param taskList The default taskList storing all the tasks
+	 * @param undoList The stack of CommandObjects which stores all undo actions
+	 * @param redoList The stack of CommandObjects which stores all redo actions
+	 */
 	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
@@ -117,13 +123,32 @@ public class Logic {
 		parseCommandObject(commandObj, false, false);
 	}
 
-	// Calling Parser to parse the user input
+	/**
+	 * Calls Parser to parse the user input
+	 * @return CommandObject containing information on the task to be manipulated, as well
+	 * as the command to execute
+	 */
 	private CommandObject callParser() {
 		Parser parser = new Parser(userInput, taskId);
 		taskId++;
 		return parser.run();
 	}
 
+	/**
+	 * Parses the CommandObject and determines which command to execute.
+	 * Responsible for manipulating the undoList and determining whether the redoList
+	 * should be cleared. <br>
+	 * The redoList will be cleared as long as the command given is not an undo or
+	 * redo. <br>
+	 * A "reverse" CommandObject will be created and pushed into the undoList if the 
+	 * current CommandObject is an action which manipulates the existing task list. 
+	 * @param commandObj CommandObject which contains information on the actions to 
+	 * execute within the lower levels of the program
+	 * @param isUndoAction a boolean value stating if this CommandObject is a result of
+	 * an undo action
+	 * @param isRedoAction a boolean value stating if this CommandObject is a result of 
+	 * a redo action
+	 */
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		int command = commandObj.getCommandType();
 		TaskObject taskObj = commandObj.getTaskObject();
@@ -192,7 +217,7 @@ public class Logic {
 			overdueFunction(taskObj);
 			break;
 		case INDEX_INCOMPLETE:
-			undoneFunction(taskObj);
+			incompleteFunction(taskObj);
 			break;
 		default:
 			printInvalidCommandMessage();
@@ -315,7 +340,7 @@ public class Logic {
 		// overdue.getTaskIdToMark()));
 	}
 
-	private void undoneFunction(TaskObject taskObj) {
+	private void incompleteFunction(TaskObject taskObj) {
 		Incomplete incomplete = new Incomplete(taskObj, taskList, lastOutputTaskList);
 		setOutput(incomplete.run());
 		setLastOutputTaskList(taskList);
@@ -326,6 +351,12 @@ public class Logic {
 		}
 	}
 
+	/**
+	 * Constructs a CommandObject for either "done", "incomplete" or "overdue" 
+	 * for the purpose of pushing it into the undoList
+	 * @param statusChanger Mark object which performed the modification to the task list
+	 * @return CommandObject which reverses the operation performed previously
+	 */
 	private CommandObject constructStatusCommandObject(Mark statusChanger) {
 		CommandObject returnedCommand = new CommandObject();
 		String pastStatus = statusChanger.getStatusToChange();
@@ -352,30 +383,41 @@ public class Logic {
 		return 0;
 	}
 
-	/*
-	 * The following methods stores the reverse of the user input in the stack.
+	 //The following methods stores the reverse of the user input in the stack.
+	 	
+	/**
+	 * Method for adding a CommandObject containing add or delete to either the undoList or redoList,
+	 * which is previously determined by the caller. <br>
+	 * For command "add", a "delete" CommandObject will be pushed into the list. The index
+	 * of the previously added TaskObject will also be added into the list to facilitate
+	 * future deletion. <br>
+	 * For command "delete", an "add" CommandObject will be pushed into the list, together 
+	 * with a copy of the task which was just deleted
+	 * @param commandObj The CommandObject to be added to the stated list.
+	 * @param list Either a undoList or a redoList
 	 */
-
-	// Add <-> delete
 	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
 		if (commandObj.getCommandType() == INDEX_ADD) {
-			// For the corresponding delete object, the TaskObject is null and
-			// the index number of the CommandObject is the index of the item
-			// that was just added
-			if (commandObj.getIndex() == -1) {	// if the task had been added to the end of the list
+			if (commandObj.getIndex() == -1) {
+				// if task was previously added to the end of the list
 				list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
 			} else {
+				// if task was previously added to a pre-determined location in the list
 				list.push(new CommandObject(INDEX_DELETE, new TaskObject(), commandObj.getIndex()));
 			}
 		} else if (commandObj.getCommandType() == INDEX_DELETE) {
-			// For the corresponding add object, the title of the TaskObject
-			// should be the name of the task that is just deleted
 			list.push(new CommandObject(INDEX_ADD, commandObj.getTaskObject(), commandObj.getIndex()));
 		} 
 	}
 
-	// Edit <-> edit
-	// Saves the item number to be edited and the original title
+	/**
+	 * Method for adding a CommandObject containing edit to either the undoList or redoList,
+	 * predetermined by the caller of this method. <br>
+	 * 
+	 * @param editOriginal Contains an Edit object which stores information on retrieving
+	 * the original TaskObject prior to the edit.
+	 * @param list Either an undoList or redoList
+	 */
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
 		CommandObject newCommandObj = new CommandObject();
 		if (editOriginal.getIsEditTitle()) {
@@ -389,16 +431,18 @@ public class Logic {
 		}
 		list.push(newCommandObj);
 	}
-	
-	// Done <-> Incomplete <-> Overdue needs one function
+
 	private void helpFunction(TaskObject taskObj) {
 		String helpSearchKey = "";
 		Help help = new Help(helpSearchKey);
 		setOutput(help.run());
 	}
 
-	// Returns true if the command is one which involves editing of the task
-	// lists
+	/**
+	 * Determines if the command involves editing of a task
+	 * @param command Integer containing the command index of this command
+	 * @return a boolean value indicating whether the command involves editing
+	 */
 	private boolean isListOperation(int command) {
 		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE || command == INDEX_DONE
 				|| command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
