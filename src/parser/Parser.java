@@ -44,8 +44,8 @@ public class Parser {
 	private static final String DONE_COMMAND_3 = "completed";
 	private static final int DONE_INDEX = 10;
 	
-	public CommandObject commandObject = new CommandObject();
-	public TaskObject taskObject = new TaskObject();
+	public CommandObject CO = new CommandObject();
+	public TaskObject TO = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
 	
 	private String _command;
@@ -54,20 +54,28 @@ public class Parser {
 	public Parser() {
 	}
 	
+	/**
+	 * Constructs the parser object that will take in the user input and a internally 
+	 * system generated taskID
+	 * 
+	 * @param command  user's input into the system of String type
+	 * @param taskId   system generated ID
+	 */
 	public Parser(String command, int taskId) {
 		_command = command;
 		_taskId = taskId;	// ADDED INITIALISATION FOR TASKID
 	}
+	
+	/**
+	 * Runs the methods to process the command and returns command object
+	 * to Logic
+	 * 
+	 * @return CO command object that contains task description and task object
+	 */
 	public CommandObject run() {
 		allocate(_command);
-		return commandObject;
+		return CO;
 	}
-	
-	/*private CommandObject parseInput(String command) {
-		allocateCommandType(command);
-		return commandObject;
-	}*/
-
 	
 	/**
 	 * method reads string and trigger the relevant method to process string's information
@@ -76,13 +84,13 @@ public class Parser {
 	 */
 	public void allocate(String command) {
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
-			commandObject.setCommandType(EXIT_INDEX);
+			CO.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {
-			commandObject.setCommandType(HELP_INDEX);
+			CO.setCommandType(HELP_INDEX);
 		} else if (command.startsWith(UNDO_COMMAND)) {
-			commandObject.setCommandType(UNDO_INDEX);
+			CO.setCommandType(UNDO_INDEX);
 		} else if (command.startsWith(REDO_COMMAND)) {
-			commandObject.setCommandType(REDO_INDEX);
+			CO.setCommandType(REDO_INDEX);
 		} else if (command.startsWith(EDIT_COMMAND_1) || command.startsWith(EDIT_COMMAND_2)) {
 			parseEdit(command);
 		} else if (command.startsWith(SAVE_COMMAND)) {
@@ -91,13 +99,11 @@ public class Parser {
 			parseDelete(command);
 		} else if (command.startsWith(ADD_COMMAND)) {
 			parseAdd(command);
-		} else if (isSearch(command)) {
-			parseSearch(command);
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
 				|| command.startsWith(DONE_COMMAND_3)) {
 			parseDone(command);
 		} else {
-			//error message? 
+			parseSearch(command);
 		}
   	}
 	
@@ -108,12 +114,12 @@ public class Parser {
 	 * @param  command   user's input
 	 */
 	public void parseDone(String command) {
-		commandObject.setCommandType(DONE_INDEX);
+		CO.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
 		command = command.substring(temp);
 		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 		temp = Integer.parseInt(command);
-		commandObject.setIndex(temp);
+		CO.setIndex(temp);
 	}
 	
 	/**
@@ -122,86 +128,68 @@ public class Parser {
 	 * @param command   user's input
 	 */
 	public void parseEdit(String command) {
-		commandObject.setCommandType(EDIT_INDEX);
+		CO.setCommandType(EDIT_INDEX);
 		CommandProcessor EP = new EditProcessor();
-		taskObject = EP.process(command);
-		commandObject.setTaskObject(taskObject);
-		commandObject.setIndex(EP.getIndex());
+		TO = EP.process(command);
+		CO.setTaskObject(TO);
+		CO.setIndex(EP.getIndex());
 		EP.reset();
 	}
-	
-	/*
-	 * taskObject.setTitle(EP.getTask());
-		taskObject.setStartTime(EP.getStartTime());
-		taskObject.setEndTime(EP.getEndTime());
-		taskObject.setStartDate(EP.getStartDate());
-		taskObject.setEndDate(EP.getEndDate());*/
 	
 	/**
 	 * method sets command type and creates task object with details keyed in by user
 	 * 
-	 * @param command   user's input
+	 * @param command   user's input as a string
 	 */
 	public void parseAdd(String command) {
-		commandObject.setCommandType(ADD_INDEX);
+		CO.setCommandType(ADD_INDEX);
 		CommandProcessor AP = new AddProcessor();
-		taskObject = AP.process(command);
+		TO = AP.process(command);
 		//add these 5 main attributes
-		taskObject.setTaskId(_taskId);
-		commandObject.setTaskObject(taskObject);
+		TO.setTaskId(_taskId);
+		CO.setTaskObject(TO);
 		setCategory();
 		AP.reset();
 	}
 	
-	/*keep here temporarily (under arts)
-	 * taskObject.setTitle(AP.getTask());
-		taskObject.setStartTime(AP.getStartTime());
-		taskObject.setEndTime(AP.getEndTime());
-		taskObject.setStartDate(AP.getStartDate());
-		taskObject.setEndDate(AP.getEndDate());
-		taskObject.setTaskId(_taskId);	// ADDED
-		taskObject.setStatus("undone");
+	/**
+	 * method sets command type and creates task object with details entered by user 
+	 * for search purpose
+	 * 
+	 * @param command   user's input as a string
 	 */
-	
-	
 	public void parseSearch(String command) {
-		commandObject.setCommandType(SEARCH_INDEX);
+		CO.setCommandType(SEARCH_INDEX);
 		CommandProcessor SP = new SearchProcessor();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
 		if (command.indexOf(" ") == -1) {
-			taskObject.setStartTime(-1);
-			taskObject.setEndTime(-1);
-			taskObject.setStartDate(-1);
-			taskObject.setEndDate(-1);
+			TO.setStartTime(-1);
+			TO.setEndTime(-1);
+			TO.setStartDate(-1);
+			TO.setEndDate(-1);
 		} else {
 			command = command.substring(command.indexOf(" ")+1);
-			taskObject = SP.process(command);
+			TO = SP.process(command);
 			
 		}
-		commandObject.setTaskObject(taskObject);
+		CO.setTaskObject(TO);
 	}
 	
-	/*taskObject.setTitle(SP.getTask());
-	taskObject.setStartTime(SP.getStartTime());
-	taskObject.setEndTime(SP.getEndTime());
-	taskObject.setStartDate(SP.getStartDate());
-	taskObject.setEndDate(SP.getEndDate());
-	*/
 	
 	public void setCategory() {
 		if (isFloating()) {
-			taskObject.setCategory("floating");
+			TO.setCategory("floating");
 		} else if (isDeadline()) {
-			taskObject.setCategory("deadline");
+			TO.setCategory("deadline");
 		} else {
-			taskObject.setCategory("event"); //edited mistake here
+			TO.setCategory("event"); //edited mistake here
 		}
 	}
 	
 	public boolean isFloating() {
-		if (taskObject.getStartDate() == -1 && taskObject.getEndDate() == -1
-				&& taskObject.getStartTime() == -1 && taskObject.getEndTime() ==-1) {
+		if (TO.getStartDate() == -1 && TO.getEndDate() == -1
+				&& TO.getStartTime() == -1 && TO.getEndTime() ==-1) {
 			return true;
 		} else {
 			return false;
@@ -209,8 +197,8 @@ public class Parser {
 	}
 	
 	public boolean isDeadline() {
-		if (taskObject.getStartDate() == taskObject.getEndDate()
-				&& taskObject.getStartTime() == taskObject.getEndTime()) {
+		if (TO.getStartDate() == TO.getEndDate()
+				&& TO.getStartTime() == TO.getEndTime()) {
 			return true;
 		} else {
 			return false;
@@ -230,11 +218,16 @@ public class Parser {
  		}
  	}
  	
+ 	/**
+ 	 * method sets command type for delete commands 
+ 	 * 
+ 	 * @param command  user's input as a string
+ 	 */
  	public void parseDelete(String command) {
- 		commandObject.setCommandType(DELETE_INDEX);
+ 		CO.setCommandType(DELETE_INDEX);
  		int index;
  		index = extractDeleteIndex(command);
- 		commandObject.setIndex(index);
+ 		CO.setIndex(index);
  	}
  	
  	/**
@@ -244,6 +237,8 @@ public class Parser {
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
  			return -1;
+ 		} else if (command.contains("all")) {
+ 			return 0;
  		} else {
 	 		int index = command.indexOf(" ") + 1;
 	 		newString = command.substring(index);
@@ -251,48 +246,55 @@ public class Parser {
 	 	return Integer.parseInt(newString);
  	}
 
+ 	/**
+ 	 * method sets command type for command object and returns file path
+ 	 * 
+ 	 * @param command user's input as a string 
+ 	 */
  	public void parseSave(String command) {
- 		commandObject.setCommandType(SAVE_INDEX);
+ 		CO.setCommandType(SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		newString = command.substring(index);
- 		taskObject.setTitle(newString);
- 		commandObject.setTaskObject(taskObject);
+ 		TO.setTitle(newString);
+ 		CO.setTaskObject(TO);
  	}
  	
+ 	//all the getters for testing purposes
+ 	
  	public int getCommandType() {
- 		return commandObject.getCommandType();
+ 		return CO.getCommandType();
  	}
 
  	public String getTask() {
- 		return taskObject.getTitle();
+ 		return TO.getTitle();
  	}
  	
  	public int getStartDate() {
- 		return taskObject.getStartDate();
+ 		return TO.getStartDate();
  	}
  	
  	public int getStartTime() {
- 		return taskObject.getStartTime();
+ 		return TO.getStartTime();
  	}
  	
  	public int getEndDate() {
- 		return taskObject.getEndDate();
+ 		return TO.getEndDate();
  	}
  	
  	public int getEndTime() {
- 		return taskObject.getEndTime();
+ 		return TO.getEndTime();
  	}
  	
  	public String getStatus() {
- 		return taskObject.getStatus();
+ 		return TO.getStatus();
  	}
  	
  	public void resetTaskObj() {
- 		taskObject.resetAttributes();
+ 		TO.resetAttributes();
  	}
  	
  	public int getCommandTask() {
- 		return commandObject.getCommandType();
+ 		return CO.getCommandType();
  	}
 }

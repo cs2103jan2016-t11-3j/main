@@ -62,7 +62,9 @@ public abstract class CommandProcessor {
 	protected int _startTime = -1;
 	protected int _endTime = -1;
 	
+	
 	public abstract TaskObject process(String input);
+	
 	public abstract void reset();
 	
 	public abstract int getIndex(); //only for EDIT

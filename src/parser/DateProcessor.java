@@ -72,7 +72,7 @@ public class DateProcessor {
 	 * 
 	 * @param input    date string that is in the format
 	 */
-	public void processDate(String input, boolean isUsedForSearch) {
+	public void processDate(String input, boolean isForSearch) {
 		input = input.replaceFirst("date:", "");
 		convertToArray(input);
 		if (list.size() == 2 || list.size() == 1) {
@@ -87,7 +87,7 @@ public class DateProcessor {
 			start_month = end_month;
 		}
 		
-		if (!isUsedForSearch) {
+		if (!isForSearch) {
 			setDates();
 		}
 	}
