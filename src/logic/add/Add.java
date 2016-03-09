@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 import common.TaskObject;
@@ -102,8 +103,8 @@ public class Add {
 			if (deadline.isBefore(LocalDateTime.now())) {
 				isOverdue = true;
 			}
-		} catch (InputMismatchException e) {
-			System.out.println(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+		} catch (DateTimeException e) {
+			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
 		}
 		return isOverdue;
 	}
@@ -170,8 +171,8 @@ public class Add {
 					return true;
 				}
 			}
-		} catch (InputMismatchException e) {
-			System.out.println(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+		} catch (DateTimeException e) {
+			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
 		}
 		return false;
 	}

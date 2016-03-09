@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.sun.javafx.tk.Toolkit.Task;
+
 import common.TaskObject;
 
 public class AddTest {
@@ -118,7 +120,7 @@ public class AddTest {
 	public void testSix() {
 	ArrayList<String> actualOutput = new ArrayList<String> ();
 		
-		TaskObject taskSix = new TaskObject("CE2", 5);
+		TaskObject taskSix = new TaskObject("CE2", 6);
 		taskSix.setTitle("CE2"); // This line due to error in TaskObject
 		taskSix.setCategory("deadline");
 		taskSix.setEndDate(20160227);
@@ -132,6 +134,26 @@ public class AddTest {
 		assertEquals(expectedOutput, actualOutput);
 		
 		String taskStatus = addSixth.getTask().getStatus();
+		assertEquals("overdue", taskStatus);
+	}
+	@Test
+	// Add overdue deadline
+	public void testSeven() {
+	ArrayList<String> actualOutput = new ArrayList<String> ();
+		
+		TaskObject taskSeven = new TaskObject("Buy pizza", 7);
+		taskSeven.setCategory("deadline");
+		taskSeven.setEndDate(20160227);
+		taskSeven.setEndTime(2500); // Invalid time
+		Add addSeventh = new Add(taskSeven, -1, testArray);
+		actualOutput = addSeventh.run();
+		
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Failed to add task. Reason: Invalid time input");
+		
+		assertEquals(expectedOutput, actualOutput);
+		
+		String taskStatus = addSeventh.getTask().getStatus();
 		assertEquals("overdue", taskStatus);
 	}
 }
