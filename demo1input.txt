@@ -6,23 +6,13 @@ add Read Task Analysis
 add Complete IE2100 Homework 4 date: 17/3/2016 time: 1400
 add Complete IE2130 Assignment 2 date: 21/3/2016 time: 1600
 
-display
-find Temasek
-view IE2100
-
-delete 2
-
-view IE2100
+delete 4
 
 add Task to be deleted
 
 delete
 
-view IE2100
-
 edit 1 Check IE2150 results
-
-display
 
 exit
 
