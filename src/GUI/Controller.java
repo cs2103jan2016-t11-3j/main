@@ -27,6 +27,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class Controller implements Initializable {
+	
 	static String _input;
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getTaskList();
@@ -64,21 +65,23 @@ public class Controller implements Initializable {
     	_input = userInput.getText();
     	_UI.passInput(_input);
     	userInput.clear();
-    	displayMessage();
-    	display();
+    	displayMessage(); //print feedback message
+    	display(); //refreshes table after every command
     	}
 	}
 	
 	@FXML
 	public void handleHelpPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
-			_UI.passInput("help");
-			ArrayList<String> helpManualList = _UI.getHelpOutput();
-			popupController.setHelpStage(helpManualList);
+			popupController.setHelpStage();
 			System.out.println("help activated");
 		}
 	}
 	
+	public static ArrayList<String> getHelpList() {
+		_UI.passInput("help");
+		return _UI.getHelpOutput();
+	}
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
@@ -114,6 +117,6 @@ public class Controller implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		display();
+		display(); //start program with all tasks in table
 	}	
 } 

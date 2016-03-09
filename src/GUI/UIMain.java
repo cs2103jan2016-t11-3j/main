@@ -16,7 +16,6 @@ public class UIMain extends Application {
 	
 	static Logic logic = new Logic();
 	Stage window;
-	static Stage helpStage = new Stage();
 	static String input;
 	static ArrayList<TaskObject> taskList;
 	
@@ -69,5 +68,7 @@ public class UIMain extends Application {
 	public ArrayList<String> getHelpOutput() {
 		return logic.getOutput();
 	}
+
+	
 
 }
