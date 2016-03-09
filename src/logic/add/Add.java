@@ -71,20 +71,23 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
-
-		String taskType = task.getCategory();
-		if (taskType.equals("event")) {
-			isClash = checkIfClash();
-			// check for clash only necessary if task is an event
-		} else {
-			if (taskType.equals("deadline")) {
-				boolean isOverdue = checkIfOverdue();
-				// check for overdue only necessary if task is a deadline
-				setTaskStatus(isOverdue);
+		try {
+			String taskType = task.getCategory();
+			if (taskType.equals("event")) {
+				isClash = checkIfClash();
+				// check for clash only necessary if task is an event
+			} else {
+				if (taskType.equals("deadline")) {
+					boolean isOverdue = checkIfOverdue();
+					// check for overdue only necessary if task is a deadline
+					setTaskStatus(isOverdue);
+				}
 			}
+			addTask();
+			createOutput();
+		} catch (DateTimeException e) {
+			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
 		}
-		addTask();
-		createOutput();
 		return output;
 	}
 
@@ -96,15 +99,11 @@ public class Add {
 	 * 
 	 * @return isOverdue: boolean - True if deadline is before current time
 	 */
-	private boolean checkIfOverdue() {
+	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		try {
-			LocalDateTime deadline = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
-			if (deadline.isBefore(LocalDateTime.now())) {
-				isOverdue = true;
-			}
-		} catch (DateTimeException e) {
-			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+		LocalDateTime deadline = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
+		if (deadline.isBefore(LocalDateTime.now())) {
+			isOverdue = true;
 		}
 		return isOverdue;
 	}
@@ -144,36 +143,33 @@ public class Add {
 	 *            The TaskObject passed into the function from the task list.
 	 * @return
 	 */
-	private boolean checkTimeClash(TaskObject current) {
-		try {
-			LocalDateTime currentStart = Logic.obtainDateTime(current.getStartDate(), current.getStartTime());
-			LocalDateTime currentEnd = Logic.obtainDateTime(current.getEndDate(), current.getEndTime());
-			LocalDateTime newStart = Logic.obtainDateTime(task.getStartDate(), task.getStartTime());
-			LocalDateTime newEnd = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
+	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
+		LocalDateTime currentStart = Logic.obtainDateTime(current.getStartDate(), current.getStartTime());
+		LocalDateTime currentEnd = Logic.obtainDateTime(current.getEndDate(), current.getEndTime());
+		LocalDateTime newStart = Logic.obtainDateTime(task.getStartDate(), task.getStartTime());
+		LocalDateTime newEnd = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
 
-			if (currentStart.isAfter(newStart)) {
-				if (currentStart.isBefore(newEnd)) {
-					return true;
-				}
+		if (currentStart.isAfter(newStart)) {
+			if (currentStart.isBefore(newEnd)) {
+				return true;
 			}
-			if (currentEnd.isAfter(newStart)) {
-				if (currentEnd.isBefore(newEnd)) {
-					return true;
-				}
-			}
-			if (newStart.isAfter(currentStart)) {
-				if (newStart.isBefore(currentEnd)) {
-					return true;
-				}
-			}
-			if (newEnd.isAfter(currentStart)) {
-				if (newEnd.isBefore(currentEnd)) {
-					return true;
-				}
-			}
-		} catch (DateTimeException e) {
-			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
 		}
+		if (currentEnd.isAfter(newStart)) {
+			if (currentEnd.isBefore(newEnd)) {
+				return true;
+			}
+		}
+		if (newStart.isAfter(currentStart)) {
+			if (newStart.isBefore(currentEnd)) {
+				return true;
+			}
+		}
+		if (newEnd.isAfter(currentStart)) {
+			if (newEnd.isBefore(currentEnd)) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
