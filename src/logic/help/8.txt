@@ -1,4 +1,4 @@
-8.	Delete an existing event/task
+Delete an existing event/task
 
 Deletes the corresponding task in the numbered list of displayed tasks. 
 
