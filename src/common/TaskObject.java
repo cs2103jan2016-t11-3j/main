@@ -14,6 +14,7 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String category; // deadline, event, or floating
 	protected String status; //completed, overdue or incomplete
 	protected int taskId;
+	protected String timeOutputString = ""; // stores date time in the desired output for GUI
 	
 	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
@@ -176,6 +177,10 @@ public class TaskObject implements Comparable<TaskObject> {
 	
 	public void setTaskId(int newTaskId) {
 		this.taskId = newTaskId;
+	}
+	
+	public void setTimeOutputString(String newTimeOutput) {
+		this.timeOutputString = newTimeOutput;
 	}
 	
 	// Checks if title, dates and times are invalid values
