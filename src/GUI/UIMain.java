@@ -69,6 +69,4 @@ public class UIMain extends Application {
 		return logic.getOutput();
 	}
 
-	
-
 }
