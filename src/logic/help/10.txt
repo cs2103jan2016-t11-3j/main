@@ -1,4 +1,4 @@
-10.	Change default save location
+Change default save location
 
 Enter “save to” followed by the path to set a new default save location
 

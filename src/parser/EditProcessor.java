@@ -71,7 +71,7 @@ public class EditProcessor extends CommandProcessor {
 				toReturn = toReturn + " " + list.get(i);
 			}
 		}
-		return toReturn.toLowerCase();
+		return toReturn;
 	}
 	
 	
