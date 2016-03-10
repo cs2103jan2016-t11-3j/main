@@ -3,14 +3,16 @@ package logic.help;
 import java.util.ArrayList;
 
 /**
- * Creates a Help object to display the user guide. There are two ways which the manual
- * can be displayed: <br>
- * 1) Entire user guide - The user does not key in any search keys. Entire manual will be
- * transferred to the output ArrayList for displaying <br>
- * 2) Parts related to the topic of interest - Based on the search keys entered by the 
- * user, the program searches for topics related and displays all sections related to it.
- * If the topic of interest does not exist, an error message will be returned to the user
- * will be returned through the same output channel.
+ * Creates a Help object to display the user guide. There are two ways which the
+ * manual can be displayed: <br>
+ * 1) Entire user guide - The user does not key in any search keys. Entire
+ * manual will be transferred to the output ArrayList for displaying <br>
+ * 2) Parts related to the topic of interest - Based on the search keys entered
+ * by the user, the program searches for topics related and displays all
+ * sections related to it. If the topic of interest does not exist, an error
+ * message will be returned to the user will be returned through the same output
+ * channel.
+ * 
  * @author ChongYan
  *
  */
@@ -65,8 +67,10 @@ public class Help {
 	}
 
 	/**
-	 * Main method in Help which copies all information related to the topic requested,
-	 * or all information if no topics were requested, to the output ArrayList
+	 * Main method in Help which copies all information related to the topic
+	 * requested, or all information if no topics were requested, to the output
+	 * ArrayList
+	 * 
 	 * @return output: ArrayList<String>
 	 */
 	public ArrayList<String> run() {
@@ -99,7 +103,7 @@ public class Help {
 		String name;
 		for (int i = 0; i < MAX_TOPIC_NUMBER; i++) {
 			name = manual.get(i).getTopicName();
-			if (name.contains(searchKey)) {
+			if (name.toUpperCase().contains(searchKey.toUpperCase())) {
 				createDisplay(i);
 			}
 		}

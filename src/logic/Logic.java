@@ -433,7 +433,7 @@ public class Logic {
 	}
 
 	private void helpFunction(TaskObject taskObj) {
-		String helpSearchKey = "";
+		String helpSearchKey = taskObj.getTitle();
 		Help help = new Help(helpSearchKey);
 		setOutput(help.run());
 	}
