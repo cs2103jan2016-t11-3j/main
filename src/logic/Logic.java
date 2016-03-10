@@ -211,13 +211,13 @@ public class Logic {
 			helpFunction(taskObj);
 			break;
 		case INDEX_DONE:
-			doneFunction(taskObj);
+			doneFunction(commandObj);
 			break;
 		case INDEX_OVERDUE:
-			overdueFunction(taskObj);
+			overdueFunction(commandObj);
 			break;
 		case INDEX_INCOMPLETE:
-			incompleteFunction(taskObj);
+			incompleteFunction(commandObj);
 			break;
 		default:
 			printInvalidCommandMessage();
@@ -318,8 +318,8 @@ public class Logic {
 		exit.run();
 	}
 
-	private void doneFunction(TaskObject taskObj) {
-		Done done = new Done(taskObj, taskList, lastOutputTaskList);
+	private void doneFunction(CommandObject commandObj) {
+		Done done = new Done(commandObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
 		setLastOutputTaskList(taskList);
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
@@ -329,8 +329,8 @@ public class Logic {
 		}
 	}
 
-	private void overdueFunction(TaskObject taskObj) {
-		Overdue overdue = new Overdue(taskObj, taskList, lastOutputTaskList);
+	private void overdueFunction(CommandObject commandObj) {
+		Overdue overdue = new Overdue(commandObj, taskList, lastOutputTaskList);
 		setOutput(overdue.run());
 		setLastOutputTaskList(taskList);
 		if (overdue.getTaskIdToMark() != -1) {
@@ -340,8 +340,8 @@ public class Logic {
 		// overdue.getTaskIdToMark()));
 	}
 
-	private void incompleteFunction(TaskObject taskObj) {
-		Incomplete incomplete = new Incomplete(taskObj, taskList, lastOutputTaskList);
+	private void incompleteFunction(CommandObject commandObj) {
+		Incomplete incomplete = new Incomplete(commandObj, taskList, lastOutputTaskList);
 		setOutput(incomplete.run());
 		setLastOutputTaskList(taskList);
 		if (incomplete.getTaskIdToMark() != -1) {
