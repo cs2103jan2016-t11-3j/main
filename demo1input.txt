@@ -1,0 +1,19 @@
+//DELETE .csv file at the start of the demo
+
+add Check IE2100 results date: 15/3/2016 time: 1200
+add Temasek Hall D&D date: 2/4/2016 time: 1800 to 2200
+add Read Task Analysis
+add Complete IE2100 Homework 4 date: 17/3/2016 time: 1400
+add Complete IE2130 Assignment 2 date: 21/3/2016 time: 1600
+
+delete 4
+
+add Task to be deleted
+
+delete
+
+edit 1 Check IE2150 results
+
+exit
+
+

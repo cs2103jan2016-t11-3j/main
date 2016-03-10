@@ -8,14 +8,15 @@ import common.CommandObject;
 import common.TaskObject;
 
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 public class LogicTest {
 	
 	// Initialisation of Logic class
 	ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
-	Stack<CommandObject> undoList = new Stack<CommandObject>();
-	Stack<CommandObject> redoList = new Stack<CommandObject>();
+	Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
+	Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
 	Logic logic = new Logic(taskList, undoList, redoList);	
 
 	ArrayList<String> output = new ArrayList<String>();
@@ -200,12 +201,27 @@ public class LogicTest {
 		}
 	}
 
+	/**
+	 * Prints everything out in undoList by popping every element into a temporary 
+	 * deque before shifting everything back. Prints from top of stack to bottom of stack
+	 */
 	private void printUndoList() {
+		CommandObject temp;
+		Deque<CommandObject> tempStack = new ArrayDeque<CommandObject> ();
 		System.out.println("Undo list:");
 		for (int i = 0; i < undoList.size(); i++) {
-			System.out.println("i = " + i + ", undo item = " + undoList.get(i));
-			System.out.println("command is " + undoList.get(i).getCommandType());
-			printTaskObjectFields(undoList.get(i).getTaskObject());
+			temp = undoList.pop();
+			System.out.println("i = " + i);
+			System.out.println("command is " + temp.getCommandType());
+			printTaskObjectFields(temp.getTaskObject());
+			tempStack.push(temp);
+		}
+		recreateUndoList(tempStack);
+	}
+	
+	private void recreateUndoList(Deque<CommandObject> tempStack) {
+		while(!tempStack.isEmpty()) {
+			undoList.push(tempStack.pop());
 		}
 	}
 }

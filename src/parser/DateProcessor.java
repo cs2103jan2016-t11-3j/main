@@ -68,11 +68,13 @@ public class DateProcessor {
 	private int endDate = -1;
 	
 	/**
-	 * This method takes in a string input and processes it. Called by the add processor
+	 * This method takes in a string input returns start date and end date 
+	 * called by command processor objects. 
 	 * 
-	 * @param input    date string that is in the format
+	 * @param input         date string that is in the format
+	 * @param isForSearch   boolean to show if date is ran by search processor
 	 */
-	public void processDate(String input, boolean isUsedForSearch) {
+	public void processDate(String input, boolean isForSearch) {
 		input = input.replaceFirst("date:", "");
 		convertToArray(input);
 		if (list.size() == 2 || list.size() == 1) {
@@ -87,7 +89,7 @@ public class DateProcessor {
 			start_month = end_month;
 		}
 		
-		if (!isUsedForSearch) {
+		if (!isForSearch) {
 			setDates();
 		}
 	}
@@ -141,7 +143,7 @@ public class DateProcessor {
 	/**
 	 * this method checks if the string contains keywords for any of the months
 	 * 
-	 * @param input    string element in araylist representing one date
+	 * @param input    string element in array list representing one date
 	 */
 	public boolean hasMonth(String input) {
 		input = input.toLowerCase();

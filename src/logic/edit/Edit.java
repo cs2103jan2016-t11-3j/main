@@ -29,7 +29,8 @@ import common.TaskObject;
  */
 public class Edit {
 
-	private static final String MESSAGE_EDIT = "Message title edited from '%1$s' to '%2$s'.";
+	private static final String MESSAGE_TITLE_EDIT = "Task title edited from '%1$s' to '%2$s'.";
+	private static final String MESSAGE_DATE_EDIT = "Task date edited from '%1$s' to '%2$s'.";
 
 	private CommandObject commandObj;
 	private ArrayList<TaskObject> lastOutputTaskList;
@@ -37,23 +38,20 @@ public class Edit {
 
 	private ArrayList<String> output = new ArrayList<String>();
 	private int editItemNumber;
-	private String editTitle;
+	private int originalDate;
+	private int editDate;
 	private String originalTitle;
+	private String editTitle;
+	
+	boolean isEditDate = false;
+	boolean isEditTitle = false;
 
 	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList) {
 		this.commandObj = commandObj;
 		this.lastOutputTaskList = lastOutputTaskList;
 		this.taskList = taskList;
 	}
-
-	public int getEditItemNumber() {
-		return editItemNumber;
-	}
-
-	public String getOriginalTitle() {
-		return originalTitle;
-	}
-
+	
 	/**
 	 * Main method of Edit. Finds the target task and edits its title before
 	 * saving it to the external file location.
@@ -64,8 +62,13 @@ public class Edit {
 		int returnedTaskId = getTaskIdOfTaskToBeEdited();
 		editTask(returnedTaskId);
 		saveExternal();
+		
+		if (isEditDate && !isEditTitle) {
+			outputDateEditedConfirmationMessage();
+		} else if (isEditTitle && !isEditDate) {
+			outputTitleEditedConfirmationMessage();
+		}
 
-		outputConfirmationMessage();
 		return output;
 	}
 
@@ -78,10 +81,17 @@ public class Edit {
 			System.exit(1);
 		}
 	}
-
+	
 	private void setEditInformation() {
 		editItemNumber = commandObj.getIndex();
+		editDate = commandObj.getTaskObject().getStartDate();
+		if (editDate != -1) {
+			isEditDate = true;
+		}
 		editTitle = commandObj.getTaskObject().getTitle();
+		if (!editTitle.equals("")) {
+			isEditTitle = true;
+		}
 	}
 
 	private int getTaskIdOfTaskToBeEdited() {
@@ -92,16 +102,46 @@ public class Edit {
 	private void editTask(int editTaskId) {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
-			if (task.getTaskId() == editTaskId) { // if this is the task to be
-													// edited
-				originalTitle = task.getTitle();
-				task.setTitle(editTitle);
+			if (task.getTaskId() == editTaskId) { // if this is the task to be edited
+				if (editDate != -1) {	// if date is to be edited
+					originalDate = task.getStartDate();
+					task.setStartDate(editDate);
+					task.setEndDate(editDate);
+				} else {	// if title is to be edited
+					originalTitle = task.getTitle();
+					task.setTitle(editTitle);
+				}
 			}
 		}
 	}
+	
+	private void outputDateEditedConfirmationMessage() {
+		output.add(String.format(MESSAGE_DATE_EDIT, originalDate, editDate));
+	}
 
-	private void outputConfirmationMessage() {
-		output.add(String.format(MESSAGE_EDIT, originalTitle, editTitle));
+	private void outputTitleEditedConfirmationMessage() {
+		output.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
+	}
+
+	// Getters
+	public int getEditItemNumber() {
+		return editItemNumber;
+	}
+
+	public String getOriginalTitle() {
+		return originalTitle;
+	}
+	
+	public int getOriginalDate() {
+		return originalDate;
+	}
+	
+	public boolean getIsEditDate() {
+		return isEditDate;
+	}
+	
+	public boolean getIsEditTitle() {
+		return isEditTitle;
 	}
 
 }

@@ -5,7 +5,8 @@ import logic.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class DeleteTest {
 	private CommandObject delete = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 1);
 	private CommandObject deleteFail = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 2);
 	private TaskObject deleteQuick = new TaskObject("");
-	private Stack<CommandObject> testUndoList = new Stack<CommandObject>();
+	private Deque<CommandObject> testUndoList = new ArrayDeque<CommandObject> ();
 
 	/* For all NORMAL Delete **************************************************/
 	@Test
@@ -58,7 +59,7 @@ public class DeleteTest {
 	
 	/* For all QUICK Delete **************************************************/
 	@Test
-	//Failed Quick delete test
+	//Failed Quick delete test(One try)
 	public void testQuickFail() {
 		testArray.add(taskOne);
 		testUndoList.push(new CommandObject(Logic.INDEX_ADD, deleteQuick));
@@ -66,12 +67,12 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteLast.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Error deleting task from TaskFinder");
+		expectedOutput.add("Quick delete unavailable");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
 	@Test
-	//Successful Quick delete test
+	//Successful Quick delete test(One try)
 	public void testQuickSuccess() {
 		testArray.add(taskOne);
 		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
@@ -80,6 +81,31 @@ public class DeleteTest {
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
 		expectedOutput.add("Task deleted from TaskFinder: Hello");
+		
+		assertEquals(expectedOutput, actualOutput);
+	}
+	@Test
+	// Multiple quick deletes (Two tries, first success, second fail)
+	public void testMultipleQuick() {
+		testArray.add(taskOne);
+		testArray.add(taskTwo);
+		testArray.add(taskThree);
+		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
+		Delete deleteOne = new Delete(testArray, testUndoList);
+		ArrayList<ArrayList<String> > actualOutput = new ArrayList<ArrayList<String> > ();
+		actualOutput.add(deleteOne.run());
+		testUndoList.push(new CommandObject(Logic.INDEX_ADD, new TaskObject()));
+		Delete deleteTwo = new Delete(testArray, testUndoList);
+		// Dummy add command to simulate the effect of deleting a task 
+		actualOutput.add(deleteTwo.run());
+		
+		ArrayList<ArrayList<String> > expectedOutput = new ArrayList<ArrayList<String> > ();
+		ArrayList<String> firstExpectedOutput = new ArrayList<String> ();
+		firstExpectedOutput.add("Task deleted from TaskFinder: Dinner tonight");
+		expectedOutput.add(firstExpectedOutput);
+		ArrayList<String> secondExpectedOutput = new ArrayList<String> ();
+		secondExpectedOutput.add("Quick delete unavailable");
+		expectedOutput.add(secondExpectedOutput);
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
