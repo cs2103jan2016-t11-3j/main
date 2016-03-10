@@ -60,7 +60,7 @@ public class UIMain extends Application {
 		return "";
 	}
 
-	public ArrayList<TaskObject> getLastOuputTaskList() {
+	public ArrayList<TaskObject> getLastOutputTaskList() {
 		taskList = logic.getLastOutputTaskList();
 		return taskList;
 	}

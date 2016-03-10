@@ -30,7 +30,7 @@ public class Controller implements Initializable {
 	
 	static String _input;
 	static UIMain _UI = new UIMain();
-	ArrayList<TaskObject> taskList = _UI.getTaskList();
+	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 	HelpPopupController popupController = new HelpPopupController();
 	
 	@FXML
@@ -64,7 +64,7 @@ public class Controller implements Initializable {
     	System.out.println(userInput.getText());
     	_input = userInput.getText();
     	_UI.passInput(_input);
-    	userInput.clear();
+    	userInput.clear(); //clears textfield after each input
     	displayMessage(); //print feedback message
     	display(); //refreshes table after every command
     	}
@@ -73,8 +73,15 @@ public class Controller implements Initializable {
 	@FXML
 	public void handleHelpPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
-			popupController.setHelpStage();
-			System.out.println("help activated");
+			popupController.startHelp();
+			System.out.println("help activated"); //to be removed aft everything is stable
+		}
+	}
+	
+	@FXML
+	public void handleEscReleased(KeyEvent event) {
+		if (event.getCode() == KeyCode.ESCAPE) {
+			System.exit(0);
 		}
 	}
 	
@@ -91,7 +98,21 @@ public class Controller implements Initializable {
 	private void display() {
 		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);
 		
-		//populate the index column
+		//populate the index column with running integers
+		populateIndex();
+		
+		//populate task and status column
+		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
+		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
+		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
+		startTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startTime"));
+		endTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endTime"));
+				
+		taskTable.setItems(groupData);
+	}
+
+	public void populateIndex() {
 		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
 		    @Override
 			public void updateIndex(int index) {
@@ -103,16 +124,6 @@ public class Controller implements Initializable {
 		        }
 		    }
 		});
-		
-		//populate task and status column
-		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
-		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
-		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
-		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
-		startTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startTime"));
-		endTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endTime"));
-				
-		taskTable.setItems(groupData);
 	}
 
 	@Override

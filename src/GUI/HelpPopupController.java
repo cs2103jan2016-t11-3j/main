@@ -44,15 +44,11 @@ public class HelpPopupController implements Initializable {
 		helpBox.setItems(items);
 	}
 
-	public void setHelpStage() throws IOException {		
-		
+	public void startHelp() throws IOException {		
 		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
 		
 		helpStage.setScene(new Scene(help));
 		helpStage.show();
-
-		
-	
 	}
 
 	
