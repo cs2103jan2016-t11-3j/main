@@ -86,7 +86,7 @@ public class Parser {
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			CO.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {
-			CO.setCommandType(HELP_INDEX);
+			parseHelp(command);
 		} else if (command.startsWith(UNDO_COMMAND)) {
 			CO.setCommandType(UNDO_INDEX);
 		} else if (command.startsWith(REDO_COMMAND)) {
@@ -106,6 +106,13 @@ public class Parser {
 			parseSearch(command);
 		}
   	}
+	
+	public void parseHelp(String command) {
+		CO.setCommandType(HELP_INDEX);
+		command = command.replaceFirst("(?i)(help )", "");
+		TO.setTitle(command);
+		CO.setTaskObject(TO);
+	}
 	
 	
 	/**

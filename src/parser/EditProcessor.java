@@ -29,7 +29,7 @@ public class EditProcessor extends CommandProcessor {
 			setTime(clean_string);
 		} else {
 			setTask(clean_string);
-		}
+		} 
 		setTaskObject();
 		return TO;
 	}
