@@ -96,20 +96,23 @@ public class Controller implements Initializable {
 	}
 
 	private void display() {
-		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);
-		
-		//populate the index column with running integers
+		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);		
+		fillTable(groupData);
+	}
+
+	public void fillTable(ObservableList<TaskObject> groupData) {
 		populateIndex();
-		
-		//populate task and status column
+		populateColumns();		
+		taskTable.setItems(groupData);
+	}
+
+	public void populateColumns() {
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
 		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
 		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
 		startTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startTime"));
 		endTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endTime"));
-				
-		taskTable.setItems(groupData);
 	}
 
 	public void populateIndex() {
