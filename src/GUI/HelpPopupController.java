@@ -16,6 +16,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class HelpPopupController implements Initializable {
@@ -24,12 +26,19 @@ public class HelpPopupController implements Initializable {
 	static ArrayList<String> displayList;
 	  
 	@FXML
-	private ListView<String> helpBox;
+	private TextFlow helpBox;
 	
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ESCAPE) {
 			helpStage.close();
+		}
+	}
+	
+	@FXML 
+	public void handleArrowPressed(KeyEvent event) {
+		if (event.getCode() == KeyCode.RIGHT) {
+			
 		}
 	}
 	
@@ -39,9 +48,11 @@ public class HelpPopupController implements Initializable {
 	}
 	
 	private void setHelpContent() {
-		displayList = Controller.getHelpList();
-		ObservableList<String> items = FXCollections.observableArrayList(displayList);
-		helpBox.setItems(items);
+		displayList = Controller.getHelpList(1);
+		for (int i = 0; i < displayList.size(); i++) {
+			Text line = new Text(displayList.get(i) + "\n");
+			helpBox.getChildren().add(line);
+		}
 	}
 
 	public void startHelp() throws IOException {		

@@ -1,4 +1,4 @@
-11.	Create a backup copy of the saved events/task
+Create a backup copy of the saved events/task
 
 Enter “save as” followed by file to save a copy of the saved events/tasks list into the selected location.
 

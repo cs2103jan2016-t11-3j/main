@@ -1,4 +1,4 @@
-1.	Adding a new event/floating task: 
+Adding a new event/floating task: 
 You can add a new event/floating task to be tracked by the program. 
 
 Enter “add”, followed by the event/floating task description. The start and end date time can also be included with the event/floating task and the information will automatically be added to the event details.

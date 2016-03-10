@@ -1,4 +1,4 @@
-4.	Viewing/Searching for existing tasks by due date or event time
+Viewing/Searching for existing tasks by due date or event time
 
 Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the date or time.
 

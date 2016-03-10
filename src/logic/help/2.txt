@@ -1,4 +1,4 @@
-2.	Adding a new deadline:
+Adding a new deadline:
 
 Tasks with a deadline can also be added by using the command “by” followed by an indication of a date after the task description. The date indicated can be flexible in its format, such as keying in the exact date or simply something like “next Tuesday”. Examples are provided below.
 

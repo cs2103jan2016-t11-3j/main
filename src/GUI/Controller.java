@@ -9,14 +9,10 @@ import common.TaskObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -24,7 +20,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 
 public class Controller implements Initializable {
 	
@@ -85,10 +80,33 @@ public class Controller implements Initializable {
 		}
 	}
 	
-	public static ArrayList<String> getHelpList() {
-		_UI.passInput("help");
+	public static ArrayList<String> getHelpList(int i) {
+		switch(i) {
+		case 1:
+			_UI.passInput("help Add");
+			break;
+		case 2:
+			_UI.passInput("help Search");
+			break;
+		case 3:
+			_UI.passInput("help Edit");
+			break;
+		case 4:
+			_UI.passInput("help Delete");
+			break;
+		case 5:
+			_UI.passInput("help Undo");
+			break;
+		case 6:
+			_UI.passInput("help save");
+			break;
+		case 7:
+			_UI.passInput("help Exit");
+			break;
+		}
 		return _UI.getHelpOutput();
 	}
+	
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
