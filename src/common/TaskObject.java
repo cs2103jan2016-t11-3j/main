@@ -1,8 +1,12 @@
 package common;
 
+import java.time.LocalDateTime;
+
 public class TaskObject implements Comparable<TaskObject> {
 
 	protected String title = "";
+	protected LocalDateTime startDateTime; //newly added
+	protected LocalDateTime endDateTime; //newly added
 	protected int startDate;
 	protected int endDate;
 	protected int startTime;
@@ -93,6 +97,14 @@ public class TaskObject implements Comparable<TaskObject> {
 		return title;
 	}
 	
+	public LocalDateTime getStartDateTime() {
+		return startDateTime;
+	}
+	
+	public LocalDateTime getEndDateTime() {
+		return endDateTime;
+	}
+	
 	public int getStartDate() {
 		return startDate;
 	}
@@ -128,6 +140,15 @@ public class TaskObject implements Comparable<TaskObject> {
 	public void setTitle(String newTitle) {
 		this.title = newTitle;
 	}
+	
+	public void setStartDateTime(LocalDateTime newStartDateTime) {
+		this.startDateTime = newStartDateTime;
+	}
+	
+	public void setEndDateTime(LocalDateTime newEndDateTime) {
+		this.endDateTime = newEndDateTime;
+	}
+	
 	
 	public void setStartDate(int newStartDate) {
 		this.startDate = newStartDate;

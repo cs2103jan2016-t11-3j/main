@@ -150,7 +150,7 @@ public class Parser {
 	 */
 	public void parseAdd(String command) {
 		CO.setCommandType(ADD_INDEX);
-		CommandProcessor AP = new AddProcessor();
+		CommandProcessor AP = new AddParser();
 		TO = AP.process(command);
 		//add these 5 main attributes
 		TO.setTaskId(_taskId);

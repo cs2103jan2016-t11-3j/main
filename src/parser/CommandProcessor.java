@@ -1,5 +1,7 @@
 package parser;
 
+import java.time.LocalDateTime;
+
 import common.TaskObject;
 
 public abstract class CommandProcessor {
@@ -62,6 +64,8 @@ public abstract class CommandProcessor {
 	protected int _startTime = -1;
 	protected int _endTime = -1;
 	
+	protected LocalDateTime _startDateTime;
+	protected LocalDateTime _endDateTime;
 	
 	public abstract TaskObject process(String input);
 	
