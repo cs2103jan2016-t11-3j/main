@@ -94,10 +94,23 @@ public class Search extends Display {
 	// Finds all tasks where the title contains a semblance of the search keyword
 	private void searchByTitle(String searchKeyword) {
 		for (int i = 0; i < taskList.size(); i++) {
+			// Gets the title of one task and splits it up into the individual words
 			String taskName = taskList.get(i).getTitle().toLowerCase();
-			if (Arrays.asList(taskName.split(" ")).contains(searchKeyword.toLowerCase())) {
-				matchedTasks.add(taskList.get(i));
+			String[] splitTaskName = taskName.split(" ");
+			boolean isMatch = false;
+			
+			// Checks if any of the individual words contain the search keyword
+			// If yes, add the task to the arraylist and stop scanning the other words for this task
+			int j = 0;
+			while (j < splitTaskName.length && !isMatch) {
+				String str = splitTaskName[j];
+				if (str.trim().contains(searchKeyword.toLowerCase()) && !isMatch) {
+					matchedTasks.add(taskList.get(i));
+					isMatch = true;
+				}
+				j++;
 			}
+				
 		}
 	}
 	

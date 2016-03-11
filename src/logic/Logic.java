@@ -152,7 +152,8 @@ public class Logic {
 		setOutput(commandFacade.getOutput());
 	}
 		
-	// Getters and setters
+	// ------------------------- GETTERS AND SETTERS -------------------------
+	
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
