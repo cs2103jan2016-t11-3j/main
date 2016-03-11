@@ -1,8 +1,10 @@
-package parser;
+package parsertest;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import parser.DateTimeProcessor;
 
 public class DateTimeProcessorTest {
 	DateTimeProcessor DTP = new DateTimeProcessor();
@@ -14,6 +16,10 @@ public class DateTimeProcessorTest {
 		DTP.parseDateTime("from 8 june to 7 july", false);
 		assertEquals(20160608, DTP.getStartDate());
 		assertEquals(20160707, DTP.getEndDate());
+		
+		DTP.parseDateTime("at 7pm", false);
+		assertEquals(1900, DTP.getStartTime());
+		
 	}
 
 	@Test
