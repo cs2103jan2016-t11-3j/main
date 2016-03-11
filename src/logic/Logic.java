@@ -11,6 +11,7 @@ import logic.search.*;
 import logic.undo.*;
 import logic.save.*;
 import logic.help.*;
+import logic.timeOutput.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -65,17 +66,13 @@ public class Logic {
 	public static final int INDEX_DONE = 10;
 	public static final int INDEX_OVERDUE = 11;
 	public static final int INDEX_INCOMPLETE = 12;
-
-	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
-	private static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
-	private static final String MESSAGE_NULL_POINTER_EXCEPTION = "Not enough arguments within target object";
+	
+	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";	
 	
 	public static final String CATEGORY_EVENT = "event";
 	public static final String CATEGORY_DEADLINE = "deadline";
 	public static final String CATEGORY_FLOATING = "floating";
-	
-	private static final String DISPLAY_TIME_EVENT = "on %1s, from %2s to %3s";	
-	private static final String DISPLAY_TIME_DEADLINE = "due on %1s"; 
+
 
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
@@ -132,7 +129,7 @@ public class Logic {
 		setUserInput(userInput);
 		CommandObject commandObj = callParser();
 		parseCommandObject(commandObj, false, false);
-		setTimeOutputForGui();
+		TimeOutput.setTimeOutputForGui(taskList);
 	}
 
 	/**
@@ -549,86 +546,5 @@ public class Logic {
 		int min = time % 100;
 		LocalDateTime formattedTime = LocalDateTime.of(year, month, dayOfMonth, hour, min);
 		return formattedTime;
-	}
-	
-	public void setTimeOutputForGui() {
-		for(int i = 0; i < taskList.size(); i++) {
-			if(taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
-				setEventTimeOutput(taskList.get(i));
-			} else {
-				if(taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
-					setDeadlineTimeOutput(taskList.get(i));
-				} else {
-					taskList.get(i).setTimeOutputString(""); // No time displayed for floating
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Formats the timing for GUI to display for events, takes in the LocalDateTime objects
-	 * startDateTime and endDateTime and processes it to form an output for GUI
-	 * @param event
-	 */
-	private void setEventTimeOutput(TaskObject event) {
-		String line;
-		try {
-			String[] start = createDateTimeArray(event.getStartDateTime());
-			String[] end = createDateTimeArray(event.getEndDateTime());
-			line = formatEventTimeOutput(start, end);
-			event.setTimeOutputString(line);
-		} catch (DateTimeException e) {
-			System.out.println(MESSAGE_DATE_TIME_CONVERSION_ERROR);
-		} catch (NullPointerException e) {
-			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
-		}
-	}
-	
-	private String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException{
-		String formattedString = "";
-		if(end[0].equals(start[0])) { // If start date == end date
-			formattedString = String.format(DISPLAY_TIME_EVENT, start[0], start[1], end[1]);
-			// End Date will not be printed 
-		} else {
-			String endDateTime = end[1].concat(" on ").concat(end[0]);
-			formattedString = String.format(DISPLAY_TIME_EVENT,  start[0], start[1], endDateTime);
-			// End Date will be printed
-		}
-		return formattedString;
-	}
-	
-	/**
-	 * Formats the timing for GUI to display for deadlines
-	 * @param deadline
-	 */
-	private void setDeadlineTimeOutput(TaskObject deadline) {
-		String line;
-		try {
-			String[] end = createDateTimeArray(deadline.getStartDateTime());
-			line = formatDeadlineTimeOutput(end);
-			deadline.setTimeOutputString(line);
-		} catch (DateTimeException e) {
-			System.out.println(MESSAGE_DATE_TIME_CONVERSION_ERROR);
-		} catch (NullPointerException e) {
-			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
-		}
-	}	
-	
-	private String formatDeadlineTimeOutput(String[] end) throws NullPointerException {
-		String formattedString = "";
-		if(end[1].equals(null)) {
-			formattedString = String.format(DISPLAY_TIME_DEADLINE, end[0]);
-			// If time due is empty
-		} else {
-			String endDateTime = end[0].concat(" at ").concat(end[1]);
-			formattedString = String.format(DISPLAY_TIME_DEADLINE, endDateTime);
-		}
-		return formattedString;
-	}
-	
-	private String[] createDateTimeArray(LocalDateTime time) throws DateTimeException { 
-		String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-		String[] timeArray = line.split("T", 2);
-		return timeArray;
 	}
 }

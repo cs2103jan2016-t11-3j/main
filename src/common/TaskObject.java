@@ -138,6 +138,10 @@ public class TaskObject implements Comparable<TaskObject> {
 		return taskId;
 	}
 	
+	public String getTimeOutputString() {
+		return timeOutputString;
+	}
+	
 	public void setTitle(String newTitle) {
 		this.title = newTitle;
 	}
