@@ -1,5 +1,6 @@
 package parser;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import common.TaskObject;
@@ -8,10 +9,11 @@ public class EditProcessor extends CommandProcessor {
 	
 	private ArrayList<String> list = new ArrayList<String>();
 	
-	private TimeProcessor TP = new TimeProcessor();
-	private DateProcessor DP = new DateProcessor();
-	public TaskObject TO = new TaskObject();
+	//private TimeProcessor TP = new TimeProcessor();
+	//private DateProcessor DP = new DateProcessor();
+	private TaskObject TO = new TaskObject();
 
+	public DateTimeProcessor dtp = new DateTimeProcessor();
 	private int _index = -1;
 	
 	/**
@@ -19,14 +21,13 @@ public class EditProcessor extends CommandProcessor {
 	 * and break down its component, determining if it is a task, time or date edit
 	 */
 	public TaskObject process(String input) {
-		convertToArray(input);
-		String clean_string = cleanString();
-		if (isDate() && !isTask()) {
-			DP.processDate(clean_string, false);
-			setDate(clean_string);
-		} else if (isTime() && !isTask()) {
-			TP.processTime(clean_string);
-			setTime(clean_string);
+		convertToArray(input); //change this to extract index
+		String clean_string = cleanString(input);
+		if (isDateTime(clean_string)) {
+			dtp.parseDateTime(clean_string, false);
+			setDateTime();
+			setDate(input);
+			setTime(input);
 		} else {
 			setTask(clean_string);
 		} 
@@ -40,6 +41,8 @@ public class EditProcessor extends CommandProcessor {
 		TO.setEndTime(_endTime);
 		TO.setEndDate(_endDate);
 		TO.setStartDate(_startDate);
+		TO.setStartDateTime(_startDateTime);
+		TO.setEndDateTime(_endDateTime);
 	}
 	
 	/**
@@ -62,158 +65,35 @@ public class EditProcessor extends CommandProcessor {
 	 * this method will re-form the command that the user input
 	 * without "edit" and the index number
 	 */
-	public String cleanString() {
-		String toReturn = null;
-		for (int i = 0; i < list.size(); i++) {
-			if(i == 0) {
-				toReturn = list.get(i);
-			} else {
-				toReturn = toReturn + " " + list.get(i);
-			}
-		}
-		return toReturn;
+	public String cleanString(String input) {
+		
+		input = input.replaceFirst(Constants.REGEX_EDIT, "").trim();
+		return input;
 	}
 	
-	
-	public boolean isDate() {
-		for (int i = 0; i < list.size(); i++) {
-			String input = list.get(i);
-			input.toLowerCase();
-			if (input.contains(MONTH_1_1) || input.contains(MONTH_1_2) || 
-					input.contains(MONTH_2_1) || input.contains(MONTH_2_2) || 
-					input.contains(MONTH_3_1) || input.contains(MONTH_3_2) ||
-					input.contains(MONTH_4_1) || input.contains(MONTH_4_2) || 
-					input.contains(MONTH_5_1) || input.contains(MONTH_6_1) ||
-					input.contains(MONTH_6_2) || input.contains(MONTH_7_1) ||
-					input.contains(MONTH_7_2) || input.contains(MONTH_8_1) ||
-					input.contains(MONTH_8_2) || input.contains(MONTH_9_1) ||
-					input.contains(MONTH_9_2) || input.contains(MONTH_10_1) ||
-					input.contains(MONTH_10_2) || input.contains(MONTH_11_1) ||
-					input.contains(MONTH_11_2) || input.contains(MONTH_12_1) ||
-					input.contains(MONTH_12_2)) {
-				return true;
-			} else if (isAlternativeDate(input)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * this method checks if the string is a date in the "dd/mm/yyyy" 
-	 * or "dd/mm" format
-	 */
-	public boolean isAlternativeDate(String input) {
-		if (input.contains("/")) {
-			input = input.replaceAll("/", "");
-			input = input.replaceAll("[a-zA-Z]+", "");
-			if (!input.isEmpty()) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-	
-	//this method checks if the string input is task
-	public boolean isTask() {
-		//form string
-		String command = null;
-		for (int i = 0; i < list.size(); i++) {
-			if (i == 0) {
-				command = list.get(i);
-			} else {
-				command = command + list.get(i);
-			}
-		}
-		//remove date
-		command = command.replaceAll("\\d", "");
-		command = command.replaceAll("/", "");
-		command = removeMonths(command);
-		if (command.length() > NOT_TASK_CONSTANT) {
+	public boolean isDateTime(String input) {
+		if (input.matches(Constants.REGEX_EDIT_DATE_TIME_IDENTIFIER)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	//this method will remove month keywords 
-	public String removeMonths(String input) {
-		input.toLowerCase();
-		input = input.replaceFirst("january", "");
-		input = input.replace("jan", "");
-		input = input.replace("february", "");
-		input = input.replace("feb", "");
-		input = input.replace("march", "");
-		input = input.replace("mar", "");
-		input = input.replace("april", "");
-		input = input.replace("apr", "");
-		input = input.replace("may", "");
-		input = input.replace("june", "");
-		input = input.replace("jun", "");
-		input = input.replace("july", "");
-		input = input.replace("jul", "");
-		input = input.replace("august", "");
-		input = input.replace("aug", "");
-		input = input.replace("september", "");
-		input = input.replace("sept", "");
-		input = input.replace("oct", "");
-		input = input.replace("october", "");
-		input = input.replace("november", "");
-		input = input.replace("nov", "");
-		input = input.replace("december", "");
-		input = input.replace("dec", "");
-		return input;
-	}
-	
-	/**
-	 * this method check if the string passed in is a time input
-	 * 
-	 * comment -> go and refactor further
-	 */
-	public boolean isTime() {
-		for (int i = 0; i < list.size(); i++) {
-			String temp = list.get(i);
-			if (i > 0) {
-				String tempPrev = list.get(i-1);
-				if (hasAMPM(temp) && hasNumber(temp)) {
-					return true;
-				} else if (hasAMPM(temp) && hasNumber(tempPrev)) {
-					return true;
-				}
-			} else {
-				if (hasAMPM(temp) && hasNumber(temp)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean hasNumber(String temp) {
-		return temp.matches(".*\\d.*");
-	}
-	
-	//this method checks if the string contains any indicator of time
-	public boolean hasAMPM(String temp) {
-		return temp.contains(TIME_AM_1) || temp.contains(TIME_AM_2)
-				|| temp.contains(TIME_AM_3) || temp.contains(TIME_AM_4)
-				|| temp.contains(TIME_PM_1) || temp.contains(TIME_PM_2)
-				|| temp.contains(TIME_PM_3) || temp.contains(TIME_PM_4);
+	public void setDateTime() {
+		_startDateTime = dtp.getStartDateTime();
+		_endDateTime = dtp.getEndDateTime();
 	}
 	
 	//this method sets the date for the object by using the date processor 
 	//class to performing the processing
 	public void setDate(String input) {
 		if (input.contains("start")) {
-			setStartDate(DP.getStartDate());
+			setStartDate(dtp.getStartDate());
 		} else if (input.contains("end")) {
-			setEndDate(DP.getEndDate());
+			setEndDate(dtp.getStartDate());
 		} else {
-			setStartDate(DP.getStartDate());
-			setEndDate(DP.getEndDate());
+			setStartDate(dtp.getStartDate());
+			setEndDate(dtp.getEndDate());
 		}
 	}
 	
@@ -221,12 +101,12 @@ public class EditProcessor extends CommandProcessor {
 	//class to performing the processing
 	public void setTime(String input) {
 		if (input.contains("start")) {
-			setStartTime(TP.getStartTime());
+			setStartTime(dtp.getStartTime());
 		} else if (input.contains("end")) {
-			setEndTime(TP.getEndTime());
+			setEndTime(dtp.getStartTime());
 		} else {
-			setStartTime(TP.getStartTime());
-			setEndTime(TP.getEndTime());
+			setStartTime(dtp.getStartTime());
+			setEndTime(dtp.getEndTime());
 		}
 	}
 	
@@ -270,34 +150,27 @@ public class EditProcessor extends CommandProcessor {
 		_endTime = endTime;
 	}
 	
+	public LocalDateTime getStartDateTime() {
+		return _startDateTime;
+	}
+	
+	public LocalDateTime getEndDateTime() {
+		return _endDateTime;
+	}
+	
 	public int getIndex() {
 		return _index;
 	}
-	
-	//method used to obtain the size of the list for testing 
-	public int getListSize() {
-		return list.size();
-	}
-	
-	//method used to get the ith element in the list for testing
-	public String getListElement(int i) {
-		return list.get(i);
-	}
-	
-	//method used to get the ith element in the list for testing
-	public void clearList() {
+ 	
+	public void resetList() {
 		list.clear();
 	}
- 	
+	
  	public void reset() {
  		setTask("");
  		setStartDate(-1);
  		setEndDate(-1);
  		setStartTime(-1);
  		setEndTime(-1);
- 		TP.resetTime();
- 		TP.clearList();
- 		DP.clearList();
- 		DP.resetDate();
  	}
 }

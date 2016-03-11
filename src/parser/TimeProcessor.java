@@ -23,10 +23,11 @@ public class TimeProcessor {
 	 *@param input  time input from user
 	 */
 	public void processTime(String input) {
-		input = input.replaceFirst("time:", "");
-		convertToArray(input);
-		if (list.size() == 2 || list.size() == 1) {
-			furtherProcessTime();
+		if (!input.isEmpty()) {
+			convertToArray(input);
+			if (list.size() == 2 || list.size() == 1) {
+				furtherProcessTime();
+			}
 		}
 	}
 	

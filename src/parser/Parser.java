@@ -189,6 +189,8 @@ public class Parser {
 			TO.setCategory("floating");
 		} else if (isDeadline()) {
 			TO.setCategory("deadline");
+			TO.setEndTime(TO.getStartTime());
+			TO.setEndDate(TO.getStartDate());
 		} else {
 			TO.setCategory("event"); //edited mistake here
 		}
@@ -204,8 +206,8 @@ public class Parser {
 	}
 	
 	public boolean isDeadline() {
-		if (TO.getStartDate() == TO.getEndDate()
-				&& TO.getStartTime() == TO.getEndTime()) {
+		if (TO.getEndDate() == -1
+				&& TO.getEndTime() == -1) {
 			return true;
 		} else {
 			return false;

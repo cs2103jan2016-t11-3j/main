@@ -44,7 +44,7 @@ public class AddParser extends CommandProcessor {
 		
 		if (identifier != null) {
 			DateTimeProcessor dtp = new DateTimeProcessor();
-			dtp.parseDateTime(identifier);
+			dtp.parseDateTime(identifier, true);
 			setDateTime(dtp);
         }
 		

@@ -16,13 +16,11 @@ public class ParserTest {
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals(900, tempParser.getStartTime());
-		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(900, tempParser.getEndTime());
 		assertEquals(20160229, tempParser.getStartDate());
-		assertEquals(-1, tempParser.getEndDate());
+		assertEquals(20160229, tempParser.getEndDate());
 		assertEquals("undone", tempParser.getStatus());
 		reset();
-		
-		
 		
 		tempParser.allocate("search 7/9/2016");
 		assertEquals("7/9/2016", tempParser.getTask());
@@ -35,7 +33,7 @@ public class ParserTest {
 		tempParser.allocate("edit 2 755pm");
 		assertEquals("", tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
-		assertEquals(1955, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
@@ -54,7 +52,7 @@ public class ParserTest {
 		tempParser.parseEdit("edit 2 755pm");
 		assertEquals("", tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
-		assertEquals(1955, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
@@ -65,9 +63,9 @@ public class ParserTest {
 		tempParser.parseAdd("add homework IE2100 by 29feb 9am");
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals(900, tempParser.getStartTime());
-		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(900, tempParser.getEndTime());
 		assertEquals(20160229, tempParser.getStartDate());
-		assertEquals(-1, tempParser.getEndDate());
+		assertEquals(20160229, tempParser.getEndDate());
 		reset();
 		
 		tempParser.parseAdd("add homework IE2100 from 7/6 10am to 1pm 9/10");

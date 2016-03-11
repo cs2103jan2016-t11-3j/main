@@ -59,10 +59,10 @@ public class Constants {
             + "(week|wk)(s)?|" + "(month|mth)(s)?|" + "(year|yr))(s)?";
 
     //regular expression for time
-	public static final String REGEX_TIME_HHMM = "(?i)[0-2][0-9][ -:]?[0-5][\\d]([h]([r][s]?))";
-    public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
+	public static final String REGEX_TIME_HHMM = "(?i)[0-2][0-9][-:]?[0-5][\\d]([h]([r][s]?))";
+    public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
     //has to have am or pm, dont care!
-    //removed space btw HH and MM 
+    //removed space btw HH and MM . added fullstop btw hh n mm
     public static final String REGEX_TIME_ATTRIBUTES = "((?i)[\\d]" + "(min|minutes)(s)?|" + "(hour|hr)(s)?|";
     
     //possible arrangements for date input
@@ -111,7 +111,7 @@ public class Constants {
     
     //For edit processor
     public static final String REGEX_EDIT_DATE_TIME_IDENTIFIER = "(" 
-			+ REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_DATETIME_FORMAT + ")";
+			+ REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_DATETIME_FORMAT +")$";
     
     
     public static final String REGEX_RELATIVE_DATE_1 = "(?i)(tmr|tomorrow)";

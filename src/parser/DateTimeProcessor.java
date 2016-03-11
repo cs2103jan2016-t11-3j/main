@@ -39,7 +39,31 @@ public class DateTimeProcessor {
 	
 	List<String> dtlist = new ArrayList<String>();
 	
-	public void parseDateTime(String input) {
+	public void parseDateTime(String input, boolean isForAdd) {
+		if (isForAdd) {
+			parseDateTimeForAdd(input);
+		} else {
+			TaskType tasktype = getTaskType(input);
+			//separate stuff for different task types
+			switch(tasktype) {
+			case event:
+				//find the "to" word n split
+				for (String temp : input.split("to")) {
+					dtlist.add(temp);
+				}
+				separateDateTime(dtlist.get(0), true);
+				separateDateTime(dtlist.get(1), false);
+				break;
+			case deadline:
+			default:
+				separateDateTime(input, true);
+				break;
+			}
+			setLocalDateTime();
+		}
+	}
+	
+	private void parseDateTimeForAdd(String input) {
 		TaskType tasktype = getTaskType(input);
 		//separate stuff for different task types
 		switch(tasktype) {
@@ -57,7 +81,6 @@ public class DateTimeProcessor {
 		default:
 			break;
 		}
-		
 		setLocalDateTime();
 	}
 	
@@ -65,13 +88,20 @@ public class DateTimeProcessor {
 	 * 
 	 */
 	public void setLocalDateTime() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
-		setDateTimeString();
-		startDateTime = LocalDateTime.parse(startDT, formatter);
-		System.out.print(startDT);
-		if(_endTime != -1 || _endDate != -1){
-			endDateTime = LocalDateTime.parse(endDT, formatter);
+		if (_startTime == -1 || _endTime == -1 || _startDate == -1 || _endDate ==-1) {
+			setUniqueLocalDateTime();
+		} else {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
+			setDateTimeString();
+			startDateTime = LocalDateTime.parse(startDT, formatter);
+			if(_endTime != -1 || _endDate != -1) {
+				endDateTime = LocalDateTime.parse(endDT, formatter);
+			}
 		}
+	}
+	
+	public void setUniqueLocalDateTime() {
+		//create unique datetime formatters
 	}
 	
 	/**
@@ -79,7 +109,7 @@ public class DateTimeProcessor {
 	 * 
 	 */
 	public void setDateTimeString() {
-		String startTimeString, endTimeString;
+		String startTimeString, endTimeString, startDateString, endDateString;
 		if (_startTime < 1000) {
 			startTimeString = "0" + Integer.toString(_startTime);
 		} else {
@@ -117,13 +147,13 @@ public class DateTimeProcessor {
 	 * @param isStart
 	 */
 	public void separateDateTime(String input, boolean isStart) {
-		Pattern date = Pattern.compile(Constants.REGEX_DATE_FORMAT);
+		//Pattern date = Pattern.compile(Constants.REGEX_DATE_FORMAT);
 		Pattern time = Pattern.compile(Constants.REGEX_TIME_FORMAT);
-		Pattern relativedate = Pattern.compile(Constants.REGEX_RELATIVE_DATE_ALL);
+		//Pattern relativedate = Pattern.compile(Constants.REGEX_RELATIVE_DATE_ALL);
 		
-		Matcher dateMatcher = date.matcher(input);
+		//Matcher dateMatcher = date.matcher(input);
 		Matcher timeMatcher = time.matcher(input);
-		Matcher rdateMatcher = relativedate.matcher(input);
+		//Matcher rdateMatcher = relativedate.matcher(input);
 		
 		DateProcessor DP = new DateProcessor();
 		TimeProcessor TP = new TimeProcessor();
@@ -133,15 +163,15 @@ public class DateTimeProcessor {
 		if (timeMatcher.find()) {
 			_time = getTrimmedString(input, timeMatcher.start(), timeMatcher.end());
 			_date = input.replaceAll(_time, "").trim();
-		} else if (dateMatcher.find() || rdateMatcher.find()) {
-			_date = getTrimmedString(input, dateMatcher.start(), dateMatcher.end());
-			_time = input.replaceAll(_date, "").trim();
+		} else {
+			//_date = getTrimmedString(input, dateMatcher.start(), dateMatcher.end());
+			//_time = input.replaceAll(_date, "").trim();
+			_date = input;
 		}
 		
 		_time = cleanString(_time);
 		_date = cleanString(_date);
-		System.out.println(_date);
-		System.out.println(_time);
+		
 		DP.processDate(_date, false);
 		TP.processTime(_time);
 		
