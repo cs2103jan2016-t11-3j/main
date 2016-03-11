@@ -10,6 +10,10 @@ import common.TaskObject;
 
 public class TimeOutput {
 
+	public static final String CATEGORY_EVENT = "event";
+	public static final String CATEGORY_DEADLINE = "deadline";
+	public static final String CATEGORY_FLOATING = "floating";
+	
 	private static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
 	private static final String MESSAGE_NULL_POINTER_EXCEPTION = "Not enough arguments within target object";
 
@@ -18,10 +22,10 @@ public class TimeOutput {
 	
 	public static void setTimeOutputForGui(ArrayList<TaskObject> taskList) {
 		for(int i = 0; i < taskList.size(); i++) {
-			if(taskList.get(i).getCategory().equals(Logic.CATEGORY_EVENT)) {
+			if(taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 				setEventTimeOutput(taskList.get(i));
 			} else {
-				if(taskList.get(i).getCategory().equals(Logic.CATEGORY_DEADLINE)) {
+				if(taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
 					setDeadlineTimeOutput(taskList.get(i));
 				} else {
 					taskList.get(i).setTimeOutputString(""); // No time displayed for floating
