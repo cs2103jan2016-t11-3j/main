@@ -15,15 +15,18 @@ import java.util.ArrayList;
 import java.util.Deque;
 
 /**
- * Creates a "Delete" object to facilitate the deletion of a task from task list internally,
- * before updating the file at its default location. <br>
+ * Creates a "Delete" object to facilitate the deletion of a task from task list
+ * internally, before updating the file at its default location. <br>
  * There are two ways which Delete can be run: <br>
- * 1) Normal delete <br> Pre-condition that user has to use a search/display function 
- * first. With that task list which was displayed, the user proceeds to decide which item
- * in the list he wishes to delete. <br>
- * 2) Quick delete <br> Pre-condition that user has to add a task in his last command. Quick
- * delete does not require the user to input an index for deletion, it automatically deletes
- * the last added task.
+ * 1) Normal delete <br>
+ * Pre-condition that user has to use a search/display function first. With that
+ * task list which was displayed, the user proceeds to decide which item in the
+ * list he wishes to delete. <br>
+ * 2) Quick delete <br>
+ * Pre-condition that user has to add a task in his last command. Quick delete
+ * does not require the user to input an index for deletion, it automatically
+ * deletes the last added task.
+ * 
  * @author ChongYan
  *
  */
@@ -32,13 +35,13 @@ import java.util.Deque;
 public class Delete {
 
 	// Deletes by searching for the unique taskID
-	private static String MESSAGE_DELETE = "Task deleted from TaskFinder: %1s";
-	private static String MESSAGE_ERROR = "Error deleting task from TaskFinder";
-	private static String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
+	private final String MESSAGE_DELETE = "Task deleted from TaskFinder: %1s";
+	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder";
+	private final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
 
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
-	
+
 	// This is the task which is actually removed from TaskFinder
 	private TaskObject removedTask = new TaskObject();
 
@@ -63,13 +66,17 @@ public class Delete {
 	public Delete() {
 
 	}
-	
+
 	/**
-	 * Default constructor for Quick Delete. <br> There will be an additional CommandObject 
-	 * initialised, with an index of -1.
-	 * @param taskList - Existing list of tasks in Adult TaskFinder
-	 * @param undoList - Current stack of CommandObjects with the purpose of undoing
-	 * previous actions
+	 * Default constructor for Quick Delete. <br>
+	 * There will be an additional CommandObject initialised, with an index of
+	 * -1.
+	 * 
+	 * @param taskList
+	 *            - Existing list of tasks in Adult TaskFinder
+	 * @param undoList
+	 *            - Current stack of CommandObjects with the purpose of undoing
+	 *            previous actions
 	 */
 	public Delete(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
 		this.taskList = taskList;
@@ -78,53 +85,70 @@ public class Delete {
 	}
 
 	/**
-	 * Default constructor for Normal Delete. 
-	 * @param commandObj - Contains the index to delete from the last outputted task list
-	 * @param taskList - Existing list of tasks in Adult TaskFinder
-	 * @param lastOutputTaskList - List of tasks outputted in the last command (e.g. Search, Display)
+	 * Default constructor for Normal Delete.
+	 * 
+	 * @param commandObj
+	 *            - Contains the index to delete from the last outputted task
+	 *            list
+	 * @param taskList
+	 *            - Existing list of tasks in Adult TaskFinder
+	 * @param lastOutputTaskList
+	 *            - List of tasks outputted in the last command (e.g. Search,
+	 *            Display)
 	 */
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
-	
+
 	/**
-	 * Called by logic to find and delete an object in the task list. Automatically decides
-	 * whether to use quick delete or normal delete based on the index of the CommandObject 
-	 * in the Delete object.
-	 * @return output: ArrayList<String> - Contains all the output that the user will see
+	 * Called by logic to find and delete an object in the task list.
+	 * Automatically decides whether to use quick delete or normal delete based
+	 * on the index of the CommandObject in the Delete object.
+	 * 
+	 * @return output: ArrayList<String> - Contains all the output that the user
+	 *         will see
 	 */
 	public ArrayList<String> run() {
-		assert(!taskList.isEmpty());
-		if(commandObj.getIndex() == -1) {
+		assert (!taskList.isEmpty());
+		if (commandObj.getIndex() == -1) {
 			runQuickDelete();
 		} else {
 			runNormalDelete();
 		}
 		return output;
 	}
-	
+
+	/**
+	 * Main method driving the quick delete function. Checks if the top of the
+	 * undoList contains a CommandObject with a delete command, and proceeds to
+	 * remove the task if it is the case.
+	 */
 	private void runQuickDelete() {
 		if (undoList.isEmpty()) {
 			createErrorOutput();
 		} else if (undoList.peek().getCommandType() == Logic.INDEX_DELETE) {
-			// delete the last item in taskList as it shows that the item had just been added
-			int index = taskList.size() - 1;
-			taskName = taskList.get(index).getTitle();
-			removedTask = taskList.remove(index);
-			if(taskList.size() == index) {
-				// To check if taskList has shrunk by 1
-				hasDeletedInternal = true;
-			}
+			hasDeletedInternal = removeTask(taskList.size() - 1);
 			hasDeletedExternal = deleteExternal();
-			if(hasDeletedInternal && hasDeletedExternal) {
+			if (hasDeletedInternal && hasDeletedExternal) {
 				createOutput();
 			} else {
 				createErrorOutput();
 			}
 		} else {
 			createQuickDeleteUnavailableErrorOutput();
+		}
+	}
+
+	private boolean removeTask(int index) {
+		try {
+			setTaskName(taskList.get(index).getTitle());
+			setRemovedTask(taskList.get(index));
+			taskList.remove(index);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 
@@ -145,10 +169,7 @@ public class Delete {
 		if (taskIdToDelete != -1) {
 			for (int i = 0; i < taskList.size(); i++) {
 				if (taskList.get(i).getTaskId() == taskIdToDelete) {
-					taskName = taskList.get(i).getTitle();
-					removedTask = taskList.get(i);
-					taskList.remove(i);
-					return true;
+					return removeTask(i);
 				}
 			}
 		}
@@ -157,7 +178,7 @@ public class Delete {
 
 	private void obtainTaskId() {
 		int index = commandObj.getIndex();
-		if (index > 0 && index <= lastOutputTaskList.size()) { 
+		if (index > 0 && index <= lastOutputTaskList.size()) {
 			index--;
 			taskIdToDelete = lastOutputTaskList.get(index).getTaskId();
 		}
@@ -166,15 +187,15 @@ public class Delete {
 	private boolean deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();
 		try {
-            storage.save(taskList);
-        } catch (NoSuchFileException e) {
-         // TODO Auto-generated catch block
-            //Ask user to specify new location or use default location
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+			storage.save(taskList);
+		} catch (NoSuchFileException e) {
+			// TODO Auto-generated catch block
+			// Ask user to specify new location or use default location
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -187,7 +208,7 @@ public class Delete {
 		removedTask = null;
 		output.add(MESSAGE_ERROR);
 	}
-	
+
 	private void createQuickDeleteUnavailableErrorOutput() {
 		removedTask = null;
 		output.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
@@ -197,7 +218,7 @@ public class Delete {
 	public CommandObject getCommandObject() {
 		return commandObj;
 	}
-	
+
 	public TaskObject getRemovedTask() {
 		return removedTask;
 	}
@@ -222,4 +243,11 @@ public class Delete {
 		this.commandObj = commandObj;
 	}
 
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public void setRemovedTask(TaskObject removedTask) {
+		this.removedTask = removedTask;
+	}
 }

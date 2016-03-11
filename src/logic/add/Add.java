@@ -32,6 +32,7 @@ public class Add {
 	private final String MESSAGE_FAIL = "Failed to add task. ";
 	private final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
 	private final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
+	private final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
 
 	private TaskObject task;
 	private int index;
@@ -71,6 +72,7 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
+		assert (!task.equals(null));
 		try {
 			String taskType = task.getCategory();
 			if (taskType.equals("event")) {
@@ -87,6 +89,8 @@ public class Add {
 			createOutput();
 		} catch (DateTimeException e) {
 			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+		} catch (NullPointerException e) {
+			output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
 		}
 		return output;
 	}
@@ -114,7 +118,7 @@ public class Add {
 		}
 	}
 
-	private boolean checkIfClash() {
+	private boolean checkIfClash() throws NullPointerException {
 		boolean hasClashes = false;
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals("event")) {
@@ -148,7 +152,7 @@ public class Add {
 		LocalDateTime currentEnd = current.getEndDateTime();
 		LocalDateTime newStart = task.getStartDateTime();
 		LocalDateTime newEnd = task.getEndDateTime();
-		
+
 		if (currentStart.isAfter(newStart)) {
 			if (currentStart.isBefore(newEnd)) {
 				return true;
@@ -178,7 +182,7 @@ public class Add {
 		addExternal();
 	}
 
-	private void addInternal() {
+	private void addInternal() throws NullPointerException {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
 		if (index != -1) { // must add at a specific point
