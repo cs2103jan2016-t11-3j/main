@@ -1,6 +1,7 @@
 package common;
 
 import java.time.LocalDateTime;
+import java.time.DateTimeException;
 
 public class TaskObject implements Comparable<TaskObject> {
 
@@ -146,11 +147,11 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.title = newTitle;
 	}
 	
-	public void setStartDateTime(LocalDateTime newStartDateTime) {
+	public void setStartDateTime(LocalDateTime newStartDateTime) throws DateTimeException {
 		this.startDateTime = newStartDateTime;
 	}
 	
-	public void setEndDateTime(LocalDateTime newEndDateTime) {
+	public void setEndDateTime(LocalDateTime newEndDateTime) throws DateTimeException {
 		this.endDateTime = newEndDateTime;
 	}
 	
