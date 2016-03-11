@@ -529,22 +529,4 @@ public class Logic {
 		Overdue.markAllOverdueTasks(taskList);
 	}
 
-	/**
-	 * Combines and converts date and time strings stored in TaskObjects 
-	 * into LocalDateTime format for easier comparison and greater usability.
-	 * @param date series of numbers representing the date in the format
-	 * YYYYMMDD
-	 * @param time series of numbers representing the time in the 24hr format
-	 * HHMM
-	 * @return LocalDateTime object containing all the above information
-	 */
-	public static LocalDateTime obtainDateTime(int date, int time) {
-		int year = date / 10000;
-		int month = (date % 10000) / 100;
-		int dayOfMonth = date % 100;
-		int hour = time / 100;
-		int min = time % 100;
-		LocalDateTime formattedTime = LocalDateTime.of(year, month, dayOfMonth, hour, min);
-		return formattedTime;
-	}
 }

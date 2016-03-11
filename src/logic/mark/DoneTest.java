@@ -3,7 +3,7 @@ package logic.mark;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import common.TaskObject;
+import common.*;
 import logic.*;
 
 import java.util.ArrayList;
@@ -20,10 +20,11 @@ public class DoneTest {
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
 		ArrayList<String> actualOutput = new ArrayList<String> ();
 		TaskObject taskTest = new TaskObject("1");
+		CommandObject test = new CommandObject(Logic.INDEX_DONE, taskTest, 1);
 		taskList.add(taskOne);
 		taskList.add(taskTwo);
 		lastOutput.add(taskOne);
-		Done doneTest = new Done(taskTest, taskList, lastOutput);
+		Done doneTest = new Done(test, taskList, lastOutput);
 		actualOutput = doneTest.run();
 		expectedOutput.add("Task: Find calculator marked as completed");
 		assertEquals(expectedOutput, actualOutput);

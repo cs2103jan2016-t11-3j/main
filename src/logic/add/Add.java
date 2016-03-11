@@ -101,7 +101,7 @@ public class Add {
 	 */
 	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		LocalDateTime deadline = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
+		LocalDateTime deadline = task.getEndDateTime();
 		if (deadline.isBefore(LocalDateTime.now())) {
 			isOverdue = true;
 		}
@@ -144,11 +144,11 @@ public class Add {
 	 * @return
 	 */
 	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
-		LocalDateTime currentStart = Logic.obtainDateTime(current.getStartDate(), current.getStartTime());
-		LocalDateTime currentEnd = Logic.obtainDateTime(current.getEndDate(), current.getEndTime());
-		LocalDateTime newStart = Logic.obtainDateTime(task.getStartDate(), task.getStartTime());
-		LocalDateTime newEnd = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
-
+		LocalDateTime currentStart = current.getStartDateTime();
+		LocalDateTime currentEnd = current.getEndDateTime();
+		LocalDateTime newStart = task.getStartDateTime();
+		LocalDateTime newEnd = task.getEndDateTime();
+		
 		if (currentStart.isAfter(newStart)) {
 			if (currentStart.isBefore(newEnd)) {
 				return true;
