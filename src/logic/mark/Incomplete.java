@@ -2,14 +2,15 @@ package logic.mark;
 
 import java.util.ArrayList;
 
+import common.CommandObject;
 import common.TaskObject;
 
 public class Incomplete extends Mark {
 
 	private final String MESSAGE_INCOMPLETE = "Task: %1s is marked as incomplete";
 
-	public Incomplete(TaskObject taskObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
-		instructionTask = taskObj;
+	public Incomplete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.index = commandObj.getIndex();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}

@@ -3,6 +3,7 @@ package logic.mark;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+import common.CommandObject;
 import common.TaskObject;
 import logic.Logic;
 
@@ -10,8 +11,8 @@ public class Overdue extends Mark {
 	
 private final String MESSAGE_OVERDUE = "Task: %1s is marked as overdue";
 	
-	public Overdue(TaskObject taskObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
-		instructionTask = taskObj;
+	public Overdue(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.index = commandObj.getIndex();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}

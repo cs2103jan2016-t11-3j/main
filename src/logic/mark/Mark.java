@@ -4,6 +4,7 @@ import logic.*;
 
 import java.util.ArrayList;
 
+import common.CommandObject;
 import common.TaskObject;
 
 /**
@@ -33,7 +34,6 @@ public abstract class Mark {
 	 * was toggled by Mark.run()
 	 * @param taskIdToMark - Contains the task ID of the task whose status will be toggled
 	 */
-	protected TaskObject instructionTask; // Task containing instruction
 	protected TaskObject markedTask;
 	protected String taskName = "";
 	protected String statusBeforeChange = "";
@@ -41,6 +41,7 @@ public abstract class Mark {
 	protected ArrayList<TaskObject> lastOutputTaskList;
 	protected ArrayList<String> output = new ArrayList<String>();
 	protected int taskIdToMark = -1; // The intended task ID user wants to mark
+	protected int index = -1;
 
 	public Mark() {
 
@@ -52,8 +53,8 @@ public abstract class Mark {
 	 * @param taskList - Contains all existing tasks in Adult TaskFinder
 	 * @param lastOutputTaskList - Contains the list of tasks which was last outputted
 	 */
-	public Mark(TaskObject taskObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
-		instructionTask = taskObj;
+	public Mark(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.index = commandObj.getIndex();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
@@ -62,10 +63,9 @@ public abstract class Mark {
 
 	// May need to change if parser changes the way this command object is constructed
 	protected void obtainTaskId() {
-		int lineNumber = Integer.parseInt(instructionTask.getTitle());
-		lineNumber--;
-		if (lineNumber >= 0 && lineNumber < lastOutputTaskList.size()) {
-			taskIdToMark = lastOutputTaskList.get(lineNumber).getTaskId();
+		index--;
+		if (index >= 0 && index < lastOutputTaskList.size()) {
+			taskIdToMark = lastOutputTaskList.get(index).getTaskId();
 		} else {
 			createErrorOutput();
 		}

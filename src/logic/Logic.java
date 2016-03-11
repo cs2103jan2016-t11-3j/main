@@ -14,6 +14,8 @@ import logic.help.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.DateTimeException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -65,6 +67,15 @@ public class Logic {
 	public static final int INDEX_INCOMPLETE = 12;
 
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
+	private static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
+	private static final String MESSAGE_NULL_POINTER_EXCEPTION = "Not enough arguments within target object";
+	
+	public static final String CATEGORY_EVENT = "event";
+	public static final String CATEGORY_DEADLINE = "deadline";
+	public static final String CATEGORY_FLOATING = "floating";
+	
+	private static final String DISPLAY_TIME_EVENT = "on %1s, from %2s to %3s";	
+	private static final String DISPLAY_TIME_DEADLINE = "due on %1s"; 
 
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
@@ -121,6 +132,7 @@ public class Logic {
 		setUserInput(userInput);
 		CommandObject commandObj = callParser();
 		parseCommandObject(commandObj, false, false);
+		setTimeOutputForGui();
 	}
 
 	/**
@@ -211,13 +223,13 @@ public class Logic {
 			helpFunction(taskObj);
 			break;
 		case INDEX_DONE:
-			doneFunction(taskObj);
+			doneFunction(commandObj);
 			break;
 		case INDEX_OVERDUE:
-			overdueFunction(taskObj);
+			overdueFunction(commandObj);
 			break;
 		case INDEX_INCOMPLETE:
-			incompleteFunction(taskObj);
+			incompleteFunction(commandObj);
 			break;
 		default:
 			printInvalidCommandMessage();
@@ -318,8 +330,8 @@ public class Logic {
 		exit.run();
 	}
 
-	private void doneFunction(TaskObject taskObj) {
-		Done done = new Done(taskObj, taskList, lastOutputTaskList);
+	private void doneFunction(CommandObject commandObj) {
+		Done done = new Done(commandObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
 		setLastOutputTaskList(taskList);
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
@@ -329,8 +341,8 @@ public class Logic {
 		}
 	}
 
-	private void overdueFunction(TaskObject taskObj) {
-		Overdue overdue = new Overdue(taskObj, taskList, lastOutputTaskList);
+	private void overdueFunction(CommandObject commandObj) {
+		Overdue overdue = new Overdue(commandObj, taskList, lastOutputTaskList);
 		setOutput(overdue.run());
 		setLastOutputTaskList(taskList);
 		if (overdue.getTaskIdToMark() != -1) {
@@ -340,8 +352,8 @@ public class Logic {
 		// overdue.getTaskIdToMark()));
 	}
 
-	private void incompleteFunction(TaskObject taskObj) {
-		Incomplete incomplete = new Incomplete(taskObj, taskList, lastOutputTaskList);
+	private void incompleteFunction(CommandObject commandObj) {
+		Incomplete incomplete = new Incomplete(commandObj, taskList, lastOutputTaskList);
 		setOutput(incomplete.run());
 		setLastOutputTaskList(taskList);
 		if (incomplete.getTaskIdToMark() != -1) {
@@ -538,5 +550,85 @@ public class Logic {
 		LocalDateTime formattedTime = LocalDateTime.of(year, month, dayOfMonth, hour, min);
 		return formattedTime;
 	}
-
+	
+	public void setTimeOutputForGui() {
+		for(int i = 0; i < taskList.size(); i++) {
+			if(taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
+				setEventTimeOutput(taskList.get(i));
+			} else {
+				if(taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
+					setDeadlineTimeOutput(taskList.get(i));
+				} else {
+					taskList.get(i).setTimeOutputString(""); // No time displayed for floating
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Formats the timing for GUI to display for events, takes in the LocalDateTime objects
+	 * startDateTime and endDateTime and processes it to form an output for GUI
+	 * @param event
+	 */
+	private void setEventTimeOutput(TaskObject event) {
+		String line;
+		try {
+			String[] start = createDateTimeArray(event.getStartDateTime());
+			String[] end = createDateTimeArray(event.getEndDateTime());
+			line = formatEventTimeOutput(start, end);
+			event.setTimeOutputString(line);
+		} catch (DateTimeException e) {
+			System.out.println(MESSAGE_DATE_TIME_CONVERSION_ERROR);
+		} catch (NullPointerException e) {
+			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
+		}
+	}
+	
+	private String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException{
+		String formattedString = "";
+		if(end[0].equals(start[0])) { // If start date == end date
+			formattedString = String.format(DISPLAY_TIME_EVENT, start[0], start[1], end[1]);
+			// End Date will not be printed 
+		} else {
+			String endDateTime = end[1].concat(" on ").concat(end[0]);
+			formattedString = String.format(DISPLAY_TIME_EVENT,  start[0], start[1], endDateTime);
+			// End Date will be printed
+		}
+		return formattedString;
+	}
+	
+	/**
+	 * Formats the timing for GUI to display for deadlines
+	 * @param deadline
+	 */
+	private void setDeadlineTimeOutput(TaskObject deadline) {
+		String line;
+		try {
+			String[] end = createDateTimeArray(deadline.getStartDateTime());
+			line = formatDeadlineTimeOutput(end);
+			deadline.setTimeOutputString(line);
+		} catch (DateTimeException e) {
+			System.out.println(MESSAGE_DATE_TIME_CONVERSION_ERROR);
+		} catch (NullPointerException e) {
+			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
+		}
+	}	
+	
+	private String formatDeadlineTimeOutput(String[] end) throws NullPointerException {
+		String formattedString = "";
+		if(end[1].equals(null)) {
+			formattedString = String.format(DISPLAY_TIME_DEADLINE, end[0]);
+			// If time due is empty
+		} else {
+			String endDateTime = end[0].concat(" at ").concat(end[1]);
+			formattedString = String.format(DISPLAY_TIME_DEADLINE, endDateTime);
+		}
+		return formattedString;
+	}
+	
+	private String[] createDateTimeArray(LocalDateTime time) throws DateTimeException { 
+		String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		String[] timeArray = line.split("T", 2);
+		return timeArray;
+	}
 }

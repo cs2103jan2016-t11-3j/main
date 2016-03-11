@@ -2,6 +2,7 @@ package logic.mark;
 
 import java.util.ArrayList;
 
+import common.CommandObject;
 import common.TaskObject;
 
 /**
@@ -16,12 +17,12 @@ public class Done extends Mark{
 	
 	/**
 	 * Constuctor for a Done object.
-	 * @param taskObj - Contains information on the task to be changed, not the task to be changed
+	 * @param commandObj - Contains information on the task to be changed, not the task to be changed
 	 * @param taskList - Contains all existing tasks in Adult TaskFinder
 	 * @param lastOutputTaskList - Contains the list of tasks which was last outputted
 	 */
-	public Done(TaskObject taskObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
-		instructionTask = taskObj;
+	public Done(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.index = commandObj.getIndex();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}

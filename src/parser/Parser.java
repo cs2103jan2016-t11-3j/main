@@ -123,7 +123,7 @@ public class Parser {
 	public void parseDone(String command) {
 		CO.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
-		command = command.substring(temp);
+		command = command.substring(temp + 1);
 		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 		temp = Integer.parseInt(command);
 		CO.setIndex(temp);
