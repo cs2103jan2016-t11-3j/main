@@ -6,10 +6,30 @@ import java.util.Deque;
 import common.CommandObject;
 import common.TaskObject;
 
+/**
+ * The UndoRedo class is a parent class of the Undo and Redo classes.
+ * The run method reads in the command type and then calls the corresponding child class.
+ * The list of undo/redo operations are:
+ * 1. Add <-> Delete
+ * 2. Edit <-> Edit
+ * 3. Incomplete <-> Done <-> Overdue
+ * 
+ * @param taskList ArrayList containing all tasks
+ * @param undoList Deque containing all undo tasks
+ * @param redoList Deque containing all redo tasks
+ * @author Ruibin
+ */
+
 public class UndoRedo {
 
-	private static final int INDEX_UNDO = 5;
-	private static final int INDEX_REDO = 6;
+	protected static final int INDEX_ADD = 1;
+	protected static final int INDEX_EDIT = 3;
+	protected static final int INDEX_DELETE = 4;
+	protected static final int INDEX_UNDO = 5;
+	protected static final int INDEX_REDO = 6;
+	protected static final int INDEX_DONE = 10;
+	protected static final int INDEX_OVERDUE = 11;
+	protected static final int INDEX_INCOMPLETE = 12;
 	
 	protected ArrayList<TaskObject> taskList;
 	protected Deque<CommandObject> undoList;
@@ -34,12 +54,12 @@ public class UndoRedo {
 		return redoList;
 	}
 	
-	public ArrayList<String> run(int command) {
+	public ArrayList<String> run(int commandType) {
 
-		if (command == INDEX_UNDO) {
+		if (commandType == INDEX_UNDO) {
 			Undo undo = new Undo(taskList, undoList, redoList);
 			output = undo.run();
-		} else if (command == INDEX_REDO) {
+		} else if (commandType == INDEX_REDO) {
 			Redo redo = new Redo(taskList, undoList, redoList);
 			output = redo.run();
 		}

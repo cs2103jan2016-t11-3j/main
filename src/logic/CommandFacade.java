@@ -28,9 +28,9 @@ public class CommandFacade {
 	public static final int INDEX_EXIT = 8;
 	public static final int INDEX_HELP = 9;
 	// A set of indicators for task status modifiers
-	public static final int INDEX_DONE = 10;
-	public static final int INDEX_OVERDUE = 11;
-	public static final int INDEX_INCOMPLETE = 12;
+	public static final int INDEX_COMPLETE = 10;
+	public static final int INDEX_INCOMPLETE = 11;
+	public static final int INDEX_OVERDUE = 12;
 	public static final String CATEGORY_EVENT = "event";
 	public static final String CATEGORY_DEADLINE = "deadline";
 	public static final String CATEGORY_FLOATING = "floating";
@@ -129,7 +129,7 @@ public class CommandFacade {
 			case INDEX_HELP:
 				helpFunction();
 				break;
-			case INDEX_DONE:
+			case INDEX_COMPLETE:
 				doneFunction();
 				break;
 			case INDEX_OVERDUE:
@@ -219,7 +219,10 @@ public class CommandFacade {
 				removedTask = normalDelete();
 			}
 			
-			processUndoForDelete(removedTask);
+			boolean isDeleteAll = checkIfCommandIsDeleteAll();
+			if (!isDeleteAll) {
+				processUndoForDelete(removedTask);
+			}
 		}
 		
 		private TaskObject quickDelete() {
@@ -231,11 +234,18 @@ public class CommandFacade {
 		}
 		
 		private TaskObject normalDelete() {
-			Delete delete = new Delete(commandObj, taskList, lastOutputTaskList);
+			Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList);
 			setOutput(delete.run());
-			setLastOutputTaskList(taskList);
+			setTaskList(delete.getTaskList());
+			setLastOutputTaskList(this.taskList);
+			setUndoList(delete.getUndoList());
+			setRedoList(delete.getRedoList());
 			
 			return delete.getRemovedTask();
+		}	
+		
+		private boolean checkIfCommandIsDeleteAll() {
+			return taskList.isEmpty() && undoList.isEmpty() && redoList.isEmpty();
 		}
 		
 		// Checks that removedTask is not null, then adds the corresponding CommandObject to the undo list or the redo list
@@ -400,10 +410,12 @@ public class CommandFacade {
 			CommandObject newCommandObj = new CommandObject();
 			
 			String pastStatus = mark.getStatusToChange();
+			System.out.println("pastStatus = " + pastStatus);	// DEBUG
 			int commandIndex = getCommandIndex(pastStatus);
 			if (commandIndex != 0) {
 				newCommandObj.setCommandType(commandIndex);
-				newCommandObj.setTaskObject(mark.getMarkedTask());
+				newCommandObj.setTaskObject(new TaskObject());	// CHANGED
+				newCommandObj.setIndex(this.index);
 			}
 			
 			list.push(newCommandObj);
@@ -415,7 +427,7 @@ public class CommandFacade {
 				return INDEX_OVERDUE;
 			} else {
 				if (pastStatus.equals("completed")) {
-					return INDEX_DONE;
+					return INDEX_COMPLETE;
 				} else {
 					if (pastStatus.equals("incomplete")) {
 						return INDEX_INCOMPLETE;
@@ -432,7 +444,7 @@ public class CommandFacade {
 		 * @return a boolean value indicating whether the command involves editing
 		 */
 		private boolean isListOperation(int command) {
-			return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE || command == INDEX_DONE
+			return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE || command == INDEX_COMPLETE
 					|| command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
 		}
 		
