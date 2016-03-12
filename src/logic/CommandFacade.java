@@ -51,6 +51,16 @@ public class CommandFacade {
 	boolean isUndoAction;
 	boolean isRedoAction;
 	
+	/**
+	 * Constructor called by Logic which passes all arguments that might be used; this class acts as a facade to process the command types
+	 * @param taskList The default taskList storing all the tasks
+	 * @param undoList The deque of CommandObjects which stores all undo actions
+	 * @param redoList The deque of CommandObjects which stores all redo actions
+	 * @param lastOutputTaskList The ArrayList which keeps track of what is currently being displayed to the user
+	 * @param commandObj The CommandObject returned by the Parser class which returns the processed information
+	 * @param isUndoAction Tracks if this call is an undo action
+	 * @param isRedoAction Tracks if this call is an undo action
+	 */
 	public CommandFacade(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList,
 			ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		this.taskList = taskList;
@@ -63,13 +73,30 @@ public class CommandFacade {
 		setCommandObjectValues();
 	}
 	
-	public void process() {
+	
+	/**
+	 * Responsible for manipulating the undoList and determining whether the redoList
+	 * should be cleared. <br>
+	 * The redoList will be cleared as long as the command given is not an undo or
+	 * redo. <br>
+	 * A "reverse" CommandObject will be created and pushed into the undoList if the 
+	 * current CommandObject is an action which manipulates the existing task list. 
+	 * @param commandObj CommandObject which contains information on the actions to 
+	 * execute within the lower levels of the program
+	 * @param isUndoAction a boolean value stating if this CommandObject is a result of
+	 * an undo action
+	 * @param isRedoAction a boolean value stating if this CommandObject is a result of 
+	 * a redo action
+	 */
+	public void run() {
 			
 		// FOR TESTING
 		//System.out.println("CommandObject command = " + command + ", index = " + index);
 		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = "
 		//+ undoList.size() + ", redo size = " + redoList.size());
-		//printTaskObjectFields(taskObj);
+		//System.out.println("commandObj command type = " + commandObj.getCommandType());
+		//System.out.println("commandObj index = " + commandObj.getIndex());
+		//if (taskObj != null) printTaskObjectFields(taskObj);
 		// System.out.println();
 	
 		// Clears the redo stack if it is a new command
@@ -331,7 +358,7 @@ public class CommandFacade {
 			return 0;
 		}
 		
-		// The following methods stores the reverse of the user input in the stack.
+		// The following methods stores the reverse of the user input in the deque.
 		 	
 		/**
 		 * Method for adding a CommandObject containing add or delete to either the undoList or redoList,
@@ -349,9 +376,11 @@ public class CommandFacade {
 				if (index == -1) {
 					// if task was previously added to the end of the list
 					list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
+					//System.out.println("\'Delete " + taskList.size() + "\' added to list");		// DEBUG
 				} else {
 					// if task was previously added to a pre-determined location in the list
 					list.push(new CommandObject(INDEX_DELETE, new TaskObject(), index));
+					//System.out.println("\'Delete " + index + "\' added to list");					// DEBUG
 				}
 			} else if (commandType == INDEX_DELETE) {
 				list.push(new CommandObject(INDEX_ADD, commandObj.getTaskObject(), index));

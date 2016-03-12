@@ -57,7 +57,7 @@ public class Logic {
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
 	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
-	private int taskId = 1;
+	private int taskId;
 
 	// This variable will get repeatedly updated by UI for each input
 	private String userInput;
@@ -75,6 +75,7 @@ public class Logic {
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
 		loadTaskList();
+		setStartingTaskId();
 		checkOverdue();
 	}
 	
@@ -82,8 +83,8 @@ public class Logic {
 	 * Constructor called by Undo/Redo. This is a secondary logic class which only performs
 	 * one operation before being deactivated.
 	 * @param taskList The default taskList storing all the tasks
-	 * @param undoList The stack of CommandObjects which stores all undo actions
-	 * @param redoList The stack of CommandObjects which stores all redo actions
+	 * @param undoList The deque of CommandObjects which stores all undo actions
+	 * @param redoList The deque of CommandObjects which stores all redo actions
 	 */
 	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.taskList = taskList;
@@ -101,6 +102,25 @@ public class Logic {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	// Sets the starting task ID value. This value should be larger than the current largest task ID value in the task list so as to avoid overlap.
+	private void setStartingTaskId() {
+		int largestTaskId = 1;
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			int id = taskList.get(i).getTaskId();
+			if (id > largestTaskId) {
+				largestTaskId = id;
+			}
+		}
+		
+		this.taskId = largestTaskId + 1;
+	}
+	
+	// Checks for overdue tasks at the start when the program is first run
+	public void checkOverdue() {
+		Overdue.markAllOverdueTasks(taskList);
 	}
 	
 	// Takes in a String argument from UI component
@@ -123,23 +143,14 @@ public class Logic {
 	}
 
 	/**
-	 * Parses the CommandObject and determines which command to execute.
-	 * Responsible for manipulating the undoList and determining whether the redoList
-	 * should be cleared. <br>
-	 * The redoList will be cleared as long as the command given is not an undo or
-	 * redo. <br>
-	 * A "reverse" CommandObject will be created and pushed into the undoList if the 
-	 * current CommandObject is an action which manipulates the existing task list. 
-	 * @param commandObj CommandObject which contains information on the actions to 
-	 * execute within the lower levels of the program
-	 * @param isUndoAction a boolean value stating if this CommandObject is a result of
-	 * an undo action
-	 * @param isRedoAction a boolean value stating if this CommandObject is a result of 
-	 * a redo action
+	 * Calls the CommandFacade class and passes all relevant arguments.
+	 * CommandFacade class will be responsible for parsing the CommandObject and calling the appropriate function.
+	 * All the lists (task list, undo list, redo list, last output task list, output) in Logic are subsequently updated with the
+	 * values from the CommandFacade class.
 	 */
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		CommandFacade commandFacade = new CommandFacade(taskList, undoList, redoList, lastOutputTaskList, commandObj, isUndoAction, isRedoAction);
-		commandFacade.process();
+		commandFacade.run();
 		updateLists(commandFacade);
 	}
 	
@@ -197,10 +208,5 @@ public class Logic {
 	public void setUserInput(String newUserInput) {
 		this.userInput = newUserInput;
 	}
-		
-	// Checks for overdue tasks at the start when the program is first run
-	public void checkOverdue() {
-		Overdue.markAllOverdueTasks(taskList);
-	}
-
+	
 }
