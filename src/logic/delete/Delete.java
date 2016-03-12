@@ -35,11 +35,11 @@ import java.util.Deque;
 public class Delete {
 
 	// Deletes by searching for the unique taskID
-	private final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s. ";
-	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder. ";
+	private final String MESSAGE_DELETE = "Task deleted from task list: %1s.";
+	private final String MESSAGE_ERROR = "Error deleting task from task list.";
 	private final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable. ";
 	private final String MESSAGE_NULL_POINTER = "Attempted to access a non-existent task. ";
-	private final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
+	private final String MESSAGE_DELETED_ALL = "All tasks deleted.";
 
 	private final int INDEX_DELETE = 4;
 	// This command object contains the index number of the line to be deleted
@@ -54,6 +54,7 @@ public class Delete {
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
+	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
 
 	// Internal checkers to ensure that deletion has occurred
 	private boolean hasDeletedInternal = false;
@@ -95,10 +96,13 @@ public class Delete {
 	 * @param taskList
 	 *            - Existing list of tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
-	 *            - List of tasks outputted in the last command (e.g. Search,
-	 *            Display)
+	 *            - List of tasks outputted in the last command (e.g. Search, Display)
+	 * @param undoList
+	 * 			  - Deque containing the list of undo tasks
+	 * @param redoList
+	 * 			  - Deque containing the list of redo tasks
 	 */
-	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
@@ -152,18 +156,6 @@ public class Delete {
 		}
 	}
 
-	private boolean removeTask(int index) {
-		assert (index > 0 && index < taskList.size());
-		try {
-			setTaskName(taskList.get(index).getTitle());
-			setRemovedTask(taskList.get(index));
-			taskList.remove(index);
-			return true;
-		} catch (NullPointerException e) {
-			return false;
-		}
-	}
-
 	private void runNormalDelete() throws NullPointerException {
 		assert (!taskList.isEmpty());
 		hasDeletedInternal = deleteInternal();
@@ -176,7 +168,30 @@ public class Delete {
 			createErrorOutput();
 		}
 	}
+	
+	// Clears everything - task list, undo list and redo list
+	private void runDeleteAll() {
+		taskList.clear();
+		undoList.clear();
+		redoList.clear();
 
+		deleteExternal();
+		createDeletedAllOutput();
+	}
+
+	private boolean removeTask(int index) {
+		assert (index > 0 && index < taskList.size());
+		try {
+			setTaskName(taskList.get(index).getTitle());
+			setRemovedTask(taskList.get(index));
+			taskList.remove(index);
+			return true;
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+
+	
 	private boolean deleteInternal() throws NullPointerException {
 		obtainTaskId();
 		if (taskIdToDelete != -1) {
@@ -210,15 +225,6 @@ public class Delete {
 		}
 		return true;
 	}
-	
-	private void runDeleteAll() {
-		for(int i = taskList.size()-1; i >= 0; i--) {
-			taskList.remove(i);
-		}
-		assert(taskList.isEmpty());
-		deleteExternal();
-		createDeletedAllOutput();
-	}
 
 	private void createOutput() {
 		String text = String.format(MESSAGE_DELETE, taskName);
@@ -251,13 +257,21 @@ public class Delete {
 	public ArrayList<String> getOutput() {
 		return output;
 	}
+	
+	public void setOutput(ArrayList<String> output) {
+		this.output = output;
+	}
 
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
-
-	public void setOutput(ArrayList<String> output) {
-		this.output = output;
+	
+	public Deque<CommandObject> getUndoList() {
+		return undoList;
+	}
+	
+	public Deque<CommandObject> getRedoList() {
+		return redoList;
 	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
