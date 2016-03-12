@@ -41,7 +41,8 @@ public class Parser {
 	
 	private static final String DONE_COMMAND_1 = "done";
 	private static final String DONE_COMMAND_2 = "finish";
-	private static final String DONE_COMMAND_3 = "completed";
+	private static final String DONE_COMMAND_3 = "complete";
+	private static final String DONE_COMMAND_4 = "completed";
 	private static final int DONE_INDEX = 10;
 	
 	public CommandObject CO = new CommandObject();
@@ -100,7 +101,7 @@ public class Parser {
 		} else if (command.startsWith(ADD_COMMAND)) {
 			parseAdd(command);
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
-				|| command.startsWith(DONE_COMMAND_3)) {
+				|| command.startsWith(DONE_COMMAND_3) || command.startsWith(DONE_COMMAND_4)) {
 			parseDone(command);
 		} else {
 			parseSearch(command);

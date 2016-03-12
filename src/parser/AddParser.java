@@ -74,7 +74,7 @@ public class AddParser extends CommandProcessor {
 		TO.setEndTime(_endTime);
 		TO.setEndDate(_endDate);
 		TO.setStartDate(_startDate);
-		TO.setStatus("undone");
+		TO.setStatus("incomplete");
 	}
  	
  	
