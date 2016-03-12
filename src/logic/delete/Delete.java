@@ -191,10 +191,9 @@ public class Delete {
 
 	private void obtainTaskId() {
 		int index = commandObj.getIndex();
-		if (index > 0 && index <= lastOutputTaskList.size()) {
-			index--;
-			taskIdToDelete = lastOutputTaskList.get(index).getTaskId();
-		}
+		assert (index > 0 && index <= lastOutputTaskList.size());
+		
+		taskIdToDelete = lastOutputTaskList.get(index-1).getTaskId();
 	}
 
 	private boolean deleteExternal() {
