@@ -1,9 +1,6 @@
 package logic.delete;
 
-import logic.*;
 import storage.*;
-
-import java.util.Stack;
 
 import common.CommandObject;
 import common.TaskObject;

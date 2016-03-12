@@ -112,7 +112,6 @@ public class Parser {
 		} else if (isSearch(command)) {
 			parseSearch(command);
 		} else {
-			System.out.println("hi");
 			parseSearch(command);
 		}
   	}
