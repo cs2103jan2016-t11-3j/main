@@ -91,7 +91,6 @@ public class CommandFacade {
 	public void run() {
 			
 		// FOR TESTING
-		//System.out.println("CommandObject command = " + command + ", index = " + index);
 		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = "
 		//+ undoList.size() + ", redo size = " + redoList.size());
 		//System.out.println("commandObj command type = " + commandObj.getCommandType());
@@ -295,10 +294,13 @@ public class CommandFacade {
 			Done done = new Done(commandObj, taskList, lastOutputTaskList);
 			setOutput(done.run());
 			setLastOutputTaskList(taskList);
+			
 			if (done.getTaskIdToMark() != -1) { // If successfully marked as done
-				CommandObject undoCommand = constructStatusCommandObject(done);
-				// addToUndoList(commandIndex, new TaskObject(pastStatus,
-				// done.getTaskIdToMark()));
+				if (isUndoAction) {
+					addToList(done, redoList);
+				} else {
+					addToList(done, undoList);
+				}
 			}
 		}
 		
@@ -307,11 +309,14 @@ public class CommandFacade {
 			Overdue overdue = new Overdue(commandObj, taskList, lastOutputTaskList);
 			setOutput(overdue.run());
 			setLastOutputTaskList(taskList);
+			
 			if (overdue.getTaskIdToMark() != -1) {
-				CommandObject undoCommand = constructStatusCommandObject(overdue);
+				if (isUndoAction) {
+					addToList(overdue, redoList);
+				} else {
+					addToList(overdue, undoList);
+				}
 			}
-			// addToUndoList(commandIndex, new TaskObject(pastStatus,
-			// overdue.getTaskIdToMark()));
 		}
 		
 		// Calls the Incomplete function, which marks a specified task as overdue
@@ -319,29 +324,91 @@ public class CommandFacade {
 			Incomplete incomplete = new Incomplete(commandObj, taskList, lastOutputTaskList);
 			setOutput(incomplete.run());
 			setLastOutputTaskList(taskList);
+			
 			if (incomplete.getTaskIdToMark() != -1) {
-				CommandObject undoCommand = constructStatusCommandObject(incomplete);
-				// addToUndoList(commandIndex, new TaskObject(pastStatus,
-				// undone.getTaskIdToMark()));
+				if (isUndoAction) {
+					addToList(incomplete, redoList);
+				} else {
+					addToList(incomplete, undoList);
+				}
 			}
+		}
+		
+		
+		// ------------------------- METHODS TO POPULATE UNDO/REDO LIST -------------------------
+		 	
+		/**
+		 * Method for adding a CommandObject containing add or delete to either the undoList or redoList,
+		 * which is previously determined by the caller. <br>
+		 * For command "add", a "delete" CommandObject will be pushed into the list. The index
+		 * of the previously added TaskObject will also be added into the list to facilitate
+		 * future deletion. <br>
+		 * For command "delete", an "add" CommandObject will be pushed into the list, together 
+		 * with a copy of the task which was just deleted
+		 * @param commandObj The CommandObject to be added to the stated list.
+		 * @param list Either a undoList or a redoList
+		 */
+		private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
+			CommandObject newCommandObj = new CommandObject();
+			
+			if (commandType == INDEX_ADD) {
+				if (index == -1) {
+					// if task was previously added to the end of the list
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
+				} else {
+					// if task was previously added to a pre-determined location in the list
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
+				}
+			} else if (commandType == INDEX_DELETE) {
+				newCommandObj = new CommandObject(INDEX_ADD, commandObj.getTaskObject(), index);
+			} 
+			
+			list.push(newCommandObj);
+		}
+		
+		/**
+		 * Method for adding a CommandObject containing edit to either the undoList or redoList,
+		 * predetermined by the caller of this method. <br>
+		 * 
+		 * @param editOriginal Contains an Edit object which stores information on retrieving
+		 * the original TaskObject prior to the edit.
+		 * @param list Either an undoList or redoList
+		 */
+		private void addToList(Edit editOriginal, Deque<CommandObject> list) {
+			CommandObject newCommandObj = new CommandObject();
+			
+			if (editOriginal.getIsEditTitle()) {
+				String originalTitle = editOriginal.getOriginalTitle();
+				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
+						editOriginal.getEditItemNumber());
+			} else if (editOriginal.getIsEditDate()) {
+				int originalDate = editOriginal.getOriginalDate();
+				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalDate),
+						editOriginal.getEditItemNumber());
+			}
+			
+			list.push(newCommandObj);
 		}
 		
 		/**
 		 * Constructs a CommandObject for either "done", "incomplete" or "overdue" 
 		 * for the purpose of pushing it into the undoList
-		 * @param statusChanger Mark object which performed the modification to the task list
-		 * @return CommandObject which reverses the operation performed previously
+		 * @param mark Mark object which performed the modification to the task list
+		 * @param list Either an undoList or redoList
 		 */
-		private CommandObject constructStatusCommandObject(Mark statusChanger) {
-			CommandObject returnedCommand = new CommandObject();
-			String pastStatus = statusChanger.getStatusToChange();
+		private void addToList(Mark mark, Deque<CommandObject> list) {
+			CommandObject newCommandObj = new CommandObject();
+			
+			String pastStatus = mark.getStatusToChange();
 			int commandIndex = getCommandIndex(pastStatus);
 			if (commandIndex != 0) {
-				returnedCommand.setCommandType(commandIndex);
-				returnedCommand.setTaskObject(statusChanger.getMarkedTask());
+				newCommandObj.setCommandType(commandIndex);
+				newCommandObj.setTaskObject(mark.getMarkedTask());
 			}
-			return returnedCommand;
+			
+			list.push(newCommandObj);
 		}
+		
 		
 		private int getCommandIndex(String pastStatus) {
 			if (pastStatus.equals("overdue")) {
@@ -356,57 +423,6 @@ public class CommandFacade {
 				}
 			}
 			return 0;
-		}
-		
-		// The following methods stores the reverse of the user input in the deque.
-		 	
-		/**
-		 * Method for adding a CommandObject containing add or delete to either the undoList or redoList,
-		 * which is previously determined by the caller. <br>
-		 * For command "add", a "delete" CommandObject will be pushed into the list. The index
-		 * of the previously added TaskObject will also be added into the list to facilitate
-		 * future deletion. <br>
-		 * For command "delete", an "add" CommandObject will be pushed into the list, together 
-		 * with a copy of the task which was just deleted
-		 * @param commandObj The CommandObject to be added to the stated list.
-		 * @param list Either a undoList or a redoList
-		 */
-		private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
-			if (commandType == INDEX_ADD) {
-				if (index == -1) {
-					// if task was previously added to the end of the list
-					list.push(new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size()));
-					//System.out.println("\'Delete " + taskList.size() + "\' added to list");		// DEBUG
-				} else {
-					// if task was previously added to a pre-determined location in the list
-					list.push(new CommandObject(INDEX_DELETE, new TaskObject(), index));
-					//System.out.println("\'Delete " + index + "\' added to list");					// DEBUG
-				}
-			} else if (commandType == INDEX_DELETE) {
-				list.push(new CommandObject(INDEX_ADD, commandObj.getTaskObject(), index));
-			} 
-		}
-		
-		/**
-		 * Method for adding a CommandObject containing edit to either the undoList or redoList,
-		 * predetermined by the caller of this method. <br>
-		 * 
-		 * @param editOriginal Contains an Edit object which stores information on retrieving
-		 * the original TaskObject prior to the edit.
-		 * @param list Either an undoList or redoList
-		 */
-		private void addToList(Edit editOriginal, Deque<CommandObject> list) {
-			CommandObject newCommandObj = new CommandObject();
-			if (editOriginal.getIsEditTitle()) {
-				String originalTitle = editOriginal.getOriginalTitle();
-				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
-						editOriginal.getEditItemNumber());
-			} else if (editOriginal.getIsEditDate()) {
-				int originalDate = editOriginal.getOriginalDate();
-				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalDate),
-						editOriginal.getEditItemNumber());
-			}
-			list.push(newCommandObj);
 		}
 		
 		

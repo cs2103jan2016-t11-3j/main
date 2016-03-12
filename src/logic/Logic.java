@@ -93,6 +93,14 @@ public class Logic {
 		this.lastOutputTaskList = taskList;
 	}
 
+	// Takes in a String argument from UI component
+	public void run(String userInput) {
+		setUserInput(userInput);
+		CommandObject commandObj = callParser();
+		parseCommandObject(commandObj, false, false);
+		TimeOutput.setTimeOutputForGui(taskList);
+	}
+
 	// Loads all existing tasks into the program from Storage
 	private void loadTaskList() {
 		try {
@@ -123,13 +131,6 @@ public class Logic {
 		Overdue.markAllOverdueTasks(taskList);
 	}
 	
-	// Takes in a String argument from UI component
-	public void run(String userInput) {
-		setUserInput(userInput);
-		CommandObject commandObj = callParser();
-		parseCommandObject(commandObj, false, false);
-		TimeOutput.setTimeOutputForGui(taskList);
-	}
 
 	/**
 	 * Calls Parser to parse the user input
