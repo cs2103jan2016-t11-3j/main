@@ -16,9 +16,20 @@ import parser.Constants.TaskType;
  * 2. by/before/at/on DT
  * 3. DT -> ddmmyyy, ddmonthyyyy, hhmm(hrs), hhmm(am/pm)
  * 
- * (tmr/tomorrow)
- * (next/previous){x} (mon/tues/wed/thur/fri/sat/sun)(week)(year)(month)
- * [\\d](days)(month)(year) (later/after/before)
+ * 1. (tmr/tomorrow) (get today date and + 1)
+ * 
+ * 2. (next/previous){x} (mon/tues/wed/thur/fri/sat/sun)(week)(year)(month) 
+ * 		--> count number of next n prev 
+ * 		--> figure out if its day, month or year
+ * 		--> get current date/time
+ * 		--> add the increment
+ * 
+ * 3. [\\d](mins)(hours)(days)(month)(year) (later/after/before/from now)
+ * 		--> identify later/fromnow n etc, 
+ * 		--> identify (mins or hour) (days, month or year)
+ * 		--> convert \\d to integer
+ * 		--> get current time or date
+ * 		--> add the number of *unit* to current -> return 
  * 
  * 
  */
@@ -109,7 +120,7 @@ public class DateTimeProcessor {
 	 * 
 	 */
 	public void setDateTimeString() {
-		String startTimeString, endTimeString, startDateString, endDateString;
+		String startTimeString, endTimeString;
 		if (_startTime < 1000) {
 			startTimeString = "0" + Integer.toString(_startTime);
 		} else {

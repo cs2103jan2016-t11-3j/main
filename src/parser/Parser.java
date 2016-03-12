@@ -44,6 +44,10 @@ public class Parser {
 	private static final String DONE_COMMAND_3 = "completed";
 	private static final int DONE_INDEX = 10;
 	
+	private static final String NOTDONE_COMMAND_1 = "undone";
+	private static final String NOTDONE_COMMAND_3 = "incomplete";
+	private static final int NOTDONE_INDEX = 11;
+	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
@@ -102,7 +106,12 @@ public class Parser {
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
 				|| command.startsWith(DONE_COMMAND_3)) {
 			parseDone(command);
+		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_3)) {
+			parseNotDone(command);
+		} else if (isSearch(command)) {
+			parseSearch(command);
 		} else {
+			System.out.println("hi");
 			parseSearch(command);
 		}
   	}
@@ -122,6 +131,15 @@ public class Parser {
 	 */
 	public void parseDone(String command) {
 		CO.setCommandType(DONE_INDEX);
+		int temp = command.indexOf(" ");
+		command = command.substring(temp + 1);
+		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+		temp = Integer.parseInt(command);
+		CO.setIndex(temp);
+	}
+	
+	public void parseNotDone(String command) {
+		CO.setCommandType(NOTDONE_INDEX);
 		int temp = command.indexOf(" ");
 		command = command.substring(temp + 1);
 		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
@@ -170,7 +188,7 @@ public class Parser {
 		CommandProcessor SP = new SearchProcessor();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
-		if (command.indexOf(" ") == -1) {
+		if (command.indexOf(" ") == -1 && isSearch(command)) {
 			TO.setStartTime(-1);
 			TO.setEndTime(-1);
 			TO.setStartDate(-1);

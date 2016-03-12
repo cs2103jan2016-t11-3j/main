@@ -63,7 +63,7 @@ public class Constants {
     public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
     //has to have am or pm, dont care!
     //removed space btw HH and MM . added fullstop btw hh n mm
-    public static final String REGEX_TIME_ATTRIBUTES = "((?i)[\\d]" + "(min|minutes)(s)?|" + "(hour|hr)(s)?|";
+    public static final String REGEX_TIME_ATTRIBUTES = "((?i)[\\d]" + "(min|minutes)(s)?|" + "(hour|hr)(s)?)";
     
     //possible arrangements for date input
 	public static final String REGEX_COMBINED_DATE_DDMMYYYY = REGEX_DAY_ONLYNUMBER
@@ -122,7 +122,10 @@ public class Constants {
     public static final String REGEX_RELATIVE_DATE_ALL = "(" + REGEX_RELATIVE_DATE_1 
     		+ "|" + REGEX_RELATIVE_DATE_2 + "|" + REGEX_RELATIVE_DATE_3 + ")$";
     
+    public static final String REGEX_RELATIVE_TIME_1 = "("
+            + REGEX_TIME_ATTRIBUTES + " (?i)(later|before|after|from now))";
+    
     public static final String REGEX_FINAL = "(" + REGEX_RELATIVE_DATE_ALL 
-    		+ "|" + REGEX_DATE_TIME_IDENTIFIER + ")";
+    		+ "|" + REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_RELATIVE_TIME_1 + ")";
     
 }

@@ -1,21 +1,13 @@
 package parser;
 
-import java.util.ArrayList;
-
 import common.TaskObject;
 
 public class SearchProcessor extends CommandProcessor {
-	
-	private boolean isPM;
-	
-	private ArrayList<String> list = new ArrayList<String>();
-	public TaskObject TO = new TaskObject();
-	
+	private TaskObject TO = new TaskObject();
 	private DateTimeProcessor dtp = new DateTimeProcessor();
 	
 	public TaskObject process(String input) {
 		input = removeSearchKeyword(input);
-		convertToArray(input);
 		if (isDateTime(input)) {
 			//process and set time
 			dtp.parseDateTime(input, false);
@@ -39,6 +31,8 @@ public class SearchProcessor extends CommandProcessor {
 		TO.setEndTime(_endTime);
 		TO.setEndDate(_endDate);
 		TO.setStartDate(_startDate);
+		TO.setStartDateTime(_startDateTime);
+		TO.setEndDateTime(_endDateTime);
 	}
 	
 	public boolean isDateTime(String input) {
@@ -51,12 +45,6 @@ public class SearchProcessor extends CommandProcessor {
 	
 	public String removeSearchKeyword(String input) {
 		return input.replaceFirst("search ", "");
-	}
-	
-	public void convertToArray(String input) {
-			for (String temp: input.split(" ")) {
-				list.add(temp);
-			}
 	}
 	
 	public void convertToDate(String input) {
@@ -86,21 +74,6 @@ public class SearchProcessor extends CommandProcessor {
 	
 	public int getEndTime() {
 		return _endTime;
-	}
-	
-	//method used to obtain the size of the list for testing 
-	public int getListSize() {
-		return list.size();
-	}
-	
-	//method used to get the ith element in the list for testing
-	public String getListElement(int i) {
-		return list.get(i);
-	}
-	
-	//method used to get the ith element in the list for testing
-	public void clearList() {
-		list.clear();
 	}
  	
  	public void resetAll() {
