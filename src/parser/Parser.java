@@ -230,7 +230,7 @@ public class Parser {
  	/**
  	 * method sets command type for delete commands 
  	 * 
- 	 * @param command  user's input as a string
+ 	 * @param command user's input as a string
  	 */
  	public void parseDelete(String command) {
  		CO.setCommandType(DELETE_INDEX);

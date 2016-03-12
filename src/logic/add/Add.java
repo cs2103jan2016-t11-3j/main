@@ -90,6 +90,7 @@ public class Add {
 		} catch (DateTimeException e) {
 			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
 		}
 		return output;
@@ -105,7 +106,7 @@ public class Add {
 	 */
 	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		LocalDateTime deadline = task.getEndDateTime();
+		LocalDateTime deadline = task.getStartDateTime(); // Depends on parser's allocation
 		if (deadline.isBefore(LocalDateTime.now())) {
 			isOverdue = true;
 		}
@@ -153,23 +154,23 @@ public class Add {
 		LocalDateTime newStart = task.getStartDateTime();
 		LocalDateTime newEnd = task.getEndDateTime();
 
-		if (currentStart.isAfter(newStart)) {
-			if (currentStart.isBefore(newEnd)) {
+		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
+			if (currentStart.isBefore(newEnd) || currentStart.isEqual(newEnd)){
 				return true;
 			}
 		}
-		if (currentEnd.isAfter(newStart)) {
-			if (currentEnd.isBefore(newEnd)) {
+		if (currentEnd.isAfter(newStart) || currentEnd.isEqual(newStart)) {
+			if (currentEnd.isBefore(newEnd) || currentEnd.isEqual(newEnd)) {
 				return true;
 			}
 		}
-		if (newStart.isAfter(currentStart)) {
-			if (newStart.isBefore(currentEnd)) {
+		if (newStart.isAfter(currentStart) || newStart.isEqual(currentStart)) {
+			if (newStart.isBefore(currentEnd) || newStart.isEqual(currentEnd)) {
 				return true;
 			}
 		}
-		if (newEnd.isAfter(currentStart)) {
-			if (newEnd.isBefore(currentEnd)) {
+		if (newEnd.isAfter(currentStart) || newEnd.isEqual(currentStart)) {
+			if (newEnd.isBefore(currentEnd) || newEnd.isEqual(currentEnd)) {
 				return true;
 			}
 		}
