@@ -20,8 +20,8 @@ public class DeleteTest {
 	private TaskObject taskOne = new TaskObject("Hello", 200);
 	private TaskObject taskTwo = new TaskObject("Nonsense", 178);
 	private TaskObject taskThree = new TaskObject("Dinner tonight", 20160226, 1900, "deadline", "incomplete", 24);
-	private CommandObject delete = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 1);
-	private CommandObject deleteFail = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 2);
+	private CommandObject delete = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), 1);
+	private CommandObject deleteFail = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), 2);
 	private TaskObject deleteQuick = new TaskObject("");
 	private Deque<CommandObject> testUndoList = new ArrayDeque<CommandObject> ();
 
@@ -62,7 +62,7 @@ public class DeleteTest {
 	//Failed Quick delete test(One try)
 	public void testQuickFail() {
 		testArray.add(taskOne);
-		testUndoList.push(new CommandObject(Logic.INDEX_ADD, deleteQuick));
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_ADD, deleteQuick));
 		Delete deleteLast = new Delete(testArray, testUndoList);
 		ArrayList<String> actualOutput = deleteLast.run();
 		
@@ -75,7 +75,7 @@ public class DeleteTest {
 	//Successful Quick delete test(One try)
 	public void testQuickSuccess() {
 		testArray.add(taskOne);
-		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_DELETE, deleteQuick));
 		Delete deleteLast = new Delete(testArray, testUndoList);
 		ArrayList<String> actualOutput = deleteLast.run();
 		
@@ -90,11 +90,11 @@ public class DeleteTest {
 		testArray.add(taskOne);
 		testArray.add(taskTwo);
 		testArray.add(taskThree);
-		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_DELETE, deleteQuick));
 		Delete deleteOne = new Delete(testArray, testUndoList);
 		ArrayList<ArrayList<String> > actualOutput = new ArrayList<ArrayList<String> > ();
 		actualOutput.add(deleteOne.run());
-		testUndoList.push(new CommandObject(Logic.INDEX_ADD, new TaskObject()));
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_ADD, new TaskObject()));
 		Delete deleteTwo = new Delete(testArray, testUndoList);
 		// Dummy add command to simulate the effect of deleting a task 
 		actualOutput.add(deleteTwo.run());
@@ -108,5 +108,11 @@ public class DeleteTest {
 		expectedOutput.add(secondExpectedOutput);
 		
 		assertEquals(expectedOutput, actualOutput);
+	}
+	
+	@Test
+	// Delete all
+	public void testDeleteAll() {
+		
 	}
 }
