@@ -45,9 +45,9 @@ public class Redo extends UndoRedo {
 				return "Delete";
 			case INDEX_EDIT :
 				return "Edit";
-			case INDEX_DONE :
-			case INDEX_OVERDUE :
+			case INDEX_COMPLETE :
 			case INDEX_INCOMPLETE :
+			case INDEX_OVERDUE :
 				return "Status change";
 			default :
 				return "";

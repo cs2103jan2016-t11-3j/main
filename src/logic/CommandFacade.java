@@ -93,9 +93,9 @@ public class CommandFacade {
 		// FOR TESTING
 		//System.out.println("isUndoAction = " + isUndoAction + ", undo size = "
 		//+ undoList.size() + ", redo size = " + redoList.size());
-		//System.out.println("commandObj command type = " + commandObj.getCommandType());
+		System.out.println("commandObj command type = " + commandObj.getCommandType());
+		if (taskObj != null) printTaskObjectFields(taskObj);
 		//System.out.println("commandObj index = " + commandObj.getIndex());
-		//if (taskObj != null) printTaskObjectFields(taskObj);
 		// System.out.println();
 	
 		// Clears the redo stack if it is a new command

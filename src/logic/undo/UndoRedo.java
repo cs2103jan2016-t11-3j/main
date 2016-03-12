@@ -27,9 +27,9 @@ public class UndoRedo {
 	protected static final int INDEX_DELETE = 4;
 	protected static final int INDEX_UNDO = 5;
 	protected static final int INDEX_REDO = 6;
-	protected static final int INDEX_DONE = 10;
-	protected static final int INDEX_OVERDUE = 11;
-	protected static final int INDEX_INCOMPLETE = 12;
+	protected static final int INDEX_COMPLETE = 10;
+	protected static final int INDEX_INCOMPLETE = 11;
+	protected static final int INDEX_OVERDUE = 12;
 	
 	protected ArrayList<TaskObject> taskList;
 	protected Deque<CommandObject> undoList;
