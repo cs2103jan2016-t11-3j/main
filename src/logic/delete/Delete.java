@@ -82,10 +82,10 @@ public class Delete {
 	 *            - Current stack of CommandObjects with the purpose of undoing
 	 *            previous actions
 	 */
-	public Delete(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
-		this.commandObj = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
+		this.commandObj = commandObj;
 	}
 
 	/**

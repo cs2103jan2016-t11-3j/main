@@ -226,7 +226,8 @@ public class CommandFacade {
 		}
 		
 		private TaskObject quickDelete() {
-			Delete delete = new Delete(taskList, undoList);
+			CommandObject cmd = new CommandObject(INDEX_DELETE, new TaskObject(), -1);	
+			Delete delete = new Delete(cmd, taskList, undoList);
 			setOutput(delete.run());
 			setLastOutputTaskList(taskList);
 			
