@@ -35,10 +35,13 @@ import java.util.Deque;
 public class Delete {
 
 	// Deletes by searching for the unique taskID
-	private final String MESSAGE_DELETE = "Task deleted from TaskFinder: %1s";
-	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder";
-	private final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
+	private final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s. ";
+	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder. ";
+	private final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable. ";
+	private final String MESSAGE_NULL_POINTER = "Attempted to access a non-existent task. ";
+	private final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
 
+	private final int INDEX_DELETE = 4;
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
 
@@ -81,15 +84,14 @@ public class Delete {
 	public Delete(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
-		this.commandObj = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), -1);
+		this.commandObj = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
 	}
 
 	/**
 	 * Default constructor for Normal Delete.
 	 * 
 	 * @param commandObj
-	 *            - Contains the index to delete from the last outputted task
-	 *            list
+	 *            - Contains the index to delete from the last output task list
 	 * @param taskList
 	 *            - Existing list of tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
@@ -112,10 +114,18 @@ public class Delete {
 	 */
 	public ArrayList<String> run() {
 		assert (!taskList.isEmpty());
-		if (commandObj.getIndex() == -1) {
-			runQuickDelete();
-		} else {
-			runNormalDelete();
+		try {
+			if (commandObj.getIndex() == -1) {
+				runQuickDelete();
+			} else {
+				if (commandObj.getIndex() == 0) {
+					runDeleteAll();
+				} else {
+					runNormalDelete();
+				}
+			}
+		} catch (NullPointerException e) {
+			output.add(MESSAGE_ERROR + MESSAGE_NULL_POINTER);
 		}
 		return output;
 	}
@@ -128,7 +138,8 @@ public class Delete {
 	private void runQuickDelete() {
 		if (undoList.isEmpty()) {
 			createErrorOutput();
-		} else if (undoList.peek().getCommandType() == Logic.INDEX_DELETE) {
+		} else if (undoList.peek().getCommandType() == INDEX_DELETE) {
+			assert (!taskList.isEmpty());
 			hasDeletedInternal = removeTask(taskList.size() - 1);
 			hasDeletedExternal = deleteExternal();
 			if (hasDeletedInternal && hasDeletedExternal) {
@@ -142,17 +153,19 @@ public class Delete {
 	}
 
 	private boolean removeTask(int index) {
+		assert (index > 0 && index < taskList.size());
 		try {
 			setTaskName(taskList.get(index).getTitle());
 			setRemovedTask(taskList.get(index));
 			taskList.remove(index);
 			return true;
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			return false;
 		}
 	}
 
-	private void runNormalDelete() {
+	private void runNormalDelete() throws NullPointerException {
+		assert (!taskList.isEmpty());
 		hasDeletedInternal = deleteInternal();
 		if (hasDeletedInternal) {
 			hasDeletedExternal = deleteExternal();
@@ -164,7 +177,7 @@ public class Delete {
 		}
 	}
 
-	private boolean deleteInternal() {
+	private boolean deleteInternal() throws NullPointerException {
 		obtainTaskId();
 		if (taskIdToDelete != -1) {
 			for (int i = 0; i < taskList.size(); i++) {
@@ -198,6 +211,15 @@ public class Delete {
 		}
 		return true;
 	}
+	
+	private void runDeleteAll() {
+		for(int i = taskList.size()-1; i >= 0; i--) {
+			taskList.remove(i);
+		}
+		assert(taskList.isEmpty());
+		deleteExternal();
+		createDeletedAllOutput();
+	}
 
 	private void createOutput() {
 		String text = String.format(MESSAGE_DELETE, taskName);
@@ -212,6 +234,10 @@ public class Delete {
 	private void createQuickDeleteUnavailableErrorOutput() {
 		removedTask = null;
 		output.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
+	}
+	
+	private void createDeletedAllOutput() {
+		output.add(MESSAGE_DELETED_ALL);
 	}
 
 	// GETTERS AND SETTERS
