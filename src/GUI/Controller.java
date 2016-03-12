@@ -49,9 +49,7 @@ public class Controller implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
-	private TableColumn<TaskObject, Integer> startTimeColumn;
-	@FXML
-	private TableColumn<TaskObject, Integer> endTimeColumn;
+	private TableColumn<TaskObject, String> timeColumn;
 	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
@@ -129,8 +127,7 @@ public class Controller implements Initializable {
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
 		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
 		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
-		startTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startTime"));
-		endTimeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endTime"));
+		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
 	}
 
 	public void populateIndex() {

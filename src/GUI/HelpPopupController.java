@@ -23,10 +23,13 @@ import javafx.stage.Stage;
 public class HelpPopupController implements Initializable {
 	
 	static Stage helpStage = new Stage();
-	static ArrayList<String> displayList;
-	  
+	static ArrayList<String> displayList = Controller.getHelpList(1);
+	static int page = 1;
+	
 	@FXML
 	private TextFlow helpBox;
+	@FXML
+	private TextArea helpText;
 	
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
@@ -35,11 +38,17 @@ public class HelpPopupController implements Initializable {
 		}
 	}
 	
-	@FXML 
+	@FXML
 	public void handleArrowPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.RIGHT) {
-			
+		System.out.println("rightarrow");
+		if (event.getCode() == KeyCode.RIGHT && page < 7) {
+			page++;
 		}
+		if (event.getCode() == KeyCode.LEFT && page > 1) {
+			page--;		
+		}
+		displayList = Controller.getHelpList(page);	
+		setHelpContent();
 	}
 	
 	@Override
@@ -48,11 +57,12 @@ public class HelpPopupController implements Initializable {
 	}
 	
 	private void setHelpContent() {
-		displayList = Controller.getHelpList(1);
+		
+		helpText.clear();
 		for (int i = 0; i < displayList.size(); i++) {
-			Text line = new Text(displayList.get(i) + "\n");
-			helpBox.getChildren().add(line);
+			helpText.appendText(displayList.get(i) + "\n");
 		}
+		
 	}
 
 	public void startHelp() throws IOException {		
