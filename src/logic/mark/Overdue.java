@@ -62,7 +62,7 @@ private final String MESSAGE_OVERDUE = "Task: %1s is marked as overdue";
 	}
 	
 	private static boolean performCheckOverdue(TaskObject task) {
-		LocalDateTime deadline = task.getEndDateTime();
+		LocalDateTime deadline = task.getStartDateTime();
 		if(deadline.isBefore(LocalDateTime.now())) {
 			return true;
 		}
