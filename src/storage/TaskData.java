@@ -123,10 +123,14 @@ public class TaskData {
         printWriter.print(DELIMITER);
         printWriter.print(task.getTaskId());
         printWriter.print(DELIMITER);
-        printWriter.print(task.getStartDateTime().format(formatter));
-        printWriter.print(DELIMITER);
-        printWriter.print(task.getEndDateTime().format(formatter));
-        printWriter.print(DELIMITER);
+        if(task.getStartDateTime() != null) {
+            printWriter.print(task.getStartDateTime().format(formatter));
+            printWriter.print(DELIMITER);
+        }
+        if(task.getEndDateTime() != null) {
+            printWriter.print(task.getEndDateTime().format(formatter));
+            printWriter.print(DELIMITER);
+        }
         printWriter.print(NEW_LINE);
         printWriter.close();
     }
