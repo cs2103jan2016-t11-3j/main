@@ -1,6 +1,7 @@
 package storage;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
@@ -13,26 +14,17 @@ public interface Storage {
      * <p>
      * @param taskList - The list of tasksObjects to be written
      * @return 
-     * @throws IOException writing to default save location/Unable to locate default location
-     * @throws NoSuchFileException If existing default location is invalid
+     * @throws IOException Error with saving file
      */
-    public abstract void save(ArrayList<TaskObject> taskList) throws NoSuchFileException, IOException;
+    public abstract void save(ArrayList<TaskObject> taskList) throws IOException;
 
     /**
      * Loads all saved tasks into storage from existing specified file.
      * <p>
      * @return List of TaskObjects
      * @throws IOException Error reading from Existing File
-     * @throws NoSuchFileException Current save location cannot be accessed/invalid
      */
-    public abstract ArrayList<TaskObject> load() throws NoSuchFileException, IOException;
-
-    /**
-     * Returns loaded tasks stored in storage
-     * <p>
-     * @return taskList - ArrayList of taskObjects stored in storage
-     */
-    public abstract ArrayList<TaskObject> getTaskList();
+    public abstract ArrayList<TaskObject> load() throws IOException;
 
     /**
      * Creates a copy of the file containing all stored task information at the specified directory.
@@ -42,25 +34,19 @@ public interface Storage {
      * <p>
      * @param directory Path of directory to create the copy in
      * @param fileName Name of file to be created
-     * @return Status
-     * <li> 0 - If successful
-     * <li> 1 - If specified directory is invalid
-     * <li> 2 - if unable to write specified file
-     * <li> 3 - If no tasks to write
+     * @throws IOException Error Copying Existing Files
+     * @throws InvalidPathException  The path specified cannot be used
      */
-    public abstract int createCopy(String directory, String fileName);
+    public abstract void createCopy(String directory, String fileName) throws InvalidPathException, IOException;
 
     /**
      * <p>
      * @param directory
-     * @return status
-     * <li> 0 - If successful
-     * <li> 1 - If unable to create copy at new location
-     * <li> 2 - If no existing file to copy
-     * <li> 3 - Cannot delete existing file
-     * <li> 4 - Specified directory is invalid
-     * <li> 5 - Error writing to specified directory
+     * @throws IOException Error writing to specified directory
+     * @throws InvalidPathException The specified directory cannot be used
      */
-    public abstract int changeSaveLocation(String directory);
+    public abstract void changeSaveLocation(String directory) throws InvalidPathException, IOException;
+
+    
 
 }

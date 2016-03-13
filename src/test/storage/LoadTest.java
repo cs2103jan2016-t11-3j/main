@@ -43,8 +43,7 @@ public class LoadTest {
             printWriter.print("task2;0;0;0;0;;;2;");
             printWriter.print(NEW_LINE);
             fileWriter.close();
-            storageTest.load();
-            loadedTasks = storageTest.getTaskList();
+            loadedTasks = storageTest.load();
             Files.delete(Paths.get(TEST_FILE));
         }
         catch (IOException e){
@@ -64,13 +63,25 @@ public class LoadTest {
             noFile = true;
         }
         assertEquals("Length",  0 , loadedTasks.size());
-        loadedTasks = storageTest.getTaskList();
+        loadedTasks = storageTest.load();
         assertEquals("Length",  0 , loadedTasks.size());
         assertEquals("ExceptionNoFileCaught", false, noFile);
         }
     
+    @Test 
+    public void loadFromEmpty() throws IOException {
+            FileWriter fileWriter = new FileWriter(TEST_FILE, false);
+            fileWriter.close();
+            fileWriter = new FileWriter(TEST_FILE, false);
+            fileWriter.close();
+            storageTest.load();
+            loadedTasks = storageTest.load();
+            Files.delete(Paths.get(TEST_FILE));
+            assertEquals("Length", 0, loadedTasks.size());
+    }
+    
     @Test
-    public void testInvalidDefaultPath() {
+    public void testInvalidDefaultPath() throws NoSuchFileException, IOException {
         int exception = 0;
         try {
         FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
@@ -94,7 +105,7 @@ public class LoadTest {
             exception = 4;
         }
         assertEquals("Length",  0 , loadedTasks.size());
-        loadedTasks = storageTest.getTaskList();
+        loadedTasks = storageTest.load();
         assertEquals("Length",  0 , loadedTasks.size());
         assertEquals("ExceptionFailToReadPath", 2, exception);
     }

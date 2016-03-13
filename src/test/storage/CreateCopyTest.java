@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -69,20 +70,29 @@ public class CreateCopyTest {
         Path path = Paths.get(dir, fileName);
         taskList.clear();
         expectedDataList.clear();;
-        int status = testStorage.createCopy( dir , fileName);
+        testStorage.createCopy( dir , fileName);
         assertEquals(dir + "exists", false , Files.exists(path));
-        assertEquals("NoExisting",  1, status);
     }
 
     @Test
     public void testInvalidDir() throws IOException {
         String dir = "fail";
         taskList = dummy.getTaskList(size);
-        testStorage.save(taskList);
+        try {
+            testStorage.save(taskList);
+        } catch (NoSuchFileException e1) {
+            // TODO Auto-generated catch block
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+        }
         Path path = Paths.get(dir, fileName);
-        int status = testStorage.createCopy( dir , fileName);
+        try {
+            testStorage.createCopy( dir , fileName);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            
+        }
         assertEquals(dir + "exists", false , Files.exists(path));
-        assertEquals("NoExisting",  2, status);
         Files.delete(defaultPath);
     }
 

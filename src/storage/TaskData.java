@@ -20,43 +20,7 @@ public class TaskData {
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
 
-    /**
-     *
-     * @param taskList
-     * @throws NoSuchFileException Default location invalid
-     * @throws IOException Unable to edit existing file/Unable read default location
-     */
-    static void overWriteList(ArrayList<TaskObject> taskList) throws NoSuchFileException , IOException {
-        try {
-            deleteData();
-        } catch (NoSuchFileException e) {
-            // Nothing to delete
-        }
-        String path = null;
-        path = FilePath.getPath();   
-        writeList(taskList, path);
-    }
-    /**
-     *
-     * @return
-     * @throws NoSuchFileException Specified default file does not exist
-     * @throws IOException Error reading from existing file
-     */
-    static ArrayList<String> readData() throws NoSuchFileException, IOException {
-        ArrayList<String> taskDataList = new ArrayList<String>();
-        String filePath = FilePath.getPath();
-        try {
-            BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
-            String line = null;
-            while ((line = fileReader.readLine()) != null) {
-                taskDataList.add(line);
-            }
-            fileReader.close();
-        } catch (FileNotFoundException e) {
-            return taskDataList;
-        }
-        return taskDataList;
-    }
+    
 
     /**
      * Writes given tasks into specified path
@@ -72,12 +36,57 @@ public class TaskData {
         }
     }
 
+    
+    /**
+     * Retrieves the tasks stored from the specified filePath.
+     * <p>
+     * @param filePath Location to read the stored data from
+     * @return ArrayList of TaskObjects stored in disk
+     * @throws IOException 
+     */
+    static ArrayList<TaskObject> getTasks(String filePath) throws IOException {
+        ArrayList<String> taskDataList = readData(filePath);
+        ArrayList<TaskObject> taskList = parseData(taskDataList);
+        return taskList;
+    }
+    
+
+    /**
+     * Deletes the file containing Stored Information
+     * @param filePath 
+     * @throws NoSuchFileException No existing file
+     * @throws IOException Error deleting file
+     */
+    static void deleteData(String filePath) throws NoSuchFileException , IOException{
+        Path path = Paths.get(filePath);
+        Files.delete(path);
+    }
+    
+    /**
+     *
+     * @param filePath 
+     * @return
+     * @throws IOException Error reading from existing file
+     */
+    private static ArrayList<String> readData(String filePath) throws IOException {
+        ArrayList<String> taskDataList = new ArrayList<String>();
+        BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
+        String line = null;
+        while ((line = fileReader.readLine()) != null) {
+            taskDataList.add(line);
+        }
+        fileReader.close();
+        return taskDataList;
+    }
+
+    
+    
     /**
      * Convert task data into task objects
      * @param taskDataList
      * @return
      */
-    static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
+    private static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         for (String taskData : taskDataList) {
             String[] taskAttributes = taskData.split(DELIMITER);
@@ -88,26 +97,13 @@ public class TaskData {
     }
 
     /**
-     * Deletes the file containing Stored Information
-     * @throws NoSuchFileException No existing file
-     * @throws IOException Error deleting file
+     * 
+     * @param task
+     * @param filePath
+     * @throws IOException
      */
-    static void deleteData() throws NoSuchFileException , IOException{
-        Path path = Paths.get(FilePath.getPath());
-        try {
-            Files.delete(path);
-        } catch (NoSuchFileException x) {
-            // System.err.format("%s: no such" + " file or directory%n", path);
-        } catch (DirectoryNotEmptyException x) {
-            // Not to be called on Directories
-        } catch (IOException x) {
-            // File permission problems are caught here.
-            System.err.println(x);
-        }
-    }
-
     private static void writeTask(TaskObject task, String filePath) throws IOException {
-        FileWriter fileWriter = new FileWriter(filePath , true);
+        FileWriter fileWriter = new FileWriter("data.csv" , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(task.getTitle().replace(";", ","));
         printWriter.print(DELIMITER);
@@ -128,4 +124,6 @@ public class TaskData {
         printWriter.print(NEW_LINE);
         printWriter.close();
     }
+    
+
 }
