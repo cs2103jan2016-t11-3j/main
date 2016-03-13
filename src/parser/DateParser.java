@@ -1,6 +1,8 @@
 package parser;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class focuses on breaking down a string for date into the relevant components
@@ -67,6 +69,8 @@ public class DateParser {
 	private int startDate = -1;
 	private int endDate = -1;
 	
+	private String dateString;
+	
 	/**
 	 * This method takes in a string input returns start date and end date 
 	 * called by command processor objects. 
@@ -75,23 +79,17 @@ public class DateParser {
 	 * @param isForSearch   boolean to show if date is ran by search processor
 	 */
 	public void processDate(String input, boolean isForSearch) {
-		input = input.replaceFirst("date:", "");
-		convertToArray(input);
-		if (list.size() == 2 || list.size() == 1) {
-			//event
-			furtherProcessDate();
-		} else if (list.isEmpty()) {
-			//floating task
-			//start and end date = -1
+		if (!input.isEmpty()) {
+			convertToArray(input);
+			furtherProcessDate(input);
+			if (start_month == -1) {
+				start_month = end_month;
+			}
+			if (!isForSearch) {
+				setDates();
+			}
 		}
-		
-		if (start_month == -1) {
-			start_month = end_month;
-		}
-		
-		if (!isForSearch) {
-			setDates();
-		}
+			
 	}
 	
 	/**
@@ -125,18 +123,15 @@ public class DateParser {
 	 * 2. "slash" format:     4/5-5/6
 	 * 3. incomplete format:  3 - 6 june 2015
 	 */
-	public void furtherProcessDate() {
-		for (int i = 0; i < list.size(); i++) {
-			if (hasMonth(list.get(i))) {
-				String temp = null;
-				setMonth(list.get(i), i);
-				temp = removeMonth(list.get(i));
-				splitStringAndProcess(temp, i);
-			} else if (hasSlash(list.get(i))) {
-				setMonthWithSlash(list.get(i), i);
-			} else {
-				processMonthlessDate(list.get(i), i);
-			}
+	public void furtherProcessDate(String input) {
+		if (hasMonth(input)) {
+			setMonth(input);
+			input = removeMonth(input);
+			splitStringAndProcess(input);
+		} else if (hasSlash(input)) {
+			setMonthWithSlash(input);
+		} else {
+			//processMonthlessDate();
 		}
 	}
 	
@@ -146,19 +141,9 @@ public class DateParser {
 	 * @param input    string element in array list representing one date
 	 */
 	public boolean hasMonth(String input) {
-		input = input.toLowerCase();
-		if (input == MONTH_1_1 || input.contains(MONTH_1_2) || 
-				input == MONTH_2_1 || input.contains(MONTH_2_2) || 
-				input == MONTH_3_1 || input.contains(MONTH_3_2) ||
-				input == MONTH_4_1 || input.contains(MONTH_3_2) ||
-				input.contains(MONTH_5_1) || input == MONTH_6_1 ||
-				input.contains(MONTH_6_2) || input == MONTH_7_1 ||
-				input.contains(MONTH_7_2) || input == MONTH_8_1 ||
-				input.contains(MONTH_8_2) || input == MONTH_9_1 ||
-				input.contains(MONTH_9_2) || input == MONTH_10_1 ||
-				input.contains(MONTH_10_2) || input == MONTH_11_1 ||
-				input.contains(MONTH_11_2) || input == MONTH_12_1 ||
-				input.contains(MONTH_12_2)) {
+		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_MONTHS_TEXT);
+		Matcher matcher = dateTimePattern.matcher(input);
+		if (matcher.find()){
 			return true;
 		} else {
 			return false;
@@ -171,13 +156,8 @@ public class DateParser {
 	}
 	
 	//
-	public void setMonth(String input, int i) {
-		if (i == 0) {
+	public void setMonth(String input) {
 			start_month = setMonthInDataProcessor(input);
-			end_month = start_month;
-		} else if (i == 1) {
-			end_month = setMonthInDataProcessor(input);
-		}
 	}
 	
 	//method removes all the characters in the date
@@ -192,7 +172,7 @@ public class DateParser {
 	 * @param i       indicates if the date is start or end
  	 * 
 	 */
-	public void splitStringAndProcess(String input, int i) {
+	public void splitStringAndProcess(String input) {
 		ArrayList<String> templist = new ArrayList<String>();
 		int _day = -1, _year = -1;
 		if (input.startsWith(" ")) {
@@ -211,15 +191,8 @@ public class DateParser {
 		}
 		
 		//set attributes
-		if (i == 0) {
-			start_day = _day;
-			end_day = _day;
-			start_year = _year;
-			end_year = _year;
-		} else if (i == 1) {
-			end_day = _day;
-			end_year = _year;
-		}
+		start_day = _day;
+		start_year = _year;
 	}
 	
 	/**
@@ -228,7 +201,7 @@ public class DateParser {
 	 * @param input  input by user for one date, in dd/mm/yyyy format
 	 * @param i      indicator if date is start or end date
 	 */
-	public void setMonthWithSlash(String input,int i) {
+	public void setMonthWithSlash(String input) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		//split date into new arraylist
 		for (String temp : input.split("/")) {
@@ -238,21 +211,11 @@ public class DateParser {
 			list.add(tempInt);
 		}
 		
-		if (i == 0) {
-			start_day = list.get(0);
-			end_day = start_day;
-			start_month = list.get(1);
-			end_month = start_month;
-			if (list.size() == 3) {
-				start_year = list.get(2);
-				end_year = start_year;
-			}
-		} else if (i == 1) {
-			end_day = list.get(0);
-			end_month = list.get(1);
-			if (list.size() == 3) {
-				end_year = list.get(2);
-			}
+		
+		start_day = list.get(0);
+		start_month = list.get(1);
+		if (list.size() == 3) {
+			start_year = list.get(2);
 		}
 	}
 	
@@ -325,30 +288,28 @@ public class DateParser {
 	
 	//method sets the date in yyyymmdd format
 	public void setDates() {
-		if (start_month == -1) {
-			end_month = start_month;
-		}
-		
-		if (end_year == -1) {
-			end_year = DEFAULT_YEAR;
-		} else if (end_year < 100) {
-			end_year = 2000 + end_year;
-		}
-		
-		if (start_year == -1) {
-			start_year = end_year;
-		} else if (start_year < 100) {
+		if (start_year < 100 && start_year != -1) {
 			start_year = 2000 + start_year;
+		} else if (start_year == -1) {
+			start_year = DEFAULT_YEAR;
 		}
 		
 		if (start_day != -1 && start_month != -1 && start_year != -1) {
 			startDate = start_day + start_month * 100 + start_year * 10000;
 		}
-		
-		if (end_day != -1 && end_month != -1 && end_year != -1) {
-			endDate = end_day + end_month * 100 + end_year * 10000;
-		}		
+		dateString = Integer.toString(startDate); //now insert the damn dashes
+	
+		dateString = addDashes(dateString);
 	}
+	
+	private String addDashes(String input) {
+		String year, month, day;
+		year = input.substring(0,4);
+		month = input.substring(4,6);
+		day = input.substring(6);
+		return year + "-" + month + "-" + day;
+	}
+	
 	
 	//this method returns the date for search query
 	public int getSearchDate() {
@@ -382,6 +343,11 @@ public class DateParser {
 	public int getEndDate() {
 		return endDate;
 	}
+	
+	public String getDateString() {
+		return dateString;
+	}
+
 	
 	//method used to obtain the size of the list for testing 
 	public int getListSize() {

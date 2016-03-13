@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import parser.Constants.TaskType;
@@ -41,11 +43,18 @@ public class DateTimeParser {
 	private int _startDate = -1;
 	private int _endDate = -1;
 	
-	String startDT;
-	String endDT;
+	private String startT;
+	private String endT;
+	private String startD;
+	private String endD;
 	
-	LocalDateTime startDateTime;
-	LocalDateTime endDateTime;
+	private LocalDate startDate = null;
+	private LocalDate endDate = null;
+	private LocalTime startTime = null;
+	private LocalTime endTime = null;
+	
+	private LocalDateTime startDateTime = null;
+	private LocalDateTime endDateTime = null;
 	
 	
 	List<String> dtlist = new ArrayList<String>();
@@ -70,7 +79,7 @@ public class DateTimeParser {
 				separateDateTime(input, true);
 				break;
 			}
-			setLocalDateTime();
+			setLocalDateTime(isForAdd, tasktype);
 		}
 	}
 	
@@ -92,61 +101,7 @@ public class DateTimeParser {
 		default:
 			break;
 		}
-		setLocalDateTime();
-	}
-	
-	/**
-	 * 
-	 */
-	public void setLocalDateTime() {
-		if (_startTime == -1 || _endTime == -1 || _startDate == -1 || _endDate ==-1) {
-			setUniqueLocalDateTime();
-		} else {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmm");
-			setDateTimeString();
-			startDateTime = LocalDateTime.parse(startDT, formatter);
-			if(_endTime != -1 || _endDate != -1) {
-				endDateTime = LocalDateTime.parse(endDT, formatter);
-			}
-		}
-	}
-	
-	public void setUniqueLocalDateTime() {
-		//create unique datetime formatters
-	}
-	
-	/**
-	 * this method will convert date and time into a string in the same format as the formatter
-	 * 
-	 */
-	public void setDateTimeString() {
-		String startTimeString, endTimeString;
-		if (_startTime < 1000) {
-			startTimeString = "0" + Integer.toString(_startTime);
-		} else {
-			startTimeString = Integer.toString(_startTime);
-		}
-		
-		if (_endTime < 1000) {
-			endTimeString = "0" + Integer.toString(_endTime);
-		} else {
-			endTimeString = Integer.toString(_endTime);
-		}
-		
-		startDT = Integer.toString(_startDate) + " " + startTimeString;
-		endDT = Integer.toString(_endDate) + " " + endTimeString;
-	}
-	
-	public TaskType getTaskType(String input) {
-		if (input.matches(Constants.REGEX_DEADLINE_IDENTIFIER)) {
-			return TaskType.deadline;
-		} else if (input.matches(Constants.REGEX_EVENT_IDENTIFIER)) {
-			return TaskType.event;
-		} else if (input.matches(Constants.REGEX_POINT_TASK_IDENTIFIER)) {
-			return TaskType.deadline;
-		} else {
-			return TaskType.floating;
-		}
+		setLocalDateTime(false, tasktype);
 	}
 	
 	/**
@@ -175,8 +130,6 @@ public class DateTimeParser {
 			_time = getTrimmedString(input, timeMatcher.start(), timeMatcher.end());
 			_date = input.replaceAll(_time, "").trim();
 		} else {
-			//_date = getTrimmedString(input, dateMatcher.start(), dateMatcher.end());
-			//_time = input.replaceAll(_date, "").trim();
 			_date = input;
 		}
 		
@@ -187,13 +140,68 @@ public class DateTimeParser {
 		TP.processTime(_time);
 		
 		if (isStart) {
-			_startTime = TP.getStartTime();
+			_startTime = TP.getTime();
 			_startDate = DP.getStartDate();
+			startT = TP.getTimeString();
+			startD = DP.getDateString();
 		} else {
-			_endTime = TP.getStartTime();
+			_endTime = TP.getTime();
 			_endDate = DP.getStartDate();
+			endT = TP.getTimeString();
+			endD = DP.getDateString();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	public void setLocalDateTime(boolean isForAdd, TaskType task) {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		
+		if (isForAdd) {
+			if (task.toString() == "event" && _endDate == -1) { 
+				endD = startD; //for special case of lazy ppl not typing end date
+			}
+			startDate = LocalDate.parse(startD, dateFormatter);
+			startTime = LocalTime.parse(startT, timeFormatter);
+			if(task.toString() == "event") {
+				endDate = LocalDate.parse(endD, dateFormatter);
+				endTime = LocalTime.parse(endT, timeFormatter);
+				endDateTime = LocalDateTime.of(endDate, endTime);
+			}
+		} else {
+			setOtherLocalDateTime(timeFormatter, dateFormatter); //for searches and edits
+			}
+		startDateTime = LocalDateTime.of(startDate, startTime);
+	}
+	
+	public void setOtherLocalDateTime(DateTimeFormatter timeF, DateTimeFormatter dateF) {
+		if (_startDate == -1 && _startTime != -1) { // set weird date
+			startDate = LocalDate.MAX;
+			startTime = LocalTime.parse(startT, timeF);
+		} else if (_startDate != -1 && _startTime == -1) { //set weird time
+			startTime = LocalTime.MAX;
+			startDate = LocalDate.parse(startD, dateF);
+		} else {
+			startDate = LocalDate.parse(startD, dateF);
+			startTime = LocalTime.parse(startT, timeF);
+		}
+	}
+	
+	public TaskType getTaskType(String input) {
+		if (input.matches(Constants.REGEX_DEADLINE_IDENTIFIER)) {
+			return TaskType.deadline;
+		} else if (input.matches(Constants.REGEX_EVENT_IDENTIFIER)) {
+			return TaskType.event;
+		} else if (input.matches(Constants.REGEX_POINT_TASK_IDENTIFIER)) {
+			return TaskType.deadline;
+		} else {
+			return TaskType.floating;
+		}
+	}
+	
+	
 	
 	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
 	private String cleanString(String input) {

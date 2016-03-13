@@ -19,7 +19,7 @@ public class ParserTest {
 		assertEquals(900, tempParser.getEndTime());
 		assertEquals(20160229, tempParser.getStartDate());
 		assertEquals(20160229, tempParser.getEndDate());
-		assertEquals("undone", tempParser.getStatus());
+		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		
 		tempParser.allocate("search 7/9/2016");
@@ -27,7 +27,23 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(20160907, tempParser.getStartDate());
-		assertEquals(20160907, tempParser.getEndDate());
+		assertEquals(-1, tempParser.getEndDate());
+		reset();
+		
+		tempParser.allocate("aagadfgad");
+		assertEquals("aagadfgad", tempParser.getTask());
+		assertEquals(-1, tempParser.getStartTime());
+		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
+		reset();
+		
+		tempParser.allocate("7.13pm");
+		assertEquals("7.13pm", tempParser.getTask());
+		assertEquals(1913, tempParser.getStartTime());
+		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
 		reset();
 		
 		tempParser.allocate("edit 2 755pm");
@@ -83,17 +99,18 @@ public class ParserTest {
 		tempParser.parseSearch("search 8pm");
 		//assertEquals("8pm", tempParser.getTask());
 		assertEquals(2000, tempParser.getStartTime());
-		assertEquals(2000, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
 		
-		tempParser.parseSearch("search 7/9/1403");
+		
+		tempParser.parseSearch("search 7/9/1903");
 		//assertEquals("7/9/1403", tempParser.getTask());
 		assertEquals(-1, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(14030907, tempParser.getStartDate());
-		assertEquals(14030907, tempParser.getEndDate());
+		assertEquals(19030907, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
 		reset();
 	}
 
