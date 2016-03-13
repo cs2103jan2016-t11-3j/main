@@ -9,13 +9,13 @@ import common.TaskObject;
 
 //TODO -> set task type
 
-public class AddParser extends CommandProcessor {
+public class AddParser extends CommandParser {
 	
 	public ArrayList<String> list = new ArrayList<String>();
 	public ArrayList<Integer> dateList = new ArrayList<Integer>();
 	
-	private TimeProcessor TP = new TimeProcessor();
-	private DateProcessor DP = new DateProcessor();
+	private TimeParser TP = new TimeParser();
+	private DateParser DP = new DateParser();
 	
 	public TaskObject TO = new TaskObject();
 	
@@ -43,7 +43,7 @@ public class AddParser extends CommandProcessor {
 		}
 		
 		if (identifier != null) {
-			DateTimeProcessor dtp = new DateTimeProcessor();
+			DateTimeParser dtp = new DateTimeParser();
 			dtp.parseDateTime(identifier, true);
 			setDateTime(dtp);
         }
@@ -51,7 +51,7 @@ public class AddParser extends CommandProcessor {
 		_task = input.replaceFirst(Constants.REGEX_ADD, "").trim();
 	}
 	
-	private void setDateTime(DateTimeProcessor dtp) {
+	private void setDateTime(DateTimeParser dtp) {
 		_startDate = dtp.getStartDate();
 		_endDate = dtp.getEndDate();
 		_startTime = dtp.getStartTime();

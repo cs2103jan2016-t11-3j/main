@@ -34,7 +34,7 @@ import parser.Constants.TaskType;
  * 
  */
 
-public class DateTimeProcessor {
+public class DateTimeParser {
 	
 	private int _startTime = -1;
 	private int _endTime = -1;
@@ -166,8 +166,8 @@ public class DateTimeProcessor {
 		Matcher timeMatcher = time.matcher(input);
 		//Matcher rdateMatcher = relativedate.matcher(input);
 		
-		DateProcessor DP = new DateProcessor();
-		TimeProcessor TP = new TimeProcessor();
+		DateParser DP = new DateParser();
+		TimeParser TP = new TimeParser();
 		
 		String _date = "", _time = "";
 		

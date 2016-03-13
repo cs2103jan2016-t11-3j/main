@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import common.TaskObject;
 
-public abstract class CommandProcessor {
+public abstract class CommandParser {
 	
 	protected static final String TIME_AM_1 = "AM";
 	protected static final String TIME_AM_2 = "A.M.";

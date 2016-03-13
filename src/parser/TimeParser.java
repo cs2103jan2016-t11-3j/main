@@ -2,7 +2,7 @@ package parser;
 
 import java.util.ArrayList;
 
-public class TimeProcessor {
+public class TimeParser {
 	private static final String TIME_AM_1 = "AM";
 	private static final String TIME_AM_2 = "A.M.";
 	private static final String TIME_AM_3 = "am";

@@ -2,9 +2,9 @@ package parser;
 
 import common.TaskObject;
 
-public class SearchProcessor extends CommandProcessor {
+public class SearchParser extends CommandParser {
 	private TaskObject TO = new TaskObject();
-	private DateTimeProcessor dtp = new DateTimeProcessor();
+	private DateTimeParser dtp = new DateTimeParser();
 	
 	public TaskObject process(String input) {
 		input = removeSearchKeyword(input);
@@ -48,7 +48,7 @@ public class SearchProcessor extends CommandProcessor {
 	}
 	
 	public void convertToDate(String input) {
-		DateProcessor DP = new DateProcessor();
+		DateParser DP = new DateParser();
 		DP.processDate(input, true);
 		_startDate = DP.getSearchDate();
 		_endDate = _startDate;

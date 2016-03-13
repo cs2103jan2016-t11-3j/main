@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
-public class EditProcessor extends CommandProcessor {
+public class EditParser extends CommandParser {
 	
 	private ArrayList<String> list = new ArrayList<String>();
 	
@@ -13,7 +13,7 @@ public class EditProcessor extends CommandProcessor {
 	//private DateProcessor DP = new DateProcessor();
 	private TaskObject TO = new TaskObject();
 
-	public DateTimeProcessor dtp = new DateTimeProcessor();
+	public DateTimeParser dtp = new DateTimeParser();
 	private int _index = -1;
 	
 	/**

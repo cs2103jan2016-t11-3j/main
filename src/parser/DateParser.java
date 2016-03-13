@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * 
  */
 
-public class DateProcessor {
+public class DateParser {
 	
 	// possible words that the user may input
 	private static final String MONTH_1_1 = "january";
