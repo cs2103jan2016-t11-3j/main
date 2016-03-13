@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -7,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
    <children>
       <Label onKeyPressed="#handleEscPressed" text="Help">
          <padding>
@@ -17,7 +19,7 @@
             <Font name="Agency FB Bold" size="30.0" />
          </font>
       </Label>
-      <TextFlow fx:id="helpBox" onKeyPressed="#handleEscPressed" prefHeight="339.0" prefWidth="0.0" style="-fx-background-color: orange; -fx-background-radius: 1.2em;">
+      <TextFlow fx:id="helpBox" onKeyPressed="#handleEscPressed" prefHeight="420.0" prefWidth="0.0" style="-fx-background-color: orange; -fx-background-radius: 1.2em;">
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
@@ -25,7 +27,10 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
          </VBox.margin>
          <children>
-            <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="316.0" prefWidth="556.0" style="-fx-background-color: orange;" />
+            <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="412.0" prefWidth="558.0" style="-fx-background-color: orange;" wrapText="true">
+               <font>
+                  <Font name="Agency FB" size="18.0" />
+               </font></TextArea>
          </children></TextFlow>
    </children>
 </VBox>

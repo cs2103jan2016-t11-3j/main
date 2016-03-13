@@ -1,6 +1,5 @@
 package GUI;
 	
-import java.io.IOException;
 import java.util.ArrayList;
 
 import common.TaskObject;
@@ -34,6 +33,7 @@ public class UIMain extends Application {
 		launch(args);
 	}
 	
+	//not used
 	public ArrayList<TaskObject> getTaskList() {
 		taskList = logic.getTaskList();
 		return taskList;

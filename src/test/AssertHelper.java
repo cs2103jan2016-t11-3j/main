@@ -42,7 +42,7 @@ public class AssertHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assertDataListEquals(testDescription + "dataList", expectedTaskDataList.size() , expectedTaskDataList, actualTaskDataList);
+        assertArrayListEquals(testDescription + "dataList", expectedTaskDataList.size() , expectedTaskDataList, actualTaskDataList);
     }
     
     public static void assertFileEquals(String testDescription, String filePath, ArrayList<String> expectedTaskDataList) {
@@ -62,11 +62,19 @@ public class AssertHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assertDataListEquals(testDescription + "dataList", expectedTaskDataList.size() , expectedTaskDataList, actualTaskDataList);
+        assertArrayListEquals(testDescription + "dataList", expectedTaskDataList.size() , expectedTaskDataList, actualTaskDataList);
     }
 
-    public static void assertDataListEquals(String message, int size, ArrayList<String> expectedDataList, ArrayList<String> dataList) {
+    public static void assertArrayListEquals(String message, int size, ArrayList<String> expectedDataList, ArrayList<String> dataList) {
         assertEquals(message + "listSize" , expectedDataList.size(), dataList.size());
+        for (int i = 0; i < size; i++) {
+            assertEquals( message+ "dataListContent" , expectedDataList.get(i) , dataList.get(i));
+        }
+    }
+    
+    public static void assertArrayListEquals(String message, ArrayList<String> expectedDataList, ArrayList<String> dataList) {
+        assertEquals(message + "listSize" , expectedDataList.size(), dataList.size());
+        int size = expectedDataList.size();
         for (int i = 0; i < size; i++) {
             assertEquals( message+ "dataListContent" , expectedDataList.get(i) , dataList.get(i));
         }

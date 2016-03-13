@@ -40,7 +40,6 @@ public class HelpPopupController implements Initializable {
 	
 	@FXML
 	public void handleArrowPressed(KeyEvent event) {
-		System.out.println("rightarrow");
 		if (event.getCode() == KeyCode.RIGHT && page < 7) {
 			page++;
 		}
@@ -57,7 +56,6 @@ public class HelpPopupController implements Initializable {
 	}
 	
 	private void setHelpContent() {
-		
 		helpText.clear();
 		for (int i = 0; i < displayList.size(); i++) {
 			helpText.appendText(displayList.get(i) + "\n");

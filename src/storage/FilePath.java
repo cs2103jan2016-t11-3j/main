@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,13 +21,9 @@ public class FilePath {
      * Changes the default directory location to store the data file to the provided path.
      * <p>
      * @param directory Location of new directory to contain data file for saved tasks
-     * @throws FileNotFoundException Invalid directory
      * @throws IOException Error saving new directory
      */
-    static void changeDirectory(String directory) throws FileNotFoundException, IOException {
-        if (!isValidPath(Paths.get(directory))) {
-            throw new FileNotFoundException();
-        }
+    static void changeDirectory(String directory) throws IOException {
         FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(directory.toString());
@@ -42,36 +39,35 @@ public class FilePath {
      * @throws NoSuchFileException Existing file path is invalid.
      * @throws IOException Error reading file containing default path
      */
-    static String getPath() throws NoSuchFileException, IOException {
-        Path path = Paths.get(".");
-        try {
-            BufferedReader fileReader = new BufferedReader(new FileReader (SAVE_FILE_NAME));
-            path = Paths.get(fileReader.readLine());
-            fileReader.close();
-        }  catch (FileNotFoundException e) {
-            return path.resolve(DATA_FILE_NAME).toString();
+    protected static String getPath() throws NoSuchFileException , IOException {
+        Path path = Paths.get("." , SAVE_FILE_NAME);
+        if(!Files.exists( path )) {
+            throw new NoSuchFileException(path.toString() , null, "No saveInfo");
         }
-        if (!isValidPath(path)) {
-            throw new NoSuchFileException(path.toString());
-        }
+        BufferedReader fileReader = new BufferedReader(new FileReader (SAVE_FILE_NAME));
+        path = Paths.get(fileReader.readLine());
+        fileReader.close();
         return path.resolve(DATA_FILE_NAME).toString();
     }
-
-    static String getPath(String filePath, String fileName) {
+    
+    /**
+     * Checks if the specified filePath is writable and readable.  
+     * @param filePath or path of file to check
+     */
+    protected static boolean checkPath(String filePath) {
         Path path = Paths.get(filePath);
-        if (!isValidPath(path)) {
-            return null;
+        return Files.isReadable(path) && Files.isWritable(path);
+    }
+
+    /**
+     * 
+     * @throws IOException
+     */
+    static void prepareDefaultSave() throws IOException {
+        Path path = Paths.get("." , SAVE_FILE_NAME);
+        if(!Files.exists( path )) {
+            changeDirectory(".");
         }
-        return path.resolve(fileName).toString();
     }
     
-    static boolean isValidPath (Path path) {
-        return Files.exists(path);
-    }
-
-    static boolean isValidPath (String filePath) {
-        Path path = Paths.get(filePath);
-        return Files.exists(path);
-    }
-
 }
