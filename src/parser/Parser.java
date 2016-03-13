@@ -41,8 +41,13 @@ public class Parser {
 	
 	private static final String DONE_COMMAND_1 = "done";
 	private static final String DONE_COMMAND_2 = "finish";
-	private static final String DONE_COMMAND_3 = "completed";
+	private static final String DONE_COMMAND_3 = "complete";
+	private static final String DONE_COMMAND_4 = "completed";
 	private static final int DONE_INDEX = 10;
+	
+	private static final String NOTDONE_COMMAND_1 = "undone";
+	private static final String NOTDONE_COMMAND_3 = "incomplete";
+	private static final int NOTDONE_INDEX = 11;
 	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
@@ -86,7 +91,7 @@ public class Parser {
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			CO.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {
-			CO.setCommandType(HELP_INDEX);
+			parseHelp(command);
 		} else if (command.startsWith(UNDO_COMMAND)) {
 			CO.setCommandType(UNDO_INDEX);
 		} else if (command.startsWith(REDO_COMMAND)) {
@@ -100,12 +105,23 @@ public class Parser {
 		} else if (command.startsWith(ADD_COMMAND)) {
 			parseAdd(command);
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
-				|| command.startsWith(DONE_COMMAND_3)) {
+				|| command.startsWith(DONE_COMMAND_3) || command.startsWith(DONE_COMMAND_4)) {
 			parseDone(command);
+		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_3)) {
+			parseNotDone(command);
+		} else if (isSearch(command)) {
+			parseSearch(command);
 		} else {
 			parseSearch(command);
 		}
   	}
+	
+	public void parseHelp(String command) {
+		CO.setCommandType(HELP_INDEX);
+		command = command.replaceFirst("(?i)(help )", "");
+		TO.setTitle(command);
+		CO.setTaskObject(TO);
+	}
 	
 	
 	/**
@@ -116,7 +132,16 @@ public class Parser {
 	public void parseDone(String command) {
 		CO.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
-		command = command.substring(temp);
+		command = command.substring(temp + 1);
+		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+		temp = Integer.parseInt(command);
+		CO.setIndex(temp);
+	}
+	
+	public void parseNotDone(String command) {
+		CO.setCommandType(NOTDONE_INDEX);
+		int temp = command.indexOf(" ");
+		command = command.substring(temp + 1);
 		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 		temp = Integer.parseInt(command);
 		CO.setIndex(temp);
@@ -129,7 +154,7 @@ public class Parser {
 	 */
 	public void parseEdit(String command) {
 		CO.setCommandType(EDIT_INDEX);
-		CommandProcessor EP = new EditProcessor();
+		CommandParser EP = new EditParser();
 		TO = EP.process(command);
 		CO.setTaskObject(TO);
 		CO.setIndex(EP.getIndex());
@@ -143,7 +168,7 @@ public class Parser {
 	 */
 	public void parseAdd(String command) {
 		CO.setCommandType(ADD_INDEX);
-		CommandProcessor AP = new AddProcessor();
+		CommandParser AP = new AddParser();
 		TO = AP.process(command);
 		//add these 5 main attributes
 		TO.setTaskId(_taskId);
@@ -160,10 +185,10 @@ public class Parser {
 	 */
 	public void parseSearch(String command) {
 		CO.setCommandType(SEARCH_INDEX);
-		CommandProcessor SP = new SearchProcessor();
+		CommandParser SP = new SearchParser();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
-		if (command.indexOf(" ") == -1) {
+		if (command.indexOf(" ") == -1 && isSearch(command)) {
 			TO.setStartTime(-1);
 			TO.setEndTime(-1);
 			TO.setStartDate(-1);
@@ -182,6 +207,8 @@ public class Parser {
 			TO.setCategory("floating");
 		} else if (isDeadline()) {
 			TO.setCategory("deadline");
+			TO.setEndTime(TO.getStartTime());
+			TO.setEndDate(TO.getStartDate());
 		} else {
 			TO.setCategory("event"); //edited mistake here
 		}
@@ -197,8 +224,8 @@ public class Parser {
 	}
 	
 	public boolean isDeadline() {
-		if (TO.getStartDate() == TO.getEndDate()
-				&& TO.getStartTime() == TO.getEndTime()) {
+		if (TO.getEndDate() == -1
+				&& TO.getEndTime() == -1) {
 			return true;
 		} else {
 			return false;
@@ -221,7 +248,7 @@ public class Parser {
  	/**
  	 * method sets command type for delete commands 
  	 * 
- 	 * @param command  user's input as a string
+ 	 * @param command user's input as a string
  	 */
  	public void parseDelete(String command) {
  		CO.setCommandType(DELETE_INDEX);

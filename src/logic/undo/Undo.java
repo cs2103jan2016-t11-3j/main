@@ -10,27 +10,28 @@ import logic.Logic;
 
 public class Undo extends UndoRedo {
 
-	private static final int INDEX_ADD = 1;
-	private static final int INDEX_EDIT = 3;
-	private static final int INDEX_DELETE = 4;
 	private static final String MESSAGE_UNDO = "%1$s undone.";
 	private static final String MESSAGE_UNDO_ERROR = "Nothing to undo!";
-
+	private static final String MESSAGE_UNDO_LIST_EMPTY = "Undo list is empty.";
+	
 	public Undo(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		super(taskList, undoList, redoList);
 	}
 	
 	public ArrayList<String> run() {
-		try {
-			CommandObject commandObj = undoList.pop();
-			//redoList.push(commandObj);
-			
-			Logic secondaryLogic = new Logic(taskList, undoList, redoList);
-			secondaryLogic.parseCommandObject(commandObj, true, false);
-			
-			output.add(String.format(MESSAGE_UNDO, getUndoneCommandType(commandObj)));
-		} catch (NoSuchElementException e) {
-			System.out.println(MESSAGE_UNDO_ERROR);
+		if (undoList.isEmpty()) {
+			output.add(MESSAGE_UNDO_LIST_EMPTY);
+		} else {
+			try {
+				CommandObject commandObj = undoList.pop();
+				
+				Logic secondaryLogic = new Logic(taskList, undoList, redoList);
+				secondaryLogic.parseCommandObject(commandObj, true, false);
+				
+				output.add(String.format(MESSAGE_UNDO, getUndoneCommandType(commandObj)));
+			} catch (NoSuchElementException e) {
+				output.add(MESSAGE_UNDO_ERROR);
+			}
 		}
 		
 		return output;
@@ -44,6 +45,10 @@ public class Undo extends UndoRedo {
 				return "Add";
 			case INDEX_EDIT :
 				return "Edit";
+			case INDEX_COMPLETE :
+			case INDEX_INCOMPLETE :
+			case INDEX_OVERDUE :
+				return "Status change";
 			default :
 				return "";
 		}

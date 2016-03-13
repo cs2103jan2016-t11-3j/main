@@ -1,4 +1,4 @@
-12.	Exiting the programme
+Exiting the programme
 
 Enter “exit” or “quit”. 
 

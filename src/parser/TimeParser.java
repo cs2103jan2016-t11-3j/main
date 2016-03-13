@@ -2,7 +2,7 @@ package parser;
 
 import java.util.ArrayList;
 
-public class TimeProcessor {
+public class TimeParser {
 	private static final String TIME_AM_1 = "AM";
 	private static final String TIME_AM_2 = "A.M.";
 	private static final String TIME_AM_3 = "am";
@@ -23,10 +23,11 @@ public class TimeProcessor {
 	 *@param input  time input from user
 	 */
 	public void processTime(String input) {
-		input = input.replaceFirst("time:", "");
-		convertToArray(input);
-		if (list.size() == 2 || list.size() == 1) {
-			furtherProcessTime();
+		if (!input.isEmpty()) {
+			convertToArray(input);
+			if (list.size() == 2 || list.size() == 1) {
+				furtherProcessTime();
+			}
 		}
 	}
 	

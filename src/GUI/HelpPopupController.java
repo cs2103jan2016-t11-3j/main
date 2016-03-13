@@ -16,15 +16,20 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class HelpPopupController implements Initializable {
 	
 	static Stage helpStage = new Stage();
-	static ArrayList<String> displayList;
-	  
+	static ArrayList<String> displayList = Controller.getHelpList(1);
+	static int page = 1;
+	
 	@FXML
-	private ListView<String> helpBox;
+	private TextFlow helpBox;
+	@FXML
+	private TextArea helpText;
 	
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
@@ -33,26 +38,38 @@ public class HelpPopupController implements Initializable {
 		}
 	}
 	
+	@FXML
+	public void handleArrowPressed(KeyEvent event) {
+		System.out.println("rightarrow");
+		if (event.getCode() == KeyCode.RIGHT && page < 7) {
+			page++;
+		}
+		if (event.getCode() == KeyCode.LEFT && page > 1) {
+			page--;		
+		}
+		displayList = Controller.getHelpList(page);	
+		setHelpContent();
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setHelpContent();
 	}
 	
 	private void setHelpContent() {
-		displayList = Controller.getHelpList();
-		ObservableList<String> items = FXCollections.observableArrayList(displayList);
-		helpBox.setItems(items);
+		
+		helpText.clear();
+		for (int i = 0; i < displayList.size(); i++) {
+			helpText.appendText(displayList.get(i) + "\n");
+		}
+		
 	}
 
-	public void setHelpStage() throws IOException {		
-		
+	public void startHelp() throws IOException {		
 		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
 		
 		helpStage.setScene(new Scene(help));
 		helpStage.show();
-
-		
-	
 	}
 
 	

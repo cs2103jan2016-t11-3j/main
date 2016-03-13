@@ -1,3 +1,3 @@
-13.	Accessing user manual
+Accessing user manual
 
 Enter “help” to displays user manual/guide and “help” followed by a command to display additional information for the command

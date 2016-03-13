@@ -32,6 +32,7 @@ public class Add {
 	private final String MESSAGE_FAIL = "Failed to add task. ";
 	private final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
 	private final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
+	private final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
 
 	private TaskObject task;
 	private int index;
@@ -71,6 +72,7 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
+		assert (!task.equals(null));
 		try {
 			String taskType = task.getCategory();
 			if (taskType.equals("event")) {
@@ -87,6 +89,9 @@ public class Add {
 			createOutput();
 		} catch (DateTimeException e) {
 			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
 		}
 		return output;
 	}
@@ -101,7 +106,7 @@ public class Add {
 	 */
 	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		LocalDateTime deadline = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
+		LocalDateTime deadline = task.getStartDateTime(); // Depends on parser's allocation
 		if (deadline.isBefore(LocalDateTime.now())) {
 			isOverdue = true;
 		}
@@ -114,7 +119,7 @@ public class Add {
 		}
 	}
 
-	private boolean checkIfClash() {
+	private boolean checkIfClash() throws NullPointerException {
 		boolean hasClashes = false;
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals("event")) {
@@ -144,28 +149,28 @@ public class Add {
 	 * @return
 	 */
 	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
-		LocalDateTime currentStart = Logic.obtainDateTime(current.getStartDate(), current.getStartTime());
-		LocalDateTime currentEnd = Logic.obtainDateTime(current.getEndDate(), current.getEndTime());
-		LocalDateTime newStart = Logic.obtainDateTime(task.getStartDate(), task.getStartTime());
-		LocalDateTime newEnd = Logic.obtainDateTime(task.getEndDate(), task.getEndTime());
+		LocalDateTime currentStart = current.getStartDateTime();
+		LocalDateTime currentEnd = current.getEndDateTime();
+		LocalDateTime newStart = task.getStartDateTime();
+		LocalDateTime newEnd = task.getEndDateTime();
 
-		if (currentStart.isAfter(newStart)) {
-			if (currentStart.isBefore(newEnd)) {
+		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
+			if (currentStart.isBefore(newEnd) || currentStart.isEqual(newEnd)){
 				return true;
 			}
 		}
-		if (currentEnd.isAfter(newStart)) {
-			if (currentEnd.isBefore(newEnd)) {
+		if (currentEnd.isAfter(newStart) || currentEnd.isEqual(newStart)) {
+			if (currentEnd.isBefore(newEnd) || currentEnd.isEqual(newEnd)) {
 				return true;
 			}
 		}
-		if (newStart.isAfter(currentStart)) {
-			if (newStart.isBefore(currentEnd)) {
+		if (newStart.isAfter(currentStart) || newStart.isEqual(currentStart)) {
+			if (newStart.isBefore(currentEnd) || newStart.isEqual(currentEnd)) {
 				return true;
 			}
 		}
-		if (newEnd.isAfter(currentStart)) {
-			if (newEnd.isBefore(currentEnd)) {
+		if (newEnd.isAfter(currentStart) || newEnd.isEqual(currentStart)) {
+			if (newEnd.isBefore(currentEnd) || newEnd.isEqual(currentEnd)) {
 				return true;
 			}
 		}
@@ -178,7 +183,7 @@ public class Add {
 		addExternal();
 	}
 
-	private void addInternal() {
+	private void addInternal() throws NullPointerException {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
 		if (index != -1) { // must add at a specific point

@@ -1,8 +1,13 @@
 package common;
 
+import java.time.LocalDateTime;
+import java.time.DateTimeException;
+
 public class TaskObject implements Comparable<TaskObject> {
 
 	protected String title = "";
+	protected LocalDateTime startDateTime; //newly added
+	protected LocalDateTime endDateTime; //newly added
 	protected int startDate;
 	protected int endDate;
 	protected int startTime;
@@ -10,6 +15,7 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String category; // deadline, event, or floating
 	protected String status; //completed, overdue or incomplete
 	protected int taskId;
+	protected String timeOutputString = ""; // stores date time in the desired output for GUI
 	
 	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
@@ -93,6 +99,14 @@ public class TaskObject implements Comparable<TaskObject> {
 		return title;
 	}
 	
+	public LocalDateTime getStartDateTime() {
+		return startDateTime;
+	}
+	
+	public LocalDateTime getEndDateTime() {
+		return endDateTime;
+	}
+	
 	public int getStartDate() {
 		return startDate;
 	}
@@ -125,9 +139,22 @@ public class TaskObject implements Comparable<TaskObject> {
 		return taskId;
 	}
 	
+	public String getTimeOutputString() {
+		return timeOutputString;
+	}
+	
 	public void setTitle(String newTitle) {
 		this.title = newTitle;
 	}
+	
+	public void setStartDateTime(LocalDateTime newStartDateTime) throws DateTimeException {
+		this.startDateTime = newStartDateTime;
+	}
+	
+	public void setEndDateTime(LocalDateTime newEndDateTime) throws DateTimeException {
+		this.endDateTime = newEndDateTime;
+	}
+	
 	
 	public void setStartDate(int newStartDate) {
 		this.startDate = newStartDate;
@@ -155,6 +182,10 @@ public class TaskObject implements Comparable<TaskObject> {
 	
 	public void setTaskId(int newTaskId) {
 		this.taskId = newTaskId;
+	}
+	
+	public void setTimeOutputString(String newTimeOutput) {
+		this.timeOutputString = newTimeOutput;
 	}
 	
 	// Checks if title, dates and times are invalid values

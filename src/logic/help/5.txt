@@ -1,3 +1,3 @@
-5.	Scroll the display while viewing the task list
+Scroll the display while viewing the task list
 
 Use the arrow keys up and down to display the previous and next pages in the display.

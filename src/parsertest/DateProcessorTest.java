@@ -13,11 +13,11 @@ public class DateProcessorTest {
 	@Test
 	public void testProcessDate() {
 		//test 1: test for ability to read uncompleted dates
-		DP.processDate("11th june", false);
+		DP.processDate(" by 7/6", false);
 		assertEquals(6, DP.getStartMonth());
-		assertEquals(11, DP.getStartDay());
+		assertEquals(7, DP.getStartDay());
 		assertEquals(2016, DP.getStartYear());
-		assertEquals(20160611, DP.getStartDate());
+		assertEquals(20160607, DP.getStartDate());
 		reset();
 		
 		//test 2: test for ability to read uncompleted dates for events
@@ -31,7 +31,7 @@ public class DateProcessorTest {
 		reset();
 		
 		//test 3: test for ability to read slash format dates
-		DP.processDate("5/6 - 8/9", false);
+		DP.processDate("from 5/6 to 8/9", false);
 		assertEquals(6, DP.getStartMonth());
 		assertEquals(5, DP.getStartDay());
 		assertEquals(2016, DP.getStartYear());

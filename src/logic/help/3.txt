@@ -1,4 +1,4 @@
-3.	Viewing/Searching for an existing event/task using task description
+Viewing/Searching for an existing event/task using task description
 
 Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the search keywords. The search keywords should contain at least one word from the task description, although the search terms do not have to be case-sensitive. 
 

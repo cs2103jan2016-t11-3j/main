@@ -20,8 +20,8 @@ public class DeleteTest {
 	private TaskObject taskOne = new TaskObject("Hello", 200);
 	private TaskObject taskTwo = new TaskObject("Nonsense", 178);
 	private TaskObject taskThree = new TaskObject("Dinner tonight", 20160226, 1900, "deadline", "incomplete", 24);
-	private CommandObject delete = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 1);
-	private CommandObject deleteFail = new CommandObject(Logic.INDEX_DELETE, new TaskObject(), 2);
+	private CommandObject delete = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), 1);
+	private CommandObject deleteFail = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), 2);
 	private TaskObject deleteQuick = new TaskObject("");
 	private Deque<CommandObject> testUndoList = new ArrayDeque<CommandObject> ();
 
@@ -39,7 +39,7 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Task deleted from TaskFinder: Hello");
+		expectedOutput.add("Task deleted from AdultTaskFinder: Hello");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -52,7 +52,7 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Error deleting task from TaskFinder");
+		expectedOutput.add("Error deleting task from TaskFinder. Requested index does not exist");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -62,8 +62,9 @@ public class DeleteTest {
 	//Failed Quick delete test(One try)
 	public void testQuickFail() {
 		testArray.add(taskOne);
-		testUndoList.push(new CommandObject(Logic.INDEX_ADD, deleteQuick));
-		Delete deleteLast = new Delete(testArray, testUndoList);
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_ADD, deleteQuick));
+		CommandObject cmd = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), -1);
+		Delete deleteLast = new Delete(cmd, testArray, testUndoList);
 		ArrayList<String> actualOutput = deleteLast.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
@@ -75,12 +76,13 @@ public class DeleteTest {
 	//Successful Quick delete test(One try)
 	public void testQuickSuccess() {
 		testArray.add(taskOne);
-		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
-		Delete deleteLast = new Delete(testArray, testUndoList);
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_DELETE, deleteQuick));
+		CommandObject cmd = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), -1);
+		Delete deleteLast = new Delete(cmd, testArray, testUndoList);
 		ArrayList<String> actualOutput = deleteLast.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task deleted from TaskFinder: Hello");
+		expectedOutput.add("Task deleted from AdultTaskFinder: Hello");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -90,22 +92,41 @@ public class DeleteTest {
 		testArray.add(taskOne);
 		testArray.add(taskTwo);
 		testArray.add(taskThree);
-		testUndoList.push(new CommandObject(Logic.INDEX_DELETE, deleteQuick));
-		Delete deleteOne = new Delete(testArray, testUndoList);
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_DELETE, deleteQuick));
+		CommandObject cmd = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), -1);
+		Delete deleteOne = new Delete(cmd, testArray, testUndoList);
 		ArrayList<ArrayList<String> > actualOutput = new ArrayList<ArrayList<String> > ();
 		actualOutput.add(deleteOne.run());
-		testUndoList.push(new CommandObject(Logic.INDEX_ADD, new TaskObject()));
-		Delete deleteTwo = new Delete(testArray, testUndoList);
+		testUndoList.push(new CommandObject(CommandFacade.INDEX_ADD, new TaskObject()));
+		CommandObject cmdx = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), -1);
+		Delete deleteTwo = new Delete(cmdx, testArray, testUndoList);
 		// Dummy add command to simulate the effect of deleting a task 
 		actualOutput.add(deleteTwo.run());
 		
 		ArrayList<ArrayList<String> > expectedOutput = new ArrayList<ArrayList<String> > ();
 		ArrayList<String> firstExpectedOutput = new ArrayList<String> ();
-		firstExpectedOutput.add("Task deleted from TaskFinder: Dinner tonight");
+		firstExpectedOutput.add("Task deleted from AdultTaskFinder: Dinner tonight");
 		expectedOutput.add(firstExpectedOutput);
 		ArrayList<String> secondExpectedOutput = new ArrayList<String> ();
 		secondExpectedOutput.add("Quick delete unavailable");
 		expectedOutput.add(secondExpectedOutput);
+		
+		assertEquals(expectedOutput, actualOutput);
+	}
+	
+	@Test
+	// Delete all
+	public void testDeleteAll() {
+		testArray.add(taskOne);
+		testArray.add(taskTwo);
+		testArray.add(taskThree);
+		CommandObject cmd = new CommandObject(CommandFacade.INDEX_DELETE, new TaskObject(), 0);
+		Delete deleteAll = new Delete(cmd, testArray, testUndoList);
+		ArrayList<String> actualOutput = new ArrayList<String> ();
+		actualOutput = deleteAll.run();
+		
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("All tasks deleted from AdultTaskFinder");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}

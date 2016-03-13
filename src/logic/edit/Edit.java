@@ -95,7 +95,9 @@ public class Edit {
 	}
 
 	private int getTaskIdOfTaskToBeEdited() {
-		return lastOutputTaskList.get(editItemNumber - 1).getTaskId();
+		assert (editItemNumber > 0 && editItemNumber <= lastOutputTaskList.size());
+		
+		return lastOutputTaskList.get(editItemNumber-1).getTaskId();
 	}
 
 	// Edits the title of the task based on the task ID passed
