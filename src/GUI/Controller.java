@@ -20,6 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Callback;
 
 public class Controller implements Initializable {
 	
@@ -112,14 +113,54 @@ public class Controller implements Initializable {
 	}
 
 	private void display() {
-		ObservableList<TaskObject> groupData = FXCollections.observableArrayList(taskList);		
-		fillTable(groupData);
+		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(taskList);		
+		fillTable(taskData);
 	}
 
-	public void fillTable(ObservableList<TaskObject> groupData) {
+	public void fillTable(ObservableList<TaskObject> taskData) {
 		populateIndex();
-		populateColumns();		
-		taskTable.setItems(groupData);
+		populateColumns();
+		setWrapText();
+		taskTable.setItems(taskData);
+	}
+
+	private void setWrapText() {
+		taskColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
+			@Override
+			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
+				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
+					private Text text;
+					@Override
+					public void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!isEmpty()) {
+							text = new Text(item.toString());
+							text.setWrappingWidth(taskColumn.getPrefWidth()); // Setting the wrapping width to the Text
+							setGraphic(text);
+						}
+					}
+				};
+				return cell;
+			}
+		});
+		timeColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
+			@Override
+			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
+				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
+					private Text text;
+					@Override
+					public void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!isEmpty()) {
+							text = new Text(item.toString());
+							text.setWrappingWidth(timeColumn.getPrefWidth()); // Setting the wrapping width to the Text
+							setGraphic(text);
+						}
+					}
+				};
+				return cell;
+			}
+		});
 	}
 
 	public void populateColumns() {
