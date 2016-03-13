@@ -155,7 +155,7 @@ public class Parser {
 	 */
 	public void parseEdit(String command) {
 		CO.setCommandType(EDIT_INDEX);
-		CommandProcessor EP = new EditProcessor();
+		CommandParser EP = new EditParser();
 		TO = EP.process(command);
 		CO.setTaskObject(TO);
 		CO.setIndex(EP.getIndex());
@@ -169,7 +169,7 @@ public class Parser {
 	 */
 	public void parseAdd(String command) {
 		CO.setCommandType(ADD_INDEX);
-		CommandProcessor AP = new AddParser();
+		CommandParser AP = new AddParser();
 		TO = AP.process(command);
 		//add these 5 main attributes
 		TO.setTaskId(_taskId);
@@ -186,7 +186,7 @@ public class Parser {
 	 */
 	public void parseSearch(String command) {
 		CO.setCommandType(SEARCH_INDEX);
-		CommandProcessor SP = new SearchProcessor();
+		CommandParser SP = new SearchParser();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
 		if (command.indexOf(" ") == -1 && isSearch(command)) {
