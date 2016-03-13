@@ -21,8 +21,12 @@ public class StorageTask extends TaskObject {
         category = taskAttributes[5];
         status = taskAttributes[6];
         taskId = Integer.parseInt(taskAttributes[7]);
-        startDateTime = LocalDateTime.parse(taskAttributes[8], formatter);
-        endDateTime = LocalDateTime.parse(taskAttributes[9], formatter);
+        if(!taskAttributes[8].isEmpty()) {
+            startDateTime = LocalDateTime.parse(taskAttributes[8], formatter);
+        }
+        if(!taskAttributes[9].isEmpty()) {
+            endDateTime = LocalDateTime.parse(taskAttributes[9], formatter);
+        }
     }
     
     public StorageTask(String title, int taskId){

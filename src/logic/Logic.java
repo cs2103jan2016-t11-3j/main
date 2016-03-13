@@ -110,7 +110,7 @@ public class Logic {
 		try {
 			FileStorage storage = FileStorage.getInstance();
 			taskList = storage.load();
-			convertDateTime(taskList);
+			//convertDateTime(taskList);
 			setLastOutputTaskList(taskList);
 		} catch (IOException e) {
 			e.printStackTrace();

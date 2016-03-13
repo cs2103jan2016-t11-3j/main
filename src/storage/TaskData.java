@@ -90,7 +90,7 @@ public class TaskData {
     private static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         for (String taskData : taskDataList) {
-            String[] taskAttributes = taskData.split(DELIMITER);
+            String[] taskAttributes = taskData.split(DELIMITER, -1);
             TaskObject task = new StorageTask(taskAttributes);
             taskList.add(task);
         }
@@ -125,12 +125,12 @@ public class TaskData {
         printWriter.print(DELIMITER);
         if(task.getStartDateTime() != null) {
             printWriter.print(task.getStartDateTime().format(formatter));
-            printWriter.print(DELIMITER);
         }
+        printWriter.print(DELIMITER);
         if(task.getEndDateTime() != null) {
             printWriter.print(task.getEndDateTime().format(formatter));
-            printWriter.print(DELIMITER);
         }
+        printWriter.print(DELIMITER);
         printWriter.print(NEW_LINE);
         printWriter.close();
     }
