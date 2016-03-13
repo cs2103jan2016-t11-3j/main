@@ -1,5 +1,8 @@
 package storage;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import common.TaskObject;
 
 public class StorageTask extends TaskObject {
@@ -9,6 +12,7 @@ public class StorageTask extends TaskObject {
      * @param taskAttributes
      */
     public StorageTask(String[] taskAttributes) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");        
         title = (taskAttributes[0]); 
         startDate = Integer.parseInt(taskAttributes[1]);
         endDate = Integer.parseInt(taskAttributes[2]);
@@ -17,6 +21,8 @@ public class StorageTask extends TaskObject {
         category = taskAttributes[5];
         status = taskAttributes[6];
         taskId = Integer.parseInt(taskAttributes[7]);
+        startDateTime = LocalDateTime.parse(taskAttributes[8], formatter);
+        endDateTime = LocalDateTime.parse(taskAttributes[9], formatter);
     }
     
     public StorageTask(String title, int taskId){

@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import common.TaskObject;
@@ -105,6 +106,7 @@ public class TaskData {
     private static void writeTask(TaskObject task, String filePath) throws IOException {
         FileWriter fileWriter = new FileWriter("data.csv" , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         printWriter.print(task.getTitle().replace(";", ","));
         printWriter.print(DELIMITER);
         printWriter.print(task.getStartDate());
@@ -120,6 +122,10 @@ public class TaskData {
         printWriter.print(task.getStatus().replace(";", ","));
         printWriter.print(DELIMITER);
         printWriter.print(task.getTaskId());
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getStartDateTime().format(formatter));
+        printWriter.print(DELIMITER);
+        printWriter.print(task.getEndDateTime().format(formatter));
         printWriter.print(DELIMITER);
         printWriter.print(NEW_LINE);
         printWriter.close();
