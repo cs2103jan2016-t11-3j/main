@@ -113,8 +113,12 @@ public class Controller implements Initializable {
 	}
 
 	private void display() {
-		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(taskList);		
+		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());		
 		fillTable(taskData);
+	}
+
+	private ArrayList<TaskObject> getOutputTaskList() {
+		return _UI.getLastOutputTaskList();
 	}
 
 	public void fillTable(ObservableList<TaskObject> taskData) {

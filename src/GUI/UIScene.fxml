@@ -14,8 +14,8 @@
       <TableView fx:id="taskTable" onKeyPressed="#handleEscReleased" onKeyReleased="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn fx:id="indexColumn" editable="false" prefWidth="30.0" sortable="false" text="No." />
-          <TableColumn fx:id="taskColumn" editable="false" prefWidth="150.0" sortable="false" text="Task Name" />
-            <TableColumn fx:id="statusColumn" editable="false" prefWidth="100.0" sortable="false" text="Status" />
+          <TableColumn fx:id="taskColumn" editable="false" prefWidth="180.0" sortable="false" text="Task Name" />
+            <TableColumn fx:id="statusColumn" editable="false" prefWidth="90.0" sortable="false" text="Status" />
             <TableColumn fx:id="startDateColumn" editable="false" prefWidth="80.0" sortable="false" text="Start Date" />
             <TableColumn fx:id="endDateColumn" editable="false" prefWidth="80.0" sortable="false" text="Date Due" />
             <TableColumn fx:id="timeColumn" editable="false" prefWidth="120.0" sortable="false" text="Time" />
