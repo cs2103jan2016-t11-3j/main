@@ -105,6 +105,8 @@ public class Delete {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
+		this.undoList = undoList;
+		this.redoList = redoList;
 	}
 
 	/**
@@ -170,13 +172,13 @@ public class Delete {
 		}
 	}
 	
-	// Clears everything - task list, undo list and redo list
+	// Clears everything - task list, undo list, redo list and the storage file
 	private void runDeleteAll() {
 		taskList.clear();
 		undoList.clear();
 		redoList.clear();
-
 		deleteExternal();
+
 		createDeletedAllOutput();
 	}
 
