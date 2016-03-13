@@ -53,6 +53,10 @@ import common.TaskObject;
  */
 public class Logic {
 
+	private final String CATEGORY_EVENT = "event";
+	private final String CATEGORY_DEADLINE = "deadline";
+	private final String CATERGORY_FLOATING = "floating";
+	
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
@@ -106,10 +110,42 @@ public class Logic {
 		try {
 			FileStorage storage = FileStorage.getInstance();
 			taskList = storage.load();
+			convertDateTime(taskList);
 			setLastOutputTaskList(taskList);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (DateTimeException e) {
+			e.printStackTrace();
 		}
+	}
+	
+	// Retrieves all string/integer date time and sends it for conversion into LocalDateTime
+	private void convertDateTime(ArrayList<TaskObject> taskList) throws DateTimeException {
+		for(int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
+				LocalDateTime startDateTime = obtainLocalDateTime(taskList.get(i).getStartDate(), taskList.get(i).getStartTime());
+				LocalDateTime endDateTime = obtainLocalDateTime(taskList.get(i).getEndDate(), taskList.get(i).getEndTime());
+				taskList.get(i).setStartDateTime(startDateTime);
+				taskList.get(i).setEndDateTime(endDateTime);
+			} else {
+				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
+					LocalDateTime deadlineTime = obtainLocalDateTime(taskList.get(i).getStartDate(), taskList.get(i).getStartTime());
+					taskList.get(i).setStartDateTime(deadlineTime);
+				}
+			}
+		}
+	}
+	
+	// Converts into LocalDateTime
+	public LocalDateTime obtainLocalDateTime(int date, int time) throws DateTimeException {
+		int year = date / 10000;
+		int month = (date % 10000) / 100;
+		int day = date % 100;
+		int hour = time / 100;
+		int min = time % 100;
+		return LocalDateTime.of(year,  month, day, hour, min);
 	}
 	
 	// Sets the starting task ID value. This value should be larger than the current largest task ID value in the task list so as to avoid overlap.
