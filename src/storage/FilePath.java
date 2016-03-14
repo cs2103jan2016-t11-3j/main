@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 public class FilePath {
 
     private static final String SAVE_FILE_NAME = "saveInfo.txt";
-    private static final String DATA_FILE_NAME = "data.csv";
+    private static final String DATA_FILE_NAME = "data.txt";
 
     /**
      * Changes the default directory location to store the data file to the provided path.
