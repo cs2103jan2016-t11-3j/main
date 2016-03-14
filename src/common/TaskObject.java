@@ -16,6 +16,8 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String status; //completed, overdue or incomplete
 	protected int taskId;
 	protected String timeOutputString = ""; // stores date time in the desired output for GUI
+	protected boolean isRecurring;
+	protected Interval interval = new Interval();
 	
 	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
@@ -186,6 +188,10 @@ public class TaskObject implements Comparable<TaskObject> {
 	
 	public void setTimeOutputString(String newTimeOutput) {
 		this.timeOutputString = newTimeOutput;
+	}
+	
+	public Interval getInterval() {
+		return interval;
 	}
 	
 	// Checks if title, dates and times are invalid values
