@@ -12,7 +12,7 @@ import common.TaskObject;
  *     2. Pulau Ubin Camp, 15/06/2009-17/06/2009, 0800hrs-1300hrs, completed <br>
  * (c) Example output for floating task: <br>
  * 	   3. Study more, incomplete <br>
- * @author ChongYan
+ * @author ChongYan, RuiBin
  *
  */
 
@@ -83,25 +83,25 @@ public class Display {
 				int taskStartTime = task.getStartTime();
 				int taskEndTime = task.getEndTime();
 				String taskStatus = task.getStatus();
-				int taskId = task.getTaskId();
+				int taskId = task.getTaskId();	// FOR DEBUG
 				
 				/* Output format for the tasks differs according to the category.
 				 * This switch statement calls the relevant method and passes in the relevant arguments.
 				 */
 				switch (taskCategory) {
-					case "deadline":
+					case "deadline" :
 						String taskEndDateInOutputFormat = parseDate(taskEndDate);
 						outputDeadlineTask(i+1, taskTitle, taskEndDateInOutputFormat, taskEndTime, taskStatus);
 						break;
-					case "event":
+					case "event" :
 						String taskStartDateInOutputFormat = parseDate(taskStartDate);
 						taskEndDateInOutputFormat = parseDate(taskEndDate);
 						outputEventTask(i+1, taskTitle, taskStartDateInOutputFormat, taskEndDateInOutputFormat, taskStartTime, taskEndTime, taskStatus);
 						break;
-					case "floating": case "null": // REMOVE NULL AFTER TESTING
+					case "floating" : // NULL CASE REMOVED HERE
 						outputFloatingTask(i+1, taskTitle, taskStatus, taskId);
 						break;
-					default:
+					default :
 						break;
 				}
 				
@@ -117,10 +117,18 @@ public class Display {
 
 	// Returns the date in DD/MM/YY format
 	private String parseDate(int date) {
-		String dateInString = "" + date;
-		String day = dateInString.substring(6, 8);
-		String month = dateInString.substring(4, 6);
-		String year = dateInString.substring(0, 4);
+		String day = "";
+		String month = "";
+		String year = "";
+		
+		try {
+			String dateInString = "" + date;
+			day = dateInString.substring(6, 8);
+			month = dateInString.substring(4, 6);
+			year = dateInString.substring(0, 4);
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
 		
 		return day + "/" + month + "/" + year;
 	}

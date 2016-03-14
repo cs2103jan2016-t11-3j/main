@@ -2,33 +2,18 @@ package logic;
 
 import parser.*;
 import storage.FileStorage;
-import logic.add.*;
-import logic.delete.*;
-import logic.display.*;
-import logic.edit.*;
 import logic.mark.*;
-import logic.search.*;
-import logic.save.*;
-import logic.help.*;
 import logic.timeOutput.*;
-import logic.undoredo.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.DateTimeException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 
 import common.CommandObject;
 import common.TaskObject;
-
-// Parent class for Undo
-
-/* On startup, should load taskList automatically from storage, and mark all events which are
- * overdue. Consider displaying all overdue tasks or alert
- */
 
 /**
  * Main driver for Adult TaskFinder. Upon initialisation of the object, retrieves all
@@ -48,14 +33,13 @@ import common.TaskObject;
  * time a command is popped from the undoList for undoing, the reverse of that command 
  * will be pushed into the redoList as an CommandObject. Clears itself whenever the user
  * inputs a command which is not "undo".
- * @author ChongYan
+ * @author ChongYan, RuiBin
  *
  */
 public class Logic {
 
 	private final String CATEGORY_EVENT = "event";
 	private final String CATEGORY_DEADLINE = "deadline";
-	private final String CATERGORY_FLOATING = "floating";
 	
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
@@ -121,7 +105,7 @@ public class Logic {
 		}
 	}
 	
-	// Retrieves all string/integer date time and sends it for conversion into LocalDateTime
+	/* Retrieves all string/integer date time and sends it for conversion into LocalDateTime
 	private void convertDateTime(ArrayList<TaskObject> taskList) throws DateTimeException {
 		for(int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
@@ -136,7 +120,7 @@ public class Logic {
 				}
 			}
 		}
-	}
+	}*/
 	
 	// Converts into LocalDateTime
 	public LocalDateTime obtainLocalDateTime(int date, int time) throws DateTimeException {

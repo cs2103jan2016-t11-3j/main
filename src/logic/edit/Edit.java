@@ -24,9 +24,10 @@ import common.TaskObject;
  *            title of a particular object, while the index contained within
  *            this attribute contains the relative position of the task in the
  *            last output task list.
- * @author ChongYan
+ * @author ChongYan, RuiBin
  *
  */
+
 public class Edit {
 
 	private static final String MESSAGE_TITLE_EDIT = "Task title edited from '%1$s' to '%2$s'.";
@@ -55,7 +56,7 @@ public class Edit {
 	/**
 	 * Main method of Edit. Finds the target task and edits its title before
 	 * saving it to the external file location.
-	 * @return
+	 * @return output
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
@@ -125,7 +126,8 @@ public class Edit {
 		output.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
 	}
 
-	// Getters
+	// ------------------------- GETTERS -------------------------
+	
 	public int getEditItemNumber() {
 		return editItemNumber;
 	}
