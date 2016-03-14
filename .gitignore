@@ -1,5 +1,9 @@
 *.log
 *.csv
+
 /bin/
+
 saveInfo.txt
 data.txt
+
+.classpath
