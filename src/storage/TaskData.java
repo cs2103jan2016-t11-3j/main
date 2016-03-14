@@ -37,7 +37,7 @@ public class TaskData {
      */
     protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
         
-        BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", false));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
