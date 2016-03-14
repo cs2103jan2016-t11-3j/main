@@ -47,7 +47,7 @@ public class Constants {
 	public static final String REGEX_DAY_NUMBER = "((?i)0?[1-9]|[12][\\d]|3[01])(st|th|nd|rd)?";
 	public static final String REGEX_DAY_ONLYNUMBER = "((?i)0?[1-9]|[12][\\d]|3[01])";
 	public static final String REGEX_DAYS_TEXT = "((?i)(mon)(day)?|"
-            + "(tue)(sday)?|" + "(wed)(nesday)?|" + "(thu)(rsday)?|"
+            + "(tue)(sday)?|" + "(wed)(nesday)?|" + "(thu)(rsday)?|" //edit this shit
             + "(fri)(day)?|" + "(sat)(urday)?|" + "(sun)(day)?)";
 	public static final String REGEX_MONTHS_NUMBER = "(0?[1-9]|1[0-2])";
 	public static final String REGEX_MONTHS_TEXT = "((?i)(jan)(uary)?|"
@@ -63,7 +63,8 @@ public class Constants {
     public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
     //has to have am or pm, dont care!
     //removed space btw HH and MM . added fullstop btw hh n mm
-    public static final String REGEX_TIME_ATTRIBUTES = "((?i)[\\d]" + "(min|minutes)(s)?|" + "(hour|hr)(s)?)";
+    public static final String REGEX_TIME_ATTRIBUTES = "((?i)[\\d]" + "(sec|second)(s)?|" 
+    		+ "(min|minutes)(s)?|" + "(hour|hr)(s)?)";
     
     //possible arrangements for date input
 	public static final String REGEX_COMBINED_DATE_DDMMYYYY = REGEX_DAY_ONLYNUMBER
