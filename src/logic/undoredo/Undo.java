@@ -1,4 +1,4 @@
-package logic.undo;
+package logic.undoredo;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -37,7 +37,7 @@ public class Undo extends UndoRedo {
 		return output;
 	}
 	
-	protected String getUndoneCommandType(CommandObject commandObj) {
+	private String getUndoneCommandType(CommandObject commandObj) {
 		switch (commandObj.getCommandType()) {
 			case INDEX_ADD :
 				return "Delete";

@@ -12,7 +12,7 @@ import logic.mark.Mark;
 import logic.mark.Overdue;
 import logic.save.Save;
 import logic.search.Search;
-import logic.undo.UndoRedo;
+import logic.undoredo.UndoRedo;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -23,7 +23,7 @@ import java.util.Deque;
  * each new user input, and all relevant arguments are passed to this class. The
  * variables that will be actually used depends on the input of the user.
  * 
- * @author Ruibin
+ * @author RuiBin
  *
  */
 public class CommandFacade {
@@ -124,48 +124,48 @@ public class CommandFacade {
 		}
 
 		switch (commandType) {
-			case INDEX_ADD:
+			case INDEX_ADD :
 				addFunction();
 				break;
-			case INDEX_SEARCH_DISPLAY:
+			case INDEX_SEARCH_DISPLAY :
 				checkDisplayOrSearch();
 				break;
-			case INDEX_EDIT:
+			case INDEX_EDIT :
 				editFunction();
 				break;
-			case INDEX_DELETE:
+			case INDEX_DELETE :
 				deleteFunction();
 				break;
-			case INDEX_UNDO:
-			case INDEX_REDO:
+			case INDEX_UNDO :
+			case INDEX_REDO :
 				undoRedoFunction();
 				break;
-			case INDEX_SAVE:
+			case INDEX_SAVE :
 				saveFunction();
 				break;
-			case INDEX_EXIT:
+			case INDEX_EXIT :
 				exitFunction();
 				break;
-			case INDEX_HELP:
+			case INDEX_HELP :
 				helpFunction();
 				break;
-			case INDEX_COMPLETE:
+			case INDEX_COMPLETE :
 				doneFunction();
 				break;
-			case INDEX_OVERDUE:
+			case INDEX_OVERDUE :
 				overdueFunction();
 				break;
-			case INDEX_INCOMPLETE:
+			case INDEX_INCOMPLETE :
 				incompleteFunction();
 				break;
-			default:
+			default :
 				printInvalidCommandMessage();
 				break;
 		}
 	}
 
+	
 	// ------------------------- FUNCTIONS -------------------------
-
 	
 	/**
 	 * Calls Add function, which adds the task to the task list and writes it to
@@ -399,6 +399,8 @@ public class CommandFacade {
 	 *            Either a undoList or a redoList
 	 */
 	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
+		assert (commandType == INDEX_ADD || commandType == INDEX_DELETE);
+		
 		CommandObject newCommandObj = new CommandObject();
 
 		if (commandType == INDEX_ADD) {
@@ -479,7 +481,7 @@ public class CommandFacade {
 				}
 			}
 		}
-		return 0;
+		return -1;
 	}
 
 	/**
@@ -505,7 +507,7 @@ public class CommandFacade {
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
 
-	// For testing
+	/* For testing
 	private void printTaskObjectFields(TaskObject taskObj) {
 		System.out.println("title = " + taskObj.getTitle());
 		System.out.println("start date = " + taskObj.getStartDate());
@@ -515,7 +517,7 @@ public class CommandFacade {
 		System.out.println("category = " + taskObj.getCategory());
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
-	}
+	}*/
 
 	// ------------------------- GETTERS AND SETTERS -------------------------
 

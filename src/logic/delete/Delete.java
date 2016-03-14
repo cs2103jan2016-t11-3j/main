@@ -183,7 +183,7 @@ public class Delete {
 	}
 
 	private boolean removeTask(int index) {
-		assert (index > 0 && index < taskList.size());
+		assert (index > 0 && index <= taskList.size());
 		try {
 			setTaskName(taskList.get(index).getTitle());
 			setRemovedTask(taskList.get(index));

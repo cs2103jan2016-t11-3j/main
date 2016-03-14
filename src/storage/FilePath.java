@@ -1,13 +1,11 @@
 package storage;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,7 +13,7 @@ import java.nio.file.Paths;
 public class FilePath {
 
     private static final String SAVE_FILE_NAME = "saveInfo.txt";
-    private static final String DATA_FILE_NAME = "data.csv";
+    private static final String DATA_FILE_NAME = "data.txt";
 
     /**
      * Changes the default directory location to store the data file to the provided path.

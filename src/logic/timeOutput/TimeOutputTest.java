@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -21,7 +23,7 @@ public class TimeOutputTest {
 	@Test
 	public void testA() {
 		TaskObject taskOne = new TaskObject("deadline with time and date", "deadline", "incomplete", 1);
-		taskOne.setEndDateTime(LocalDateTime.of(2016, 3, 15, 16, 00));
+		taskOne.setStartDateTime(LocalDateTime.of(2016, 3, 15, 16, 00));
 		// of(int year, int month, int dayOfMonth, int hour, int minute)
 		testArray.add(taskOne);
 		TimeOutput.setTimeOutputForGui(testArray);
@@ -51,7 +53,7 @@ public class TimeOutputTest {
 	
 	@Test
 	public void testC() {
-		TaskObject taskThree = new TaskObject("event in a single day", "event", "incomplete", 2);
+		TaskObject taskThree = new TaskObject("event in a single day", "event", "incomplete", 3);
 		taskThree.setEndDateTime(LocalDateTime.of(2016, 3, 15, 16, 00));
 		taskThree.setStartDateTime(LocalDateTime.of(2016, 3, 15, 15, 00));
 		// of(int year, int month, int dayOfMonth, int hour, int minute)
@@ -64,5 +66,66 @@ public class TimeOutputTest {
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
-
+	
+	@Test
+	public void testD() {
+		TaskObject taskFour = new TaskObject("deadline without time", "deadline", "incomplete", 4);
+		taskFour.setStartDateTime(LocalDateTime.of(LocalDate.of(2016,  3,  15), LocalTime.MAX));
+		testArray.add(taskFour);
+		TimeOutput.setTimeOutputForGui(testArray);
+		for(int i = 0; i < testArray.size(); i++) {
+			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
+		}
+		expectedTimeOutput.add("by 2016-03-15");
+		
+		assertEquals(expectedTimeOutput, actualTimeOutput);
+	}
+	
+	@Test
+	// Start date, no start time, end date, no end time
+	public void testE() {
+		TaskObject taskFive = new TaskObject("event without time", "event", "incomplete", 5);
+		taskFive.setStartDateTime(LocalDateTime.of(LocalDate.of(2016, 3, 15), LocalTime.MAX));
+		taskFive.setEndDateTime(LocalDateTime.of(LocalDate.of(2016, 3, 16), LocalTime.MAX));
+		testArray.add(taskFive);
+		TimeOutput.setTimeOutputForGui(testArray);
+		for(int i = 0; i < testArray.size(); i++) {
+			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
+		}
+		expectedTimeOutput.add("from 2016-03-15 to 2016-03-16");
+		
+		assertEquals(expectedTimeOutput, actualTimeOutput);
+	}
+	
+	@Test
+	// Start date, start time, end date, no end time
+	public void testF() {
+		TaskObject taskFive = new TaskObject("event without time", "event", "incomplete", 5);
+		taskFive.setStartDateTime(LocalDateTime.of(LocalDate.of(2016, 3, 15), LocalTime.of(13, 00)));
+		taskFive.setEndDateTime(LocalDateTime.of(LocalDate.of(2016, 3, 16), LocalTime.MAX));
+		testArray.add(taskFive);
+		TimeOutput.setTimeOutputForGui(testArray);
+		for(int i = 0; i < testArray.size(); i++) {
+			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
+		}
+		expectedTimeOutput.add("on 2016-03-15, from 13:00:00 to 2016-03-16");
+		
+		assertEquals(expectedTimeOutput, actualTimeOutput);
+	}
+	
+	@Test
+	// Start date, no start time, end date, end time
+	public void testG() {
+		TaskObject taskFive = new TaskObject("event without time", "event", "incomplete", 5);
+		taskFive.setStartDateTime(LocalDateTime.of(LocalDate.of(2016, 3, 15), LocalTime.MAX));
+		taskFive.setEndDateTime(LocalDateTime.of(LocalDate.of(2016, 3, 16), LocalTime.of(14, 00)));
+		testArray.add(taskFive);
+		TimeOutput.setTimeOutputForGui(testArray);
+		for(int i = 0; i < testArray.size(); i++) {
+			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
+		}
+		expectedTimeOutput.add("from 2016-03-15 to 14:00:00 on 2016-03-16");
+		
+		assertEquals(expectedTimeOutput, actualTimeOutput);
+	}
 }

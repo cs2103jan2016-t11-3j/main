@@ -1,4 +1,4 @@
-package logic.undo;
+package logic.undoredo;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -55,6 +55,7 @@ public class UndoRedo {
 	}
 	
 	public ArrayList<String> run(int commandType) {
+		assert (commandType == INDEX_UNDO || commandType == INDEX_REDO);
 
 		if (commandType == INDEX_UNDO) {
 			Undo undo = new Undo(taskList, undoList, redoList);

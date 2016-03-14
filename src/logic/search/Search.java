@@ -1,10 +1,9 @@
 package logic.search;
 import logic.display.Display;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import common.TaskObject;
+import java.util.ArrayList;
+
 
 /**
  * Creates a Search object which facilitates the finding of tasks matching the search strings.
@@ -18,6 +17,7 @@ import common.TaskObject;
  * @author ChongYan, RuiBin
  *
  */
+
 public class Search extends Display {
 	
 	private static final String MESSAGE_NO_TITLE_RESULTS_FOUND = "Keyword \'%1$s\' not found.";
@@ -129,5 +129,5 @@ public class Search extends Display {
 			output.addAll(super.runSpecificList(matchedTasks));
 		}
 	}
-	
+
 }

@@ -1,6 +1,5 @@
 package storage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
@@ -43,7 +42,7 @@ public class FileStorage implements Storage {
         ArrayList<TaskObject> taskList = null;
         try {
             filePath = FilePath.getPath();
-            taskList = new ArrayList<TaskObject>(TaskData.getTasks(filePath));
+            taskList = new ArrayList<TaskObject>(TaskData.readTasks(filePath));
         } catch (NoSuchFileException e) {
             FilePath.prepareDefaultSave();
         } 
@@ -87,7 +86,7 @@ public class FileStorage implements Storage {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
         String filePath = Paths.get(directory, fileName).toString();
-        ArrayList<TaskObject> taskList = TaskData.getTasks(filePath);
+        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
         if( lastTaskList == null) {
             lastTaskList = new ArrayList<TaskObject>(taskList);
         }
