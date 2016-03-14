@@ -12,7 +12,7 @@ import logic.mark.Mark;
 import logic.mark.Overdue;
 import logic.save.Save;
 import logic.search.Search;
-import logic.undo.UndoRedo;
+import logic.undoredo.UndoRedo;
 
 import java.util.ArrayList;
 import java.util.Deque;
