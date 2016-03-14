@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import common.TaskObject;
 
 
-public class AddProcessor extends CommandProcessor{
+public class AddProcessor extends CommandParser{
 	
 	public ArrayList<String> list = new ArrayList<String>();
 	public ArrayList<Integer> dateList = new ArrayList<Integer>();
 	
-	private TimeProcessor TP = new TimeProcessor();
-	private DateProcessor DP = new DateProcessor();
+	private TimeParser TP = new TimeParser();
+	private DateParser DP = new DateParser();
 	public TaskObject TO = new TaskObject();
 	
 	/**

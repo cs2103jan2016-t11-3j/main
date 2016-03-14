@@ -4,11 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import parser.SearchProcessor;
+import parser.SearchParser;
 
 public class SearchProcessorTest {
 
-	SearchProcessor SP = new SearchProcessor();
+	SearchParser SP = new SearchParser();
 	@Test
 	public void testProcessSearchTerm() {
 		SP.process("7.13pm");
@@ -31,7 +31,6 @@ public class SearchProcessorTest {
 	
 	
 	private void reset() {
-		SP.clearList();
 		SP.resetAll();
 	}
 

@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import parser.DateTimeProcessor;
+import parser.DateTimeParser;
 
 public class DateTimeProcessorTest {
-	DateTimeProcessor DTP = new DateTimeProcessor();
+	DateTimeParser DTP = new DateTimeParser();
 	@Test
 	public void testParseDateTime() {
 		//DTP.parseDateTime("by 9.13pm", false);

@@ -1,3 +1,4 @@
+
 package parsertest;
 
 import static org.junit.Assert.*;
@@ -22,9 +23,9 @@ public class ParserTest {
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		
-		tempParser.allocate("search 7/9/2016");
-		assertEquals("7/9/2016", tempParser.getTask());
-		assertEquals(-1, tempParser.getStartTime());
+		tempParser.allocate("search 7/9/2016 7pm");
+		assertEquals("7/9/2016 7pm", tempParser.getTask());
+		assertEquals(1900, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(20160907, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());

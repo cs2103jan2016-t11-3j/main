@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import common.TaskObject;
 
-import parser.EditProcessor;
+import parser.EditParser;
 
 public class EditProcessorTest {
 
-	EditProcessor EP = new EditProcessor();
+	EditParser EP = new EditParser();
 	TaskObject Tempshit = new TaskObject();
 	@Test
 	public void testProcessEdit() {
