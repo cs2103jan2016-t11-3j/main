@@ -1,18 +1,19 @@
 package storage;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import com.google.gson.Gson;
 
 import common.TaskObject;
 
@@ -104,6 +105,12 @@ public class TaskData {
      * @throws IOException
      */
     private static void writeTask(TaskObject task, String filePath) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
+        Gson gson = new Gson();
+        String json = gson.toJson(task);
+        writer.write(json + "\n");
+        writer.close();
+        
         FileWriter fileWriter = new FileWriter("data.csv" , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
