@@ -95,6 +95,25 @@ public class TaskObject implements Comparable<TaskObject> {
 		
 	}
 	
+	// Constructor for deadline with LocalDateTime
+	public TaskObject(String title, LocalDateTime startDateTime, String category, String status, int taskId) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// Constructor for event with LocalDateTime
+	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String category, String status, int taskId) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+
 	public String getTitle() {
 		if (title == null)
 			return "null";
