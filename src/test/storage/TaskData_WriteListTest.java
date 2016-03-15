@@ -25,7 +25,7 @@ public class TaskData_WriteListTest extends TaskData {
 
     TaskGenerator testTask = new TaskGenerator();
     /**
-     * Test method for {@link storage.TaskData#writeList(java.util.ArrayList, java.lang.String)}.
+     * Test method for {@link storage.TaskData#writeTasks(java.util.ArrayList, java.lang.String)}.
      * @throws IOException
      */
     @Test
@@ -75,7 +75,7 @@ public class TaskData_WriteListTest extends TaskData {
         taskList.add(task1);
         taskList.add(task2);
         try {
-            writeList(taskList, filePath);
+            writeTasks(taskList, filePath);
         } catch (IOException e) {
             return 1;
         }

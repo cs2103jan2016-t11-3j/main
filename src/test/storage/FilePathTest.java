@@ -16,7 +16,7 @@ import org.junit.Test;
 public class FilePathTest extends storage.FilePath {
 
     private static final String SAVE_FILE_NAME = "saveInfo.txt";
-    private static final String DATA_FILE_NAME = "data.csv";
+    private static final String DATA_FILE_NAME = "data.txt";
     
     @Test
     public void testChangeDirectory() {

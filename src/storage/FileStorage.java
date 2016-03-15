@@ -1,8 +1,10 @@
 package storage;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -11,7 +13,6 @@ import common.TaskObject;
 public class FileStorage implements Storage {
 
     private static FileStorage instance = null;
-    private static ArrayList<TaskObject> lastTaskList = null;
 
     private FileStorage() {
     }
@@ -26,13 +27,10 @@ public class FileStorage implements Storage {
     @Override
     public  void save(ArrayList<TaskObject> newTaskList) throws IOException {
         String filePath = null;
-        try {
-            filePath = FilePath.getPath();
-            TaskData.deleteData(filePath);
-        } catch (NoSuchFileException e1) {
-            FilePath.prepareDefaultSave();
-        } 
-        TaskData.writeList(newTaskList, filePath);
+        filePath = FilePath.getPath();
+        Path path = Paths.get(filePath);
+        Files.deleteIfExists(path);
+        TaskData.writeTasks(newTaskList, filePath);
     }
 
     @Override
@@ -46,9 +44,6 @@ public class FileStorage implements Storage {
         } catch (NoSuchFileException e) {
             FilePath.prepareDefaultSave();
         } 
-        if( lastTaskList == null) {
-            lastTaskList = new ArrayList<TaskObject>(taskList);
-        }
         return taskList;
     }
 
@@ -59,7 +54,7 @@ public class FileStorage implements Storage {
         }
         ArrayList<TaskObject> taskList = load();
         String copyFilePath = Paths.get(directory, fileName).toString();
-        TaskData.writeList(taskList, copyFilePath);
+        TaskData.writeTasks(taskList, copyFilePath);
     }
 
     @Override
@@ -69,14 +64,8 @@ public class FileStorage implements Storage {
         }
         ArrayList<TaskObject> taskList = load();
         String filePath = FilePath.getPath();
-        try {
-            TaskData.deleteData(filePath);
-        } catch (NoSuchFileException e) {
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        Path path = Paths.get(filePath);
+        Files.deleteIfExists(path);
         FilePath.changeDirectory(directory);
         save(taskList);
     }
@@ -87,9 +76,6 @@ public class FileStorage implements Storage {
         }
         String filePath = Paths.get(directory, fileName).toString();
         ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
-        if( lastTaskList == null) {
-            lastTaskList = new ArrayList<TaskObject>(taskList);
-        }
         return taskList;
     }
 

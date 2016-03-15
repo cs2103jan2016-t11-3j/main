@@ -1,20 +1,20 @@
 package storage;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
@@ -28,14 +28,15 @@ public class TaskData {
     
 
     /**
-     * Writes given tasks into specified path
+     * Creates a file at the specified path containing details of the tasks to be stored.
+     * If existing file at the specified path is present, it will be overwritten.
+     * The taskObjects will written to the file in json format.
      * <p>
-     * @param taskList
-     * @param filePath
-     * @throws NoSuchFileException Invalid specified path
+     * @param taskList An ArrayList containing all the taskObjects
+     * @param filePath The file path to create the file
      * @throws IOException Error writing to specified path
      */
-    protected static void writeList(ArrayList<TaskObject> taskList, String filePath) throws IOException {
+    protected static void writeTasks(ArrayList<TaskObject> taskList, String filePath) throws IOException {
         
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
         Gson gson = new GsonBuilder()
@@ -44,78 +45,40 @@ public class TaskData {
         String json = gson.toJson(taskList);
         writer.write(json + "\n");
         writer.close();
-        // for (TaskObject task : taskList) {
-        //     writeTask(task, filePath);
-        // }
     }
-
     
     /**
-     * Retrieves the tasks stored from the specified filePath.
+     * Reads the specified file and 
      * <p>
-     * @param filePath Location to read the stored data from
-     * @return ArrayList of TaskObjects stored in disk
-     * @throws IOException 
-     */
-//    static ArrayList<TaskObject> getTasks(String filePath) throws IOException {
-//        ArrayList<String> taskDataList = readData(filePath);
-//        ArrayList<TaskObject> taskList = parseData(taskDataList);
- //       return taskList;
-   // }
-    
-
-    /**
-     * Deletes the file containing Stored Information
-     * @param filePath 
-     * @throws NoSuchFileException No existing file
-     * @throws IOException Error deleting file
-     */
-    static void deleteData(String filePath) throws NoSuchFileException , IOException{
-        Path path = Paths.get(filePath);
-        Files.delete(path);
-    }
-    
-    /**
-     *
-     * @param filePath 
+     * @param filePath The path of the file containing the stored tasks information.
      * @return
+     * @throws FileNotFoundException The specified file path does not exist
      * @throws IOException Error reading from existing file
      */
-    static ArrayList<TaskObject> readTasks(String filePath) throws IOException {
+    static ArrayList<TaskObject> readTasks(String filePath) throws FileNotFoundException , IOException , JsonSyntaxException {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
-        JsonReader jsonReader = new JsonReader(new FileReader(filePath));
+        BufferedReader fileReader = new BufferedReader (new FileReader(filePath));
         Type typeOfTaskList = new TypeToken<ArrayList<TaskObject>>(){}.getType();
         Gson gson = new Gson();
-        taskList = gson.fromJson(jsonReader, typeOfTaskList);
-      //  String line = null;
-       // while ((line = fileReader.readLine()) != null) {
-      //      taskDataList.add(line);
-      //  }
-      //  fileReader.close();
+        taskList = gson.fromJson(fileReader, typeOfTaskList);
+        fileReader.close();
         return taskList;
     }
 
-    /**
-     * UNUSED
-     */
     
     /**
      * Convert task data into task objects
      * @param taskDataList
      * @return
      */
+    @SuppressWarnings("unused")
     private static ArrayList<TaskObject> parseData(ArrayList<String> taskDataList) {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         Type typeOfTask = new TypeToken<TaskObject>(){}.getType();
         Gson gson = new Gson();
-        for (String taskData : taskDataList) {
-            
-            
+        for (String taskData : taskDataList) {           
             TaskObject task = gson.fromJson(taskData, typeOfTask);
             taskList.add(task);
-        //    String[] taskAttributes = taskData.split(DELIMITER, -1);
-         //   TaskObject task = new StorageTask(taskAttributes);
-          //  taskList.add(task);
         }
         return taskList;
     }
@@ -126,13 +89,9 @@ public class TaskData {
      * @param filePath
      * @throws IOException
      */
+    @SuppressWarnings("unused")
     private static void writeTask(TaskObject task, String filePath) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt", true));
-        Gson gson = new Gson();
-        String json = gson.toJson(task);
-        writer.write(json + "\n");
-        writer.close();
-        
         FileWriter fileWriter = new FileWriter("data.csv" , true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
