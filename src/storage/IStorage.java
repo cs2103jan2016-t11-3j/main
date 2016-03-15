@@ -1,13 +1,15 @@
 package storage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
+
+import com.google.gson.JsonSyntaxException;
 
 import common.TaskObject;
 
-public interface Storage {
+public interface IStorage {
 
     /**
      * Writes tasks to storage. Overwrites existing tasks stored in storage.
@@ -24,8 +26,8 @@ public interface Storage {
      * @return List of TaskObjects
      * @throws IOException Error reading from Existing File
      */
-    public abstract ArrayList<TaskObject> load() throws IOException;
-
+    public abstract ArrayList<TaskObject> load() throws IOException , JsonSyntaxException;
+    
     /**
      * Creates a copy of the file containing all stored task information at the specified directory.
      * <p>
@@ -47,6 +49,19 @@ public interface Storage {
      */
     public abstract void changeSaveLocation(String directory) throws InvalidPathException, IOException;
 
+    /**
+     * 
+     * @param directory
+     * @param fileName
+     * @return
+     * @throws InvalidPathException
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws JsonSyntaxException
+     */
+    public abstract ArrayList<TaskObject> load(String directory, String fileName)
+            throws InvalidPathException, IOException, FileNotFoundException, JsonSyntaxException;
+    
     
 
 }

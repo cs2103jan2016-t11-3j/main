@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import common.TaskObject;
 import storage.FileStorage;
-import storage.Storage;
-import storage.StorageTask;
+import storage.IStorage;
+import storage.IStorage;
 import test.AssertHelper;
 
 public class LoadTest {
@@ -25,7 +25,7 @@ public class LoadTest {
     static String NEW_LINE = "\n";
     private static final String SAVE_FILE_NAME = "saveInfo.txt";
     ArrayList<TaskObject> loadedTasks = new ArrayList<TaskObject>();
-    Storage storageTest = FileStorage.getInstance();
+    IStorage storageTest = FileStorage.getInstance();
     
     @Test
     public void test() {

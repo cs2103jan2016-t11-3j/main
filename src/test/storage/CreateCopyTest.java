@@ -15,14 +15,14 @@ import org.junit.Test;
 
 import common.TaskObject;
 import storage.FileStorage;
-import storage.Storage;
+import storage.IStorage;
 import test.AssertHelper;
 import test.TaskGenerator;
 
 public class CreateCopyTest {
 
     static final String fileName = "testFile.csv";
-    Storage testStorage = FileStorage.getInstance();
+    IStorage testStorage = FileStorage.getInstance();
     TaskGenerator dummy = new TaskGenerator();
     ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
     ArrayList<String> dataList = new ArrayList<String>();

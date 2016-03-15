@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.nio.file.NoSuchFileException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -16,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
 import common.TaskObject;
 
@@ -24,7 +22,6 @@ public class TaskData {
 
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
-
     
 
     /**
@@ -48,12 +45,14 @@ public class TaskData {
     }
     
     /**
-     * Reads the specified file and 
+     * Reads the specified file and creates taskObjects from the task information stored in the file.
+     * The task information needs to be stored in json format in the file.
      * <p>
      * @param filePath The path of the file containing the stored tasks information.
      * @return
      * @throws FileNotFoundException The specified file path does not exist
      * @throws IOException Error reading from existing file
+     * @throws JsonSyntaxException File format not compatible with existing format
      */
     static ArrayList<TaskObject> readTasks(String filePath) throws FileNotFoundException , IOException , JsonSyntaxException {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();

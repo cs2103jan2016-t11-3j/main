@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import common.TaskObject;
 import storage.FileStorage;
-import storage.Storage;
+import storage.IStorage;
 
 public class SaveTest {
 
@@ -28,7 +28,7 @@ public class SaveTest {
         taskList.add(task1);
         taskList.add(task2);
 
-        Storage testStorage = FileStorage.getInstance();
+        IStorage testStorage = FileStorage.getInstance();
         testStorage.save(taskList);
 
         ArrayList<String> writtenList = readFile();
@@ -47,7 +47,7 @@ public class SaveTest {
         taskList.add(task1);
         taskList.add(task2);
 
-        Storage testStorage = FileStorage.getInstance();
+        IStorage testStorage = FileStorage.getInstance();
         testStorage.save(taskList);
 
         ArrayList<String> writtenList = readFile();

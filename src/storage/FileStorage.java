@@ -1,5 +1,6 @@
 package storage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -8,9 +9,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import com.google.gson.JsonSyntaxException;
+
 import common.TaskObject;
 
-public class FileStorage implements Storage {
+public class FileStorage implements IStorage {
 
     private static FileStorage instance = null;
 
@@ -25,16 +28,14 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public  void save(ArrayList<TaskObject> newTaskList) throws IOException {
+    public  void save(ArrayList<TaskObject> newTaskList) throws NoSuchFileException , IOException {
         String filePath = null;
         filePath = FilePath.getPath();
-        Path path = Paths.get(filePath);
-        Files.deleteIfExists(path);
         TaskData.writeTasks(newTaskList, filePath);
     }
 
     @Override
-    public ArrayList<TaskObject> load() throws IOException  {
+    public ArrayList<TaskObject> load() throws IOException , JsonSyntaxException {
        
         String filePath;
         ArrayList<TaskObject> taskList = null;
@@ -70,7 +71,9 @@ public class FileStorage implements Storage {
         save(taskList);
     }
 
-    public ArrayList<TaskObject> load(String directory, String fileName) throws InvalidPathException , IOException{
+    @Override
+    public ArrayList<TaskObject> load(String directory, String fileName) 
+            throws InvalidPathException , IOException , FileNotFoundException , JsonSyntaxException{
         if (!FilePath.checkPath(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
@@ -78,5 +81,5 @@ public class FileStorage implements Storage {
         ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
         return taskList;
     }
-
+    
 }

@@ -307,7 +307,7 @@ public class Add {
 	}
 
 	private void addExternal() {
-		Storage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
 		} catch (NoSuchFileException e) {

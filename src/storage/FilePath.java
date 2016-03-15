@@ -33,7 +33,6 @@ public class FilePath {
      * the directory containing the program unless another directory has been defined.
      * <p>
      * @return String of path of the file containing saved tasks.
-     * Returns the default location if no file has been specified.
      * @throws NoSuchFileException Existing file path is invalid.
      * @throws IOException Error reading file containing default path
      */
@@ -58,8 +57,11 @@ public class FilePath {
     }
 
     /**
-     * 
-     * @throws IOException
+     * Sets the save location to the default if the save location has not been specified. 
+     * The location where the data files created by the program will be set 
+     * to the working directory containing the program. If the save location has already
+     * been specified, it will not be changed. 
+     * @throws IOException Error creating the file containing the save location
      */
     static void prepareDefaultSave() throws IOException {
         Path path = Paths.get("." , SAVE_FILE_NAME);
