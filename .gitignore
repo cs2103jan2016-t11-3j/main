@@ -2,6 +2,7 @@
 *.csv
 
 /bin/
+/lib/
 
 saveInfo.txt
 data.txt
