@@ -78,9 +78,11 @@ public class Add {
 		try {
 			String taskType = task.getCategory();
 			if (taskType.equals("event")) {
-				assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
-				assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
-
+				// assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
+				// assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
+				assert(!task.getTaskDateTime().get(1).getStartDateTime().equals(LocalDateTime.MAX));
+				assert(!task.getTaskDateTime().get(1).getEndDateTime().equals(LocalDateTime.MAX));
+				
 				LocalDateTimePair taskTime = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
 				task.addToTaskDateTime(taskTime);
 				// check for clash only necessary if task is an event
@@ -91,8 +93,10 @@ public class Add {
 				addTask();
 			} else {
 				if (taskType.equals("deadline")) {
-					assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
-					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
+					// assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
+					// assert (task.getEndDateTime().equals(LocalDateTime.MAX));
+					assert(!task.getTaskDateTime().get(1).getStartDateTime().equals(LocalDateTime.MAX));
+					assert(task.getTaskDateTime().get(1).getEndDateTime().equals(LocalDateTime.MAX));
 
 					LocalDateTimePair taskTime = new LocalDateTimePair(task.getStartDateTime());
 					task.addToTaskDateTime(taskTime);
@@ -106,8 +110,10 @@ public class Add {
 					addTask();
 				} else {
 					assert (taskType.equals("floating"));
-					assert (task.getStartDateTime().equals(LocalDateTime.MAX));
-					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
+					// assert (task.getStartDateTime().equals(LocalDateTime.MAX));
+					// assert (task.getEndDateTime().equals(LocalDateTime.MAX));
+					assert(task.getTaskDateTime().get(1).getStartDateTime().equals(LocalDateTime.MAX));
+					assert(task.getTaskDateTime().get(1).getEndDateTime().equals(LocalDateTime.MAX));
 
 					addTask();
 					// Recurrence not possible for floating tasks
@@ -124,20 +130,41 @@ public class Add {
 	}
 
 	private void addRecurringTimes() {
-		// Generates 10 additional times on top of the first
-		LocalDateTime startTimeObject = task.getStartDateTime();
-		LocalDateTime endTimeObject = task.getEndDateTime();
-		for (int i = 0; i < 10; i++) {
-			startTimeObject = addInterval(startTimeObject, task.getInterval());
-			if (task.getCategory().equals("event")) {
-				endTimeObject = addInterval(endTimeObject, task.getInterval());
-			} else {
-				endTimeObject = LocalDateTime.MAX;
+
+		// LocalDateTime startTimeObject = task.getStartDateTime();
+		// LocalDateTime endTimeObject = task.getEndDateTime();
+		// Following new storage of time
+
+		assert (task.getCategory().equals("event") || task.getCategory().equals("deadline"));
+
+		LocalDateTimePair startEnd = task.getTaskDateTime().get(1);
+
+		// Generates 10 additional times if no recurring end time
+		if (task.getTaskDateTime().get(0).getEndDateTime().isEqual(LocalDateTime.MAX)) {
+			for (int i = 0; i < 10; i++) {
+				startEnd = addToTaskDateTime(startEnd);
+				// System.out.println(i+1+ " "+ startTimeObject.toString());
 			}
-			LocalDateTimePair nextTime = new LocalDateTimePair(startTimeObject, endTimeObject);
-			task.addToTaskDateTime(nextTime);
-			// System.out.println(i+1+ " "+ startTimeObject.toString());
+		} else {
+			// Generates up till the last possible time before it exceeds end recurring time
+			while (startEnd.getStartDateTime().isBefore(task.getTaskDateTime().get(0).getEndDateTime())) {
+				addToTaskDateTime(startEnd);
+			}
 		}
+	}
+
+	private LocalDateTimePair addToTaskDateTime(LocalDateTimePair startEnd) {
+		LocalDateTime startTimeObject = startEnd.getStartDateTime();
+		LocalDateTime endTimeObject = startEnd.getEndDateTime();
+		startTimeObject = addInterval(startTimeObject, task.getInterval());
+		if (task.getCategory().equals("event")) {
+			endTimeObject = addInterval(endTimeObject, task.getInterval());
+		} else {
+			endTimeObject = LocalDateTime.MAX;
+		}
+		LocalDateTimePair nextTime = new LocalDateTimePair(startTimeObject, endTimeObject);
+		task.addToTaskDateTime(nextTime);
+		return nextTime;
 	}
 
 	public static LocalDateTime addInterval(LocalDateTime originalTime, Interval interval) {
