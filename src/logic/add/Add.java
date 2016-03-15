@@ -99,7 +99,7 @@ public class Add {
 					boolean isOverdue = checkIfOverdue();
 					if (task.getIsRecurring()) {
 						addRecurringTimes();
-					} 
+					}
 					if (isOverdue) {
 						setTaskStatus(isOverdue);
 					}
@@ -253,7 +253,7 @@ public class Add {
 
 	private void addClashedRecurringTasks(TaskObject current) {
 		for (int i = 0; i < clashedTasks.size(); i++) {
-			if (clashedTasks.equals(current)) {
+			if (clashedTasks.get(i).equals(current)) {
 				// To prevent duplicate tasks from being added to clashedTasks
 				return;
 			}

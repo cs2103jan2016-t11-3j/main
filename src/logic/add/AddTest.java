@@ -269,4 +269,48 @@ public class AddTest {
 			assertEquals(pair.getStartDateTime(), taskEleven.getTaskDateTime().get(i).getStartDateTime());
 		}
 	}
+	
+	@Test
+	// Add recurring event which will clash in the future
+	public void testL() {
+		ArrayList<String> actualOutput = new ArrayList<String>();
+
+		TaskObject taskTwelve = new TaskObject("Weekly supper date", 12);
+		taskTwelve.setCategory("event");
+		taskTwelve.setIsRecurring(true);
+		LocalDateTime sdt = LocalDateTime.of(2016, 03, 29, 20, 00);
+		LocalDateTime edt = LocalDateTime.of(2016, 03, 29, 22, 00);
+		
+		taskTwelve.setStartDateTime(sdt);
+		taskTwelve.setEndDateTime(edt);
+		LocalDateTimePair pair = new LocalDateTimePair(sdt, edt);
+		
+		// Test if intervals add correctly
+		Interval interval = new Interval();
+		interval.setWeek(1);
+		
+		taskTwelve.setInterval(interval);
+		
+		// Test if output is the same
+		Add addTwelfth = new Add(taskTwelve, -1, testArray);
+		actualOutput = addTwelfth.run();
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Task added: Weekly supper date");
+		expectedOutput.add("Task: Weekly supper date clashes with Weekly dinner date");
+		assertEquals(expectedOutput, actualOutput);
+		
+		/* For test printing
+		for(int i = 0; i < taskTen.getTaskDateTime().size(); i++) {
+			System.out.println(i+1 + " " + taskTen.getTaskDateTime().get(i).getStartDateTime().toString());
+		}
+		*/
+		
+		// Test if taskDateTime ArrayLists are the same
+		for(int i = 0; i < 10; i++) {
+			pair = new LocalDateTimePair(sdt, edt);
+			sdt = sdt.plusWeeks(1);
+			edt = edt.plusWeeks(1);
+			assertEquals(pair.getStartDateTime(), taskTwelve.getTaskDateTime().get(i).getStartDateTime());
+		}
+	}
 }
