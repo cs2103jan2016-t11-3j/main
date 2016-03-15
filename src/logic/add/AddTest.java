@@ -170,7 +170,7 @@ public class AddTest {
 	public void testI() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 
-		TaskObject taskNine = new TaskObject("Dinner in school", 4);
+		TaskObject taskNine = new TaskObject("Dinner in school", 9);
 		taskNine.setCategory("event");
 		taskNine.setStartDateTime(LocalDateTime.of(2016, 03, 26, 18, 00));
 		taskNine.setEndDateTime(LocalDateTime.of(2016, 03, 26, 21, 00));
@@ -188,7 +188,7 @@ public class AddTest {
 	public void testJ() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 
-		TaskObject taskTen = new TaskObject("Weekly assignment", 4);
+		TaskObject taskTen = new TaskObject("Weekly assignment", 10);
 		taskTen.setCategory("deadline");
 		taskTen.setIsRecurring(true);
 		LocalDateTime dateTime = LocalDateTime.of(2016, 03, 26, 18, 00);
@@ -223,6 +223,50 @@ public class AddTest {
 			pair = new LocalDateTimePair(dateTime);
 			dateTime = dateTime.plusWeeks(1);
 			assertEquals(pair.getStartDateTime(), taskTen.getTaskDateTime().get(i).getStartDateTime());
+		}
+	}
+	
+	@Test
+	// Add recurring event
+	public void testK() {
+		ArrayList<String> actualOutput = new ArrayList<String>();
+
+		TaskObject taskEleven = new TaskObject("Weekly dinner date", 11);
+		taskEleven.setCategory("event");
+		taskEleven.setIsRecurring(true);
+		LocalDateTime sdt = LocalDateTime.of(2016, 03, 27, 18, 00);
+		LocalDateTime edt = LocalDateTime.of(2016, 03, 27, 21, 00);
+		
+		taskEleven.setStartDateTime(sdt);
+		taskEleven.setEndDateTime(edt);
+		LocalDateTimePair pair = new LocalDateTimePair(sdt, edt);
+		
+		// Test if intervals add correctly
+		Interval interval = new Interval();
+		interval.setWeek(1);
+		interval.setDay(1);
+		
+		taskEleven.setInterval(interval);
+		
+		// Test if output is the same
+		Add addEleventh = new Add(taskEleven, -1, testArray);
+		actualOutput = addEleventh.run();
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Task added: Weekly dinner date");
+		assertEquals(expectedOutput, actualOutput);
+		
+		/* For test printing
+		for(int i = 0; i < taskTen.getTaskDateTime().size(); i++) {
+			System.out.println(i+1 + " " + taskTen.getTaskDateTime().get(i).getStartDateTime().toString());
+		}
+		*/
+		
+		// Test if taskDateTime ArrayLists are the same
+		for(int i = 0; i < 10; i++) {
+			pair = new LocalDateTimePair(sdt, edt);
+			sdt = sdt.plusWeeks(1).plusDays(1);
+			edt = edt.plusWeeks(1).plusDays(1);
+			assertEquals(pair.getStartDateTime(), taskEleven.getTaskDateTime().get(i).getStartDateTime());
 		}
 	}
 }
