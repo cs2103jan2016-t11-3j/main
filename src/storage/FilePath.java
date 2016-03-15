@@ -21,7 +21,7 @@ public class FilePath {
      * @param directory Location of new directory to contain data file for saved tasks
      * @throws IOException Error saving new directory
      */
-    static void changeDirectory(String directory) throws IOException {
+    protected static void changeDirectory(String directory) throws IOException {
         FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(directory.toString());

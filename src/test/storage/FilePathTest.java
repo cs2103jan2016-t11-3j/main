@@ -17,11 +17,6 @@ public class FilePathTest extends storage.FilePath {
 
     private static final String SAVE_FILE_NAME = "saveInfo.txt";
     private static final String DATA_FILE_NAME = "data.txt";
-    
-    @Test
-    public void testChangeDirectory() {
-        fail("Not yet implemented");
-    }
 
     @Test(expected = NoSuchFileException.class)
     public void testGetPathNoFile() throws NoSuchFileException, IOException {
@@ -51,6 +46,15 @@ public class FilePathTest extends storage.FilePath {
         Paths.get("should fail");
         assertEquals("Folder is Usable", false, isUsable);
     }
+    
+    @Test
+    public void testChangeDirectory() throws IOException {
+        String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
+        Path path = Paths.get(saveDir, "bin");
+        Path expectedPath = Paths.get(saveDir, "bin" , DATA_FILE_NAME);
+        changeDirectory(path.toString());
+        assertEquals( "Change Directory to bin" , expectedPath.toString() , getPath() );
+    }
         
     private void writeSaveDir(String directory) throws IOException {
         FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
@@ -59,6 +63,8 @@ public class FilePathTest extends storage.FilePath {
         printWriter.close();
     }
 
+
+    
 }
 
 

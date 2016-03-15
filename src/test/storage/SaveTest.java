@@ -13,7 +13,6 @@ import org.junit.Test;
 import common.TaskObject;
 import storage.FileStorage;
 import storage.Storage;
-import storage.StorageTask;
 
 public class SaveTest {
 
@@ -24,8 +23,8 @@ public class SaveTest {
     @Test
     public void testWrite() throws NoSuchFileException, IOException {
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
-        TaskObject task1 = new StorageTask("task1", 1);
-        TaskObject task2 = new StorageTask("task2", 2);
+        TaskObject task1 = new TaskObject("task1", 1);
+        TaskObject task2 = new TaskObject("task2", 2);
         taskList.add(task1);
         taskList.add(task2);
 
@@ -43,8 +42,8 @@ public class SaveTest {
     @Test
     public void testOverwrite() throws NoSuchFileException, IOException{
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
-        TaskObject task1 = new StorageTask("task3", 3);
-        TaskObject task2 = new StorageTask("task4", 4);
+        TaskObject task1 = new TaskObject("task3", 3);
+        TaskObject task2 = new TaskObject("task4", 4);
         taskList.add(task1);
         taskList.add(task2);
 
