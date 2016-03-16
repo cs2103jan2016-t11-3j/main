@@ -18,35 +18,25 @@ import common.AtfLogger;
 
 public class FilePath {
 
-    public static final String DEFAULT_DIRECTORY = ".";
-    
-    public static final String SAVE_FILENAME = "saveInfo.txt";
-    public static final String DATA_FILE_NAME = "data.txt";
-    public static final Path DEFAULT_SAVE_PATH = Paths.get(DEFAULT_DIRECTORY, SAVE_FILENAME);
-    
-    public static final String LOG_FILENAME = "log.txt";
-    public static final String LOG_DIRECTORY = "atf_logs";
-    public static final Path LOG_FILEPATH = Paths.get(DEFAULT_DIRECTORY, 
-            LOG_DIRECTORY , LOG_FILENAME);
-    
     /**
      * Changes the default directory location to store the data file to the provided path.
      * <p>
      * @param directory Location of new directory to contain data file for saved tasks
      * @throws IOException Error saving new directory
      */
-    protected static void changeDirectory(String directory) throws IOException {
+    protected static void changePreferedDirectory(String directory) throws IOException {
         Logger logger = AtfLogger.getLogger();
         File file = new File(directory);
         if (!file.exists()) {
             file.mkdirs();
+            logger.info(String.format(Constants.LOG_MKDIR, directory));
         }
         checkDirectory(directory);
-        FileWriter fileWriter = new FileWriter(SAVE_FILENAME , false);
+        FileWriter fileWriter = new FileWriter(Constants.SAVE_FILEPATH.toString() , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(directory);
         printWriter.close();
-        logger.info(String.format("Directory changed to %s", directory));
+        logger.info(String.format(Constants.LOG_CHANGE_PREFERED_DIR, directory));
     }
 
     /**
@@ -60,7 +50,7 @@ public class FilePath {
     protected static String getPath() throws FileNotFoundException , IOException {
         String directory = getPreferedDirectory();
         checkDirectory(directory);
-        Path path = Paths.get(directory, DATA_FILE_NAME);
+        Path path = Paths.get(directory, Constants.DATA_FILENAME);
         return path.toString();
     }
     
@@ -88,13 +78,13 @@ public class FilePath {
      * @throws IOException Error creating the file containing the save location
      */
     static void initializeDefaultSave() throws IOException {
-        if(!Files.exists(DEFAULT_SAVE_PATH)) {
-            changeDirectory(DEFAULT_DIRECTORY);
+        if(!Files.exists(Constants.DEFAULT_SAVE_PATH)) {
+            changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
         }
     }
     
     private static String getPreferedDirectory() throws FileNotFoundException, IOException {
-        BufferedReader fileReader = new BufferedReader(new FileReader (SAVE_FILENAME));
+        BufferedReader fileReader = new BufferedReader(new FileReader (Constants.SAVE_FILEPATH.toString()));
         Path directory = Paths.get(fileReader.readLine());
         fileReader.close();
         return directory.toString();

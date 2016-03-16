@@ -15,14 +15,16 @@ import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Test;
 
+import storage.Constants;
+
 public class FilePathTest extends storage.FilePath {
 
-    private static final String SAVE_FILE_NAME = "saveInfo.txt";
-    private static final String DATA_FILE_NAME = "data.txt";
+    private static final String SAVE_FILE_NAME = Constants.SAVE_FILENAME;
+    private static final String DATA_FILE_NAME = Constants.DATA_FILENAME;
 
     @After
     public void tearDown() throws Exception {
-        Path path = Paths.get(SAVE_FILE_NAME);
+        Path path = Constants.SAVE_FILEPATH;
         Path path2 = Paths.get(".", "bin" , "save");
         try {
             Files.delete(path);
@@ -63,7 +65,7 @@ public class FilePathTest extends storage.FilePath {
         String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
         Path path = Paths.get(saveDir, "bin");
         Path expectedPath = Paths.get(saveDir, "bin" , DATA_FILE_NAME);
-        changeDirectory(path.toString());
+        changePreferedDirectory(path.toString());
         assertEquals( "Change Directory to bin" , expectedPath.toString() , getPath() );
     }
     
@@ -72,12 +74,12 @@ public class FilePathTest extends storage.FilePath {
         String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
         Path path = Paths.get(saveDir, "bin" , "save");
         Path expectedPath = Paths.get(saveDir, "bin"  , "save" , DATA_FILE_NAME);
-        changeDirectory(path.toString());
+        changePreferedDirectory(path.toString());
         assertEquals( "Change Directory to bin" , expectedPath.toString() , getPath() );
     }
         
     private void writeSaveDir(String directory) throws IOException {
-        FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
+        FileWriter fileWriter = new FileWriter(Constants.SAVE_FILEPATH.toString() , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(directory.toString());
         printWriter.close();

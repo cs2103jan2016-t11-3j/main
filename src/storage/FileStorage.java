@@ -39,7 +39,7 @@ public class FileStorage implements IStorage {
         String filePath = null;
         try {
             filePath = FilePath.getPath();
-        } catch (NoSuchFileException e) {
+        } catch (FileNotFoundException e) {
             FilePath.initializeDefaultSave();
         } 
         ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
@@ -65,7 +65,7 @@ public class FileStorage implements IStorage {
         String filePath = FilePath.getPath();
         Path path = Paths.get(filePath);
         Files.deleteIfExists(path);
-        FilePath.changeDirectory(directory);
+        FilePath.changePreferedDirectory(directory);
         save(taskList);
     }
 

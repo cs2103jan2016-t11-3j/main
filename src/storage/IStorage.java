@@ -18,7 +18,7 @@ public interface IStorage {
      * @return 
      * @throws IOException Error with saving file
      */
-    public abstract void save(ArrayList<TaskObject> taskList) throws IOException;
+    void save(ArrayList<TaskObject> taskList) throws IOException;
 
     /**
      * Loads all saved tasks into storage from existing specified file.
@@ -26,7 +26,7 @@ public interface IStorage {
      * @return List of TaskObjects
      * @throws IOException Error reading from Existing File
      */
-    public abstract ArrayList<TaskObject> load() throws IOException , JsonSyntaxException;
+    ArrayList<TaskObject> load() throws IOException , JsonSyntaxException;
     
     /**
      * Creates a copy of the file containing all stored task information at the specified directory.
@@ -39,7 +39,7 @@ public interface IStorage {
      * @throws IOException Error Copying Existing Files
      * @throws InvalidPathException  The path specified cannot be used
      */
-    public abstract void createCopy(String directory, String fileName) throws InvalidPathException, IOException;
+    void createCopy(String directory, String fileName) throws InvalidPathException, IOException;
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface IStorage {
      * @throws IOException Error writing to specified directory
      * @throws InvalidPathException The specified directory cannot be used
      */
-    public abstract void changeSaveLocation(String directory) throws InvalidPathException, IOException;
+    void changeSaveLocation(String directory) throws InvalidPathException, IOException;
 
     /**
      * 
@@ -59,7 +59,7 @@ public interface IStorage {
      * @throws FileNotFoundException
      * @throws JsonSyntaxException
      */
-    public abstract ArrayList<TaskObject> load(String directory, String fileName)
+    ArrayList<TaskObject> load(String directory, String fileName)
             throws InvalidPathException, IOException, FileNotFoundException, JsonSyntaxException;
     
     

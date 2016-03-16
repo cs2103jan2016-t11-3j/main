@@ -10,12 +10,14 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import common.AtfLogger;
 import common.TaskObject;
 
 public class TaskData {
@@ -23,7 +25,8 @@ public class TaskData {
     private static final String DELIMITER = ";";
     private static final String NEW_LINE = "\n";
     
-
+    
+    
     /**
      * Creates a file at the specified path containing details of the tasks to be stored.
      * If existing file at the specified path is present, it will be overwritten.
@@ -35,13 +38,15 @@ public class TaskData {
      */
     protected static void writeTasks(ArrayList<TaskObject> taskList, String filePath) throws IOException {
         assert filePath!= null;
+        Logger logger = AtfLogger.getLogger();
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
         String json = gson.toJson(taskList);
-        writer.write(json + "\n");
+        writer.write(json + NEW_LINE);
         writer.close();
+        logger.info(String.format(Constants.LOG_SAVED, filePath));
     }
     
     /**
@@ -56,12 +61,14 @@ public class TaskData {
      */
     static ArrayList<TaskObject> readTasks(String filePath) throws FileNotFoundException , IOException , JsonSyntaxException {
         assert(filePath!= null);
+        Logger logger = AtfLogger.getLogger();
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         BufferedReader fileReader = new BufferedReader (new FileReader(filePath));
         Type typeOfTaskList = new TypeToken<ArrayList<TaskObject>>(){}.getType();
         Gson gson = new Gson();
         taskList = gson.fromJson(fileReader, typeOfTaskList);
         fileReader.close();
+        logger.info(String.format(Constants.LOG_LOADED, filePath));
         return taskList;
     }
 
