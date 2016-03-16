@@ -3,10 +3,12 @@
  */
 package test.storage;
 
-import static org.junit.Assert.*;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -15,7 +17,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.gson.JsonSyntaxException;
+
 import common.TaskObject;
+import storage.Constants;
+import storage.FileStorage;
+import storage.IStorage;
+import test.AssertHelper;
+import test.TaskGenerator;
 
 /**
  * @author Hang
@@ -24,12 +33,14 @@ import common.TaskObject;
 public class FileStorageTest {
 
     
-    public ArrayList<TaskObject> saveList1 = new ArrayList<TaskObject>();
-    public ArrayList<TaskObject> saveList2 = new ArrayList<TaskObject>();
+    public static ArrayList<TaskObject> taskList1 = new ArrayList<TaskObject>();
+    public static ArrayList<TaskObject> taskList2 = new ArrayList<TaskObject>();
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        
+        TaskGenerator taskGen = new TaskGenerator();
+        taskList1 = taskGen.getTaskList(5);
+        taskList2 = taskGen.getTaskList(5);
     }
 
     /**
@@ -37,6 +48,11 @@ public class FileStorageTest {
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
+        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.DATA_FILENAME);
+        Path path2 = Paths.get(Constants.LOG_DIR.toString() , "test");
+        Files.deleteIfExists(path1);
+        Files.deleteIfExists(path2);
+        Files.deleteIfExists(Constants.DEFAULT_SAVE_PATH);
     }
 
     /**
@@ -54,33 +70,52 @@ public class FileStorageTest {
     }
 
     @Test
-    public void testSave() {
-        fail("Not yet implemented");
+    public void testSaveLoad() throws IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        ArrayList<TaskObject> actualTaskList = storage.load();
+        AssertHelper.assertTaskListEquals("SaveLoad" , taskList1 , actualTaskList);
+    }
+
+    @Test
+    public void testSaveLoadSeperate() throws IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        storage = null;
+        storage = FileStorage.getInstance();
+        ArrayList<TaskObject> actualTaskList = storage.load();
+        AssertHelper.assertTaskListEquals("SaveLoad" , taskList1 , actualTaskList);
+    }
+
+    @Test
+    public void testOverWrite() throws IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        storage.save(taskList2);
+        ArrayList<TaskObject> actualTaskList = storage.load();
+        AssertHelper.assertTaskListEquals("SaveLoad" , taskList2 , actualTaskList);
+    }
+
+    @Test
+    public void testCreateCopyLoadFrom() throws IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        storage.createCopy(Constants.LOG_DIR.toString(), "test");
+        ArrayList<TaskObject> actualTaskList = 
+                storage.load(Constants.LOG_DIR.toString() , "test");
+        AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList1 , actualTaskList);
     }
 
 
     @Test
-    public void testLoad() {
-        fail("Not yet implemented");
+    public void testChangeSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        storage.changeSaveLocation(Constants.LOG_DIR.toString());
+        storage.save(taskList2);
+        ArrayList<TaskObject> actualTaskList = storage.load();
+        AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList2 , actualTaskList);
     }
 
-    @Test
-    public void testCreateCopy() {
-        fail("Not yet implemented");
-    }
-
-
-    @Test
-    public void testChangeSaveLocation() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link storage.FileStorage#load(java.lang.String, java.lang.String)}.
-     */
-    @Test
-    public void testLoadStringString() {
-        fail("Not yet implemented");
-    }
 
 }

@@ -26,6 +26,15 @@ public class AssertHelper {
         assertEquals(testDescription + " taskId", task1.getTaskId(), task2.getTaskId());
     }
     
+    public static void assertTaskListEquals(String testDescription, 
+            ArrayList<TaskObject> expectedTaskList, ArrayList<TaskObject> actualTaskList) {
+        assertEquals(testDescription + "listSize" , expectedTaskList.size(), actualTaskList.size());
+        int size = expectedTaskList.size();
+        for (int i = 0; i < size; i++) {
+            assertTaskEquals( testDescription+ "dataListContent" , expectedTaskList.get(i) , actualTaskList.get(i));
+        }
+    }
+    
     public static void assertFileEquals(String testDescription, Path path, ArrayList<String> expectedTaskDataList) {
         assertEquals(testDescription + " File Exist" , true , Files.exists(path));
         
