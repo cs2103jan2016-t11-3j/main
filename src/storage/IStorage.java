@@ -13,20 +13,23 @@ public interface IStorage {
 
     /**
      * Writes tasks to storage. Overwrites existing tasks stored in storage.
+     * If no existing preferred save location is found, the preferred save location
+     * will be set to the default save location. 
      * <p>
      * @param taskList - The list of tasksObjects to be written
-     * @return 
-     * @throws IOException Error with saving file
+     * @throws IOException Error with saving tasks to disks
      */
     void save(ArrayList<TaskObject> taskList) throws IOException;
 
     /**
-     * Loads all saved tasks into storage from existing specified file.
-     * <p>
-     * @return List of TaskObjects
-     * @throws IOException Error reading from Existing File
+     * Loads all saved tasks into storage from existing specified file. If no existing 
+     * existing preferred save location is specified, returns an empty list.
+     * @return List of TaskObjects. Empty list returned if no save location is specified.
+     * @throws FileNotFoundException Unable to find file in specified save location.
+     * @throws IOException Error reading from disk.
+     * @throws JsonSyntaxException File not in correct format.
      */
-    ArrayList<TaskObject> load() throws IOException , JsonSyntaxException;
+    ArrayList<TaskObject> load() throws FileNotFoundException, IOException , JsonSyntaxException;
     
     /**
      * Creates a copy of the file containing all stored task information at the specified directory.
@@ -50,14 +53,15 @@ public interface IStorage {
     void changeSaveLocation(String directory) throws InvalidPathException, IOException;
 
     /**
+     * Load from specified path.
      * 
      * @param directory
      * @param fileName
      * @return
-     * @throws InvalidPathException
-     * @throws IOException
-     * @throws FileNotFoundException
-     * @throws JsonSyntaxException
+     * @throws InvalidPathException The specified path is invalid
+     * @throws IOException Error reading from file
+     * @throws FileNotFoundException No file found at the specified path
+     * @throws JsonSyntaxException Specified file is not in correct format
      */
     ArrayList<TaskObject> load(String directory, String fileName)
             throws InvalidPathException, IOException, FileNotFoundException, JsonSyntaxException;

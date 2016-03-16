@@ -44,7 +44,7 @@ public class FilePath {
      * the directory containing the program unless another directory has been defined.
      * <p>
      * @return String of path of the file containing saved tasks.
-     * @throws NoSuchFileException Existing file path is invalid.
+     * @throws FileNotFound No existing preferred directory specified.
      * @throws IOException Error reading file containing default path
      */
     protected static String getPath() throws FileNotFoundException , IOException {
@@ -54,7 +54,13 @@ public class FilePath {
         return path.toString();
     }
     
+    /**
+     * 
+     * @param directory
+     * @throws InvalidPathException
+     */
     protected static void checkDirectory(String directory) throws InvalidPathException {
+        assert directory != null;
         Path path = Paths.get(directory);
         if( !Files.isExecutable(path) || !Files.isWritable(path) || !Files.isReadable(path)) {
             throw new InvalidPathException(directory, "Cannot be used");
@@ -82,10 +88,12 @@ public class FilePath {
             changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
         }
     }
-    
-    private static String getPreferedDirectory() throws FileNotFoundException, IOException {
-        BufferedReader fileReader = new BufferedReader(new FileReader (Constants.SAVE_FILEPATH.toString()));
-        Path directory = Paths.get(fileReader.readLine());
+
+    private static String getPreferedDirectory() throws FileNotFoundException, IOException  {
+        Path directory = null;
+        BufferedReader fileReader = new BufferedReader(
+                new FileReader (Constants.SAVE_FILEPATH.toString()));
+        directory = Paths.get(fileReader.readLine());
         fileReader.close();
         return directory.toString();
     }

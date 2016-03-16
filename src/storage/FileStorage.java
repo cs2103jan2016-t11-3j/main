@@ -28,26 +28,49 @@ public class FileStorage implements IStorage {
     }
 
     @Override
-    public  void save(ArrayList<TaskObject> newTaskList) throws NoSuchFileException , IOException {
+    public  void save(ArrayList<TaskObject> newTaskList) 
+            throws NoSuchFileException, IOException {
         String filePath = null;
+        try {
         filePath = FilePath.getPath();
+        } catch (FileNotFoundException e) {
+            FilePath.initializeDefaultSave();
+            filePath = FilePath.getPath();
+        }
+        if(filePath == null) { // defensive measure
+            FilePath.initializeDefaultSave();
+            filePath = FilePath.getPath();
+        }
         TaskData.writeTasks(newTaskList, filePath);
     }
 
     @Override
-    public ArrayList<TaskObject> load() throws IOException , JsonSyntaxException {
+    public ArrayList<TaskObject> load() 
+            throws FileNotFoundException, IOException , JsonSyntaxException {
         String filePath = null;
         try {
             filePath = FilePath.getPath();
         } catch (FileNotFoundException e) {
-            FilePath.initializeDefaultSave();
+            return new ArrayList<TaskObject>();
         } 
         ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
         return taskList;
     }
 
     @Override
-    public void createCopy(String directory , String fileName) throws InvalidPathException ,IOException  {
+    public ArrayList<TaskObject> load(String directory, String fileName) 
+            throws InvalidPathException, FileNotFoundException, IOException, JsonSyntaxException{
+        if (!FilePath.checkPath(directory)) {
+            throw new InvalidPathException(directory, "Invalid Directory");
+        }
+        String filePath = Paths.get(directory, fileName).toString();
+        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
+        return taskList;
+    }
+    
+    @Override
+    public void createCopy(String directory , String fileName) 
+            throws InvalidPathException ,IOException  {
         if (!FilePath.checkPath(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
@@ -57,7 +80,8 @@ public class FileStorage implements IStorage {
     }
 
     @Override
-    public void changeSaveLocation (String directory) throws InvalidPathException , IOException {
+    public void changeSaveLocation (String directory) 
+            throws InvalidPathException , IOException {
         if (!FilePath.checkPath(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
@@ -67,17 +91,6 @@ public class FileStorage implements IStorage {
         Files.deleteIfExists(path);
         FilePath.changePreferedDirectory(directory);
         save(taskList);
-    }
-
-    @Override
-    public ArrayList<TaskObject> load(String directory, String fileName) 
-            throws InvalidPathException , IOException , FileNotFoundException , JsonSyntaxException{
-        if (!FilePath.checkPath(directory)) {
-            throw new InvalidPathException(directory, "Invalid Directory");
-        }
-        String filePath = Paths.get(directory, fileName).toString();
-        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
-        return taskList;
     }
     
 }
