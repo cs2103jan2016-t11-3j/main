@@ -1,20 +1,34 @@
 package storage;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
+
+import common.AtfLogger;
 
 public class FilePath {
 
-    private static final String SAVE_FILE_NAME = "saveInfo.txt";
-    private static final String DATA_FILE_NAME = "data.txt";
-
+    public static final String DEFAULT_DIRECTORY = ".";
+    
+    public static final String SAVE_FILENAME = "saveInfo.txt";
+    public static final String DATA_FILE_NAME = "data.txt";
+    public static final Path DEFAULT_SAVE_PATH = Paths.get(DEFAULT_DIRECTORY, SAVE_FILENAME);
+    
+    public static final String LOG_FILENAME = "log.txt";
+    public static final String LOG_DIRECTORY = "atf_logs";
+    public static final Path LOG_FILEPATH = Paths.get(DEFAULT_DIRECTORY, 
+            LOG_DIRECTORY , LOG_FILENAME);
+    
     /**
      * Changes the default directory location to store the data file to the provided path.
      * <p>
@@ -22,10 +36,17 @@ public class FilePath {
      * @throws IOException Error saving new directory
      */
     protected static void changeDirectory(String directory) throws IOException {
-        FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
+        Logger logger = AtfLogger.getLogger();
+        File file = new File(directory);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        checkDirectory(directory);
+        FileWriter fileWriter = new FileWriter(SAVE_FILENAME , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(directory.toString());
+        printWriter.print(directory);
         printWriter.close();
+        logger.info(String.format("Directory changed to %s", directory));
     }
 
     /**
@@ -36,17 +57,20 @@ public class FilePath {
      * @throws NoSuchFileException Existing file path is invalid.
      * @throws IOException Error reading file containing default path
      */
-    protected static String getPath() throws NoSuchFileException , IOException {
-        Path path = Paths.get("." , SAVE_FILE_NAME);
-        if(!Files.exists( path )) {
-            throw new NoSuchFileException(path.toString() , null, "No saveInfo");
-        }
-        BufferedReader fileReader = new BufferedReader(new FileReader (SAVE_FILE_NAME));
-        path = Paths.get(fileReader.readLine());
-        fileReader.close();
-        return path.resolve(DATA_FILE_NAME).toString();
+    protected static String getPath() throws FileNotFoundException , IOException {
+        String directory = getPreferedDirectory();
+        checkDirectory(directory);
+        Path path = Paths.get(directory, DATA_FILE_NAME);
+        return path.toString();
     }
     
+    protected static void checkDirectory(String directory) throws InvalidPathException {
+        Path path = Paths.get(directory);
+        if( !Files.isExecutable(path) || !Files.isWritable(path) || !Files.isReadable(path)) {
+            throw new InvalidPathException(directory, "Cannot be used");
+        }
+    }
+
     /**
      * Checks if the specified filePath is writable and readable.  
      * @param filePath or path of file to check
@@ -63,11 +87,17 @@ public class FilePath {
      * been specified, it will not be changed. 
      * @throws IOException Error creating the file containing the save location
      */
-    static void prepareDefaultSave() throws IOException {
-        Path path = Paths.get("." , SAVE_FILE_NAME);
-        if(!Files.exists( path )) {
-            changeDirectory(".");
+    static void initializeDefaultSave() throws IOException {
+        if(!Files.exists(DEFAULT_SAVE_PATH)) {
+            changeDirectory(DEFAULT_DIRECTORY);
         }
+    }
+    
+    private static String getPreferedDirectory() throws FileNotFoundException, IOException {
+        BufferedReader fileReader = new BufferedReader(new FileReader (SAVE_FILENAME));
+        Path directory = Paths.get(fileReader.readLine());
+        fileReader.close();
+        return directory.toString();
     }
     
 }

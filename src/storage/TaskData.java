@@ -34,7 +34,7 @@ public class TaskData {
      * @throws IOException Error writing to specified path
      */
     protected static void writeTasks(ArrayList<TaskObject> taskList, String filePath) throws IOException {
-        
+        assert filePath!= null;
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -55,6 +55,7 @@ public class TaskData {
      * @throws JsonSyntaxException File format not compatible with existing format
      */
     static ArrayList<TaskObject> readTasks(String filePath) throws FileNotFoundException , IOException , JsonSyntaxException {
+        assert(filePath!= null);
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         BufferedReader fileReader = new BufferedReader (new FileReader(filePath));
         Type typeOfTaskList = new TypeToken<ArrayList<TaskObject>>(){}.getType();

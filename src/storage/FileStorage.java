@@ -36,15 +36,13 @@ public class FileStorage implements IStorage {
 
     @Override
     public ArrayList<TaskObject> load() throws IOException , JsonSyntaxException {
-       
-        String filePath;
-        ArrayList<TaskObject> taskList = null;
+        String filePath = null;
         try {
             filePath = FilePath.getPath();
-            taskList = new ArrayList<TaskObject>(TaskData.readTasks(filePath));
         } catch (NoSuchFileException e) {
-            FilePath.prepareDefaultSave();
+            FilePath.initializeDefaultSave();
         } 
+        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
         return taskList;
     }
 
