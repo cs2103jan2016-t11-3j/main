@@ -16,9 +16,9 @@ public class AtfLogger {
     
     public static Logger logger = null;
 
-    public static Logger getLogger() {
+    public static Logger getLogger(String name) {
         if (logger == null) {
-            logger = Logger.getLogger("AtfLogger");
+            logger = Logger.getLogger(name);
             logger.setLevel(Level.INFO);
            
             try {

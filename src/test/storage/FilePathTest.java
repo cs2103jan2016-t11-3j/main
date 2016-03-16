@@ -23,15 +23,11 @@ public class FilePathTest extends storage.FilePath {
     private static final String DATA_FILE_NAME = Constants.DATA_FILENAME;
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws IOException {
         Path path = Constants.SAVE_FILEPATH;
         Path path2 = Paths.get(".", "bin" , "save");
-        try {
-            Files.delete(path);
-            Files.delete(path2);
-        } catch (Exception e) {
-            // Ignore
-        }
+        Files.deleteIfExists(path);
+        Files.deleteIfExists(path2);
         
     }
     

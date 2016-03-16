@@ -35,6 +35,7 @@ public class FileStorageTest {
     
     public static ArrayList<TaskObject> taskList1 = new ArrayList<TaskObject>();
     public static ArrayList<TaskObject> taskList2 = new ArrayList<TaskObject>();
+    public static String moveDir = Paths.get(Constants.ATF_DIRECTORY).toString();
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -49,9 +50,11 @@ public class FileStorageTest {
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
         Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.DATA_FILENAME);
-        Path path2 = Paths.get(Constants.LOG_DIR.toString() , "test");
+        Path path2 = Paths.get(moveDir , "test");
+        Path path3 = Paths.get(moveDir , Constants.DATA_FILENAME);
         Files.deleteIfExists(path1);
         Files.deleteIfExists(path2);
+        Files.deleteIfExists(path3);
         Files.deleteIfExists(Constants.DEFAULT_SAVE_PATH);
     }
 
@@ -100,9 +103,9 @@ public class FileStorageTest {
     public void testCreateCopyLoadFrom() throws IOException {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
-        storage.createCopy(Constants.LOG_DIR.toString(), "test");
+        storage.createCopy(moveDir, "test");
         ArrayList<TaskObject> actualTaskList = 
-                storage.load(Constants.LOG_DIR.toString() , "test");
+                storage.load(moveDir , "test");
         AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList1 , actualTaskList);
     }
 
@@ -111,7 +114,7 @@ public class FileStorageTest {
     public void testChangeSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
-        storage.changeSaveLocation(Constants.LOG_DIR.toString());
+        storage.changeSaveLocation(moveDir);
         storage.save(taskList2);
         ArrayList<TaskObject> actualTaskList = storage.load();
         AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList2 , actualTaskList);
