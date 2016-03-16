@@ -21,13 +21,13 @@ import test.TaskGenerator;
 
 public class CreateCopyTest {
 
-    static final String fileName = "testFile.csv";
+    static final String fileName = "data.txt";
     IStorage testStorage = FileStorage.getInstance();
     TaskGenerator dummy = new TaskGenerator();
     ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
     ArrayList<String> dataList = new ArrayList<String>();
     ArrayList<String> expectedDataList = new ArrayList<String>();
-    private final Path defaultPath = Paths.get(".", "data.csv");
+    private final Path defaultPath = Paths.get(".", "data.txt");
     static final int size = 5;
 
 
