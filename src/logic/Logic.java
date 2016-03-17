@@ -66,6 +66,11 @@ public class Logic {
 		loadTaskList();
 		setStartingTaskId();
 		checkOverdue();
+		try {
+			Recurring.updateRecurringEvents(taskList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

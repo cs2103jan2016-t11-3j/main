@@ -7,70 +7,110 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class Recurring {
+
+	public final static String FREQ_HOURLY = "HOURLY";
+	public final static String FREQ_DAILY = "DAILY";
+	public final static String FREQ_WEEKLY = "WEEKLY";
+	public final static String FREQ_MONTHLY = "MONTHLY";
+	public final static String FREQ_YEARLY = "YEARLY";
+
+	private static final String CATEGORY_EVENT = "event";
 	
+	private static final String MESSAGE_INVALID_RECURRENCE = "No valid end of recurrence";
 	/*
 	 * Insert following methods in Logic() constructor:
 	 * Recurring.checkRecurringDeadlines(taskList);
 	 * Recurring.checkRecurringEvents(taskList);
 	 */
 
-	public static void checkRecurringDeadlines(ArrayList<TaskObject> taskList) {
-		for(int i = 0; i < taskList.size(); i++) {
-			if(taskList.get(i).getIsRecurring() && taskList.get(i).getCategory().equals("deadline")) {
-				ArrayList<LocalDateTimePair> taskTimes = taskList.get(i).getTaskDateTime();
-				boolean isOver = checkIfPastDeadline(taskTimes);
-				if(isOver) {
-					sortNextDeadlineTime(taskTimes, taskList.get(i).getInterval());
+	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) throws Exception {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getIsRecurring()) {
+				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
+					boolean hasEnded = checkIfEventOver(taskList.get(i));
+					if (hasEnded) {
+						boolean isStillRecurring = checkIfStillRecurring(taskList.get(i));
+						if (isStillRecurring) {
+							setNextEventTime(taskList.get(i));
+						} else {
+							markEventAsDone(taskList.get(i));
+						}
+					}
 				}
 			}
 		}
 	}
-	
-	public static boolean checkIfPastDeadline(ArrayList<LocalDateTimePair> taskTimes) {
-		if(LocalDateTime.now().isBefore(taskTimes.get(1).getStartDateTime())) {
+
+	private static boolean checkIfEventOver(TaskObject task) {
+		LocalDateTime eventEndDateTime = task.getEndDateTime();
+		if (eventEndDateTime.isBefore(LocalDateTime.now())) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public static void sortNextDeadlineTime(ArrayList<LocalDateTimePair> taskTimes, Interval interval) {
-		if(taskTimes.get(0).getEndDateTime().isEqual(LocalDateTime.MAX)) {
-			// If there's no set date for end of recurrence
-			LocalDateTime lastAddedTime = taskTimes.get(taskTimes.size() - 1).getStartDateTime();
-			lastAddedTime = Add.addInterval(lastAddedTime, interval);
-			taskTimes.add(new LocalDateTimePair(lastAddedTime));
-		}
-			taskTimes.remove(1);
-	}
-	
-	public static void checkRecurringEvents(ArrayList<TaskObject> taskList) {
-		for(int i = 0; i < taskList.size(); i++) {
-			if(taskList.get(i).getIsRecurring() && taskList.get(i).getCategory().equals("event")) {
-				ArrayList<LocalDateTimePair> taskTimes = taskList.get(i).getTaskDateTime();
-				boolean isOver = checkIfPastEvent(taskTimes);
-				if(isOver) {
-					sortNextEventTime(taskTimes, taskList.get(i).getInterval());
-				}
+	private static boolean checkIfStillRecurring(TaskObject task) throws Exception{
+		int count = task.getInterval().getCount();
+		LocalDateTime until = task.getInterval().getUntil();
+		
+		if (count != -1) {
+			if (count == 0) {
+				return false;
+			} else {
+				task.getInterval().setCount(count - 1);
+				return true;
 			}
-		}
-	}
-	
-	public static boolean checkIfPastEvent(ArrayList<LocalDateTimePair> taskTimes) {
-		if (LocalDateTime.now().isBefore(taskTimes.get(1).getEndDateTime())) {
-			return true;
 		} else {
-			return false;
+			if (!until.equals(LocalDateTime.MAX)) {
+				if (until.isBefore(LocalDateTime.now())) {
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
+				throw e;
+			}
+		}		
+	}
+
+	private static void setNextEventTime(TaskObject task) {
+		String frequency = task.getInterval().getFrequency();
+		int timeInterval = task.getInterval().getTimeInterval();
+		if (task.getInterval().getByDay().equals("")) {
+			switch (frequency) {
+			case FREQ_HOURLY:
+				task.setStartDateTime(task.getStartDateTime().plusHours(timeInterval));
+				task.setEndDateTime(task.getEndDateTime().plusHours(timeInterval));
+				break;
+
+			case FREQ_DAILY:
+				task.setStartDateTime(task.getStartDateTime().plusDays(timeInterval));
+				task.setEndDateTime(task.getEndDateTime().plusDays(timeInterval));
+				break;
+
+			case FREQ_WEEKLY:
+				task.setStartDateTime(task.getStartDateTime().plusWeeks(timeInterval));
+				task.setEndDateTime(task.getEndDateTime().plusWeeks(timeInterval));
+				break;
+
+			case FREQ_MONTHLY:
+				task.setStartDateTime(task.getStartDateTime().plusMonths(timeInterval));
+				task.setEndDateTime(task.getEndDateTime().plusMonths(timeInterval));
+				break;
+
+			case FREQ_YEARLY:
+				task.setStartDateTime(task.getStartDateTime().plusYears(timeInterval));
+				task.setEndDateTime(task.getEndDateTime().plusYears(timeInterval));
+				break;
+			}
+		} else {
+			// implementation for by day
 		}
 	}
 	
-	public static void sortNextEventTime(ArrayList<LocalDateTimePair> taskTimes, Interval interval) {
-		if(taskTimes.get(0).getEndDateTime().isEqual(LocalDateTime.MAX)) {
-			LocalDateTime lastAddedStartTime = taskTimes.get(taskTimes.size() - 1).getStartDateTime();
-			LocalDateTime lastAddedEndTime = taskTimes.get(taskTimes.size() - 1).getEndDateTime();
-			lastAddedStartTime = Add.addInterval(lastAddedStartTime, interval);
-			lastAddedEndTime = Add.addInterval(lastAddedEndTime, interval);
-			taskTimes.add(new LocalDateTimePair(lastAddedStartTime, lastAddedEndTime));
-		}
+	private static void markEventAsDone(TaskObject task) {
+		task.setStatus("done");
 	}
 }
