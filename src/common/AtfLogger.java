@@ -22,9 +22,9 @@ public class AtfLogger {
             logger.setLevel(Level.INFO);
            
             try {
-                File dir = new File(Constants.LOG_DIR.toString());
+                File dir = new File(storage.Constants.FILEPATH_LOGDIR.toString());
                 dir.mkdirs();
-                fileHandler = new FileHandler(Constants.LOG_FILEPATH.toString());
+                fileHandler = new FileHandler(storage.Constants.FILEPATH_LOGFILE.toString());
             } catch (SecurityException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

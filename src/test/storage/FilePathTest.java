@@ -19,12 +19,12 @@ import storage.Constants;
 
 public class FilePathTest extends storage.FilePath {
 
-    private static final String SAVE_FILE_NAME = Constants.SAVE_FILENAME;
+    private static final String SAVE_FILE_NAME = Constants.FILENAME_SAVEINFO;
     private static final String DATA_FILE_NAME = Constants.DATA_FILENAME;
 
     @After
     public void tearDown() throws IOException {
-        Path path = Constants.SAVE_FILEPATH;
+        Path path = Constants.FILEPATH_SAVEINFO;
         Path path2 = Paths.get(".", "bin" , "save");
         Files.deleteIfExists(path);
         Files.deleteIfExists(path2);
@@ -75,7 +75,7 @@ public class FilePathTest extends storage.FilePath {
     }
         
     private void writeSaveDir(String directory) throws IOException {
-        FileWriter fileWriter = new FileWriter(Constants.SAVE_FILEPATH.toString() , false);
+        FileWriter fileWriter = new FileWriter(Constants.FILEPATH_SAVEINFO.toString() , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(directory.toString());
         printWriter.close();

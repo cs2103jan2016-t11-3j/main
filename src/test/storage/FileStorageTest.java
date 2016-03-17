@@ -55,7 +55,7 @@ public class FileStorageTest {
         Files.deleteIfExists(path1);
         Files.deleteIfExists(path2);
         Files.deleteIfExists(path3);
-        Files.deleteIfExists(Constants.DEFAULT_SAVE_PATH);
+        Files.deleteIfExists(Constants.FILEPATH_DEFAULT_SAVE_);
     }
 
     /**

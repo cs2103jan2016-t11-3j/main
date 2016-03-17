@@ -85,7 +85,7 @@ public class TaskData {
      * @param filePath
      * @throws IOException Fail to Delete
      */
-    protected static void deleteTasks(ArrayList<TaskObject> taskList, String filePath) 
+    static void deleteTasks(ArrayList<TaskObject> taskList, String filePath) 
             throws IOException {
         Path path = Paths.get(filePath);
         Files.deleteIfExists(path);

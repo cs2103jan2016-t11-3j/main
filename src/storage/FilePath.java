@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
@@ -26,16 +25,9 @@ public class FilePath {
      */
     protected static void changePreferedDirectory(String directory) throws IOException {
         Logger logger = AtfLogger.getLogger(FilePath.class.getName());
-        File file = new File(directory);
-        if (!file.exists()) {
-            file.mkdirs();
-            logger.info(String.format(Constants.LOG_MKDIR, directory));
-        }
+        mkdirIfNotExist(directory);
         checkDirectory(directory);
-        FileWriter fileWriter = new FileWriter(Constants.SAVE_FILEPATH.toString() , false);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(directory);
-        printWriter.close();
+        writePreferredDirectory(directory);
         logger.info(String.format(Constants.LOG_CHANGE_PREFERED_DIR, directory));
     }
 
@@ -48,7 +40,7 @@ public class FilePath {
      * @throws IOException Error reading file containing default path
      */
     protected static String getPath() throws FileNotFoundException , IOException {
-        String directory = getPreferedDirectory();
+        String directory = readPreferedDirectory();
         checkDirectory(directory);
         Path path = Paths.get(directory, Constants.DATA_FILENAME);
         return path.toString();
@@ -84,18 +76,33 @@ public class FilePath {
      * @throws IOException Error creating the file containing the save location
      */
     static void initializeDefaultSave() throws IOException {
-        if(!Files.exists(Constants.DEFAULT_SAVE_PATH)) {
+        if(!Files.exists(Constants.FILEPATH_DEFAULT_SAVE_)) {
             changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
         }
     }
 
-    private static String getPreferedDirectory() throws FileNotFoundException, IOException  {
+    private static String readPreferedDirectory() throws FileNotFoundException, IOException  {
         Path directory = null;
         BufferedReader fileReader = new BufferedReader(
-                new FileReader (Constants.SAVE_FILEPATH.toString()));
+                new FileReader (Constants.FILEPATH_SAVEINFO.toString()));
         directory = Paths.get(fileReader.readLine());
         fileReader.close();
         return directory.toString();
     }
     
+    private static void mkdirIfNotExist(String directory) {
+        Logger logger = AtfLogger.getLogger(FilePath.class.getName());
+        File file = new File(directory);
+        if (!file.exists()) {
+            file.mkdirs();
+            logger.info(String.format(Constants.LOG_MKDIR, directory));
+        }
+    }
+
+    private static void writePreferredDirectory(String directory) throws IOException {
+        FileWriter fileWriter = new FileWriter(Constants.FILEPATH_SAVEINFO.toString() , false);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.print(directory);
+        printWriter.close();
+    }
 }
