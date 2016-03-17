@@ -3,6 +3,8 @@
 
 /bin/
 /lib/
+/.settings/
+/atf_files/
 
 saveInfo.txt
 data.txt

@@ -1,5 +1,6 @@
 package storage;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -8,9 +9,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import com.google.gson.JsonSyntaxException;
+
 import common.TaskObject;
 
-public class FileStorage implements Storage {
+public class FileStorage implements IStorage {
 
     private static FileStorage instance = null;
 
@@ -25,30 +28,49 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public  void save(ArrayList<TaskObject> newTaskList) throws IOException {
+    public  void save(ArrayList<TaskObject> newTaskList) 
+            throws NoSuchFileException, IOException {
         String filePath = null;
+        try {
         filePath = FilePath.getPath();
-        Path path = Paths.get(filePath);
-        Files.deleteIfExists(path);
+        } catch (FileNotFoundException e) {
+            FilePath.initializeDefaultSave();
+            filePath = FilePath.getPath();
+        }
+        if(filePath == null) { // defensive measure
+            FilePath.initializeDefaultSave();
+            filePath = FilePath.getPath();
+        }
         TaskData.writeTasks(newTaskList, filePath);
     }
 
     @Override
-    public ArrayList<TaskObject> load() throws IOException  {
-       
-        String filePath;
-        ArrayList<TaskObject> taskList = null;
+    public ArrayList<TaskObject> load() 
+            throws FileNotFoundException, IOException , JsonSyntaxException {
+        String filePath = null;
         try {
             filePath = FilePath.getPath();
-            taskList = new ArrayList<TaskObject>(TaskData.readTasks(filePath));
-        } catch (NoSuchFileException e) {
-            FilePath.prepareDefaultSave();
+        } catch (FileNotFoundException e) {
+            return new ArrayList<TaskObject>();
         } 
+        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
         return taskList;
     }
 
     @Override
-    public void createCopy(String directory , String fileName) throws InvalidPathException ,IOException  {
+    public ArrayList<TaskObject> load(String directory, String fileName) 
+            throws InvalidPathException, FileNotFoundException, IOException, JsonSyntaxException{
+        if (!FilePath.checkPath(directory)) {
+            throw new InvalidPathException(directory, "Invalid Directory");
+        }
+        String filePath = Paths.get(directory, fileName).toString();
+        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
+        return taskList;
+    }
+    
+    @Override
+    public void createCopy(String directory , String fileName) 
+            throws InvalidPathException ,IOException  {
         if (!FilePath.checkPath(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
@@ -58,7 +80,8 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public void changeSaveLocation (String directory) throws InvalidPathException , IOException {
+    public void changeSaveLocation (String directory) 
+            throws InvalidPathException , IOException {
         if (!FilePath.checkPath(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
@@ -66,17 +89,8 @@ public class FileStorage implements Storage {
         String filePath = FilePath.getPath();
         Path path = Paths.get(filePath);
         Files.deleteIfExists(path);
-        FilePath.changeDirectory(directory);
+        FilePath.changePreferedDirectory(directory);
         save(taskList);
     }
-
-    public ArrayList<TaskObject> load(String directory, String fileName) throws InvalidPathException , IOException{
-        if (!FilePath.checkPath(directory)) {
-            throw new InvalidPathException(directory, "Invalid Directory");
-        }
-        String filePath = Paths.get(directory, fileName).toString();
-        ArrayList<TaskObject> taskList = TaskData.readTasks(filePath);
-        return taskList;
-    }
-
+    
 }

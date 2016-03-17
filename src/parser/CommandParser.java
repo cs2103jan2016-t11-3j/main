@@ -73,4 +73,8 @@ public abstract class CommandParser {
 	
 	public abstract int getIndex(); //only for EDIT
 	
+	protected String getTrimmedString(String input, int startIndex, int endIndex) {
+		return input.substring(startIndex, endIndex).trim();
+	}
+	
 }

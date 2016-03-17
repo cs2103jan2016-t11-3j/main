@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="layout" prefHeight="600" prefWidth="450.0" style="-fx-background-image: url('http://stylopics.com/wp-content/uploads/2013/09/tumblr_mhjzm6Bbtv1rh18soo1_500.jpg'); -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+<BorderPane fx:id="layout" prefHeight="600" prefWidth="450.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <center>
       <TableView fx:id="taskTable" onKeyPressed="#handleEscReleased" onKeyReleased="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
         <columns>

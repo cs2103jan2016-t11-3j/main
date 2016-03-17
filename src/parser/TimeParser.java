@@ -1,11 +1,14 @@
 package parser;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TimeParser {
 	private final ArrayList<String> list = new ArrayList<String>();
 	private int time = -1;
 	private String timeString = "";
+	private LocalTime timeObject = LocalTime.MAX;
 		
 	
 	/**
@@ -76,6 +79,7 @@ public class TimeParser {
 	
 	private void convertToString() {
 		String minute, hour;
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		if (time < 1000) {
 			minute = "0" + Integer.toString(time);
 		} else {
@@ -86,6 +90,7 @@ public class TimeParser {
 		minute = minute.substring(2);
 		
 		timeString = hour + ":" + minute;
+		timeObject = LocalTime.parse(timeString, timeFormatter);
 	}
 	
 	/**
@@ -147,6 +152,10 @@ public class TimeParser {
 	
 	public String getTimeString() {
 		return timeString;
+	}
+	
+	public LocalTime getTimeObject() {
+		return timeObject;
 	}
 	
 	//method used to obtain the size of the list for testing 

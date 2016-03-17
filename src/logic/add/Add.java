@@ -345,7 +345,7 @@ public class Add {
 	}
 
 	private void addExternal() {
-		Storage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
 			logger.log(Level.INFO, "added task to external file storage");

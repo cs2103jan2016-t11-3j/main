@@ -7,24 +7,32 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.After;
 import org.junit.Test;
+
+import storage.Constants;
 
 public class FilePathTest extends storage.FilePath {
 
-    private static final String SAVE_FILE_NAME = "saveInfo.txt";
-    private static final String DATA_FILE_NAME = "data.txt";
-    
-    @Test
-    public void testChangeDirectory() {
-        fail("Not yet implemented");
-    }
+    private static final String SAVE_FILE_NAME = Constants.FILENAME_SAVEINFO;
+    private static final String DATA_FILE_NAME = Constants.DATA_FILENAME;
 
-    @Test(expected = NoSuchFileException.class)
-    public void testGetPathNoFile() throws NoSuchFileException, IOException {
+    @After
+    public void tearDown() throws IOException {
+        Path path = Constants.FILEPATH_SAVEINFO;
+        Path path2 = Paths.get(".", "bin" , "save");
+        Files.deleteIfExists(path);
+        Files.deleteIfExists(path2);
+        
+    }
+    
+    @Test(expected = FileNotFoundException.class)
+    public void testGetPathNoFile() throws FileNotFoundException, IOException {
         getPath();
     }
     
@@ -35,30 +43,46 @@ public class FilePathTest extends storage.FilePath {
         String actualFilePath = getPath();
         String expectedFilePath = Paths.get(saveDir, DATA_FILE_NAME).toString();
         Path path = Paths.get(saveDir , SAVE_FILE_NAME);
-        Files.delete(path);
         assertEquals("Returned file Path", expectedFilePath , actualFilePath);
     }
 
     @Test
     public void testCheckValidFolder() {
-        boolean isUsable = checkPath(".");
-        assertEquals("Folder is Usable", true, isUsable);
+        checkDirectory(".");
     }
 
-    @Test
+    @Test(expected = InvalidPathException.class)
     public void testCheckInalidPath() {
-        boolean isUsable = checkPath("fail");
-        Paths.get("should fail");
-        assertEquals("Folder is Usable", false, isUsable);
+        checkDirectory("fail");
+    }
+    
+    @Test
+    public void testChangeDirectory() throws IOException {
+        String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
+        Path path = Paths.get(saveDir, "bin");
+        Path expectedPath = Paths.get(saveDir, "bin" , DATA_FILE_NAME);
+        changePreferedDirectory(path.toString());
+        assertEquals( "Change Directory to bin" , expectedPath.toString() , getPath() );
+    }
+    
+    @Test
+    public void testChangeNewDirectory() throws IOException {
+        String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
+        Path path = Paths.get(saveDir, "bin" , "save");
+        Path expectedPath = Paths.get(saveDir, "bin"  , "save" , DATA_FILE_NAME);
+        changePreferedDirectory(path.toString());
+        assertEquals( "Change Directory to bin" , expectedPath.toString() , getPath() );
     }
         
     private void writeSaveDir(String directory) throws IOException {
-        FileWriter fileWriter = new FileWriter(SAVE_FILE_NAME , false);
+        FileWriter fileWriter = new FileWriter(Constants.FILEPATH_SAVEINFO.toString() , false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(directory.toString());
         printWriter.close();
     }
 
+
+    
 }
 
 

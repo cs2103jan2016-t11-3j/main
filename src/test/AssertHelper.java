@@ -17,13 +17,20 @@ public class AssertHelper {
 
     public static void assertTaskEquals(String testDescription, TaskObject task1, TaskObject task2) {
         assertEquals(testDescription + " title", task1.getTitle(), task2.getTitle());
-        assertEquals(testDescription + " start date", task1.getStartDate(), task2.getStartDate());
-        assertEquals(testDescription + " end date", task1.getEndDate(), task2.getEndDate());
-        assertEquals(testDescription + " start time", task1.getStartTime(), task2.getStartTime());
-        assertEquals(testDescription + " end time", task1.getEndTime(), task2.getEndTime());
+        assertEquals(testDescription + " start dateTime", task1.getStartDateTime(), task2.getEndDateTime());
+        assertEquals(testDescription + " end dateTime", task1.getEndDateTime(), task2.getEndDateTime());
         assertEquals(testDescription + " category", task1.getCategory(), task2.getCategory());
         assertEquals(testDescription + " Status", task1.getStatus(), task2.getStatus());
         assertEquals(testDescription + " taskId", task1.getTaskId(), task2.getTaskId());
+    }
+    
+    public static void assertTaskListEquals(String testDescription, 
+            ArrayList<TaskObject> expectedTaskList, ArrayList<TaskObject> actualTaskList) {
+        assertEquals(testDescription + "listSize" , expectedTaskList.size(), actualTaskList.size());
+        int size = expectedTaskList.size();
+        for (int i = 0; i < size; i++) {
+            assertTaskEquals( testDescription+ "dataListContent" , expectedTaskList.get(i) , actualTaskList.get(i));
+        }
     }
     
     public static void assertFileEquals(String testDescription, Path path, ArrayList<String> expectedTaskDataList) {

@@ -5,6 +5,7 @@ import storage.FileStorage;
 import logic.mark.*;
 import logic.timeOutput.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.DateTimeException;
@@ -96,8 +97,10 @@ public class Logic {
 			taskList = storage.load();
 			//convertDateTime(taskList);
 			setLastOutputTaskList(taskList);
+		} catch (FileNotFoundException e) {
+		   //No file found in specified save location 
 		} catch (IOException e) {
-			e.printStackTrace();
+		    e.printStackTrace();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} catch (DateTimeException e) {
@@ -135,7 +138,6 @@ public class Logic {
 	// Sets the starting task ID value. This value should be larger than the current largest task ID value in the task list so as to avoid overlap.
 	private void setStartingTaskId() {
 		int largestTaskId = 1;
-		
 		for (int i = 0; i < taskList.size(); i++) {
 			int id = taskList.get(i).getTaskId();
 			if (id > largestTaskId) {
