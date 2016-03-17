@@ -1,19 +1,16 @@
 package logic.add;
 
 import logic.*;
-import logic.mark.*;
 import storage.*;
 import common.*;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.logging.*;
 
-import common.Interval;
 import common.TaskObject;
 
 /**
@@ -45,7 +42,7 @@ public class Add {
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
-	
+
 	public static Logger logger = Logger.getLogger("Add");
 
 	public Add() {
@@ -82,49 +79,32 @@ public class Add {
 		try {
 			String taskType = task.getCategory();
 			if (taskType.equals("event")) {
-				// assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
-				// assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
-				assert(!task.getTaskDateTime().get(1).getStartDateTime().equals(LocalDateTime.MAX));
-				assert(!task.getTaskDateTime().get(1).getEndDateTime().equals(LocalDateTime.MAX));
-				
+				assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
+				assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
 				logger.log(Level.INFO, "event to be added");
-				
-				LocalDateTimePair taskTime = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
-				task.addToTaskDateTime(taskTime);
+
 				// check for clash only necessary if task is an event
-				if (task.getIsRecurring()) {
-					addRecurringTimes();
-				}
 				isClash = checkIfClash();
 				addTask();
 			} else {
 				if (taskType.equals("deadline")) {
-					// assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
-					// assert (task.getEndDateTime().equals(LocalDateTime.MAX));
-					assert(!task.getTaskDateTime().get(1).getStartDateTime().equals(LocalDateTime.MAX));
-					assert(task.getTaskDateTime().get(1).getEndDateTime().equals(LocalDateTime.MAX));
+					assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
+					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
 
 					logger.log(Level.INFO, "deadline to be added");
-					
-					LocalDateTimePair taskTime = new LocalDateTimePair(task.getStartDateTime());
-					task.addToTaskDateTime(taskTime);
+
 					boolean isOverdue = checkIfOverdue();
-					if (task.getIsRecurring()) {
-						addRecurringTimes();
-					}
 					if (isOverdue) {
 						setTaskStatus(isOverdue);
 					}
 					addTask();
 				} else {
 					assert (taskType.equals("floating"));
-					// assert (task.getStartDateTime().equals(LocalDateTime.MAX));
-					// assert (task.getEndDateTime().equals(LocalDateTime.MAX));
-					assert(task.getTaskDateTime().get(1).getStartDateTime().equals(LocalDateTime.MAX));
-					assert(task.getTaskDateTime().get(1).getEndDateTime().equals(LocalDateTime.MAX));
+					assert (task.getStartDateTime().equals(LocalDateTime.MAX));
+					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
 
 					logger.log(Level.INFO, "floating to be added");
-					
+
 					addTask();
 					// Recurrence not possible for floating tasks
 				}
@@ -141,64 +121,6 @@ public class Add {
 		return output;
 	}
 
-	private void addRecurringTimes() {
-
-		// LocalDateTime startTimeObject = task.getStartDateTime();
-		// LocalDateTime endTimeObject = task.getEndDateTime();
-		// Following new storage of time
-
-		assert (task.getCategory().equals("event") || task.getCategory().equals("deadline"));
-		
-		logger.log(Level.INFO, "about to generate task times for recurring tasks");
-
-		LocalDateTimePair startEnd = task.getTaskDateTime().get(1);
-
-		// Generates 10 additional times if no recurring end time
-		if (task.getTaskDateTime().get(0).getEndDateTime().isEqual(LocalDateTime.MAX)) {
-			for (int i = 0; i < 10; i++) {
-				startEnd = addToTaskDateTime(startEnd);
-				// System.out.println(i+1+ " "+ startTimeObject.toString());
-			}
-			
-			logger.log(Level.INFO, "generated 10 additional timings");
-		} else {
-			// Generates up till the last possible time before it exceeds end recurring time
-			while (startEnd.getStartDateTime().isBefore(task.getTaskDateTime().get(0).getEndDateTime())) {
-				addToTaskDateTime(startEnd);
-			}
-			
-			logger.log(Level.INFO, "generated all remaining timings for this recurring task");
-		}
-	}
-
-	private LocalDateTimePair addToTaskDateTime(LocalDateTimePair startEnd) {
-		LocalDateTime startTimeObject = startEnd.getStartDateTime();
-		LocalDateTime endTimeObject = startEnd.getEndDateTime();
-		startTimeObject = addInterval(startTimeObject, task.getInterval());
-		if (task.getCategory().equals("event")) {
-			endTimeObject = addInterval(endTimeObject, task.getInterval());
-		} else {
-			endTimeObject = LocalDateTime.MAX;
-		}
-		LocalDateTimePair nextTime = new LocalDateTimePair(startTimeObject, endTimeObject);
-		task.addToTaskDateTime(nextTime);
-		logger.log(Level.INFO, "generated one new set of timings for recurring task");
-		return nextTime;
-	}
-
-	public static LocalDateTime addInterval(LocalDateTime originalTime, Interval interval) {
-		LocalDateTime newTime = originalTime;
-		newTime = newTime.plusYears(interval.getYear());
-		newTime = newTime.plusMonths(interval.getMonth());
-		newTime = newTime.plusWeeks(interval.getWeek());
-		newTime = newTime.plusDays(interval.getDay());
-		newTime = newTime.plusHours(interval.getHour());
-		newTime = newTime.plusMinutes(interval.getMinute());
-		newTime = newTime.plusSeconds(interval.getSecond());
-		logger.log(Level.INFO, "added an interval to existing time object");
-		return newTime;
-	}
-
 	/**
 	 * Throws Exception if time input is invalid. Deadline to be added has a
 	 * valid date and time in its TaskObject <br>
@@ -209,12 +131,11 @@ public class Add {
 	 */
 	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		// LocalDateTime deadline = task.getStartDateTime(); 
-		LocalDateTime deadline = task.getTaskDateTime().get(1).getStartDateTime();
-		
+		// LocalDateTime deadline = task.getStartDateTime();
+
 		logger.log(Level.INFO, "going to check whether a deadline is overdue");
-		
-		if (deadline.isBefore(LocalDateTime.now())) {
+
+		if (task.getStartDateTime().isBefore(LocalDateTime.now())) {
 			isOverdue = true;
 		}
 		return isOverdue;
@@ -242,28 +163,12 @@ public class Add {
 
 	private boolean checkAcrossAllTimes(TaskObject current, int i) throws NullPointerException {
 		boolean hasClashes = false;
-		
-		logger.log(Level.INFO, "about to check across all available timings between"
-				+ "two events");
-		
-		for (int j = 0; j < task.getTaskDateTime().size(); j++) {
-			for (int k = 0; k < current.getTaskDateTime().size(); k++) {
-				LocalDateTime currentStart = current.getTaskDateTime().get(k).getStartDateTime();
-				LocalDateTime currentEnd = current.getTaskDateTime().get(k).getEndDateTime();
-				LocalDateTime newStart = task.getTaskDateTime().get(j).getStartDateTime();
-				LocalDateTime newEnd = task.getTaskDateTime().get(j).getEndDateTime();
-				if (checkTimeClash(currentStart, currentEnd, newStart, newEnd)) {
-					if (task.getIsRecurring() || current.getIsRecurring()) {
-						addClashedRecurringTasks(current);
-						logger.log(Level.INFO, "detected a clash between recurring tasks");
-					} else {
+				if (checkTimeClash(current)) {
 						clashedTasks.add(taskList.get(i));
 						logger.log(Level.INFO, "detected a clash between non-recurring tasks");
-					}
+					
 					hasClashes = true;
 				}
-			}
-		}
 		return hasClashes;
 	}
 
@@ -282,8 +187,12 @@ public class Add {
 	 *            The TaskObject passed into the function from the task list.
 	 * @return
 	 */
-	private boolean checkTimeClash(LocalDateTime currentStart, LocalDateTime currentEnd, LocalDateTime newStart,
-			LocalDateTime newEnd) throws DateTimeException {
+	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
+		
+		LocalDateTime currentStart = current.getStartDateTime();
+		LocalDateTime currentEnd = current.getEndDateTime();
+		LocalDateTime newStart = task.getStartDateTime();
+		LocalDateTime newEnd = task.getEndDateTime();
 
 		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
 			if (currentStart.isBefore(newEnd) || currentStart.isEqual(newEnd)) {
@@ -305,21 +214,10 @@ public class Add {
 				return true;
 			}
 		}
-		
+
 		logger.log(Level.INFO, "no clash detected between two timings");
 
 		return false;
-	}
-
-	private void addClashedRecurringTasks(TaskObject current) {
-		for (int i = 0; i < clashedTasks.size(); i++) {
-			if (clashedTasks.get(i).equals(current)) {
-				// To prevent duplicate tasks from being added to clashedTasks
-				return;
-			}
-		}
-		clashedTasks.add(current);
-		logger.log(Level.INFO, "added tasks that clash for tracking");
 	}
 
 	private void addTask() {

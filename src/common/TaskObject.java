@@ -19,7 +19,6 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String timeOutputString = ""; // stores date time in the desired output for GUI
 	protected boolean isRecurring;
 	protected Interval interval = new Interval();
-	protected ArrayList<LocalDateTimePair> taskDateTime = new ArrayList<LocalDateTimePair> ();
 	
 	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
@@ -114,14 +113,6 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.category = category;
 		this.status = status;
 		this.taskId = taskId;
-	}
-	
-	public void addToTaskDateTime(LocalDateTimePair nextTime) {
-		taskDateTime.add(nextTime);
-	}
-	
-	public ArrayList<LocalDateTimePair> getTaskDateTime() {
-		return taskDateTime;
 	}
 
 	public String getTitle() {
