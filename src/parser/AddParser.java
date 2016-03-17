@@ -61,9 +61,6 @@ public class AddParser extends CommandParser {
 	}
 	
 	
-	
-	
-	
 	private void setTaskObject() {
 		TO.setTitle(_task);
 		TO.setStartDateTime(_startDateTime);

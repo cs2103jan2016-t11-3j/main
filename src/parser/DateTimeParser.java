@@ -4,19 +4,15 @@ package parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+import common.TaskObject;
 
 import parser.Constants.TaskType;
 
@@ -60,16 +56,22 @@ public class DateTimeParser {
 	private LocalDate endDate = null;
 	private LocalTime startTime = null;
 	private LocalTime endTime = null;
+	private LocalDate untilDate = null;
+	private LocalTime untilTime = null;
 	
 	private LocalDateTime startDateTime = null;
 	private LocalDateTime endDateTime = null;
+	private LocalDateTime untilDateTime = null;
 	
-	
+	TaskObject TO = new TaskObject();
 	List<String> dtlist = new ArrayList<String>();
 	
-	private FileHandler fh = null;
-	
 	private static Logger logger = Logger.getLogger("DateTimeParser");
+	
+	public TaskObject parse(String input, boolean isForAdd) {
+		parseDateTime(input, isForAdd);
+		return TO;
+	}
 	
 	/**
 	 * method will take in string containing date and time, then splitting it into the date and time
@@ -86,16 +88,15 @@ public class DateTimeParser {
 			//separate stuff for different task types
 			switch(tasktype) {
 			case event:
-				//find the "to" word n split
 				for (String temp : input.split("to")) {
 					dtlist.add(temp);
 				}
-				separateDateTime(dtlist.get(0), true);
-				separateDateTime(dtlist.get(1), false);
+				separateDateTime(dtlist.get(0), "start");
+				separateDateTime(dtlist.get(1), "end");
 				break;
 			case deadline:
 			default:
-				separateDateTime(input, true);
+				separateDateTime(input, "start");
 				break;
 			}
 			setLocalDateTime(isForAdd, tasktype);
@@ -113,20 +114,58 @@ public class DateTimeParser {
 		//separate stuff for different task types
 		switch(tasktype) {
 		case event:
-			//find the "to" word n split
 			for (String temp : input.split("to")) {
 				dtlist.add(temp);
 			}
-			separateDateTime(dtlist.get(0), true);
-			separateDateTime(dtlist.get(1), false);
+			separateDateTime(dtlist.get(0), "start");
+			separateDateTime(dtlist.get(1), "end");
 			break;
 		case deadline:
-			separateDateTime(input, true);
+			separateDateTime(input, "start");
+			break;
+		case recurring:
+			recur(input);
 			break;
 		default:
 			break;
 		}
 		setLocalDateTime(true, tasktype);
+	}
+	
+	public void recur(String input) {
+		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
+		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL);
+		
+		Matcher untilMatcher = until.matcher(input);
+		if(untilMatcher.find()) {
+			String untilstring = getTrimmedString(input, untilMatcher.start(), input.length());
+			separateDateTime(untilstring, "until");
+			input = input.replaceFirst(untilstring, "");
+			untilDateTime = LocalDateTime.of(untilDate, untilTime);
+		}
+
+		Matcher intervalMatcher = interval.matcher(input);
+		if(intervalMatcher.find()) {
+			String intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
+			input = input.replaceFirst(intervalString, "").trim();
+			parseInterval(intervalString);
+			parseDateTime(input,true);
+		}
+		
+	}
+	
+	public void parseInterval(String input) {
+		input = input.replaceFirst("every","").trim();
+		String _freq;
+		int _interval = 1;
+		if (input.contains(" ")) {
+			String[] interval = input.split(" ");
+			_interval = Integer.parseInt(interval[0]);
+			_freq = interval[1];
+		} else {
+			_freq = input;
+		}
+		setInterval(_interval, _freq);
 	}
 	
 	/**
@@ -137,7 +176,8 @@ public class DateTimeParser {
 	 * @param input
 	 * @param isStart
 	 */
-	public void separateDateTime(String input, boolean isStart) {
+	public void separateDateTime(String input, String type) {
+		input = input.replaceFirst("until", "").trim();
 		//Pattern date = Pattern.compile(Constants.REGEX_DATE_FORMAT);
 		Pattern time = Pattern.compile(Constants.REGEX_TIME_FORMAT);
 		//Pattern relativedate = Pattern.compile(Constants.REGEX_RELATIVE_DATE_ALL);
@@ -152,23 +192,30 @@ public class DateTimeParser {
 		String _date = "", _time = "";
 		
 		if (timeMatcher.find()) {
-			logger.log(Level.INFO, "Time format found");
+			//logger.log(Level.INFO, "Time format found");
 			_time = getTrimmedString(input, timeMatcher.start(), timeMatcher.end());
 			_date = input.replaceAll(_time, "").trim();
 		} else {
-			logger.log(Level.INFO, "Time format NOT found");
+			//logger.log(Level.INFO, "Time format NOT found");
 			_date = input;
 		}
-		
 		processParallel(DP, TP, _date, _time);
-		
-		if (isStart) {
+		setDateTime(type, DP, TP);
+	}
+
+
+	public void setDateTime(String type, DateParser DP, TimeParser TP) {
+		if (type.matches("start")) {
 			_startTime = TP.getTime();
 			_startDate = DP.getStartDate();
 			startT = TP.getTimeString();
 			startD = DP.getDateString();
 			startTime = TP.getTimeObject();
 			startDate = DP.getDateObject();
+		} else if (type.matches("until")) {
+			_startDate = DP.getStartDate();
+			untilTime = TP.getTimeObject();
+			untilDate = DP.getDateObject();
 		} else {
 			_endTime = TP.getTime();
 			_endDate = DP.getStartDate();
@@ -192,9 +239,6 @@ public class DateTimeParser {
 	 * 
 	 */
 	public void setLocalDateTime(boolean isForAdd, TaskType task) {
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
-		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-		
 		if (isForAdd) {
 			if (task.toString() == "event" && _endDate == -1) { 
 				_endDate = _startDate;
@@ -208,6 +252,12 @@ public class DateTimeParser {
 		startDateTime = LocalDateTime.of(startDate, startTime);
 	}
 	
+	private void setInterval(int interval, String frequency) {
+		TO.getInterval().setTimeInterval(interval);
+		TO.getInterval().setFrequency(frequency);
+		TO.getInterval().setUntil(untilDateTime);
+	}
+	
 	/**
 	 * method checks string to identify the task type
 	 * 
@@ -216,21 +266,22 @@ public class DateTimeParser {
 	 */
 	public TaskType getTaskType(String input) {
 		if (input.matches(Constants.REGEX_DEADLINE_IDENTIFIER)) {
-			logger.log(Level.INFO, "Deadline recognised");
+			//logger.log(Level.INFO, "Deadline recognised");
 			return TaskType.deadline;
 		} else if (input.matches(Constants.REGEX_EVENT_IDENTIFIER)) {
-			logger.log(Level.INFO, "Event recognised");
+			//logger.log(Level.INFO, "Event recognised");
 			return TaskType.event;
 		} else if (input.matches(Constants.REGEX_POINT_TASK_IDENTIFIER)) {
-			logger.log(Level.INFO, "Event recognised");
+			//logger.log(Level.INFO, "Event recognised");
 			return TaskType.deadline;
+		} else if (input.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER)) {
+			//logger.log(Level.INFO, "Recurring recognised");
+			return TaskType.recurring;
 		} else {
-			logger.log(Level.INFO, "Floating recognised");
+			//logger.log(Level.INFO, "Floating recognised");
 			return TaskType.floating;
 		}
 	}
-	
-	
 	
 	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
 	private String cleanString(String input) {

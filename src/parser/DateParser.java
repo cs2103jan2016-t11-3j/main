@@ -90,7 +90,6 @@ public class DateParser {
 			}
 			setDates();
 		}
-			
 	}
 	
 	
@@ -109,9 +108,39 @@ public class DateParser {
 			splitStringAndProcess(input);
 		} else if (hasSlash(input)) {
 			setMonthWithSlash(input);
+		} else if (isRelative(input)) {
+			//relative date process here 
+			processRelativeDate(input);
+		}
+	}
+	
+	
+	
+	public boolean isRelative(String input) {
+		if(input.matches(Constants.REGEX_RELATIVE_DATE_ALL)) {
+			return true;
 		} else {
-			//processMonthlessDate();
-			//relative date process here
+			return false;
+		}
+		
+	}
+	
+	
+	public void processRelativeDate(String input) {
+		int i=0;
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
+			if (input.matches("today")) {
+				dateObject = LocalDate.now();
+			} else {
+				dateObject = LocalDate.now().plusDays(1);
+			}
+		} else if (input.matches("next "+ Constants.REGEX_DAYS_TEXT)) {
+			dateObject = LocalDate.now();
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input.substring(5))) {
+				dateObject = dateObject.plusDays(1);
+			}
+		} else if (input.matches("next " + "(week|wk)")) {
+			dateObject = LocalDate.now().plusWeeks(1);
 		}
 	}
 	

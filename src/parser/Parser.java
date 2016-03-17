@@ -1,4 +1,6 @@
 package parser;
+import java.time.LocalDateTime;
+
 import common.CommandObject;
 import common.TaskObject;
 
@@ -335,6 +337,14 @@ public class Parser {
  	
  	public int getEndTime() {
  		return TO.getEndTime();
+ 	}
+ 	
+ 	public LocalDateTime getStartDateTime() {
+ 		return TO.getStartDateTime();
+ 	}
+ 	
+ 	public LocalDateTime getEndDateTime() {
+ 		return TO.getEndDateTime();
  	}
  	
  	public String getStatus() {
