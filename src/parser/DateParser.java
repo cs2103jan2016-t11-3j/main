@@ -1,5 +1,7 @@
 package parser;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,6 +72,7 @@ public class DateParser {
 	private int endDate = -1;
 	
 	private String dateString;
+	private LocalDate dateObject = LocalDate.MAX;
 	
 	/**
 	 * This method takes in a string input returns start date and end date 
@@ -78,42 +81,18 @@ public class DateParser {
 	 * @param input         date string that is in the format
 	 * @param isForSearch   boolean to show if date is ran by search processor
 	 */
-	public void processDate(String input, boolean isForSearch) {
+	public void processDate(String input) {
 		if (!input.isEmpty()) {
-			convertToArray(input);
+			//convertToArray(input);
 			furtherProcessDate(input);
 			if (start_month == -1) {
 				start_month = end_month;
 			}
-			if (!isForSearch) {
-				setDates();
-			}
+			setDates();
 		}
 			
 	}
 	
-	/**
-	 * this method splits string into array list for easy manipulation.
-	 * ideally the start and end date if any, will be split into two elements of the arraylist (events)
-	 * if there is only one date, there will be no splitting
-	 * 
-	 * @param input   input from user
-	 */
-	public void convertToArray(String input) {
-		if (input.contains("-")) {
-			for (String temp: input.split("-")) {
-				list.add(temp);
-				}
-		} else if (input.contains("to")) {
-			for (String temp: input.split("to")) {
-	 			list.add(temp);
-	 			}
-		}
-		
-		if (list.isEmpty()) {
-			list.add(input);
-		}
-	}
 	
 	/**
 	 * this method further processes the newly made array list.
@@ -132,6 +111,7 @@ public class DateParser {
 			setMonthWithSlash(input);
 		} else {
 			//processMonthlessDate();
+			//relative date process here
 		}
 	}
 	
@@ -155,7 +135,7 @@ public class DateParser {
 		return input.contains("/");
 	}
 	
-	//
+	//this method will allocate relevant integer to month variable
 	public void setMonth(String input) {
 			start_month = setMonthInDataProcessor(input);
 	}
@@ -288,6 +268,8 @@ public class DateParser {
 	
 	//method sets the date in yyyymmdd format
 	public void setDates() {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+		
 		if (start_year < 100 && start_year != -1) {
 			start_year = 2000 + start_year;
 		} else if (start_year == -1) {
@@ -297,11 +279,18 @@ public class DateParser {
 		if (start_day != -1 && start_month != -1 && start_year != -1) {
 			startDate = start_day + start_month * 100 + start_year * 10000;
 		}
+		
 		dateString = Integer.toString(startDate); //now insert the damn dashes
-	
 		dateString = addDashes(dateString);
+		setDateObject(LocalDate.parse(dateString, dateFormatter));
 	}
 	
+	/**
+	 * method adds dashes into the date string to convert it into yyyy-MM-dd format
+	 * 
+	 * @param input
+	 * @return string in yyyy-MM-dd format
+	 */
 	private String addDashes(String input) {
 		String year, month, day;
 		year = input.substring(0,4);
@@ -395,6 +384,14 @@ public class DateParser {
 	}
 	public int getEndYear() {
 		return end_year;
+	}
+
+	public LocalDate getDateObject() {
+		return dateObject;
+	}
+
+	public void setDateObject(LocalDate dateObject) {
+		this.dateObject = dateObject;
 	}
 
 }

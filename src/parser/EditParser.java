@@ -2,15 +2,15 @@ package parser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import common.TaskObject;
 
 public class EditParser extends CommandParser {
 	
 	private ArrayList<String> list = new ArrayList<String>();
-	
-	//private TimeProcessor TP = new TimeProcessor();
-	//private DateProcessor DP = new DateProcessor();
+
 	private TaskObject TO = new TaskObject();
 
 	public DateTimeParser dtp = new DateTimeParser();
@@ -22,15 +22,24 @@ public class EditParser extends CommandParser {
 	 */
 	public TaskObject process(String input) {
 		convertToArray(input); //change this to extract index
-		String clean_string = cleanString(input);
-		if (isDateTime(clean_string)) {
-			dtp.parseDateTime(clean_string, false);
+		input = cleanString(input);
+		
+		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
+		Matcher matcher = dateTimePattern.matcher(input);
+		
+		String identifier = null;
+		
+		if (matcher.find()) {
+			identifier = getTrimmedString(input ,matcher.start(), input.length());
+			input = getTrimmedString(input, 0, matcher.start());
+		}
+		
+		if (identifier != null) {
+			dtp.parseDateTime(identifier, false);
 			setDateTime();
-			setDate(input);
-			setTime(input);
-		} else {
-			setTask(clean_string);
-		} 
+        }
+		
+		_task = input;
 		setTaskObject();
 		return TO;
 	}
@@ -66,7 +75,6 @@ public class EditParser extends CommandParser {
 	 * without "edit" and the index number
 	 */
 	public String cleanString(String input) {
-		
 		input = input.replaceFirst(Constants.REGEX_EDIT, "").trim();
 		return input;
 	}
@@ -82,6 +90,10 @@ public class EditParser extends CommandParser {
 	public void setDateTime() {
 		_startDateTime = dtp.getStartDateTime();
 		_endDateTime = dtp.getEndDateTime();
+		_startTime = dtp.getStartTime();
+		_startDate = dtp.getStartDate();
+		_endTime = dtp.getEndTime();
+		_endDate = dtp.getEndDate();
 	}
 	
 	//this method sets the date for the object by using the date processor 
@@ -173,4 +185,15 @@ public class EditParser extends CommandParser {
  		setStartTime(-1);
  		setEndTime(-1);
  	}
+ 	
+ 	/*
+ 	 * if (isDateTime(clean_string)) {
+		dtp.parseDateTime(clean_string, false);
+		setDateTime();
+		setDate(input);
+		setTime(input);
+	} else {
+		setTask(clean_string);
+	} 
+ 	 */
 }

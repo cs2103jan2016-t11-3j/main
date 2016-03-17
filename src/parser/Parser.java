@@ -76,8 +76,9 @@ public class Parser {
 	 * to Logic
 	 * 
 	 * @return CO command object that contains task description and task object
+	 * @throws Exception 
 	 */
-	public CommandObject run() {
+	public CommandObject run() throws Exception {
 		allocate(_command);
 		return CO;
 	}
@@ -86,8 +87,11 @@ public class Parser {
 	 * method reads string and trigger the relevant method to process string's information
 	 * 
 	 * @param command  is the user's input to the program
+	 * @throws Exception 
 	 */
-	public void allocate(String command) {
+	public void allocate(String command) throws Exception {
+		assert(!command.isEmpty()); //ensure command is a proper string
+		
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			CO.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {
@@ -128,23 +132,34 @@ public class Parser {
 	 * method sets command type and index of the task to be marked as done
 	 * 
 	 * @param  command   user's input
+	 * @throws Exception 
 	 */
-	public void parseDone(String command) {
+	public void parseDone(String command) throws Exception {
 		CO.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
-		command = command.substring(temp + 1);
-		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
-		temp = Integer.parseInt(command);
-		CO.setIndex(temp);
+		if (command.length() > temp) {
+			command = command.substring(temp + 1);
+			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+			temp = Integer.parseInt(command);
+			CO.setIndex(temp);	
+		} else {
+			throw new Exception("Missing index.");
+		}
+		
 	}
 	
-	public void parseNotDone(String command) {
+	public void parseNotDone(String command) throws Exception {
 		CO.setCommandType(NOTDONE_INDEX);
 		int temp = command.indexOf(" ");
-		command = command.substring(temp + 1);
-		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
-		temp = Integer.parseInt(command);
-		CO.setIndex(temp);
+		if (command.length() > temp) {
+			command = command.substring(temp + 1);
+			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+			temp = Integer.parseInt(command);
+			CO.setIndex(temp);	
+		} else {
+			throw new Exception("Missing index.");
+		}
+		
 	}
 	
 	/**
@@ -169,6 +184,7 @@ public class Parser {
 	public void parseAdd(String command) {
 		CO.setCommandType(ADD_INDEX);
 		CommandParser AP = new AddParser();
+		command = command.replaceFirst(Constants.REGEX_ADD, "").trim();
 		TO = AP.process(command);
 		//add these 5 main attributes
 		TO.setTaskId(_taskId);
@@ -249,8 +265,9 @@ public class Parser {
  	 * method sets command type for delete commands 
  	 * 
  	 * @param command user's input as a string
+ 	 * @throws Exception 
  	 */
- 	public void parseDelete(String command) {
+ 	public void parseDelete(String command) throws Exception {
  		CO.setCommandType(DELETE_INDEX);
  		int index;
  		index = extractDeleteIndex(command);
@@ -259,11 +276,12 @@ public class Parser {
  	
  	/**
  	 * this method returns the number that is after the delete command as an integer
+ 	 * @throws Exception 
  	 */
- 	public int extractDeleteIndex(String command) {		
+ 	public int extractDeleteIndex(String command) throws Exception {		
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
- 			return -1;
+ 			throw new Exception("Missing index");
  		} else if (command.contains("all")) {
  			return 0;
  		} else {
@@ -277,14 +295,20 @@ public class Parser {
  	 * method sets command type for command object and returns file path
  	 * 
  	 * @param command user's input as a string 
+ 	 * @throws Exception 
  	 */
- 	public void parseSave(String command) {
+ 	public void parseSave(String command) throws Exception {
  		CO.setCommandType(SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
- 		newString = command.substring(index);
- 		TO.setTitle(newString);
- 		CO.setTaskObject(TO);
+ 		if (command.length() > index && command.contains("C://")) {
+ 			newString = command.substring(index);
+ 	 		TO.setTitle(newString);
+ 	 		CO.setTaskObject(TO);	
+ 		} else {
+ 			throw new Exception("Filepath missing");
+ 		}
+ 		
  	}
  	
  	//all the getters for testing purposes

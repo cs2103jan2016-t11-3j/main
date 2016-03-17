@@ -48,7 +48,7 @@ public class AddParser extends CommandParser {
 			setDateTime(dtp);
         }
 		
-		_task = input.replaceFirst(Constants.REGEX_ADD, "").trim();
+		_task = input;
 	}
 	
 	private void setDateTime(DateTimeParser dtp) {
@@ -60,9 +60,7 @@ public class AddParser extends CommandParser {
 		_endDateTime = dtp.getEndDateTime();
 	}
 	
-	private String getTrimmedString(String input, int startIndex, int endIndex) {
-		return input.substring(startIndex, endIndex).trim();
-	}
+	
 	
 	
 	

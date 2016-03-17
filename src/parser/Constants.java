@@ -99,7 +99,8 @@ public class Constants {
     
     //recurring task has an every keyword
     public static final String REGEX_RECURRING_TASK_IDENTIFIER = "(?i)(every) "
-            + REGEX_DAYS_TEXT + "(?i)( to " + REGEX_DAYS_TEXT
+            + REGEX_DAYS_TEXT + "|" + REGEX_TIME_ATTRIBUTES + "|" 
+    		+ REGEX_TIME_ATTRIBUTES + "(?i)( to " + REGEX_DAYS_TEXT
             + ")?";
     
     public static final String REGEX_TASK_IDENTIFIER = "(?i)(by|before|every|on|at|from|to)";
@@ -128,5 +129,8 @@ public class Constants {
     
     public static final String REGEX_FINAL = "(" + REGEX_RELATIVE_DATE_ALL 
     		+ "|" + REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_RELATIVE_TIME_1 + ")";
+    
+    public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
+    		+ REGEX_DATETIME_FORMAT + ")$";
     
 }

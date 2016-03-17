@@ -3,8 +3,16 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -59,6 +67,17 @@ public class DateTimeParser {
 	
 	List<String> dtlist = new ArrayList<String>();
 	
+	private FileHandler fh = null;
+	
+	private static Logger logger = Logger.getLogger("DateTimeParser");
+	
+	/**
+	 * method will take in string containing date and time, then splitting it into the date and time
+	 * separately for parsing through dateparser and timeparser
+	 * 
+	 * @param input      user input in string format
+	 * @param isForAdd   boolean to indicate if command is for the add parser
+	 */
 	public void parseDateTime(String input, boolean isForAdd) {
 		if (isForAdd) {
 			parseDateTimeForAdd(input);
@@ -83,6 +102,12 @@ public class DateTimeParser {
 		}
 	}
 	
+	
+	/**
+	 * method will parse date time string according to its task type
+	 * 
+	 * @param input   user's input in a string format
+	 */
 	private void parseDateTimeForAdd(String input) {
 		TaskType tasktype = getTaskType(input);
 		//separate stuff for different task types
@@ -101,7 +126,7 @@ public class DateTimeParser {
 		default:
 			break;
 		}
-		setLocalDateTime(false, tasktype);
+		setLocalDateTime(true, tasktype);
 	}
 	
 	/**
@@ -127,29 +152,40 @@ public class DateTimeParser {
 		String _date = "", _time = "";
 		
 		if (timeMatcher.find()) {
+			logger.log(Level.INFO, "Time format found");
 			_time = getTrimmedString(input, timeMatcher.start(), timeMatcher.end());
 			_date = input.replaceAll(_time, "").trim();
 		} else {
+			logger.log(Level.INFO, "Time format NOT found");
 			_date = input;
 		}
 		
-		_time = cleanString(_time);
-		_date = cleanString(_date);
-		
-		DP.processDate(_date, false);
-		TP.processTime(_time);
+		processParallel(DP, TP, _date, _time);
 		
 		if (isStart) {
 			_startTime = TP.getTime();
 			_startDate = DP.getStartDate();
 			startT = TP.getTimeString();
 			startD = DP.getDateString();
+			startTime = TP.getTimeObject();
+			startDate = DP.getDateObject();
 		} else {
 			_endTime = TP.getTime();
 			_endDate = DP.getStartDate();
 			endT = TP.getTimeString();
 			endD = DP.getDateString();
+			endTime = TP.getTimeObject();
+			endDate = DP.getDateObject();
 		}
+	}
+
+	
+	public void processParallel(DateParser DP, TimeParser TP, String _date,
+			String _time) {
+		_time = cleanString(_time);
+		_date = cleanString(_date);
+		DP.processDate(_date);
+		TP.processTime(_time);
 	}
 	
 	/**
@@ -161,42 +197,35 @@ public class DateTimeParser {
 		
 		if (isForAdd) {
 			if (task.toString() == "event" && _endDate == -1) { 
+				_endDate = _startDate;
 				endD = startD; //for special case of lazy ppl not typing end date
+				endDate = startDate;
 			}
-			startDate = LocalDate.parse(startD, dateFormatter);
-			startTime = LocalTime.parse(startT, timeFormatter);
 			if(task.toString() == "event") {
-				endDate = LocalDate.parse(endD, dateFormatter);
-				endTime = LocalTime.parse(endT, timeFormatter);
 				endDateTime = LocalDateTime.of(endDate, endTime);
 			}
-		} else {
-			setOtherLocalDateTime(timeFormatter, dateFormatter); //for searches and edits
-			}
+		}
 		startDateTime = LocalDateTime.of(startDate, startTime);
 	}
 	
-	public void setOtherLocalDateTime(DateTimeFormatter timeF, DateTimeFormatter dateF) {
-		if (_startDate == -1 && _startTime != -1) { // set weird date
-			startDate = LocalDate.MAX;
-			startTime = LocalTime.parse(startT, timeF);
-		} else if (_startDate != -1 && _startTime == -1) { //set weird time
-			startTime = LocalTime.MAX;
-			startDate = LocalDate.parse(startD, dateF);
-		} else {
-			startDate = LocalDate.parse(startD, dateF);
-			startTime = LocalTime.parse(startT, timeF);
-		}
-	}
-	
+	/**
+	 * method checks string to identify the task type
+	 * 
+	 * @param input    user's input in string format
+	 * @return         appropriate task type for the input 
+	 */
 	public TaskType getTaskType(String input) {
 		if (input.matches(Constants.REGEX_DEADLINE_IDENTIFIER)) {
+			logger.log(Level.INFO, "Deadline recognised");
 			return TaskType.deadline;
 		} else if (input.matches(Constants.REGEX_EVENT_IDENTIFIER)) {
+			logger.log(Level.INFO, "Event recognised");
 			return TaskType.event;
 		} else if (input.matches(Constants.REGEX_POINT_TASK_IDENTIFIER)) {
+			logger.log(Level.INFO, "Event recognised");
 			return TaskType.deadline;
 		} else {
+			logger.log(Level.INFO, "Floating recognised");
 			return TaskType.floating;
 		}
 	}
@@ -208,6 +237,7 @@ public class DateTimeParser {
 		return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();
 	}
 	
+	//extract string and trims out whitespace
 	private String getTrimmedString(String input, int startIndex, int endIndex) {
 		return input.substring(startIndex, endIndex).trim();
 	}
