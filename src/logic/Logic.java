@@ -46,14 +46,10 @@ import common.TaskObject;
  *
  */
 public class Logic {
-<<<<<<< HEAD
-	
-=======
 
 	private final String CATEGORY_EVENT = "event";
 	private final String CATEGORY_DEADLINE = "deadline";
 
->>>>>>> 45553ff615067e03a9172fc29c3add16e4dd6dba
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();

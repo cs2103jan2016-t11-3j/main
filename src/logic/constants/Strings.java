@@ -10,19 +10,21 @@ public class Strings {
 	public static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 	
 	// Recurring Constants
-	public final static String FREQ_HOURLY = "HOURLY";
-	public final static String FREQ_DAILY = "DAILY";
-	public final static String FREQ_WEEKLY = "WEEKLY";
-	public final static String FREQ_MONTHLY = "MONTHLY";
-	public final static String FREQ_YEARLY = "YEARLY";
+	public static final String FREQ_HOURLY = "HOURLY";
+	public static final String FREQ_DAILY = "DAILY";
+	public static final String FREQ_WEEKLY = "WEEKLY";
+	public static final String FREQ_MONTHLY = "MONTHLY";
+	public static final String FREQ_YEARLY = "YEARLY";
 	public static final String MESSAGE_INVALID_RECURRENCE = "No valid end of recurrence";
 	
 	//Add Constants
 	public static final String MESSAGE_ADD = "Task added: ";
-	private final String MESSAGE_FAIL = "Failed to add task. ";
-	private final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
-	private final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
-	private final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
+	public static final String MESSAGE_FAIL = "Failed to add task. ";
+	public static final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
+	public static final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
+	public static final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
+	
+	
 
 }
 
