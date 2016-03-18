@@ -29,7 +29,7 @@
          <children>
             <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="412.0" prefWidth="558.0" style="-fx-background-color: orange;" wrapText="true">
                <font>
-                  <Font name="Agency FB" size="18.0" />
+                  <Font name="Agency FB" size="16.0" />
                </font></TextArea>
          </children></TextFlow>
    </children>
