@@ -1,7 +1,7 @@
 package logic.constants;
 
 public class Index {
-	// CommandFacade Constants
+
 	public static final int INDEX_ADD = 1;
 	public static final int INDEX_SEARCH_DISPLAY = 2;
 	public static final int INDEX_EDIT = 3;
