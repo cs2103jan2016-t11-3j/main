@@ -8,7 +8,7 @@ import common.TaskObject;
 public class SearchParser extends CommandParser {
 	private TaskObject TO = new TaskObject();
 	
-	public TaskObject process(String input) {
+	public TaskObject process(String input) throws Exception {
 		input = removeSearchKeyword(input);
 		//read directly with matcher
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);

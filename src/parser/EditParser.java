@@ -19,8 +19,9 @@ public class EditParser extends CommandParser {
 	/**
 	 * this method will take in the string from the parser 
 	 * and break down its component, determining if it is a task, time or date edit
+	 * @throws Exception 
 	 */
-	public TaskObject process(String input) {
+	public TaskObject process(String input) throws Exception {
 		convertToArray(input); //change this to extract index
 		input = cleanString(input);
 		
