@@ -24,14 +24,15 @@ public class AddParser extends CommandParser {
 	 * to task/date/time
 	 * 
 	 * @param input    string input from user
+	 * @throws Exception 
 	 */
-	public TaskObject process(String input) {
+	public TaskObject process(String input) throws Exception {
 		setTask(input);
 		setTaskObject();
 		return TO;
 	}
 	
-	public void setTask(String input) {
+	public void setTask(String input) throws Exception {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_FINAL);
 		Matcher matcher = dateTimePattern.matcher(input);
 		

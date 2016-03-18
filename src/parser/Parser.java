@@ -168,8 +168,9 @@ public class Parser {
 	 * method sets command type, index of task to edit and parts of the task to edit
 	 * 
 	 * @param command   user's input
+	 * @throws Exception 
 	 */
-	public void parseEdit(String command) {
+	public void parseEdit(String command) throws Exception {
 		CO.setCommandType(EDIT_INDEX);
 		CommandParser EP = new EditParser();
 		TO = EP.process(command);
@@ -182,8 +183,9 @@ public class Parser {
 	 * method sets command type and creates task object with details keyed in by user
 	 * 
 	 * @param command   user's input as a string
+	 * @throws Exception 
 	 */
-	public void parseAdd(String command) {
+	public void parseAdd(String command) throws Exception {
 		CO.setCommandType(ADD_INDEX);
 		CommandParser AP = new AddParser();
 		command = command.replaceFirst(Constants.REGEX_ADD, "").trim();
@@ -200,8 +202,9 @@ public class Parser {
 	 * for search purpose
 	 * 
 	 * @param command   user's input as a string
+	 * @throws Exception 
 	 */
-	public void parseSearch(String command) {
+	public void parseSearch(String command) throws Exception {
 		CO.setCommandType(SEARCH_INDEX);
 		CommandParser SP = new SearchParser();
 		

@@ -67,7 +67,7 @@ public abstract class CommandParser {
 	protected LocalDateTime _startDateTime;
 	protected LocalDateTime _endDateTime;
 	
-	public abstract TaskObject process(String input);
+	public abstract TaskObject process(String input) throws Exception;
 	
 	public abstract void reset();
 	

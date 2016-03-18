@@ -13,7 +13,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import common.TaskObject;
-
 import parser.Constants.TaskType;
 
 /*
@@ -68,7 +67,7 @@ public class DateTimeParser {
 	
 	private static Logger logger = Logger.getLogger("DateTimeParser");
 	
-	public TaskObject parse(String input, boolean isForAdd) {
+	public TaskObject parse(String input, boolean isForAdd) throws Exception {
 		parseDateTime(input, isForAdd);
 		return TO;
 	}
@@ -79,8 +78,9 @@ public class DateTimeParser {
 	 * 
 	 * @param input      user input in string format
 	 * @param isForAdd   boolean to indicate if command is for the add parser
+	 * @throws Exception 
 	 */
-	public void parseDateTime(String input, boolean isForAdd) {
+	public void parseDateTime(String input, boolean isForAdd) throws Exception {
 		if (isForAdd) {
 			parseDateTimeForAdd(input);
 		} else {
@@ -108,8 +108,9 @@ public class DateTimeParser {
 	 * method will parse date time string according to its task type
 	 * 
 	 * @param input   user's input in a string format
+	 * @throws Exception 
 	 */
-	private void parseDateTimeForAdd(String input) {
+	private void parseDateTimeForAdd(String input) throws Exception {
 		TaskType tasktype = getTaskType(input);
 		//separate stuff for different task types
 		switch(tasktype) {
@@ -132,7 +133,7 @@ public class DateTimeParser {
 		setLocalDateTime(true, tasktype);
 	}
 	
-	public void recur(String input) {
+	public void recur(String input) throws Exception {
 		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
 		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL);
 		
@@ -154,7 +155,7 @@ public class DateTimeParser {
 		
 	}
 	
-	public void parseInterval(String input) {
+	public void parseInterval(String input) throws Exception {
 		input = input.replaceFirst("every","").trim();
 		String _freq;
 		int _interval = 1;
@@ -252,7 +253,7 @@ public class DateTimeParser {
 		startDateTime = LocalDateTime.of(startDate, startTime);
 	}
 	
-	private void setInterval(int interval, String frequency) {
+	private void setInterval(int interval, String frequency) throws Exception {
 		TO.getInterval().setTimeInterval(interval);
 		TO.getInterval().setFrequency(frequency);
 		TO.getInterval().setUntil(untilDateTime);
