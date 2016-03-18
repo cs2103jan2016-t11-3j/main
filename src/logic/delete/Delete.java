@@ -11,6 +11,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates a "Delete" object to facilitate the deletion of a task from task list
  * internally, before updating the file at its default location. <br>
@@ -33,14 +36,6 @@ public class Delete {
 
 	// Deletes by searching for the unique taskID
 
-	private final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s";
-	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder. ";
-	private final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
-	private final String MESSAGE_NULL_POINTER = "Attempted to access a non-existent task. ";
-	private final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
-	private final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
-
-	private final int INDEX_DELETE = 4;
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
 
@@ -130,9 +125,9 @@ public class Delete {
 				}
 			}
 		} catch (NullPointerException e) {
-			output.add(MESSAGE_ERROR + MESSAGE_NULL_POINTER);
+			output.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
 		} catch (IndexOutOfBoundsException e) {
-			output.add(MESSAGE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
+			output.add(MESSAGE_DELETE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
 		}
 		return output;
 	}
@@ -236,7 +231,7 @@ public class Delete {
 
 	private void createErrorOutput() {
 		removedTask = null;
-		output.add(MESSAGE_ERROR);
+		output.add(MESSAGE_DELETE_ERROR);
 	}
 
 	private void createQuickDeleteUnavailableErrorOutput() {

@@ -3,6 +3,10 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
+
 /**
  *  Creates a "Display" object which imports the existing task list into an ArrayList of 
  *  Strings, in the format shown below: <br>
@@ -17,13 +21,7 @@ import common.TaskObject;
  */
 
 public class Display {
-	
-	private static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
-	private static final String MESSAGE_SEARCH_RESULTS = "Search results:";
-	private static final String DISPLAY_RESULT_DEADLINE = "%1$s. %2$s, %3$s, %4$shrs, %5$s";
-	private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
-	private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s. TaskId: %4$s";
-	
+		
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> outputTaskList = new ArrayList<TaskObject>();
 	private ArrayList<String> output = new ArrayList<String>();

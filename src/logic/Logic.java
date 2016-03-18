@@ -47,9 +47,6 @@ import common.TaskObject;
  */
 public class Logic {
 
-	private final String CATEGORY_EVENT = "event";
-	private final String CATEGORY_DEADLINE = "deadline";
-
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import common.CommandObject;
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * An abstract class. Inherited by Done, Incomplete and Overdue. This set of classes 
  * serve to facilitate switching the status of a selected task between three set statuses - 
@@ -20,8 +23,6 @@ import common.TaskObject;
  *
  */
 public abstract class Mark {
-
-	private final String MESSAGE_ERROR = "Error marking task as complete";
 
 	/**
 	 * @param TaskObject instructionTask - This is the TaskObject which contains information 
@@ -85,7 +86,7 @@ public abstract class Mark {
 	}
 
 	protected void createErrorOutput() {
-		output.add(MESSAGE_ERROR);
+		output.add(MESSAGE_MARK_ERROR);
 	}
 
 	// Getter

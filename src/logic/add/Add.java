@@ -31,7 +31,6 @@ import static logic.constants.Strings.*;
  */
 public class Add {
 
-
 	private TaskObject task;
 	private int index;
 	private boolean addedInternal = false;
