@@ -13,6 +13,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 import common.CommandObject;
 import common.TaskObject;
 
@@ -38,9 +41,6 @@ import common.TaskObject;
  *
  */
 public class Logic {
-
-	private final String CATEGORY_EVENT = "event";
-	private final String CATEGORY_DEADLINE = "deadline";
 	
 	// Maintained throughout the entire running operation of the program
 	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
