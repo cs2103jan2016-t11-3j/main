@@ -12,7 +12,7 @@ public class ParserTest {
 	Parser tempParser = new Parser();
 
 	@Test
-	public void testAllocateCommandType() {
+	public void testAllocateCommandType() throws Exception {
 		tempParser.allocate("add homework IE2100 by 29feb 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
@@ -20,14 +20,56 @@ public class ParserTest {
 		assertEquals(900, tempParser.getEndTime());
 		assertEquals(20160229, tempParser.getStartDate());
 		assertEquals(20160229, tempParser.getEndDate());
+		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		
-		tempParser.allocate("search 7/9/2016 7pm");
-		assertEquals("7/9/2016 7pm", tempParser.getTask());
+		tempParser.allocate("add homework IE2100 by tmr 9am");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("homework IE2100", tempParser.getTask());
+		assertEquals(900, tempParser.getStartTime());
+		assertEquals(900, tempParser.getEndTime());
+		
+		assertEquals("2016-03-21T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("incomplete", tempParser.getStatus());
+		reset();
+		
+		tempParser.allocate("add prep 5pm lecture by 29feb 9am");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("prep 5pm lecture", tempParser.getTask());
+		assertEquals(900, tempParser.getStartTime());
+		assertEquals(900, tempParser.getEndTime());
+		assertEquals(20160229, tempParser.getStartDate());
+		assertEquals(20160229, tempParser.getEndDate());
+		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("incomplete", tempParser.getStatus());
+		reset();
+		
+		tempParser.allocate("add prep 5pm lecture from 29feb 9am to 8pm");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("prep 5pm lecture", tempParser.getTask());
+		assertEquals(900, tempParser.getStartTime());
+		assertEquals(2000, tempParser.getEndTime());
+		assertEquals(20160229, tempParser.getStartDate());
+		assertEquals(20160229, tempParser.getEndDate());
+		assertEquals("incomplete", tempParser.getStatus());
+		reset();
+		
+		tempParser.allocate("add 5pm lecture every tuesday at 4pm until 9june");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("5pm lecture", tempParser.getTask());
+		assertEquals(1600, tempParser.getStartTime());
+		assertEquals(1600, tempParser.getEndTime());
+		assertEquals("2016-03-22T16:00",tempParser.getStartDateTime().toString());
+		assertEquals("incomplete", tempParser.getStatus());
+		reset();
+		
+		tempParser.allocate("search hi 7/9/2016 7pm");
+		assertEquals("hi", tempParser.getTask());
 		assertEquals(1900, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(20160907, tempParser.getStartDate());
+		assertEquals("2016-09-07T19:00",tempParser.getStartDateTime().toString());
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
 		
@@ -40,8 +82,16 @@ public class ParserTest {
 		reset();
 		
 		tempParser.allocate("7.13pm");
-		assertEquals("7.13pm", tempParser.getTask());
+		assertEquals("", tempParser.getTask());
 		assertEquals(1913, tempParser.getStartTime());
+		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
+		reset();
+		
+		tempParser.allocate("edit 2 get task 755pm");
+		assertEquals("get task", tempParser.getTask());
+		assertEquals(1955, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
@@ -53,6 +103,7 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
+		//assertEquals("",tempParser.getStartDateTime().toString());
 		reset();
 		
 		tempParser.allocate("save as C://mac/desktop");
@@ -62,11 +113,29 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
 		reset();
+		
+		tempParser.allocate("done");
+		assertEquals("", tempParser.getTask());
+		assertEquals(-1, tempParser.getStartTime());
+		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
+		assertEquals("completed", tempParser.getStatus());
+		reset();
+		
+		tempParser.allocate("incomplete");
+		assertEquals("", tempParser.getTask());
+		assertEquals(-1, tempParser.getStartTime());
+		assertEquals(-1, tempParser.getEndTime());
+		assertEquals(-1, tempParser.getStartDate());
+		assertEquals(-1, tempParser.getEndDate());
+		assertEquals("incomplete", tempParser.getStatus());
+		reset();
 	}
 
 	@Test
-	public void testParseEdit() {
-		tempParser.parseEdit("edit 2 755pm");
+	public void testParseEdit() throws Exception {
+		tempParser.parseEdit("edit 2 7.55pm");
 		assertEquals("", tempParser.getTask());
 		assertEquals(1955, tempParser.getStartTime());
 		assertEquals(-1, tempParser.getEndTime());
@@ -76,7 +145,7 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testParseAdd() {
+	public void testParseAdd() throws Exception {
 		tempParser.parseAdd("add homework IE2100 by 29feb 9am");
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals(900, tempParser.getStartTime());
@@ -96,7 +165,7 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testParseSearch() {
+	public void testParseSearch() throws Exception {
 		tempParser.parseSearch("search 8pm");
 		//assertEquals("8pm", tempParser.getTask());
 		assertEquals(2000, tempParser.getStartTime());
@@ -124,13 +193,13 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testExtractDeleteIndex() {
+	public void testExtractDeleteIndex() throws Exception {
 		assertEquals(2, tempParser.extractDeleteIndex("delete 2"));
 		assertEquals(5, tempParser.extractDeleteIndex("delete 5"));
 	}
 
 	@Test
-	public void testSetCommandObjectToSave() {
+	public void testSetCommandObjectToSave() throws Exception {
 		tempParser.parseSave("save C://afagdagda");
 		assertEquals("C://afagdagda", tempParser.getTask());
 	}
