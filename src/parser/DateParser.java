@@ -117,7 +117,7 @@ public class DateParser {
 	
 	
 	public boolean isRelative(String input) {
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL)) {
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT)) {
 			return true;
 		} else {
 			return false;
@@ -137,9 +137,11 @@ public class DateParser {
 			} else {
 				dateObject = LocalDate.now().plusDays(1);
 			}
-		} else if (input.matches("next "+ Constants.REGEX_DAYS_TEXT)) {
+		} else if (input.matches(Constants.REGEX_DAYS_TEXT)) {
+			System.out.println(input);
+			input = input.replaceAll("next ", "").trim();
 			dateObject = LocalDate.now();
-			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input.substring(5))) {
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
 				dateObject = dateObject.plusDays(1);
 			}
 		} else if (input.matches("next " + "(week|wk)")) {

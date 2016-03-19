@@ -40,7 +40,7 @@ public class AddParser extends CommandParser {
 	 * @throws Exception
 	 */
 	public void setTask(String input) throws Exception {
-		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_FINAL);
+		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_DATE_TIME_IDENTIFIER);
 		Matcher matcher = dateTimePattern.matcher(input);
 		
 		String identifier = null;
@@ -48,6 +48,7 @@ public class AddParser extends CommandParser {
 		if (matcher.find()) {
 			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
 			input = getTrimmedString(input, 0, matcher.start());
+			System.out.println(identifier);
 		}
 		
 		if (identifier != null) {

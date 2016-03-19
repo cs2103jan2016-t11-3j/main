@@ -139,6 +139,7 @@ public class DateTimeParser {
 	public void recur(String input) throws Exception {
 		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
 		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL);
+		String intervalString=null;
 		
 		Matcher untilMatcher = until.matcher(input);
 		if(untilMatcher.find()) {
@@ -150,14 +151,33 @@ public class DateTimeParser {
 
 		Matcher intervalMatcher = interval.matcher(input);
 		if(intervalMatcher.find()) {
-			String intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
+			intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
 			input = input.replaceFirst(intervalString, "").trim();
 			parseInterval(intervalString);
+			System.out.println(input);
 			if (!input.isEmpty()) {
 				parseDateTime(input,true);
 			}
 		}
-		
+		if(startDate == LocalDate.MAX) {
+			getStartDateFromInterval(intervalString);
+		}
+	}
+	
+	public void getStartDateFromInterval(String input) {
+		input = input.replaceFirst("every","").trim();
+		String _freq = "";
+		int _interval = 1;
+		if (input.contains(" ")) {
+			String[] interval = input.split(" ");
+			_interval = Integer.parseInt(interval[0]);
+			_freq = interval[1];
+		} else {
+			_freq = input;
+		}
+		DateParser DP = new DateParser();
+		DP.processDate(input);
+		startDate = DP.getDateObject();
 	}
 	
 	public void parseInterval(String input) throws Exception {
