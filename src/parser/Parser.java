@@ -48,7 +48,7 @@ public class Parser {
 	private static final int DONE_INDEX = 10;
 	
 	private static final String NOTDONE_COMMAND_1 = "undone";
-	private static final String NOTDONE_COMMAND_3 = "incomplete";
+	private static final String NOTDONE_COMMAND_2 = "incomplete";
 	private static final int NOTDONE_INDEX = 11;
 	
 	public CommandObject CO = new CommandObject();
@@ -113,7 +113,7 @@ public class Parser {
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
 				|| command.startsWith(DONE_COMMAND_3) || command.startsWith(DONE_COMMAND_4)) {
 			parseDone(command);
-		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_3)) {
+		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_2)) {
 			parseNotDone(command);
 		} else if (isSearch(command)) {
 			parseSearch(command);
@@ -134,32 +134,39 @@ public class Parser {
 	 * method sets command type and index of the task to be marked as done
 	 * 
 	 * @param  command   user's input
-	 * @throws Exception 
 	 */
-	public void parseDone(String command) throws Exception {
-		CO.setCommandType(DONE_INDEX);
+	public void parseDone(String command) {
 		int temp = command.indexOf(" ");
-		if (command.length() > temp) {
+		if (temp != -1) {
+			CO.setCommandType(DONE_INDEX);
 			command = command.substring(temp + 1);
 			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
-			throw new Exception("Missing index.");
+			CO.setCommandType(SEARCH_INDEX);
+			TO.setStatus("completed");
+			CO.setTaskObject(TO);
 		}
-		
 	}
 	
-	public void parseNotDone(String command) throws Exception {
-		CO.setCommandType(NOTDONE_INDEX);
+	/**
+	 * method sets command type and index of task to be marked as incomplete
+	 * 
+	 * @param command
+	 */
+	public void parseNotDone(String command) {
 		int temp = command.indexOf(" ");
-		if (command.length() > temp) {
+		if (temp != -1) {
+			CO.setCommandType(NOTDONE_INDEX);
 			command = command.substring(temp + 1);
 			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
-			throw new Exception("Missing index.");
+			CO.setCommandType(SEARCH_INDEX);
+			TO.setStatus("incomplete");
+			CO.setTaskObject(TO);
 		}
 		
 	}

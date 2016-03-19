@@ -88,23 +88,27 @@ public class Constants {
             + REGEX_DATE_ATTRIBUTES + "|" + REGEX_DAYS_TEXT + "))";
     public static final String REGEX_RELATIVE_DATE_3 = "(\\d+ "
             + REGEX_DATE_ATTRIBUTES + " (?i)(later|before|after|from now))";
-    public static final String REGEX_RELATIVE_DATE_ALL = "(" + REGEX_RELATIVE_DATE_1 
-    		+ "|" + REGEX_RELATIVE_DATE_2 + "|" + REGEX_RELATIVE_DATE_3 + ")$";
+    public static final String REGEX_RELATIVE_DATE_ALL = "(" 
+            + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
+            + "|" + REGEX_RELATIVE_DATE_3 +")";
+    public static final String REGEX_RELATIVE_DATETIME = "(" + REGEX_RELATIVE_DATE_ALL + " "
+    		+ "(" + REGEX_TIME_FORMAT + ")?" + ")$";
     
     public static final String REGEX_RELATIVE_TIME_1 = "("
             + REGEX_TIME_ATTRIBUTES + " (?i)(later|before|after|from now))";
     
     //DEADLINE has the by or before keyword
-    public static final String REGEX_DEADLINE_IDENTIFIER = "(?i)(by|before) "
-            + REGEX_DATETIME_FORMAT;
+    public static final String REGEX_DEADLINE_IDENTIFIER = "(?i)(by|before) " + "("
+            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME + ")";
     
     //EVENT has a start and end 
     public static final String REGEX_EVENT_IDENTIFIER = "(?i)(from) "
-            + REGEX_DATETIME_FORMAT + " to " +REGEX_DATETIME_FORMAT;
+            + REGEX_DATETIME_FORMAT 
+            + " to " + REGEX_DATETIME_FORMAT;
     
     //point task has an at or on keyword
     public static final String REGEX_POINT_TASK_IDENTIFIER = "(?i)(on|at) "
-            + REGEX_DATETIME_FORMAT;
+            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME;
     
     //RECURRING task has an "every" keyword
     public static final String REGEX_RECURRING_INTERVAL = "(?i)(every)[ 0-9]* ("
@@ -126,6 +130,7 @@ public class Constants {
     
     
     public static final String REGEX_TASK_IDENTIFIER = "(?i)(by|before|every|on|at|from|to)";
+    public static final String REGEX_TASK_IDENTIFIER_2 = "(?i)(by|before|every|on|at|from)";
     
     //if any of the 4 types matches, the input by user will need to read date time
     public static final String REGEX_DATE_TIME_IDENTIFIER = "("
@@ -140,8 +145,8 @@ public class Constants {
     
     
     
-    public static final String REGEX_FINAL = "(" + REGEX_RELATIVE_DATE_ALL 
-    		+ "|" + REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_RELATIVE_TIME_1 + ")";
+    public static final String REGEX_FINAL = "(" + REGEX_DATE_TIME_IDENTIFIER + "|" 
+    		+ REGEX_RELATIVE_DATE_ALL + "|" + REGEX_RELATIVE_TIME_1 + ")$";
     
     public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
     		+ REGEX_DATETIME_FORMAT + ")$";

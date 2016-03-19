@@ -96,7 +96,10 @@ public class DateTimeParser {
 				break;
 			case deadline:
 			default:
-				separateDateTime(input, "start");
+				if(input.contains("to")) {
+					endDateTime = startDateTime;
+				}
+				separateDateTime(input, "start");	
 				break;
 			}
 			setLocalDateTime(isForAdd, tasktype);
@@ -150,7 +153,9 @@ public class DateTimeParser {
 			String intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
 			input = input.replaceFirst(intervalString, "").trim();
 			parseInterval(intervalString);
-			parseDateTime(input,true);
+			if (!input.isEmpty()) {
+				parseDateTime(input,true);
+			}
 		}
 		
 	}
@@ -242,6 +247,9 @@ public class DateTimeParser {
 	public void setLocalDateTime(boolean isForAdd, TaskType task) {
 		if (isForAdd) {
 			if (task.toString() == "event" && _endDate == -1) { 
+				if(_startDate == -1) {
+					startDate = LocalDate.now();
+				}
 				_endDate = _startDate;
 				endD = startD; //for special case of lazy ppl not typing end date
 				endDate = startDate;
@@ -254,6 +262,21 @@ public class DateTimeParser {
 	}
 	
 	private void setInterval(int interval, String frequency) throws Exception {
+		//read in freq
+		if (frequency.matches(Constants.REGEX_DAYS_TEXT)
+				|| frequency.matches("(week|wk)(s)?")) {
+			frequency = "WEEKLY";
+		} else if (frequency.matches("(year|yr)(s)?")) {
+			frequency = "YEARLY";
+		} else if (frequency.matches("(hour|hr)(s)?")) {
+			frequency = "HOURLY";
+		} else if (frequency.matches(Constants.REGEX_MONTHS_TEXT) 
+				|| frequency.matches("(month|mth)(s)?")) {
+			frequency = "MONTHLY";
+		} else if (frequency.matches("(day)(s)?")) {
+			frequency = "DAILY";
+		}
+		
 		TO.getInterval().setTimeInterval(interval);
 		TO.getInterval().setFrequency(frequency);
 		TO.getInterval().setUntil(untilDateTime);
@@ -286,6 +309,9 @@ public class DateTimeParser {
 	
 	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
 	private String cleanString(String input) {
+		if (input.contains("today")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim();
+		}
 		return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();
 	}
 	

@@ -117,7 +117,7 @@ public class DateParser {
 	
 	
 	public boolean isRelative(String input) {
-		if(input.matches(Constants.REGEX_RELATIVE_DATE_ALL)) {
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL)) {
 			return true;
 		} else {
 			return false;
@@ -125,9 +125,12 @@ public class DateParser {
 		
 	}
 	
-	
+	/**
+	 * method will set date object for relative date inputs such as today, tmr, next week
+	 * 
+	 * @param input
+	 */
 	public void processRelativeDate(String input) {
-		int i=0;
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
 			if (input.matches("today")) {
 				dateObject = LocalDate.now();
@@ -152,7 +155,7 @@ public class DateParser {
 	public boolean hasMonth(String input) {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_MONTHS_TEXT);
 		Matcher matcher = dateTimePattern.matcher(input);
-		if (matcher.find()){
+		if (matcher.find()) {
 			return true;
 		} else {
 			return false;
@@ -212,7 +215,7 @@ public class DateParser {
 	 */
 	public void setMonthWithSlash(String input) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		//split date into new arraylist
+		
 		for (String temp : input.split("/")) {
 			temp = temp.replaceAll(" ", "");
 			temp = temp.replaceAll("[a-zA-Z]+", "");
@@ -220,9 +223,9 @@ public class DateParser {
 			list.add(tempInt);
 		}
 		
-		
 		start_day = list.get(0);
 		start_month = list.get(1);
+		
 		if (list.size() == 3) {
 			start_year = list.get(2);
 		}
@@ -311,7 +314,7 @@ public class DateParser {
 		
 		dateString = Integer.toString(startDate); //now insert the damn dashes
 		dateString = addDashes(dateString);
-		setDateObject(LocalDate.parse(dateString, dateFormatter));
+		setDateObject(dateString, dateFormatter);
 	}
 	
 	/**
@@ -321,11 +324,15 @@ public class DateParser {
 	 * @return string in yyyy-MM-dd format
 	 */
 	private String addDashes(String input) {
-		String year, month, day;
-		year = input.substring(0,4);
-		month = input.substring(4,6);
-		day = input.substring(6);
-		return year + "-" + month + "-" + day;
+		if (input.length() == 8) {
+			String year, month, day;
+			year = input.substring(0,4);
+			month = input.substring(4,6);
+			day = input.substring(6);
+			return year + "-" + month + "-" + day;	
+		} else {
+			return "";
+		}
 	}
 	
 	
@@ -418,9 +425,12 @@ public class DateParser {
 	public LocalDate getDateObject() {
 		return dateObject;
 	}
-
-	public void setDateObject(LocalDate dateObject) {
-		this.dateObject = dateObject;
+	
+	//if already set due to relative date, the method will not set the date again
+	public void setDateObject(String input, DateTimeFormatter dateFormatter) {
+		if (dateObject == LocalDate.MAX) {
+			dateObject = LocalDate.parse(input, dateFormatter);
+		}
 	}
 
 }
