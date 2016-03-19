@@ -16,10 +16,6 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by 29feb 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals(900, tempParser.getStartTime());
-		assertEquals(900, tempParser.getEndTime());
-		assertEquals(20160229, tempParser.getStartDate());
-		assertEquals(20160229, tempParser.getEndDate());
 		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
@@ -27,9 +23,6 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by tmr 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals(900, tempParser.getStartTime());
-		assertEquals(900, tempParser.getEndTime());
-		
 		assertEquals("2016-03-21T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
@@ -37,10 +30,6 @@ public class ParserTest {
 		tempParser.allocate("add prep 5pm lecture by 29feb 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("prep 5pm lecture", tempParser.getTask());
-		assertEquals(900, tempParser.getStartTime());
-		assertEquals(900, tempParser.getEndTime());
-		assertEquals(20160229, tempParser.getStartDate());
-		assertEquals(20160229, tempParser.getEndDate());
 		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
@@ -48,19 +37,16 @@ public class ParserTest {
 		tempParser.allocate("add prep 5pm lecture from 29feb 9am to 8pm");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("prep 5pm lecture", tempParser.getTask());
-		assertEquals(900, tempParser.getStartTime());
-		assertEquals(2000, tempParser.getEndTime());
-		assertEquals(20160229, tempParser.getStartDate());
-		assertEquals(20160229, tempParser.getEndDate());
+		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-02-29T20:00",tempParser.getEndDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		
 		tempParser.allocate("add 5pm lecture every tuesday at 4pm until 9june");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("5pm lecture", tempParser.getTask());
-		assertEquals(1600, tempParser.getStartTime());
-		assertEquals(1600, tempParser.getEndTime());
 		assertEquals("2016-03-22T16:00",tempParser.getStartDateTime().toString());
+		//test for until
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		
@@ -103,7 +89,7 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getEndTime());
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
-		//assertEquals("",tempParser.getStartDateTime().toString());
+		assertEquals("+999999999-12-31T19:55",tempParser.getStartDateTime().toString());
 		reset();
 		
 		tempParser.allocate("save as C://mac/desktop");

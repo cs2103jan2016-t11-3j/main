@@ -136,6 +136,12 @@ public class DateTimeParser {
 		setLocalDateTime(true, tasktype);
 	}
 	
+	/**
+	 * Method will split string into the startdatetime, interval and until components of a recurring task identifier
+	 * 
+	 * @param input
+	 * @throws Exception
+	 */
 	public void recur(String input) throws Exception {
 		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
 		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL);
@@ -154,7 +160,6 @@ public class DateTimeParser {
 			intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
 			input = input.replaceFirst(intervalString, "").trim();
 			parseInterval(intervalString);
-			System.out.println(input);
 			if (!input.isEmpty()) {
 				parseDateTime(input,true);
 			}
@@ -164,6 +169,13 @@ public class DateTimeParser {
 		}
 	}
 	
+	/**
+	 * method will use the frequency from interval to obtain start date
+	 * if user does not input the start date
+	 * 
+	 * @param input  frequency from the user's input
+	 * 			e.g. every 2 tuesday
+	 */
 	public void getStartDateFromInterval(String input) {
 		input = input.replaceFirst("every","").trim();
 		String _freq = "";
@@ -176,10 +188,18 @@ public class DateTimeParser {
 			_freq = input;
 		}
 		DateParser DP = new DateParser();
-		DP.processDate(input);
+		DP.processDate(_freq);
 		startDate = DP.getDateObject();
 	}
 	
+	/**
+	 * method breaks down string into the interval and frequency to be stored in
+	 * task object's interval object.
+	 * 
+	 * @param input      interval and frequency from user's input 
+	 * 			e.g. every 5 weeks
+	 * @throws Exception
+	 */
 	public void parseInterval(String input) throws Exception {
 		input = input.replaceFirst("every","").trim();
 		String _freq;
@@ -196,22 +216,20 @@ public class DateTimeParser {
 	
 	/**
 	 * method will take in string and identify regular expressions for time
-	 * and date. It will create date processor object and tie processor object
-	 * to parse date and time
+	 * and date. 
 	 * 
-	 * @param input
-	 * @param isStart
+	 * Creates dateparser object and timeparser object
+	 * to parse date and time respectively.
+	 * 
+	 * @param input		user's input containing date and time
+	 * 			e.g. 7pm 9 june, tmr 9am
+	 * @param isStart   type of time/date the user's input will be stored, either as start, end or until
 	 */
 	public void separateDateTime(String input, String type) {
 		input = input.replaceFirst("until", "").trim();
-		//Pattern date = Pattern.compile(Constants.REGEX_DATE_FORMAT);
+		
 		Pattern time = Pattern.compile(Constants.REGEX_TIME_FORMAT);
-		//Pattern relativedate = Pattern.compile(Constants.REGEX_RELATIVE_DATE_ALL);
-		
-		//Matcher dateMatcher = date.matcher(input);
 		Matcher timeMatcher = time.matcher(input);
-		//Matcher rdateMatcher = relativedate.matcher(input);
-		
 		DateParser DP = new DateParser();
 		TimeParser TP = new TimeParser();
 		
@@ -262,7 +280,11 @@ public class DateTimeParser {
 	}
 	
 	/**
+	 * method will set appropriate localdatetime for the task object
+	 * if the task is an event without end date, start date will be used
 	 * 
+	 * @param isForAdd  boolean show if the task is for an add command
+	 * @param task      task type (deadline, event, floating or recurrent)
 	 */
 	public void setLocalDateTime(boolean isForAdd, TaskType task) {
 		if (isForAdd) {
@@ -306,6 +328,7 @@ public class DateTimeParser {
 	 * method checks string to identify the task type
 	 * 
 	 * @param input    user's input in string format
+	 * 			e.g. by tmr 6pm (deadline)
 	 * @return         appropriate task type for the input 
 	 */
 	public TaskType getTaskType(String input) {
@@ -331,8 +354,9 @@ public class DateTimeParser {
 	private String cleanString(String input) {
 		if (input.contains("today")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim();
+		} else {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();	
 		}
-		return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();
 	}
 	
 	//extract string and trims out whitespace
@@ -340,6 +364,8 @@ public class DateTimeParser {
 		return input.substring(startIndex, endIndex).trim();
 	}
 	
+	
+	//getters!!!!
 	public int getStartDate() {
 		return _startDate;
 	}

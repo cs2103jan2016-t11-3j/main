@@ -48,7 +48,6 @@ public class AddParser extends CommandParser {
 		if (matcher.find()) {
 			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
 			input = getTrimmedString(input, 0, matcher.start());
-			System.out.println(identifier);
 		}
 		
 		if (identifier != null) {

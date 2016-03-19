@@ -75,15 +75,12 @@ public class DateParser {
 	private LocalDate dateObject = LocalDate.MAX;
 	
 	/**
-	 * This method takes in a string input returns start date and end date 
-	 * called by command processor objects. 
+	 * This method takes in a string input returns LocalDate to the datetimeparser
 	 * 
-	 * @param input         date string that is in the format
-	 * @param isForSearch   boolean to show if date is ran by search processor
+	 * @param input    date string that is in the format
 	 */
 	public void processDate(String input) {
 		if (!input.isEmpty()) {
-			//convertToArray(input);
 			furtherProcessDate(input);
 			if (start_month == -1) {
 				start_month = end_month;
@@ -94,7 +91,7 @@ public class DateParser {
 	
 	
 	/**
-	 * this method further processes the newly made array list.
+	 * this method further processes the input from date-time-parser
 	 * 
 	 * format types include
 	 * 1. Month spelt out:    3rd june 2013 - 4th june 2014
@@ -108,14 +105,19 @@ public class DateParser {
 			splitStringAndProcess(input);
 		} else if (hasSlash(input)) {
 			setMonthWithSlash(input);
-		} else if (isRelative(input)) {
-			//relative date process here 
+		} else if (isRelative(input)) { 
 			processRelativeDate(input);
 		}
 	}
 	
 	
-	
+	/**
+	 * method checks if the input string is a relative date
+	 * @param input   date string 
+	 * 			e.g. tmr (relative date)
+	 * 			e.g. 8 june (not relative date)
+	 * @return boolean   true,if the date string is a relative date
+	 */
 	public boolean isRelative(String input) {
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT)) {
 			return true;
@@ -138,7 +140,6 @@ public class DateParser {
 				dateObject = LocalDate.now().plusDays(1);
 			}
 		} else if (input.matches(Constants.REGEX_DAYS_TEXT)) {
-			System.out.println(input);
 			input = input.replaceAll("next ", "").trim();
 			dateObject = LocalDate.now();
 			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
@@ -300,7 +301,12 @@ public class DateParser {
 		}
 	}
 	
-	//method sets the date in yyyymmdd format
+	/**
+	 * method sets the LocalDate for the object by cleaning up minor format differences
+	 * and forming yyyyMMdd string
+	 * 
+	 * passes date in string format to setDateObject method for setting the LocalDate value
+	 */
 	public void setDates() {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 		
@@ -322,8 +328,10 @@ public class DateParser {
 	/**
 	 * method adds dashes into the date string to convert it into yyyy-MM-dd format
 	 * 
-	 * @param input
+	 * @param input   date string in yyyyMMdd format 
+	 * 			e.g. 20140529
 	 * @return string in yyyy-MM-dd format
+	 * 			e.g. 2014-05-29
 	 */
 	private String addDashes(String input) {
 		if (input.length() == 8) {
@@ -361,6 +369,13 @@ public class DateParser {
 		}
 		
 		return start_day + start_month * 100 + start_year * 10000;
+	}
+	
+	//if already set due to relative date, the method will not set the date again
+	public void setDateObject(String input, DateTimeFormatter dateFormatter) {
+		if (dateObject == LocalDate.MAX) {
+			dateObject = LocalDate.parse(input, dateFormatter);
+		}
 	}
 	
 	public int getStartDate() {
@@ -426,13 +441,6 @@ public class DateParser {
 
 	public LocalDate getDateObject() {
 		return dateObject;
-	}
-	
-	//if already set due to relative date, the method will not set the date again
-	public void setDateObject(String input, DateTimeFormatter dateFormatter) {
-		if (dateObject == LocalDate.MAX) {
-			dateObject = LocalDate.parse(input, dateFormatter);
-		}
 	}
 
 }
