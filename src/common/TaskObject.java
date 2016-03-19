@@ -117,7 +117,7 @@ public class TaskObject implements Comparable<TaskObject> {
 
 	public String getTitle() {
 		if (title == null)
-			return "null";
+			return "";
 		return title;
 	}
 	
