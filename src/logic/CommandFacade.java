@@ -15,6 +15,9 @@ import logic.search.Search;
 import logic.undoredo.UndoRedo;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Deque;
 
@@ -412,16 +415,21 @@ public class CommandFacade {
 	 *            Either an undoList or redoList
 	 */
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
+		String originalTitle = editOriginal.getOriginalTitle();
+		LocalDateTime originalDateTime = editOriginal.getOriginalDateTime();
 		CommandObject newCommandObj = new CommandObject();
 
-		if (editOriginal.getIsEditTitle()) {
-			String originalTitle = editOriginal.getOriginalTitle();
-			newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
+		if (editOriginal.getIsEditTitle() && editOriginal.getIsEditDateAndTime()) {
+			newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle, originalDateTime),
 					editOriginal.getEditItemNumber());
-		} else if (editOriginal.getIsEditDate()) {
-			int originalDate = editOriginal.getOriginalDate();
-			newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalDate),
-					editOriginal.getEditItemNumber());
+		} else {
+			if (!editOriginal.getIsEditDateAndTime()) {	// only title was edited
+				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
+						editOriginal.getEditItemNumber());
+			} else { // only date/time was edited
+				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalDateTime),
+						editOriginal.getEditItemNumber());
+			}
 		}
 
 		list.push(newCommandObj);

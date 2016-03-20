@@ -21,6 +21,68 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected Interval interval = new Interval();
 	
 	// Constructor for event tasks
+	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String category, String status, int taskId) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// Constructor for deadline tasks
+	public TaskObject(String title, LocalDateTime startDateTime, String category, String status, int taskId) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.endDateTime = LocalDateTime.MAX;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// Constructor for floating tasks 
+	public TaskObject(String title, String category, String status, int taskId) {
+		this.title = title;
+		this.startDateTime = LocalDateTime.MAX;
+		this.endDateTime = LocalDateTime.MAX;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// FOR WHAT???
+	public TaskObject (LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.interval = interval;
+	}
+	
+	// Constructor for processing undo for edit of title and date/time
+	public TaskObject(String title, LocalDateTime startDateTime) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+	}
+	
+	// Constructor for processing undo for edit of title
+	public TaskObject(String title) {
+		this.title = title;
+		this.startDateTime = LocalDateTime.MAX;
+	}
+	
+	// Constructor for processing undo for edit of date/time
+	public TaskObject(LocalDateTime startDateTime) {
+		this.title = "";
+		this.startDateTime = startDateTime;
+	}
+
+	
+	// empty constructor
+	public TaskObject() {
+		
+	}
+	
+	/*
+	// Constructor for event tasks
 	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
 		this.title = title;
 		this.startDate = startDate;
@@ -44,7 +106,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = taskId;
 	}
 	
-	/* Constructor for floating tasks
+	// Constructor for floating tasks
 	public TaskObject(String title, String category, String status, int taskId) {
 		this.title = title;
 		this.startDate = -1;
@@ -54,7 +116,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.category = category;
 		this.status = status;
 		this.taskId = taskId;
-	}*/
+	}
 	
 	// Constructor for search keyword, delete, save and for edit-title functions
 	public TaskObject(String title){
@@ -66,70 +128,9 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.category = "";
 		this.status = "";
 		this.taskId = -1;
-	}
+	}*/
 	
-	// Constructor for edit-date functions
-	public TaskObject(int date) {
-		this.title = "";
-		this.startDate = date;
-		this.endDate = date;
-		this.startTime = -1;
-		this.endTime = -1;
-		this.category = "";
-		this.status = "";
-		this.taskId = -1;
-	}
 	
-    public TaskObject(String title, int taskId){
-        this.title = title;
-        this.startDate = 0;
-        this.endDate = 0;
-        this.startTime = 0;
-        this.endTime = 0;
-        this.category = "";
-        this.status = "";
-        this.taskId = taskId;
-    }
-	
-	// empty constructor
-	public TaskObject() {
-		
-	}
-	
-	// Constructor for deadline with LocalDateTime
-	public TaskObject(String title, LocalDateTime startDateTime, String category, String status, int taskId) {
-		this.title = title;
-		this.startDateTime = startDateTime;
-		this.category = category;
-		this.status = status;
-		this.taskId = taskId;
-	}
-	
-	// Constructor for event with LocalDateTime
-	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String category, String status, int taskId) {
-		this.title = title;
-		this.startDateTime = startDateTime;
-		this.endDateTime = endDateTime;
-		this.category = category;
-		this.status = status;
-		this.taskId = taskId;
-	}
-	
-	// Constructor for floating tasks with LocalDateTime - for edit JUnit testing purposes
-	public TaskObject(String title, String category, String status, int taskId) {
-		this.title = title;
-		this.startDateTime = LocalDateTime.MAX;
-		this.endDateTime = LocalDateTime.MAX;
-		this.category = category;
-		this.status = status;
-		this.taskId = taskId;
-	}
-	
-	public TaskObject (LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
-		this.startDateTime = startDateTime;
-		this.endDateTime = endDateTime;
-		this.interval = interval;
-	}
 
 	public String getTitle() {
 		if (title == null)

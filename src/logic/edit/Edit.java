@@ -45,6 +45,7 @@ public class Edit {
 
 	private ArrayList<String> output = new ArrayList<String>();
 	private String originalTitle;
+	private LocalDateTime originalDateTime;
 	private LocalDate originalDate;
 	private LocalTime originalTime;
 	private String editTitle;
@@ -69,7 +70,7 @@ public class Edit {
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
-		checkEditInformation();
+		//checkEditInformation();
 		int editTaskId = getTaskIdOfTaskToBeEdited();
 		editTask(editTaskId);
 		saveExternal();
@@ -148,8 +149,9 @@ public class Edit {
 	}
 	
 	private void editDateAndTime(TaskObject task) {
-		originalDate = task.getStartDateTime().toLocalDate();
-		originalTime = task.getStartDateTime().toLocalTime();
+		originalDateTime = task.getStartDateTime();
+		originalDate = originalDateTime.toLocalDate();
+		originalTime = originalDateTime.toLocalTime();
 		
 		if (!originalDate.isEqual(editDate) && !originalTime.equals(editTime)) {		
 			task.setStartDateTime(LocalDateTime.of(editDate, editTime));
@@ -164,10 +166,11 @@ public class Edit {
 	}
 	
 	private void editDate(TaskObject task) {
-		originalDate = task.getStartDateTime().toLocalDate();
+		originalDateTime = task.getStartDateTime();
+		originalDate = originalDateTime.toLocalDate();
 		
 		if (!originalDate.isEqual(editDate)) {		
-			originalTime = task.getStartDateTime().toLocalTime();
+			originalTime = originalDateTime.toLocalTime();
 			task.setStartDateTime(LocalDateTime.of(editDate, originalTime));
 			LOGGER.log(Level.INFO, "Date edited");
 		} else {
@@ -176,10 +179,11 @@ public class Edit {
 	}
 	
 	private void editTime(TaskObject task) {
-		originalTime = task.getStartDateTime().toLocalTime();
+		originalDateTime = task.getStartDateTime();
+		originalTime = originalDateTime.toLocalTime();
 		
 		if (!originalTime.equals(editTime)) {
-			originalDate = task.getStartDateTime().toLocalDate();
+			originalDate = originalDateTime.toLocalDate();
 			task.setStartDateTime(LocalDateTime.of(originalDate, editTime));
 			LOGGER.log(Level.INFO, "Time edited");
 		} else {
@@ -282,16 +286,23 @@ public class Edit {
 		return originalTitle;
 	}
 	
-	public LocalDate getOriginalDate() {
-		return originalDate;
+	public LocalDateTime getOriginalDateTime() {
+		return originalDateTime;
+	}
+	
+	public boolean getIsEditTitle() {
+		return isEditTitle;
+	}
+	
+	public boolean getIsEditDateAndTime() {
+		return isEditDate || isEditTime;
 	}
 	
 	public boolean getIsEditDate() {
 		return isEditDate;
 	}
 	
-	public boolean getIsEditTitle() {
-		return isEditTitle;
+	public boolean getIsEditTime() {
+		return isEditTime;
 	}
-
 }
