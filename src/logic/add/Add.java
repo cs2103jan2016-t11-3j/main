@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.logging.*;
+import java.io.File;
 
 import common.TaskObject;
 
@@ -40,7 +41,7 @@ public class Add {
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
 
-	public static Logger logger = Logger.getLogger("Add");
+	private static Logger logger = Logger.getLogger(Add.class.getName());
 
 	public Add() {
 
@@ -63,6 +64,24 @@ public class Add {
 		this.taskList = taskList;
 	}
 
+	public void setUpLogger() {
+		try {
+			File fakeFile = new File("");
+			String filePath = fakeFile.getAbsolutePath();
+			FileHandler fileHandler = new FileHandler(filePath + "/src/logic/add/" + "addLog.txt");
+			logger.addHandler(fileHandler);
+			SimpleFormatter formatter = new SimpleFormatter();
+			fileHandler.setFormatter(formatter);
+			logger.setUseParentHandlers(false);
+
+			logger.log(Level.INFO, "First log");
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Called by logic to add the task initialised in the Add object to the task
 	 * list.
@@ -72,6 +91,7 @@ public class Add {
 	 */
 	public ArrayList<String> run() {
 		assert (!task.getTitle().equals(""));
+		setUpLogger();
 		logger.log(Level.INFO, "going to start processing task for adding");
 		try {
 			String taskType = task.getCategory();

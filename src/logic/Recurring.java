@@ -69,7 +69,7 @@ public class Recurring {
 		}		
 	}
 
-	private static void setNextEventTime(TaskObject task) {
+	public static void setNextEventTime(TaskObject task) {
 		String frequency = task.getInterval().getFrequency();
 		int timeInterval = task.getInterval().getTimeInterval();
 		if (task.getInterval().getByDay().equals("")) {

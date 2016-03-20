@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import common.TaskObject;
+import common.Interval;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -37,7 +38,7 @@ public class TimeOutput {
 	 * 
 	 * @param event
 	 */
-	private static void setEventTimeOutput(TaskObject event) {
+	public static void setEventTimeOutput(TaskObject event) {
 		String line;
 		try {
 			String[] start = createDateTimeArray(event.getStartDateTime());
@@ -62,14 +63,14 @@ public class TimeOutput {
 				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], endDateTime);
 				// End Date will be printed
 			} else {
-				if(end[1].equals("")) {
-					if(start[1].equals("")) {
+				if (end[1].equals("")) {
+					if (start[1].equals("")) {
 						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
 					} else {
 						formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], end[0]);
 					}
 				} else {
-					if(start[1].equals("")) {
+					if (start[1].equals("")) {
 						String endDateTime = end[1].concat(" on ").concat(end[0]);
 						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], endDateTime);
 					}
@@ -84,7 +85,7 @@ public class TimeOutput {
 	 * 
 	 * @param deadline
 	 */
-	private static void setDeadlineTimeOutput(TaskObject deadline) {
+	public static void setDeadlineTimeOutput(TaskObject deadline) {
 		String line;
 		try {
 			String[] start = createDateTimeArray(deadline.getStartDateTime());
@@ -121,5 +122,35 @@ public class TimeOutput {
 			timeArray[1] = "";
 		}
 		return timeArray;
+	}
+
+	public static ArrayList<String> setRecurringEventTimeOutput(TaskObject foundTask) throws Exception {
+		ArrayList<String> output = new ArrayList<String>();
+		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
+
+		LocalDateTime startDateTime = foundTask.getStartDateTime();
+		LocalDateTime endDateTime = foundTask.getEndDateTime();
+		Interval interval = foundTask.getInterval();
+
+		TaskObject dummyTask = new TaskObject(startDateTime, endDateTime, interval);
+		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) {
+			while (dummyTask.getStartDateTime().isBefore(dummyTask.getInterval().getUntil())) {
+				TimeOutput.setEventTimeOutput(dummyTask);
+				output.add(dummyTask.getTimeOutputString());
+				Recurring.setNextEventTime(dummyTask);
+			}
+		} else {
+			if (interval.getCount() != -1) {
+				for (int i = 0; i <= interval.getCount(); i++) {
+					TimeOutput.setEventTimeOutput(dummyTask);
+					output.add(dummyTask.getTimeOutputString());
+					Recurring.setNextEventTime(dummyTask);
+				}
+			} else {
+				Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
+				throw e;
+			}
+		}
+		return output;
 	}
 }

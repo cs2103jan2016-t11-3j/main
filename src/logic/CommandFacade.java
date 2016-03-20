@@ -180,7 +180,7 @@ public class CommandFacade {
 
 	// Calls Search function which outputs only the tasks that match the search keyword.
 	private void searchFunction() {
-		Search search = new Search(taskObj, taskList);
+		Search search = new Search(commandObj, taskList, lastOutputTaskList);
 		setOutput(search.run());
 		setLastOutputTaskList(search.getLastOutputTaskList());
 	}

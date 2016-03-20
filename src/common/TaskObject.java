@@ -114,6 +114,12 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.status = status;
 		this.taskId = taskId;
 	}
+	
+	public TaskObject (LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.interval = interval;
+	}
 
 	public String getTitle() {
 		if (title == null)
