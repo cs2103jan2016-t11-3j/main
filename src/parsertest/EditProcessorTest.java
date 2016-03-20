@@ -30,8 +30,12 @@ public class EditProcessorTest {
 		Tempshit = EP.process("edit 4 9.13pm");
 		assertEquals(2113, Tempshit.getStartTime());
 		reset();
+		
+		Tempshit = EP.process("edit 4 9.13pm");
+		assertEquals(2113, Tempshit.getStartTime());
+		reset();
 	}
-
+	
 	@Test
 	public void testCleanString() {
 		assertEquals("do this task", EP.cleanString("edit 3 do this task"));

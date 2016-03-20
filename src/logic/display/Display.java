@@ -4,6 +4,10 @@ import java.util.logging.*;
 
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
+
 /**
  *  Creates a "Display" object which imports the existing task list into an ArrayList of 
  *  Strings, in the format shown below: <br>

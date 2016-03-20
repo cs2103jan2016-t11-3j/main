@@ -67,10 +67,14 @@ public abstract class CommandParser {
 	protected LocalDateTime _startDateTime;
 	protected LocalDateTime _endDateTime;
 	
-	public abstract TaskObject process(String input);
+	public abstract TaskObject process(String input) throws Exception;
 	
 	public abstract void reset();
 	
 	public abstract int getIndex(); //only for EDIT
+	
+	protected String getTrimmedString(String input, int startIndex, int endIndex) {
+		return input.substring(startIndex, endIndex).trim();
+	}
 	
 }

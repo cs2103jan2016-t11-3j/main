@@ -7,6 +7,9 @@ import java.util.logging.Level;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 
 /**
  * Creates a Search object which facilitates the finding of tasks matching the search strings.

@@ -3,8 +3,9 @@ You can add a new event/floating task to be tracked by the program.
 
 Enter “add”, followed by the event/floating task description. The start and end date time can also be included with the event/floating task and the information will automatically be added to the event details.
 
-Note that if two conflicting events are scheduled (i.e. The timing of the event to be scheduled overlaps with any part of any existing event), there will be a notification requesting you to confirm if these two events are to be scheduled together despite the conflict. 
-
 Usage Examples:
-add Dinner with John 7pm - 8pm	Creates an event named “Dinner with John”, scheduled between 7pm to 8pm on the day this was created
-add Dinner with John	Creates a floating task named “Dinner with John”
+add Dinner with John 7pm - 8pm	
+Creates an event named “Dinner with John”, scheduled between 7pm to 8pm on the day this was created
+
+add Dinner with John	
+Creates a floating task named “Dinner with John”

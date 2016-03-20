@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import common.CommandObject;
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates a Done object, which is a Mark object. However, it specifically changes the status
  * of the target task to "done".
@@ -12,8 +15,6 @@ import common.TaskObject;
  *
  */
 public class Done extends Mark{
-
-	private final String MESSAGE_DONE = "Task: %1s marked as completed";
 	
 	/**
 	 * Constuctor for a Done object.

@@ -9,6 +9,9 @@ import java.util.logging.*;
 import common.CommandObject;
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates an Edit object which will edit the title of a selected task to the
  * desired title. <br>

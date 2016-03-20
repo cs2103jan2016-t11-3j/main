@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.logging.*;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates a "Delete" object to facilitate the deletion of a task from task list
  * internally, before updating the file at its default location. <br>
@@ -29,10 +32,7 @@ import java.util.logging.*;
  *
  */
 
-// Needs delete function for last added code
 public class Delete {
-
-	// Deletes by searching for the unique taskID
 
 	private final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s";
 	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder. ";
@@ -43,6 +43,7 @@ public class Delete {
 	private static final Logger LOGGER = Logger.getLogger(Delete.class.getName());
 
 	private final int INDEX_DELETE = 4;
+
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
 
@@ -78,9 +79,9 @@ public class Delete {
 	 * -1.
 	 * 
 	 * @param taskList
-	 *            - Existing list of tasks in Adult TaskFinder
+	 *            Existing list of tasks in Adult TaskFinder
 	 * @param undoList
-	 *            - Current stack of CommandObjects with the purpose of undoing
+	 *            Current stack of CommandObjects with the purpose of undoing
 	 *            previous actions
 	 */
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
@@ -88,22 +89,31 @@ public class Delete {
 		this.undoList = undoList;
 		this.commandObj = commandObj;
 	}
+	
+	// Constructor for test cases
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.commandObj = commandObj;
+		this.taskList = taskList;
+		this.lastOutputTaskList = lastOutputTaskList;
+	}
 
 	/**
 	 * Default constructor for Normal Delete.
 	 * 
 	 * @param commandObj
-	 *            - Contains the index to delete from the last output task list
+	 *            Contains the index to delete from the last output task list
 	 * @param taskList
-	 *            - Existing list of tasks in Adult TaskFinder
+	 *            Existing list of tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
-	 *            - List of tasks outputted in the last command (e.g. Search, Display)
+	 *            List of tasks outputted in the last command (e.g. Search,
+	 *            Display)
 	 * @param undoList
-	 * 			  - Deque containing the list of undo tasks
+	 *            Deque containing the list of undo tasks
 	 * @param redoList
-	 * 			  - Deque containing the list of redo tasks
+	 *            Deque containing the list of redo tasks
 	 */
-	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList,
+			Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
@@ -132,9 +142,9 @@ public class Delete {
 				}
 			}
 		} catch (NullPointerException e) {
-			output.add(MESSAGE_ERROR + MESSAGE_NULL_POINTER);
+			output.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
 		} catch (IndexOutOfBoundsException e) {
-			output.add(MESSAGE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
+			output.add(MESSAGE_DELETE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
 		}
 		return output;
 	}
@@ -175,7 +185,7 @@ public class Delete {
 			createErrorOutput();
 		}
 	}
-	
+
 	// Clears everything - task list, undo list, redo list and the storage file
 	private void runDeleteAll() {
 		taskList.clear();
@@ -199,7 +209,6 @@ public class Delete {
 		}
 	}
 
-	
 	private boolean deleteInternal() throws NullPointerException {
 		obtainTaskId();
 		if (taskIdToDelete != -1) {
@@ -215,8 +224,8 @@ public class Delete {
 	private void obtainTaskId() {
 		int index = commandObj.getIndex();
 		assert (index > 0 && index <= lastOutputTaskList.size());
-		
-		taskIdToDelete = lastOutputTaskList.get(index-1).getTaskId();
+
+		taskIdToDelete = lastOutputTaskList.get(index - 1).getTaskId();
 	}
 
 	private boolean deleteExternal() {
@@ -242,14 +251,14 @@ public class Delete {
 
 	private void createErrorOutput() {
 		removedTask = null;
-		output.add(MESSAGE_ERROR);
+		output.add(MESSAGE_DELETE_ERROR);
 	}
 
 	private void createQuickDeleteUnavailableErrorOutput() {
 		removedTask = null;
 		output.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
 	}
-	
+
 	private void createDeletedAllOutput() {
 		output.add(MESSAGE_DELETED_ALL);
 	}
@@ -266,7 +275,7 @@ public class Delete {
 	public ArrayList<String> getOutput() {
 		return output;
 	}
-	
+
 	public void setOutput(ArrayList<String> output) {
 		this.output = output;
 	}
@@ -274,11 +283,11 @@ public class Delete {
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
-	
+
 	public Deque<CommandObject> getUndoList() {
 		return undoList;
 	}
-	
+
 	public Deque<CommandObject> getRedoList() {
 		return redoList;
 	}

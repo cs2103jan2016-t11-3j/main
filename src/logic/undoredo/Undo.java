@@ -9,12 +9,11 @@ import common.CommandObject;
 import common.TaskObject;
 import logic.Logic;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 public class Undo extends UndoRedo {
 
-	private static final String MESSAGE_UNDO = "%1$s undone.";
-	private static final String MESSAGE_UNDO_ERROR = "Nothing to undo!";
-	private static final String MESSAGE_UNDO_LIST_EMPTY = "Undo list is empty.";
-	
 	public Undo(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		super(taskList, undoList, redoList);
 	}

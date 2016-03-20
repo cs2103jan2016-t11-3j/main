@@ -1,30 +1,37 @@
 package parser;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TimeParser {
 	private final ArrayList<String> list = new ArrayList<String>();
 	private int time = -1;
 	private String timeString = "";
+	private LocalTime timeObject = LocalTime.MAX;
 		
 	
 	/**
-	 * this method takes in the user's input from add/edit/search processor
+	 * this method takes in the user's input from add/edit/search parser
 	 * 
 	 *@param input  time input from user
+	 *			e.g. 21:59hr, 7.13pm
 	 */
 	public void processTime(String input) {
 		if (!input.isEmpty()) {
 			furtherProcessTime(input);
 			convertToString();
+		} else {
+			
 		}
 	}
 	
 	
 	
 	/**
-	 * this method will check process the time input by recognizing am/pm and if the time is 
-	 * in order (8-5pm is recognized as 8am to 5pm)
+	 * this method will check process the time input by recognizing am/pm/hr
+	 * 
+	 * @param input   time input from user
 	 */
 	public void furtherProcessTime(String input) {
 		if (isAM(input)) {
@@ -74,8 +81,13 @@ public class TimeParser {
 		time = temp;
 	}
 	
+	/**
+	 * method will convert time from integer format in HHmm to string format in HH:mm 
+	 * and create LocalTime object
+	 */
 	private void convertToString() {
 		String minute, hour;
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		if (time < 1000) {
 			minute = "0" + Integer.toString(time);
 		} else {
@@ -86,36 +98,10 @@ public class TimeParser {
 		minute = minute.substring(2);
 		
 		timeString = hour + ":" + minute;
+		timeObject = LocalTime.parse(timeString, timeFormatter);
 	}
 	
-	/**
-	 * this method checks if the two time are in running order, meaning 8-1pm would
-	 * mean 8am to 1pm instead of 8pm to 1pm
-	 * 
-	 * @param temp      start time
-	 * @param tempNext  end time
-	 */
-	private static boolean checkIfCrossover(String temp, String tempNext) {
-		int first, second;
-		temp = temp.replaceAll("[:!-/a-zA-Z]+", "");
-		tempNext = tempNext.replaceAll("[:!-/a-zA-Z]+", "");
-		first = Integer.parseInt(temp);
-		second = Integer.parseInt(tempNext);
-		
-		if (first < 100) {
-			first = first * 100;
-		}
-		
-		if (second < 100) {
-			second = second * 100;
-		}
-		
-		if (first > second) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	
 	
 	/**
 	 * this method splits string into array list for easy manipulation.
@@ -147,6 +133,10 @@ public class TimeParser {
 	
 	public String getTimeString() {
 		return timeString;
+	}
+	
+	public LocalTime getTimeObject() {
+		return timeObject;
 	}
 	
 	//method used to obtain the size of the list for testing 

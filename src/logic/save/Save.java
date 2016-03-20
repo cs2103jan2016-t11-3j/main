@@ -11,6 +11,9 @@ import java.util.logging.*;
 
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates a Save object to perform two main types of operations. <br>
  * 1) Save to - Permanently changes the default location for the file to be saved. Also saves

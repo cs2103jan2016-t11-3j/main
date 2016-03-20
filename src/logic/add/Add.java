@@ -1,19 +1,20 @@
 package logic.add;
 
 import logic.*;
-import logic.mark.*;
 import storage.*;
 import common.*;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.logging.*;
 
-import common.Interval;
 import common.TaskObject;
+
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
 
 /**
  * Creates an "Add" object to facilitate adding of a task into Adult
@@ -30,12 +31,6 @@ import common.TaskObject;
  */
 public class Add {
 
-	private final String MESSAGE_ADD = "Task added: ";
-	private final String MESSAGE_FAIL = "Failed to add task. ";
-	private final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
-	private final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
-	private final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
-
 	private TaskObject task;
 	private int index;
 	private boolean addedInternal = false;
@@ -44,6 +39,8 @@ public class Add {
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
+
+	public static Logger logger = Logger.getLogger("Add");
 
 	public Add() {
 
@@ -74,19 +71,15 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
-		assert (!task.equals(null));
+		assert (!task.getTitle().equals(""));
+		logger.log(Level.INFO, "going to start processing task for adding");
 		try {
 			String taskType = task.getCategory();
 			if (taskType.equals("event")) {
 				assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
 				assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
+				logger.log(Level.INFO, "event to be added");
 
-				LocalDateTimePair taskTime = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
-				task.addToTaskDateTime(taskTime);
-				// check for clash only necessary if task is an event
-				if (task.getIsRecurring()) {
-					addRecurringTimes();
-				}
 				isClash = checkIfClash();
 				addTask();
 			} else {
@@ -94,12 +87,9 @@ public class Add {
 					assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
 					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
 
-					LocalDateTimePair taskTime = new LocalDateTimePair(task.getStartDateTime());
-					task.addToTaskDateTime(taskTime);
+					logger.log(Level.INFO, "deadline to be added");
+
 					boolean isOverdue = checkIfOverdue();
-					if (task.getIsRecurring()) {
-						addRecurringTimes();
-					} 
 					if (isOverdue) {
 						setTaskStatus(isOverdue);
 					}
@@ -109,6 +99,8 @@ public class Add {
 					assert (task.getStartDateTime().equals(LocalDateTime.MAX));
 					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
 
+					logger.log(Level.INFO, "floating to be added");
+
 					addTask();
 					// Recurrence not possible for floating tasks
 				}
@@ -116,40 +108,13 @@ public class Add {
 			createOutput();
 		} catch (DateTimeException e) {
 			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+			logger.log(Level.WARNING, "date within input task is invalid");
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
+			logger.log(Level.WARNING, "tried to retrieve an unavailable object");
 		}
 		return output;
-	}
-
-	private void addRecurringTimes() {
-		// Generates 10 additional times on top of the first
-		LocalDateTime startTimeObject = task.getStartDateTime();
-		LocalDateTime endTimeObject = task.getEndDateTime();
-		for (int i = 0; i < 10; i++) {
-			startTimeObject = addInterval(startTimeObject, task.getInterval());
-			if (task.getCategory().equals("event")) {
-				endTimeObject = addInterval(endTimeObject, task.getInterval());
-			} else {
-				endTimeObject = LocalDateTime.MAX;
-			}
-			LocalDateTimePair nextTime = new LocalDateTimePair(startTimeObject, endTimeObject);
-			task.addToTaskDateTime(nextTime);
-			// System.out.println(i+1+ " "+ startTimeObject.toString());
-		}
-	}
-
-	public static LocalDateTime addInterval(LocalDateTime originalTime, Interval interval) {
-		LocalDateTime newTime = originalTime;
-		newTime = newTime.plusYears(interval.getYear());
-		newTime = newTime.plusMonths(interval.getMonth());
-		newTime = newTime.plusWeeks(interval.getWeek());
-		newTime = newTime.plusDays(interval.getDay());
-		newTime = newTime.plusHours(interval.getHour());
-		newTime = newTime.plusMinutes(interval.getMinute());
-		newTime = newTime.plusSeconds(interval.getSecond());
-		return newTime;
 	}
 
 	/**
@@ -162,9 +127,11 @@ public class Add {
 	 */
 	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		LocalDateTime deadline = task.getStartDateTime(); // Depends on parser's
-															// allocation
-		if (deadline.isBefore(LocalDateTime.now())) {
+		// LocalDateTime deadline = task.getStartDateTime();
+
+		logger.log(Level.INFO, "going to check whether a deadline is overdue");
+
+		if (task.getStartDateTime().isBefore(LocalDateTime.now())) {
 			isOverdue = true;
 		}
 		return isOverdue;
@@ -174,10 +141,15 @@ public class Add {
 		if (isOverdue) {
 			task.setStatus("overdue");
 		}
+		logger.log(Level.INFO, "toggled a task's status if applicable");
 	}
 
 	private boolean checkIfClash() throws NullPointerException {
 		boolean hasClashes = false;
+		if (task.getStartDateTime().isAfter(task.getEndDateTime())) {
+			DateTimeException e = new DateTimeException("Start Date Time after End Date Time");
+			throw e;
+		}
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals("event")) {
 				if (checkAcrossAllTimes(taskList.get(i), i)) {
@@ -185,26 +157,17 @@ public class Add {
 				}
 			}
 		}
+		logger.log(Level.INFO, "checked if events clash");
 		return hasClashes;
 	}
 
 	private boolean checkAcrossAllTimes(TaskObject current, int i) throws NullPointerException {
 		boolean hasClashes = false;
-		for (int j = 0; j < task.getTaskDateTime().size(); j++) {
-			for (int k = 0; k < current.getTaskDateTime().size(); k++) {
-				LocalDateTime currentStart = current.getTaskDateTime().get(k).getStartDateTime();
-				LocalDateTime currentEnd = current.getTaskDateTime().get(k).getEndDateTime();
-				LocalDateTime newStart = task.getTaskDateTime().get(j).getStartDateTime();
-				LocalDateTime newEnd = task.getTaskDateTime().get(j).getEndDateTime();
-				if (checkTimeClash(currentStart, currentEnd, newStart, newEnd)) {
-					if (task.getIsRecurring() || current.getIsRecurring()) {
-						addClashedRecurringTasks(current);
-					} else {
-						clashedTasks.add(taskList.get(i));
-					}
-					hasClashes = true;
-				}
-			}
+		if (checkTimeClash(current)) {
+			clashedTasks.add(taskList.get(i));
+			logger.log(Level.INFO, "detected a clash between non-recurring tasks");
+
+			hasClashes = true;
 		}
 		return hasClashes;
 	}
@@ -224,8 +187,12 @@ public class Add {
 	 *            The TaskObject passed into the function from the task list.
 	 * @return
 	 */
-	private boolean checkTimeClash(LocalDateTime currentStart, LocalDateTime currentEnd, LocalDateTime newStart,
-			LocalDateTime newEnd) throws DateTimeException {
+	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
+
+		LocalDateTime currentStart = current.getStartDateTime();
+		LocalDateTime currentEnd = current.getEndDateTime();
+		LocalDateTime newStart = task.getStartDateTime();
+		LocalDateTime newEnd = task.getEndDateTime();
 
 		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
 			if (currentStart.isBefore(newEnd) || currentStart.isEqual(newEnd)) {
@@ -248,22 +215,15 @@ public class Add {
 			}
 		}
 
-		return false;
-	}
+		logger.log(Level.INFO, "no clash detected between two timings");
 
-	private void addClashedRecurringTasks(TaskObject current) {
-		for (int i = 0; i < clashedTasks.size(); i++) {
-			if (clashedTasks.equals(current)) {
-				// To prevent duplicate tasks from being added to clashedTasks
-				return;
-			}
-		}
-		clashedTasks.add(current);
+		return false;
 	}
 
 	private void addTask() {
 		addInternal();
 		addExternal();
+		logger.log(Level.INFO, "added tasks to the taskList");
 	}
 
 	private void addInternal() throws NullPointerException {
@@ -275,20 +235,27 @@ public class Add {
 			taskList.add(task);
 		}
 
-		if (taskList.size() == newSize)
+		if (taskList.size() == newSize) {
 			addedInternal = true;
+			logger.log(Level.INFO, "added task to internal taskList");
+		} else {
+			logger.log(Level.WARNING, "failed to add task");
+		}
 	}
 
 	private void addExternal() {
-		Storage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
+			logger.log(Level.INFO, "added task to external file storage");
 		} catch (NoSuchFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.log(Level.WARNING, "did not manage to add task externally, invalid file");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.log(Level.WARNING, "did not manage to add task externally, IO exception");
 		}
 		addedExternal = true;
 
@@ -305,8 +272,10 @@ public class Add {
 					output.add(clashMessage);
 				}
 			}
+			logger.log(Level.INFO, "output created successfully");
 		} else {
 			output.add(MESSAGE_FAIL);
+			logger.log(Level.WARNING, "task was not added, failure output created");
 		}
 	}
 

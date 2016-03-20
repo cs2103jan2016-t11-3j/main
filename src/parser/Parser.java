@@ -1,4 +1,6 @@
 package parser;
+import java.time.LocalDateTime;
+
 import common.CommandObject;
 import common.TaskObject;
 
@@ -46,7 +48,7 @@ public class Parser {
 	private static final int DONE_INDEX = 10;
 	
 	private static final String NOTDONE_COMMAND_1 = "undone";
-	private static final String NOTDONE_COMMAND_3 = "incomplete";
+	private static final String NOTDONE_COMMAND_2 = "incomplete";
 	private static final int NOTDONE_INDEX = 11;
 	
 	public CommandObject CO = new CommandObject();
@@ -76,8 +78,9 @@ public class Parser {
 	 * to Logic
 	 * 
 	 * @return CO command object that contains task description and task object
+	 * @throws Exception 
 	 */
-	public CommandObject run() {
+	public CommandObject run() throws Exception {
 		allocate(_command);
 		return CO;
 	}
@@ -86,8 +89,11 @@ public class Parser {
 	 * method reads string and trigger the relevant method to process string's information
 	 * 
 	 * @param command  is the user's input to the program
+	 * @throws Exception 
 	 */
-	public void allocate(String command) {
+	public void allocate(String command) throws Exception {
+		assert(!command.isEmpty()); //ensure command is a proper string
+		
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			CO.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {
@@ -107,7 +113,7 @@ public class Parser {
 		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
 				|| command.startsWith(DONE_COMMAND_3) || command.startsWith(DONE_COMMAND_4)) {
 			parseDone(command);
-		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_3)) {
+		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_2)) {
 			parseNotDone(command);
 		} else if (isSearch(command)) {
 			parseSearch(command);
@@ -130,29 +136,48 @@ public class Parser {
 	 * @param  command   user's input
 	 */
 	public void parseDone(String command) {
-		CO.setCommandType(DONE_INDEX);
 		int temp = command.indexOf(" ");
-		command = command.substring(temp + 1);
-		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
-		temp = Integer.parseInt(command);
-		CO.setIndex(temp);
+		if (temp != -1) {
+			CO.setCommandType(DONE_INDEX);
+			command = command.substring(temp + 1);
+			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+			temp = Integer.parseInt(command);
+			CO.setIndex(temp);	
+		} else {
+			CO.setCommandType(SEARCH_INDEX);
+			TO.setStatus("completed");
+			CO.setTaskObject(TO);
+		}
 	}
 	
+	/**
+	 * method sets command type and index of task to be marked as incomplete
+	 * 
+	 * @param command
+	 */
 	public void parseNotDone(String command) {
-		CO.setCommandType(NOTDONE_INDEX);
 		int temp = command.indexOf(" ");
-		command = command.substring(temp + 1);
-		//taskObject.setTitle(command);  --> can remove this after logic passes the tests
-		temp = Integer.parseInt(command);
-		CO.setIndex(temp);
+		if (temp != -1) {
+			CO.setCommandType(NOTDONE_INDEX);
+			command = command.substring(temp + 1);
+			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
+			temp = Integer.parseInt(command);
+			CO.setIndex(temp);	
+		} else {
+			CO.setCommandType(SEARCH_INDEX);
+			TO.setStatus("incomplete");
+			CO.setTaskObject(TO);
+		}
+		
 	}
 	
 	/**
 	 * method sets command type, index of task to edit and parts of the task to edit
 	 * 
 	 * @param command   user's input
+	 * @throws Exception 
 	 */
-	public void parseEdit(String command) {
+	public void parseEdit(String command) throws Exception {
 		CO.setCommandType(EDIT_INDEX);
 		CommandParser EP = new EditParser();
 		TO = EP.process(command);
@@ -165,10 +190,12 @@ public class Parser {
 	 * method sets command type and creates task object with details keyed in by user
 	 * 
 	 * @param command   user's input as a string
+	 * @throws Exception 
 	 */
-	public void parseAdd(String command) {
+	public void parseAdd(String command) throws Exception {
 		CO.setCommandType(ADD_INDEX);
 		CommandParser AP = new AddParser();
+		command = command.replaceFirst(Constants.REGEX_ADD, "").trim();
 		TO = AP.process(command);
 		//add these 5 main attributes
 		TO.setTaskId(_taskId);
@@ -182,8 +209,9 @@ public class Parser {
 	 * for search purpose
 	 * 
 	 * @param command   user's input as a string
+	 * @throws Exception 
 	 */
-	public void parseSearch(String command) {
+	public void parseSearch(String command) throws Exception {
 		CO.setCommandType(SEARCH_INDEX);
 		CommandParser SP = new SearchParser();
 		
@@ -249,8 +277,9 @@ public class Parser {
  	 * method sets command type for delete commands 
  	 * 
  	 * @param command user's input as a string
+ 	 * @throws Exception 
  	 */
- 	public void parseDelete(String command) {
+ 	public void parseDelete(String command) throws Exception {
  		CO.setCommandType(DELETE_INDEX);
  		int index;
  		index = extractDeleteIndex(command);
@@ -259,11 +288,12 @@ public class Parser {
  	
  	/**
  	 * this method returns the number that is after the delete command as an integer
+ 	 * @throws Exception 
  	 */
- 	public int extractDeleteIndex(String command) {		
+ 	public int extractDeleteIndex(String command) throws Exception {		
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
- 			return -1;
+ 			throw new Exception("Missing index");
  		} else if (command.contains("all")) {
  			return 0;
  		} else {
@@ -277,14 +307,20 @@ public class Parser {
  	 * method sets command type for command object and returns file path
  	 * 
  	 * @param command user's input as a string 
+ 	 * @throws Exception 
  	 */
- 	public void parseSave(String command) {
+ 	public void parseSave(String command) throws Exception {
  		CO.setCommandType(SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
- 		newString = command.substring(index);
- 		TO.setTitle(newString);
- 		CO.setTaskObject(TO);
+ 		if (command.length() > index && command.contains("C://")) {
+ 			newString = command.substring(index);
+ 	 		TO.setTitle(newString);
+ 	 		CO.setTaskObject(TO);	
+ 		} else {
+ 			throw new Exception("Filepath missing");
+ 		}
+ 		
  	}
  	
  	//all the getters for testing purposes
@@ -311,6 +347,14 @@ public class Parser {
  	
  	public int getEndTime() {
  		return TO.getEndTime();
+ 	}
+ 	
+ 	public LocalDateTime getStartDateTime() {
+ 		return TO.getStartDateTime();
+ 	}
+ 	
+ 	public LocalDateTime getEndDateTime() {
+ 		return TO.getEndDateTime();
  	}
  	
  	public String getStatus() {

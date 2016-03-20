@@ -40,7 +40,7 @@ public class Constants {
 	public static final int DONE_INDEX = 10;
 	
 	public enum TaskType {
-        floating, deadline, event, repeated;
+        floating, deadline, event, recurring;
     }
 	
 	//regular expressions for date
@@ -55,54 +55,82 @@ public class Constants {
             + "(jun)(e)?|" + "(jul)(y)?|" + "(aug)(ust)?|" + "(sep)(t)(ember)?|"
             + "(oct)(ober)?|" + "(nov)(ember)?|" + "(dec)(ember)?)";
 	public static final String REGEX_YEAR = "((19|20)?\\d\\d)";
-    public static final String REGEX_DATE_ATTRIBUTES = "((?i)(day)(s)?|"
+    public static final String REGEX_DATE_ATTRIBUTES = "(?i)((day)(s)?|"
             + "(week|wk)(s)?|" + "(month|mth)(s)?|" + "(year|yr))(s)?";
 
-    //regular expression for time
+    //Time Format
 	public static final String REGEX_TIME_HHMM = "(?i)[0-2][0-9][-:]?[0-5][\\d]([h]([r][s]?))";
     public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
-    //has to have am or pm, dont care!
-    //removed space btw HH and MM . added fullstop btw hh n mm
-    public static final String REGEX_TIME_ATTRIBUTES = "((?i)[\\d]" + "(sec|second)(s)?|" 
-    		+ "(min|minutes)(s)?|" + "(hour|hr)(s)?)";
+    	//has to have am or pm, dont care!
+    	//removed space btw HH and MM . added fullstop btw hh n mm
+    public static final String REGEX_TIME_ATTRIBUTES = "(?i)(sec|second)(s)?|" 
+    		+ "(min|minutes)(s)?|" + "(hour|hr)(s)?";
     
-    //possible arrangements for date input
+    //Date Formats
 	public static final String REGEX_COMBINED_DATE_DDMMYYYY = REGEX_DAY_ONLYNUMBER
             + "[-./]" + REGEX_MONTHS_NUMBER + "[-./]?" + REGEX_YEAR + "?";
     public static final String REGEX_COMBINED_DATE_DDMONTHYYYY = REGEX_DAY_NUMBER
             + "[-./ ]?" + REGEX_MONTHS_TEXT + "[-./ ]?" + REGEX_YEAR + "?";
 	
-    //possible formats for time input and date input
+    //Date & Time Formats
     public static final String REGEX_TIME_FORMAT = "(" + REGEX_TIME_HHMM
             + "|" + REGEX_TIME_AMPM + ")";
     public static final String REGEX_DATE_FORMAT = "("
             + REGEX_COMBINED_DATE_DDMMYYYY + "|"
             + REGEX_COMBINED_DATE_DDMONTHYYYY + ")";
-    
-  
     public static final String REGEX_DATETIME_FORMAT = "(("
             + REGEX_DATE_FORMAT + "(,?[ ]" + REGEX_TIME_FORMAT + ")?)|("
             + REGEX_TIME_FORMAT + "(,?[ ]" + REGEX_DATE_FORMAT + ")?))";
-  
     
-    //deadline has the by or before keyword
-    public static final String REGEX_DEADLINE_IDENTIFIER = "(?i)(by|before) "
-            + REGEX_DATETIME_FORMAT;
+    //RELATIVE
+    public static final String REGEX_RELATIVE_DATE_1 = "(?i)(today|tmr|tomorrow)";
+    public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next) ("
+            + REGEX_DATE_ATTRIBUTES + "|" + REGEX_DAYS_TEXT + "))";
+    public static final String REGEX_RELATIVE_DATE_3 = "(\\d+ "
+            + REGEX_DATE_ATTRIBUTES + " (?i)(later|before|after|from now))";
+    public static final String REGEX_RELATIVE_DATE_ALL = "(" 
+            + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
+            + "|" + REGEX_RELATIVE_DATE_3 +")";
+    public static final String REGEX_RELATIVE_DATETIME = "(" + REGEX_RELATIVE_DATE_ALL + " "
+    		+ "(" + REGEX_TIME_FORMAT + ")?" + ")$";
     
-    //event has a start and end 
+    public static final String REGEX_RELATIVE_TIME_1 = "("
+            + REGEX_TIME_ATTRIBUTES + " (?i)(later|before|after|from now))";
+    
+    //DEADLINE has the by or before keyword
+    public static final String REGEX_DEADLINE_IDENTIFIER = "(?i)(by|before) " + "("
+            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME + ")";
+    
+    //EVENT has a start and end 
     public static final String REGEX_EVENT_IDENTIFIER = "(?i)(from) "
-            + REGEX_DATETIME_FORMAT + " to " +REGEX_DATETIME_FORMAT;
+            + REGEX_DATETIME_FORMAT 
+            + " to " + REGEX_DATETIME_FORMAT;
     
     //point task has an at or on keyword
     public static final String REGEX_POINT_TASK_IDENTIFIER = "(?i)(on|at) "
-            + REGEX_DATETIME_FORMAT;
+            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME;
     
-    //recurring task has an every keyword
-    public static final String REGEX_RECURRING_TASK_IDENTIFIER = "(?i)(every) "
-            + REGEX_DAYS_TEXT + "(?i)( to " + REGEX_DAYS_TEXT
-            + ")?";
+    //RECURRING task has an "every" keyword
+    public static final String REGEX_RECURRING_INTERVAL = "(?i)(every)[ 0-9]* ("
+    		+ REGEX_DATE_ATTRIBUTES + "|" + REGEX_TIME_ATTRIBUTES + "|" 
+    		+ REGEX_DAYS_TEXT + ")";
+    public static final String REGEX_RECURRING_START = "(" + REGEX_DATETIME_FORMAT + "|"
+    		+ REGEX_DEADLINE_IDENTIFIER + "|" + REGEX_EVENT_IDENTIFIER + "|" 
+    		+ REGEX_POINT_TASK_IDENTIFIER+ ")?";
+    public static final String REGEX_RECURRING_UNTIL = "(?i)(until) (" 
+    		+ REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATE_ALL + ")";
+    public static final String REGEX_RECURRING_TASK_IDENTIFIER = REGEX_RECURRING_INTERVAL
+    		+ " (" + REGEX_RECURRING_START + ")? " + REGEX_RECURRING_UNTIL;
+    /*"(?i)([0-9]+ )?"
+     * examples of recurring tasks 
+     * add go gym every monday at 9am until 9 june (freq:WEEK;interval:1;until:20160606 localtime)
+     * 
+     * things to read, interval data (freq, interval, until) + start/end datetime
+     */
+    
     
     public static final String REGEX_TASK_IDENTIFIER = "(?i)(by|before|every|on|at|from|to)";
+    public static final String REGEX_TASK_IDENTIFIER_2 = "(?i)(by|before|every|on|at|from)";
     
     //if any of the 4 types matches, the input by user will need to read date time
     public static final String REGEX_DATE_TIME_IDENTIFIER = "("
@@ -115,18 +143,12 @@ public class Constants {
 			+ REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_DATETIME_FORMAT +")$";
     
     
-    public static final String REGEX_RELATIVE_DATE_1 = "(?i)(tmr|tomorrow)";
-    public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next) ("
-            + REGEX_DATE_ATTRIBUTES + "|" + REGEX_DAYS_TEXT + "))";
-    public static final String REGEX_RELATIVE_DATE_3 = "(\\d+ "
-            + REGEX_DATE_ATTRIBUTES + " (?i)(later|before|after|from now))";
-    public static final String REGEX_RELATIVE_DATE_ALL = "(" + REGEX_RELATIVE_DATE_1 
-    		+ "|" + REGEX_RELATIVE_DATE_2 + "|" + REGEX_RELATIVE_DATE_3 + ")$";
     
-    public static final String REGEX_RELATIVE_TIME_1 = "("
-            + REGEX_TIME_ATTRIBUTES + " (?i)(later|before|after|from now))";
     
-    public static final String REGEX_FINAL = "(" + REGEX_RELATIVE_DATE_ALL 
-    		+ "|" + REGEX_DATE_TIME_IDENTIFIER + "|" + REGEX_RELATIVE_TIME_1 + ")";
+    public static final String REGEX_FINAL = "(" + REGEX_DATE_TIME_IDENTIFIER + "|" 
+    		+ REGEX_RELATIVE_DATE_ALL + "|" + REGEX_RELATIVE_TIME_1 + ")$";
+    
+    public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
+    		+ REGEX_DATETIME_FORMAT + ")$";
     
 }

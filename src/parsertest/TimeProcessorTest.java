@@ -12,9 +12,9 @@ public class TimeProcessorTest {
 	
 	@Test
 	public void testProcess() {
-		TP.processTime("8pm");
-		assertEquals(2000, TP.getTime());
-		assertEquals("20:00", TP.getTimeString());
+		TP.processTime("8.01pm");
+		assertEquals(2001, TP.getTime());
+		assertEquals("20:01", TP.getTimeString());
 		reset();
 		
 		TP.processTime("8.08pm");

@@ -6,9 +6,10 @@ import java.util.logging.Level;
 import common.CommandObject;
 import common.TaskObject;
 
-public class Incomplete extends Mark {
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
 
-	private final String MESSAGE_INCOMPLETE = "Task: %1s is marked as incomplete";
+public class Incomplete extends Mark {
 
 	public Incomplete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.index = commandObj.getIndex();

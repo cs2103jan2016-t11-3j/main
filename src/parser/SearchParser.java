@@ -1,28 +1,46 @@
 package parser;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import common.TaskObject;
 
 public class SearchParser extends CommandParser {
 	private TaskObject TO = new TaskObject();
-	private DateTimeParser dtp = new DateTimeParser();
 	
-	public TaskObject process(String input) {
+	public TaskObject process(String input) throws Exception {
 		input = removeSearchKeyword(input);
-		if (isDateTime(input)) {
-			//process and set time
-			dtp.parseDateTime(input, false);
-			setDateTime();
+		//read directly with matcher
+		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
+		Matcher matcher = dateTimePattern.matcher(input);
+		
+		String identifier = null;
+		
+		if (matcher.find()) {
+			identifier = getTrimmedString(input ,matcher.start(), input.length());
+			input = getTrimmedString(input, 0, matcher.start());
 		}
-		//set task
+		
+		if (identifier != null) {
+			DateTimeParser dtp = new DateTimeParser();
+			dtp.parseDateTime(identifier, false);
+			setDateTime(dtp);
+        }
+		
 		_task = input;
+
 		setTaskObject();
 		return TO;
 	}
 	
-	private void setDateTime() {
+	private void setDateTime(DateTimeParser dtp) {
 		_startDate = dtp.getStartDate();
 		_startTime = dtp.getStartTime();
 		_startDateTime = dtp.getStartDateTime();
+		
+		_endDate = dtp.getEndDate();
+		_endTime = dtp.getEndTime();
+		_endDateTime = dtp.getEndDateTime();
 	}
 	
 	private void setTaskObject() {
@@ -36,6 +54,7 @@ public class SearchParser extends CommandParser {
 	}
 	
 	public boolean isDateTime(String input) {
+		
 		if (input.matches(Constants.REGEX_EDIT_DATE_TIME_IDENTIFIER)) {
 			return true;
 		} else {
@@ -45,15 +64,6 @@ public class SearchParser extends CommandParser {
 	
 	public String removeSearchKeyword(String input) {
 		return input.replaceFirst("search ", "");
-	}
-	
-	public void convertToDate(String input) {
-		DateParser DP = new DateParser();
-		DP.processDate(input, true);
-		_startDate = DP.getSearchDate();
-		_endDate = _startDate;
-		DP.resetDate();
-		DP.clearList();
 	}
 	
 	public String getTask() {

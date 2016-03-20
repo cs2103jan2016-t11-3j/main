@@ -13,7 +13,8 @@ import logic.mark.Overdue;
 import logic.save.Save;
 import logic.search.Search;
 import logic.undoredo.UndoRedo;
-
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
 import java.util.ArrayList;
 import java.util.Deque;
 
@@ -27,25 +28,6 @@ import java.util.Deque;
  *
  */
 public class CommandFacade {
-
-	public static final int INDEX_ADD = 1;
-	public static final int INDEX_SEARCH_DISPLAY = 2;
-	public static final int INDEX_EDIT = 3;
-	public static final int INDEX_DELETE = 4;
-	public static final int INDEX_UNDO = 5;
-	public static final int INDEX_REDO = 6;
-	public static final int INDEX_SAVE = 7;
-	public static final int INDEX_EXIT = 8;
-	public static final int INDEX_HELP = 9;
-	// A set of indicators for task status modifiers
-	public static final int INDEX_COMPLETE = 10;
-	public static final int INDEX_INCOMPLETE = 11;
-	public static final int INDEX_OVERDUE = 12;
-	public static final String CATEGORY_EVENT = "event";
-	public static final String CATEGORY_DEADLINE = "deadline";
-	public static final String CATEGORY_FLOATING = "floating";
-
-	private static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 
 	private ArrayList<TaskObject> taskList;
 	private Deque<CommandObject> undoList;
