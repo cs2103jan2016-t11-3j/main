@@ -52,23 +52,55 @@ public class MainController implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;
 	
+
 	@FXML
-	public void handleEnterPressed(KeyEvent event) {
+	//reads input on enter
+	public void handleEnterPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.ENTER) {
-    	System.out.println(userInput.getText());
-    	_input = userInput.getText();
-    	_UI.passInput(_input);
-    	userInput.clear(); //clears textfield after each input
-    	displayMessage(); //print feedback message
-    	display(); //refreshes table after every command
-    	}
+			System.out.println(userInput.getText()); //to be removed
+			readInput();
+			passInput();
+			clearTextField();
+			feedbackUser();
+		}
+	}
+	
+	private void readInput() {
+		_input = userInput.getText();
+	}
+
+	private void passInput() throws IOException {
+		if(_input.startsWith("help")) {
+			popupController.startHelp();
+		} else {
+			_UI.passInput(_input);
+		}
+	}
+
+	private void clearTextField() {
+		userInput.clear(); // clears textfield after each input
+	}
+
+	private void feedbackUser() {
+		displayMessage(); // print feedback message
+		display(); // refreshes table after every command
+	}
+	
+	private void displayMessage() {
+		feedbackMessage.setText(_UI.getMessage());
+		feedbackBox.getChildren().clear();
+		feedbackBox.getChildren().add(feedbackMessage);
+	}
+	
+	private void display() {
+		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());		
+		fillTable(taskData);
 	}
 	
 	@FXML
 	public void handleHelpPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
 			popupController.startHelp();
-			System.out.println("help activated"); //to be removed aft everything is stable
 		}
 	}
 	
@@ -104,17 +136,6 @@ public class MainController implements Initializable {
 			break;
 		}
 		return _UI.getHelpOutput();
-	}
-	
-	private void displayMessage() {
-		feedbackMessage.setText(_UI.getMessage());
-		feedbackBox.getChildren().clear();
-		feedbackBox.getChildren().add(feedbackMessage);
-	}
-
-	private void display() {
-		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());		
-		fillTable(taskData);
 	}
 
 	private ArrayList<TaskObject> getOutputTaskList() {
