@@ -33,14 +33,7 @@ import static logic.constants.Strings.*;
  */
 
 public class Edit {
-
-	private static final String MESSAGE_TITLE_DATE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%3$s' to '%4$s', time edited from '%5$s' to '%6$s'.";
-	private static final String MESSAGE_DATE_TIME_EDIT = "Date edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
-	private static final String MESSAGE_DATE_EDIT = "Date edited from '%1$s' to '%2$s'.";
-	private static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'.";
-	private static final String MESSAGE_TITLE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
-	private static final String MESSAGE_TITLE_EDIT = "Title edited from '%1$s' to '%2$s'.";
-	private static final String MESSAGE_TITLE_DATE_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%3$s' to '%4$s'.";
+	
 	private static final Logger LOGGER = Logger.getLogger(Edit.class.getName());
 	
 	private CommandObject commandObj;
@@ -48,13 +41,13 @@ public class Edit {
 	private ArrayList<TaskObject> taskList;
 
 	private ArrayList<String> output = new ArrayList<String>();
-	private int editItemNumber;
 	private String originalTitle;
 	private int originalDate;
 	private int originalTime;
 	private String editTitle;
 	private int editDate;
 	private int editTime;
+	private int editItemNumber;
 	
 	boolean isEditDate = false;
 	boolean isEditTitle = false;
@@ -129,6 +122,7 @@ public class Edit {
 						isEditTitle = false;
 					}
 				} 
+				
 				if (isEditDate) {
 					originalDate = task.getStartDate();
 					
@@ -139,6 +133,7 @@ public class Edit {
 						isEditDate = false;
 					} 
 				}
+				
 				if (isEditTime) {
 					originalTime = task.getStartTime();
 				

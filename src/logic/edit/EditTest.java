@@ -121,7 +121,5 @@ public class EditTest {
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
 	}
-	
-
 
 }
