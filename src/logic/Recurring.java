@@ -39,9 +39,9 @@ public class Recurring {
 		LocalDateTime eventEndDateTime = task.getEndDateTime();
 		if (eventEndDateTime.isBefore(LocalDateTime.now())) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 	
 	private static boolean checkIfStillRecurring(TaskObject task) throws Exception{
@@ -51,17 +51,16 @@ public class Recurring {
 		if (count != -1) {
 			if (count == 0) {
 				return false;
-			} else {
-				task.getInterval().setCount(count - 1);
-				return true;
 			}
+			
+			task.getInterval().setCount(count - 1);
+			return true;
 		} else {
 			if (!until.equals(LocalDateTime.MAX)) {
 				if (until.isBefore(LocalDateTime.now())) {
 					return false;
-				} else {
-					return true;
 				}
+				return true;
 			} else {
 				Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
 				throw e;
@@ -74,30 +73,30 @@ public class Recurring {
 		int timeInterval = task.getInterval().getTimeInterval();
 		if (task.getInterval().getByDay().equals("")) {
 			switch (frequency) {
-			case FREQ_HOURLY:
-				task.setStartDateTime(task.getStartDateTime().plusHours(timeInterval));
-				task.setEndDateTime(task.getEndDateTime().plusHours(timeInterval));
-				break;
-
-			case FREQ_DAILY:
-				task.setStartDateTime(task.getStartDateTime().plusDays(timeInterval));
-				task.setEndDateTime(task.getEndDateTime().plusDays(timeInterval));
-				break;
-
-			case FREQ_WEEKLY:
-				task.setStartDateTime(task.getStartDateTime().plusWeeks(timeInterval));
-				task.setEndDateTime(task.getEndDateTime().plusWeeks(timeInterval));
-				break;
-
-			case FREQ_MONTHLY:
-				task.setStartDateTime(task.getStartDateTime().plusMonths(timeInterval));
-				task.setEndDateTime(task.getEndDateTime().plusMonths(timeInterval));
-				break;
-
-			case FREQ_YEARLY:
-				task.setStartDateTime(task.getStartDateTime().plusYears(timeInterval));
-				task.setEndDateTime(task.getEndDateTime().plusYears(timeInterval));
-				break;
+				case FREQ_HOURLY:
+					task.setStartDateTime(task.getStartDateTime().plusHours(timeInterval));
+					task.setEndDateTime(task.getEndDateTime().plusHours(timeInterval));
+					break;
+	
+				case FREQ_DAILY:
+					task.setStartDateTime(task.getStartDateTime().plusDays(timeInterval));
+					task.setEndDateTime(task.getEndDateTime().plusDays(timeInterval));
+					break;
+	
+				case FREQ_WEEKLY:
+					task.setStartDateTime(task.getStartDateTime().plusWeeks(timeInterval));
+					task.setEndDateTime(task.getEndDateTime().plusWeeks(timeInterval));
+					break;
+	
+				case FREQ_MONTHLY:
+					task.setStartDateTime(task.getStartDateTime().plusMonths(timeInterval));
+					task.setEndDateTime(task.getEndDateTime().plusMonths(timeInterval));
+					break;
+	
+				case FREQ_YEARLY:
+					task.setStartDateTime(task.getStartDateTime().plusYears(timeInterval));
+					task.setEndDateTime(task.getEndDateTime().plusYears(timeInterval));
+					break;
 			}
 		} else {
 			// implementation for by day

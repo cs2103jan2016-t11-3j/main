@@ -133,7 +133,7 @@ public class TimeOutput {
 		Interval interval = foundTask.getInterval();
 
 		TaskObject dummyTask = new TaskObject(startDateTime, endDateTime, interval);
-		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) {
+		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) { // if there is no end date specified
 			while (dummyTask.getStartDateTime().isBefore(dummyTask.getInterval().getUntil())) {
 				TimeOutput.setEventTimeOutput(dummyTask);
 				output.add(dummyTask.getTimeOutputString());

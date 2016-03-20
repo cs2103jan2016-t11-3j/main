@@ -89,11 +89,11 @@ public class Edit {
 				isEditTitle = true;
 			}
 			editDate = commandObj.getTaskObject().getStartDateTime().toLocalDate();
-			if (editDate.compareTo(LocalDate.MAX) < 0) {
+			if (!editDate.isEqual(LocalDate.MAX)) {
 				isEditDate = true;
 			}
 			editTime = commandObj.getTaskObject().getStartDateTime().toLocalTime();
-			if (editTime.compareTo(LocalTime.MAX) < 0) {
+			if (!editTime.equals(LocalTime.MAX)) {
 				isEditTime = true;
 			}
 		} catch (NullPointerException e) {
@@ -151,13 +151,13 @@ public class Edit {
 		originalDate = task.getStartDateTime().toLocalDate();
 		originalTime = task.getStartDateTime().toLocalTime();
 		
-		if (originalDate.compareTo(editDate) != 0 && originalTime.compareTo(editTime) != 0) {		
+		if (!originalDate.isEqual(editDate) && !originalTime.equals(editTime)) {		
 			task.setStartDateTime(LocalDateTime.of(editDate, editTime));
 			LOGGER.log(Level.INFO, "Date and time edited");
-		} else if (originalTime.compareTo(editTime) == 0) {
+		} else if (originalTime.equals(editTime)) {
 			isEditTime = false;
 			editDate(task);
-		} else if (originalDate.compareTo(editDate) == 0) {
+		} else if (originalDate.isEqual(editDate)) {
 			isEditDate = false;
 			editTime(task);
 		} 
@@ -166,7 +166,7 @@ public class Edit {
 	private void editDate(TaskObject task) {
 		originalDate = task.getStartDateTime().toLocalDate();
 		
-		if (originalDate.compareTo(editDate) != 0) {		
+		if (!originalDate.isEqual(editDate)) {		
 			originalTime = task.getStartDateTime().toLocalTime();
 			task.setStartDateTime(LocalDateTime.of(editDate, originalTime));
 			LOGGER.log(Level.INFO, "Date edited");
@@ -178,7 +178,7 @@ public class Edit {
 	private void editTime(TaskObject task) {
 		originalTime = task.getStartDateTime().toLocalTime();
 		
-		if (originalTime.compareTo(editTime) != 0) {
+		if (!originalTime.equals(editTime)) {
 			originalDate = task.getStartDateTime().toLocalDate();
 			task.setStartDateTime(LocalDateTime.of(originalDate, editTime));
 			LOGGER.log(Level.INFO, "Time edited");
