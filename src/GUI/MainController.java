@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 
-public class Controller implements Initializable {
+public class MainController implements Initializable {
 	
 	static String _input;
 	static UIMain _UI = new UIMain();

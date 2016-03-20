@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 public class HelpPopupController implements Initializable {
 	
 	static Stage helpStage = new Stage();
-	static ArrayList<String> displayList = Controller.getHelpList(1);
+	static ArrayList<String> displayList = MainController.getHelpList(1);
 	static int page = 1;
 	
 	@FXML
@@ -46,7 +46,7 @@ public class HelpPopupController implements Initializable {
 		if (event.getCode() == KeyCode.LEFT && page > 1) {
 			page--;		
 		}
-		displayList = Controller.getHelpList(page);	
+		displayList = MainController.getHelpList(page);	
 		setHelpContent();
 	}
 	

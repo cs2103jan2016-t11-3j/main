@@ -21,7 +21,7 @@ public class UIMain extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
-		Parent root = FXMLLoader.load(getClass().getResource("UIScene.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 650, 500);
 		
 		window.setTitle("Adult TaskFinder");
