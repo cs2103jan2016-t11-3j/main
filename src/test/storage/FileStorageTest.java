@@ -119,6 +119,13 @@ public class FileStorageTest {
         ArrayList<TaskObject> actualTaskList = storage.load();
         AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList2 , actualTaskList);
     }
+    
+    @Test (expected = InvalidPathException.class)
+    public void testChangeInvalidSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        storage.changeSaveLocation("Invalid");
+    }
 
 
 }
