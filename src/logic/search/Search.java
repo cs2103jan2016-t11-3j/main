@@ -198,13 +198,14 @@ public class Search extends Display {
 	
 	private void searchByIndex(int index) {
 		index--;
+		assert (index >= 0 && index < lastOutputTaskList.size()) ;
+
 		boolean isFound = false;
-		if (index >= 0 && index < lastOutputTaskList.size()) {
+		try {
 			int taskIdToSearch = lastOutputTaskList.get(index).getTaskId();
 			isFound = findTaskWithIndex(taskIdToSearch);
-		} else {
-			NullPointerException e = new NullPointerException("invalid index");
-			throw e;
+		} catch (NullPointerException e) {
+			throw new NullPointerException("invalid index");
 		}
 	}
 	
