@@ -10,6 +10,7 @@ import java.nio.file.NoSuchFileException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.logging.*;
 
 /**
  * Creates a "Delete" object to facilitate the deletion of a task from task list
@@ -39,6 +40,7 @@ public class Delete {
 	private final String MESSAGE_NULL_POINTER = "Attempted to access a non-existent task. ";
 	private final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
 	private final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
+	private static final Logger LOGGER = Logger.getLogger(Delete.class.getName());
 
 	private final int INDEX_DELETE = 4;
 	// This command object contains the index number of the line to be deleted
@@ -151,6 +153,7 @@ public class Delete {
 			hasDeletedExternal = deleteExternal();
 			if (hasDeletedInternal && hasDeletedExternal) {
 				createOutput();
+				LOGGER.log(Level.INFO, "Quick delete executed");
 			} else {
 				createErrorOutput();
 			}
@@ -166,6 +169,7 @@ public class Delete {
 			hasDeletedExternal = deleteExternal();
 			if (hasDeletedExternal) {
 				createOutput();
+				LOGGER.log(Level.INFO, "Normal delete executed");
 			}
 		} else {
 			createErrorOutput();
@@ -178,6 +182,7 @@ public class Delete {
 		undoList.clear();
 		redoList.clear();
 		deleteExternal();
+		LOGGER.log(Level.INFO, "Delete all executed");
 
 		createDeletedAllOutput();
 	}
@@ -218,6 +223,7 @@ public class Delete {
 		FileStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
+			LOGGER.log(Level.INFO, "Storage file replaced");
 		} catch (NoSuchFileException e) {
 			// TODO Auto-generated catch block
 			// Ask user to specify new location or use default location

@@ -3,6 +3,9 @@ import logic.display.Display;
 
 import common.TaskObject;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import com.sun.media.jfxmedia.logging.Logger;
 
 
 /**
@@ -20,8 +23,7 @@ import java.util.ArrayList;
 
 public class Search extends Display {
 	
-	private static final String MESSAGE_NO_TITLE_RESULTS_FOUND = "Keyword \'%1$s\' not found.";
-	private static final String MESSAGE_NO_DATE_RESULTS_FOUND = "No task found for the specified date.";
+	private static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	
 	/**
 	 * @param matchedTasks - a list maintained by the search object which contains
@@ -32,8 +34,12 @@ public class Search extends Display {
 	private ArrayList<TaskObject> matchedTasks = new ArrayList<TaskObject>();
 	private ArrayList<String> output = new ArrayList<String>();
 	
-	String searchKeyword;
+	String searchTitle;
 	int searchDate;
+	int searchTime;
+	boolean isSearchTitle = false;
+	boolean isSearchDate = false;
+	boolean isSearchTime = false;
 	
 	/**
 	 * Constructor for a Search object
@@ -59,43 +65,68 @@ public class Search extends Display {
 	 * it will search within the start/end dates of each task.
 	 */
 	public ArrayList<String> run() {
-		if (taskObj.getStartDate() == -1) { // it is a title search
-			searchKeyword = getSearchKeyword();
-			searchByTitle(searchKeyword);
-			outputSearchResults(searchKeyword);
-		} else {
-			searchDate = getSearchDate();
-			searchByDate(searchDate);
-			outputSearchResults(searchDate);
-		}
+		setSearchInformation();
+		processSearch();
+		setOutput();
 		
 		return output;
 	}
-
-	private String getSearchKeyword() {
-		return taskObj.getTitle().trim();
-	}
 	
-	private int getSearchDate() {
-		return taskObj.getStartDate();
-	}
-	
-	// Finds all tasks that have the same start or end date as the search date
-	private void searchByDate(int searchDate) {
-		for (int i = 0; i < taskList.size(); i++) {
-			int taskStartDate = taskList.get(i).getStartDate();
-			int taskEndDate = taskList.get(i).getStartDate();
-			if (searchDate == taskStartDate || searchDate == taskEndDate) {
-				matchedTasks.add(taskList.get(i));
+	// Retrieves values from the data objects and sets the relevant search information
+	private void setSearchInformation() {
+		try {
+			searchTitle = taskObj.getTitle();
+			if (!searchTitle.equals("")) {
+				isSearchTitle = true;
 			}
+			searchDate = taskObj.getStartDate();
+			if (searchDate != -1) {
+				isSearchDate = true;
+			}
+			searchTime = taskObj.getStartTime();
+			if (searchTime != -1) {
+				isSearchTime = true;
+			}
+		} catch (NullPointerException e) {
+			LOGGER.log(Level.WARNING, "Error setting search information");
 		}
-	}
 		
+		//printSearchInformation();
+	}
+	
+	// FOR DEBUG
+	private void printSearchInformation() {
+		System.out.println("search title = " + searchTitle);
+		System.out.println("search date = " + searchDate);
+		System.out.println("search time = " + searchTime);
+		System.out.println("isSearchTitle = " + isSearchTitle);
+		System.out.println("isSearchDate = " + isSearchDate);
+		System.out.println("isSearchTime = " + isSearchTime);
+	}
+
+	private void processSearch() {
+		matchedTasks = taskList;
+		
+		if (isSearchTitle) {
+			matchedTasks = searchByTitle(matchedTasks);
+		}
+		if (isSearchDate) {
+			System.out.println("matchedTasks size = " + matchedTasks.size());
+			matchedTasks = searchByDate(matchedTasks);
+		}
+		if (isSearchTime) {
+			matchedTasks = searchByTime(matchedTasks);
+		}
+		
+	}	
+	
 	// Finds all tasks where the title contains a semblance of the search keyword
-	private void searchByTitle(String searchKeyword) {
-		for (int i = 0; i < taskList.size(); i++) {
+	private ArrayList<TaskObject> searchByTitle(ArrayList<TaskObject> list) {
+		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
+
+		for (int i = 0; i < list.size(); i++) {
 			// Gets the title of one task and splits it up into the individual words
-			String taskName = taskList.get(i).getTitle().toLowerCase();
+			String taskName = list.get(i).getTitle().toLowerCase();
 			String[] splitTaskName = taskName.split(" ");
 			boolean isMatch = false;
 			
@@ -104,30 +135,53 @@ public class Search extends Display {
 			int j = 0;
 			while (j < splitTaskName.length && !isMatch) {
 				String str = splitTaskName[j];
-				if (str.trim().contains(searchKeyword.toLowerCase()) && !isMatch) {
-					matchedTasks.add(taskList.get(i));
+				if (str.trim().contains(searchTitle.toLowerCase())) {
+					match.add(list.get(i));
 					isMatch = true;
 				}
 				j++;
 			}
-				
 		}
+		
+		return match;
 	}
 	
-	private void outputSearchResults(String searchKeyword) {
-		if (matchedTasks.isEmpty()) {
-			output.add(String.format(MESSAGE_NO_TITLE_RESULTS_FOUND, searchKeyword));
-		} else {
-			output.addAll(super.runSpecificList(matchedTasks));
+	// Finds all tasks that have the same start or end date as the search date
+	private ArrayList<TaskObject> searchByDate(ArrayList<TaskObject> list) {
+		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			int taskStartDate = list.get(i).getStartDate();
+			int taskEndDate = list.get(i).getEndDate();
+			if (searchDate == taskStartDate || searchDate == taskEndDate) {
+				match.add(list.get(i));
+			}
 		}
-	}
-	
-	private void outputSearchResults(int searchDate) {
-		if (matchedTasks.isEmpty()) {
-			output.add(String.format(MESSAGE_NO_DATE_RESULTS_FOUND));
-		} else {
-			output.addAll(super.runSpecificList(matchedTasks));
-		}
-	}
 
+		return match;
+	}
+	
+	// Finds all tasks that have the same start start or end time as the search time
+	private ArrayList<TaskObject> searchByTime(ArrayList<TaskObject> list) {
+		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			int taskStartTime = list.get(i).getStartTime();
+			int taskEndTime= list.get(i).getEndTime();
+			if (searchTime == taskStartTime || searchDate == taskEndTime) {
+				match.add(list.get(i));
+			}
+		}
+		
+		return match;
+	}
+	
+	private void setOutput() {
+		if (matchedTasks.isEmpty()) {
+			output.add(String.format(MESSAGE_NO_RESULTS_FOUND));
+		} else {
+			output.addAll(super.runSpecificList(matchedTasks));
+		}
+	}
+	
 }

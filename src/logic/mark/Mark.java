@@ -3,6 +3,7 @@ package logic.mark;
 import logic.*;
 
 import java.util.ArrayList;
+import java.util.logging.*;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -22,6 +23,7 @@ import common.TaskObject;
 public abstract class Mark {
 
 	private final String MESSAGE_ERROR = "Error marking task as complete";
+	protected static final Logger LOGGER = Logger.getLogger(Mark.class.getName());
 
 	/**
 	 * @param TaskObject instructionTask - This is the TaskObject which contains information 
@@ -78,6 +80,8 @@ public abstract class Mark {
 				statusBeforeChange = taskList.get(i).getStatus();
 				markedTask = taskList.get(i);
 				taskList.get(i).setStatus("completed");
+				
+				LOGGER.log(Level.INFO, "Status changed to \'completed\'");
 				return true;
 			}
 		}

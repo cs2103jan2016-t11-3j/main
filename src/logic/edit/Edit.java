@@ -4,6 +4,7 @@ import storage.FileStorage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.*;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -30,23 +31,32 @@ import common.TaskObject;
 
 public class Edit {
 
-	private static final String MESSAGE_TITLE_EDIT = "Task title edited from '%1$s' to '%2$s'.";
-	private static final String MESSAGE_DATE_EDIT = "Task date edited from '%1$s' to '%2$s'.";
-
+	private static final String MESSAGE_TITLE_DATE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%3$s' to '%4$s', time edited from '%5$s' to '%6$s'.";
+	private static final String MESSAGE_DATE_TIME_EDIT = "Date edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
+	private static final String MESSAGE_DATE_EDIT = "Date edited from '%1$s' to '%2$s'.";
+	private static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'.";
+	private static final String MESSAGE_TITLE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
+	private static final String MESSAGE_TITLE_EDIT = "Title edited from '%1$s' to '%2$s'.";
+	private static final String MESSAGE_TITLE_DATE_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%1$s' to '%2$s'.";
+	private static final Logger LOGGER = Logger.getLogger(Edit.class.getName());
+	
 	private CommandObject commandObj;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<TaskObject> taskList;
 
 	private ArrayList<String> output = new ArrayList<String>();
 	private int editItemNumber;
-	private int originalDate;
-	private int editDate;
 	private String originalTitle;
+	private int originalDate;
+	private int originalTime;
 	private String editTitle;
+	private int editDate;
+	private int editTime;
 	
 	boolean isEditDate = false;
 	boolean isEditTitle = false;
-
+	boolean isEditTime = false;
+	
 	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList) {
 		this.commandObj = commandObj;
 		this.lastOutputTaskList = lastOutputTaskList;
@@ -60,43 +70,38 @@ public class Edit {
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
-		int returnedTaskId = getTaskIdOfTaskToBeEdited();
-		editTask(returnedTaskId);
+		int editTaskId = getTaskIdOfTaskToBeEdited();
+		editTask(editTaskId);
 		saveExternal();
 		
-		if (isEditDate && !isEditTitle) {
-			outputDateEditedConfirmationMessage();
-		} else if (isEditTitle && !isEditDate) {
-			outputTitleEditedConfirmationMessage();
-		}
-
+		setOutput();
 		return output;
 	}
-
-	private void saveExternal() {
-		try {
-			FileStorage storage = FileStorage.getInstance();
-			storage.save(taskList);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
 	
+	// Retrieves values from the data objects and sets the relevant edit information	
 	private void setEditInformation() {
-		editItemNumber = commandObj.getIndex();
-		editDate = commandObj.getTaskObject().getStartDate();
-		if (editDate != -1) {
-			isEditDate = true;
-		}
-		editTitle = commandObj.getTaskObject().getTitle();
-		if (!editTitle.equals("")) {
-			isEditTitle = true;
+		try {
+			editItemNumber = commandObj.getIndex();
+			editTitle = commandObj.getTaskObject().getTitle();
+			if (!editTitle.equals("")) {
+				isEditTitle = true;
+			}
+			editDate = commandObj.getTaskObject().getStartDate();
+			if (editDate != -1) {
+				isEditDate = true;
+			}
+			editTime = commandObj.getTaskObject().getStartTime();
+			if (editTime != -1) {
+				isEditTime = true;
+			}
+		} catch (NullPointerException e) {
+			LOGGER.log(Level.WARNING, "Error setting edit information");
 		}
 	}
 
 	private int getTaskIdOfTaskToBeEdited() {
 		assert (editItemNumber > 0 && editItemNumber <= lastOutputTaskList.size());
+		LOGGER.log(Level.INFO, "Obtained task ID to be edited");
 		
 		return lastOutputTaskList.get(editItemNumber-1).getTaskId();
 	}
@@ -106,24 +111,97 @@ public class Edit {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
 			if (task.getTaskId() == editTaskId) { // if this is the task to be edited
-				if (editDate != -1) {	// if date is to be edited
-					originalDate = task.getStartDate();
-					task.setStartDate(editDate);
-					task.setEndDate(editDate);
-				} else {	// if title is to be edited
+				if (isEditTitle) 
 					originalTitle = task.getTitle();
 					task.setTitle(editTitle);
-				}
+					LOGGER.log(Level.INFO, "Title edited");
+				} 
+				if (isEditDate) {
+					originalDate = task.getStartDate();
+					task.setStartDate(editDate);
+					LOGGER.log(Level.INFO, "Date edited");
+				} 
+				if (isEditTime) {
+					originalTime = task.getStartTime();
+					task.setStartTime(editTime);
+					LOGGER.log(Level.INFO, "Time edited");
 			}
 		}
 	}
 	
-	private void outputDateEditedConfirmationMessage() {
+	private void saveExternal() {
+		try {
+			FileStorage storage = FileStorage.getInstance();
+			storage.save(taskList);
+			LOGGER.log(Level.INFO, "Storage file updated");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
+	/*
+	 * 7 combinations:
+	 * TITLE	DATE	TIME
+	 * 	 -		DATE	TIME
+	 * 	 -		DATE	 -
+	 *   -   	 -		TIME
+	 * TITLE	 -		TIME
+	 * TITLE	 -		 -
+	 * TITLE	DATE	 -
+	 */
+	private void setOutput() {
+		if (isEditTitle && isEditDate && isEditTime) {
+			outputTitleDateTimeEditedMessage();
+		} else if (!isEditTitle) {
+			if (isEditDate && isEditTime) {
+				outputDateTimeEditedMessage();
+			} else {
+				if (!isEditTime) {	// no time, only date
+					outputDateEditedMessage();
+				} else { // // no date, only time
+					outputTimeEditedMessage();
+				}
+			}
+		} else if (!isEditDate) {
+			if (isEditTitle && isEditTime) {
+				outputTitleTimeEditedMessage();
+			} else if (!isEditTime) {
+				outputTitleEditedMessage();
+			}
+		} else if (!isEditTime) {
+			outputTitleDateEditedMessage();
+		}
+	
+	}
+	
+	private void outputTitleDateTimeEditedMessage() {
+		output.add(String.format(MESSAGE_TITLE_DATE_TIME_EDIT, originalTitle, editTitle, 
+				originalDate, editDate, originalTime, editTime));
+	}
+
+	private void outputDateTimeEditedMessage() {
+		output.add(String.format(MESSAGE_DATE_TIME_EDIT, originalDate, editDate, originalTime, editTime));
+	}
+	
+	private void outputDateEditedMessage() {
 		output.add(String.format(MESSAGE_DATE_EDIT, originalDate, editDate));
 	}
 
-	private void outputTitleEditedConfirmationMessage() {
+	private void outputTimeEditedMessage() {
+		output.add(String.format(MESSAGE_TIME_EDIT, originalTime, editTime));
+	}
+	
+	private void outputTitleTimeEditedMessage() {
+		output.add(String.format(MESSAGE_TITLE_TIME_EDIT, originalTitle, editTitle, originalTime, editTime));
+	}
+	
+	private void outputTitleEditedMessage() {
 		output.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
+	}
+
+	private void outputTitleDateEditedMessage() {
+		output.add(String.format(MESSAGE_TITLE_DATE_EDIT, originalTitle, editTitle, originalDate, editDate));
 	}
 
 	// ------------------------- GETTERS -------------------------

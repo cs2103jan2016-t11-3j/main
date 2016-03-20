@@ -1,6 +1,7 @@
 package logic.mark;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.time.LocalDateTime;
 
 import common.CommandObject;
@@ -36,6 +37,8 @@ private final String MESSAGE_OVERDUE = "Task: %1s is marked as overdue";
 				taskName = taskList.get(i).getTitle();
 				statusBeforeChange = taskList.get(i).getStatus();
 				taskList.get(i).setStatus("overdue");
+
+				LOGGER.log(Level.INFO, "Status changed to \'overdue\'");
 				return true;
 			}
 		}

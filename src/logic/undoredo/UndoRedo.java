@@ -2,6 +2,7 @@ package logic.undoredo;
 
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.logging.*;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -30,6 +31,7 @@ public class UndoRedo {
 	protected static final int INDEX_COMPLETE = 10;
 	protected static final int INDEX_INCOMPLETE = 11;
 	protected static final int INDEX_OVERDUE = 12;
+	protected static final Logger LOGGER = Logger.getLogger(UndoRedo.class.getName());
 	
 	protected ArrayList<TaskObject> taskList;
 	protected Deque<CommandObject> undoList;
