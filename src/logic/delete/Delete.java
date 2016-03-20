@@ -71,9 +71,9 @@ public class Delete {
 	 * -1.
 	 * 
 	 * @param taskList
-	 *            - Existing list of tasks in Adult TaskFinder
+	 *            Existing list of tasks in Adult TaskFinder
 	 * @param undoList
-	 *            - Current stack of CommandObjects with the purpose of undoing
+	 *            Current stack of CommandObjects with the purpose of undoing
 	 *            previous actions
 	 */
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, Deque<CommandObject> undoList) {
@@ -81,22 +81,31 @@ public class Delete {
 		this.undoList = undoList;
 		this.commandObj = commandObj;
 	}
+	
+	// Constructor for test cases
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+		this.commandObj = commandObj;
+		this.taskList = taskList;
+		this.lastOutputTaskList = lastOutputTaskList;
+	}
 
 	/**
 	 * Default constructor for Normal Delete.
 	 * 
 	 * @param commandObj
-	 *            - Contains the index to delete from the last output task list
+	 *            Contains the index to delete from the last output task list
 	 * @param taskList
-	 *            - Existing list of tasks in Adult TaskFinder
+	 *            Existing list of tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
-	 *            - List of tasks outputted in the last command (e.g. Search, Display)
+	 *            List of tasks outputted in the last command (e.g. Search,
+	 *            Display)
 	 * @param undoList
-	 * 			  - Deque containing the list of undo tasks
+	 *            Deque containing the list of undo tasks
 	 * @param redoList
-	 * 			  - Deque containing the list of redo tasks
+	 *            Deque containing the list of redo tasks
 	 */
-	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
+	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList,
+			Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
@@ -166,7 +175,7 @@ public class Delete {
 			createErrorOutput();
 		}
 	}
-	
+
 	// Clears everything - task list, undo list, redo list and the storage file
 	private void runDeleteAll() {
 		taskList.clear();
@@ -189,7 +198,6 @@ public class Delete {
 		}
 	}
 
-	
 	private boolean deleteInternal() throws NullPointerException {
 		obtainTaskId();
 		if (taskIdToDelete != -1) {
@@ -205,8 +213,8 @@ public class Delete {
 	private void obtainTaskId() {
 		int index = commandObj.getIndex();
 		assert (index > 0 && index <= lastOutputTaskList.size());
-		
-		taskIdToDelete = lastOutputTaskList.get(index-1).getTaskId();
+
+		taskIdToDelete = lastOutputTaskList.get(index - 1).getTaskId();
 	}
 
 	private boolean deleteExternal() {
@@ -238,7 +246,7 @@ public class Delete {
 		removedTask = null;
 		output.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
 	}
-	
+
 	private void createDeletedAllOutput() {
 		output.add(MESSAGE_DELETED_ALL);
 	}
@@ -255,7 +263,7 @@ public class Delete {
 	public ArrayList<String> getOutput() {
 		return output;
 	}
-	
+
 	public void setOutput(ArrayList<String> output) {
 		this.output = output;
 	}
@@ -263,11 +271,11 @@ public class Delete {
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
-	
+
 	public Deque<CommandObject> getUndoList() {
 		return undoList;
 	}
-	
+
 	public Deque<CommandObject> getRedoList() {
 		return redoList;
 	}
