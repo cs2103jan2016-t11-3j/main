@@ -43,7 +43,10 @@ public class HelpPopupController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	
+
+		assert helpText != null : "fx:id=\"helpText\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+        assert helpBox != null : "fx:id=\"helpBox\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+
 		setHelpContent();
 	}
 	
