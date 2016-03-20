@@ -71,7 +71,7 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
-		assert (!task.equals(null));
+		assert (!task.getTitle().equals(""));
 		logger.log(Level.INFO, "going to start processing task for adding");
 		try {
 			String taskType = task.getCategory();
@@ -80,7 +80,6 @@ public class Add {
 				assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
 				logger.log(Level.INFO, "event to be added");
 
-				// check for clash only necessary if task is an event
 				isClash = checkIfClash();
 				addTask();
 			} else {
@@ -147,6 +146,10 @@ public class Add {
 
 	private boolean checkIfClash() throws NullPointerException {
 		boolean hasClashes = false;
+		if (task.getStartDateTime().isAfter(task.getEndDateTime())) {
+			DateTimeException e = new DateTimeException("Start Date Time after End Date Time");
+			throw e;
+		}
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals("event")) {
 				if (checkAcrossAllTimes(taskList.get(i), i)) {
@@ -160,12 +163,12 @@ public class Add {
 
 	private boolean checkAcrossAllTimes(TaskObject current, int i) throws NullPointerException {
 		boolean hasClashes = false;
-				if (checkTimeClash(current)) {
-						clashedTasks.add(taskList.get(i));
-						logger.log(Level.INFO, "detected a clash between non-recurring tasks");
-					
-					hasClashes = true;
-				}
+		if (checkTimeClash(current)) {
+			clashedTasks.add(taskList.get(i));
+			logger.log(Level.INFO, "detected a clash between non-recurring tasks");
+
+			hasClashes = true;
+		}
 		return hasClashes;
 	}
 
@@ -185,7 +188,7 @@ public class Add {
 	 * @return
 	 */
 	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
-		
+
 		LocalDateTime currentStart = current.getStartDateTime();
 		LocalDateTime currentEnd = current.getEndDateTime();
 		LocalDateTime newStart = task.getStartDateTime();
@@ -235,8 +238,9 @@ public class Add {
 		if (taskList.size() == newSize) {
 			addedInternal = true;
 			logger.log(Level.INFO, "added task to internal taskList");
+		} else {
+			logger.log(Level.WARNING, "failed to add task");
 		}
-		logger.log(Level.WARNING, "failed to add task");
 	}
 
 	private void addExternal() {
