@@ -3,6 +3,7 @@ package logic.undoredo;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.logging.*;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -26,9 +27,11 @@ public class Undo extends UndoRedo {
 				
 				Logic secondaryLogic = new Logic(taskList, undoList, redoList);
 				secondaryLogic.parseCommandObject(commandObj, true, false);
+				LOGGER.log(Level.INFO, "Undo CommandObject processed in secondary Logic class");
 				
 				output.add(String.format(MESSAGE_UNDO, getUndoneCommandType(commandObj)));
 			} catch (NoSuchElementException e) {
+				LOGGER.log(Level.WARNING, "Undo error");
 				output.add(MESSAGE_UNDO_ERROR);
 			}
 		}

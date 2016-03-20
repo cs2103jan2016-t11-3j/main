@@ -63,8 +63,8 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.endDate = -1;
 		this.startTime = -1;
 		this.endTime = -1;
-		this.category = null;
-		this.status = null;
+		this.category = "";
+		this.status = "";
 		this.taskId = -1;
 	}
 	
@@ -75,8 +75,8 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.endDate = date;
 		this.startTime = -1;
 		this.endTime = -1;
-		this.category = null;
-		this.status = null;
+		this.category = "";
+		this.status = "";
 		this.taskId = -1;
 	}
 	

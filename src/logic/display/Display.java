@@ -1,5 +1,6 @@
 package logic.display;
 import java.util.ArrayList;
+import java.util.logging.*;
 
 import common.TaskObject;
 
@@ -21,7 +22,14 @@ import static logic.constants.Strings.*;
  */
 
 public class Display {
-		
+	
+	private static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
+	private static final String MESSAGE_SEARCH_RESULTS = "Search results:";
+	private static final String DISPLAY_RESULT_DEADLINE = "%1$s. %2$s, %3$s, %4$shrs, %5$s";
+	private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
+	private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
+	protected static final Logger LOGGER = Logger.getLogger(Display.class.getName());
+	
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> outputTaskList = new ArrayList<TaskObject>();
 	private ArrayList<String> output = new ArrayList<String>();
@@ -67,6 +75,7 @@ public class Display {
 	 */
 	private ArrayList<String> display() {
 		if (taskList.isEmpty()) {
+			LOGGER.log(Level.INFO, "Task list is empty");
 			outputEmptyMessage();
 		} else {
 			output.add(MESSAGE_SEARCH_RESULTS);
@@ -81,7 +90,7 @@ public class Display {
 				int taskStartTime = task.getStartTime();
 				int taskEndTime = task.getEndTime();
 				String taskStatus = task.getStatus();
-				int taskId = task.getTaskId();	// FOR DEBUG
+				//int taskId = task.getTaskId();	// FOR DEBUG
 				
 				/* Output format for the tasks differs according to the category.
 				 * This switch statement calls the relevant method and passes in the relevant arguments.
@@ -97,7 +106,7 @@ public class Display {
 						outputEventTask(i+1, taskTitle, taskStartDateInOutputFormat, taskEndDateInOutputFormat, taskStartTime, taskEndTime, taskStatus);
 						break;
 					case "floating" : // NULL CASE REMOVED HERE
-						outputFloatingTask(i+1, taskTitle, taskStatus, taskId);
+						outputFloatingTask(i+1, taskTitle, taskStatus);
 						break;
 					default :
 						break;
@@ -140,7 +149,7 @@ public class Display {
 		output.add(String.format(DISPLAY_RESULT_EVENT, num, taskTitle, taskStartDate, taskEndDate, taskStartTime, taskEndTime, taskStatus));
 	}
 	
-	private void outputFloatingTask(int num, String taskTitle, String taskStatus, int taskId) {
-		output.add(String.format(DISPLAY_RESULT_FLOATING, num, taskTitle, taskStatus, taskId));
+	private void outputFloatingTask(int num, String taskTitle, String taskStatus) {
+		output.add(String.format(DISPLAY_RESULT_FLOATING, num, taskTitle, taskStatus));
 	}
 }

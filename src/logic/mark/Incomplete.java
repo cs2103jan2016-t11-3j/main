@@ -1,6 +1,7 @@
 package logic.mark;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import common.CommandObject;
 import common.TaskObject;
@@ -35,6 +36,8 @@ public class Incomplete extends Mark {
 				taskName = taskList.get(i).getTitle();
 				statusBeforeChange = taskList.get(i).getStatus();
 				taskList.get(i).setStatus("incomplete");
+
+				LOGGER.log(Level.INFO, "Status changed to \'incomplete\'");
 				return true;
 			}
 		}
