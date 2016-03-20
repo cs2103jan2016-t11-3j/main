@@ -23,8 +23,10 @@ public class EditTest {
 	@Test // Populate the task list
 	public void test() {
 	
-		testList.add(new TaskObject("Study hard for finals", "floating", "incomplete", 1));
-		testList.add(new TaskObject("Find internship in Germany", "floating", "incomplete", 2));
+		testList.add(new TaskObject("Study hard for finals", LocalDateTime.of(LocalDate.parse("2016-05-25"), LocalTime.parse("09:00")),
+				"deadline", "incomplete", 1));
+		testList.add(new TaskObject("Find internship in Germany", LocalDateTime.of(LocalDate.parse("2016-12-31"), LocalTime.parse("23:59")),
+				"deadline", "incomplete", 2));
 		testList.add(new TaskObject("Travel Eastern Europe", "floating", "incomplete", 3));
 		testList.add(new TaskObject("CS2106 Assignment 2", LocalDateTime.of(LocalDate.parse("2016-12-01"), LocalTime.parse("18:00")),
 				"deadline", "incomplete", 4));
@@ -41,7 +43,6 @@ public class EditTest {
 	@Test // Test edit for title + date + time
 	public void testA() {
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-07-11"), LocalTime.parse("10:00"));
-		//LocalDateTime testEndDateTime = LocalDateTime.of(LocalDate.parse("2016-07-15"), LocalTime.parse("17:00"));
 		testTaskObject = new TaskObject("Reservist", testStartDateTime, "event", "incomplete", 9);
 		testCommandObject = new CommandObject(3, testTaskObject, 9);
 		
@@ -62,6 +63,35 @@ public class EditTest {
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();
 		correctOutput.add("Date edited from '2017-03-24' to '2016-03-24', time edited from '19:00' to '11:00'.");
+		
+		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
+	}
+	
+	@Test // Test edit for date + time, but with same old and new date, so only time should be edited
+	public void testH() {
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-12-31"), LocalTime.parse("18:00"));
+		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
+		testCommandObject = new CommandObject(3, testTaskObject, 2);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("Time edited from '23:59' to '18:00'.");
+		
+		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
+	}
+	
+	
+	@Test // Test edit for date + time, but with same old and new time, so only date should be edited
+	public void testI() {
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-04-25"), LocalTime.parse("09:00"));
+		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
+		testCommandObject = new CommandObject(3, testTaskObject, 1);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("Date edited from '2016-05-25' to '2016-04-25'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
