@@ -1,6 +1,7 @@
 package logic.mark;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.time.LocalDateTime;
 
 import common.CommandObject;
@@ -37,6 +38,8 @@ public class Overdue extends Mark {
 				taskName = taskList.get(i).getTitle();
 				statusBeforeChange = taskList.get(i).getStatus();
 				taskList.get(i).setStatus("overdue");
+
+				LOGGER.log(Level.INFO, "Status changed to \'overdue\'");
 				return true;
 			}
 		}
