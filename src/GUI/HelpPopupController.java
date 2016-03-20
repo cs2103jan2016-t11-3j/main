@@ -40,6 +40,12 @@ public class HelpPopupController implements Initializable {
 	private TextFlow helpBox;
 	@FXML
 	private TextArea helpText;
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+	
+		setHelpContent();
+	}
 	
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
@@ -57,11 +63,6 @@ public class HelpPopupController implements Initializable {
 			page--;		
 		}
 		displayList = MainController.getHelpList(page);	
-		setHelpContent();
-	}
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
 		setHelpContent();
 	}
 	
