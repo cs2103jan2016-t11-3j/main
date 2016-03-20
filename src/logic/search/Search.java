@@ -1,12 +1,14 @@
 package logic.search;
 import logic.display.Display;
 import logic.timeOutput.TimeOutput;
-import logic.constants.Strings;
 
 import common.TaskObject;
 import common.CommandObject;
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
