@@ -44,7 +44,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = taskId;
 	}
 	
-	// Constructor for floating tasks
+	/* Constructor for floating tasks
 	public TaskObject(String title, String category, String status, int taskId) {
 		this.title = title;
 		this.startDate = -1;
@@ -54,7 +54,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.category = category;
 		this.status = status;
 		this.taskId = taskId;
-	}
+	}*/
 	
 	// Constructor for search keyword, delete, save and for edit-title functions
 	public TaskObject(String title){
@@ -110,6 +110,16 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.title = title;
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+	}
+	
+	// Constructor for floating tasks with LocalDateTime - for edit JUnit testing purposes
+	public TaskObject(String title, String category, String status, int taskId) {
+		this.title = title;
+		this.startDateTime = LocalDateTime.MAX;
+		this.endDateTime = LocalDateTime.MAX;
 		this.category = category;
 		this.status = status;
 		this.taskId = taskId;

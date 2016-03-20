@@ -3,6 +3,9 @@ package logic.edit;
 import storage.FileStorage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.logging.*;
 
@@ -42,11 +45,11 @@ public class Edit {
 
 	private ArrayList<String> output = new ArrayList<String>();
 	private String originalTitle;
-	private int originalDate;
-	private int originalTime;
+	private LocalDate originalDate;
+	private LocalTime originalTime;
 	private String editTitle;
-	private int editDate;
-	private int editTime;
+	private LocalDate editDate;
+	private LocalTime editTime;
 	private int editItemNumber;
 	
 	boolean isEditDate = false;
@@ -66,7 +69,7 @@ public class Edit {
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
-		//checkEditInformation();
+		checkEditInformation();
 		int editTaskId = getTaskIdOfTaskToBeEdited();
 		editTask(editTaskId);
 		saveExternal();
@@ -77,18 +80,20 @@ public class Edit {
 	
 	// Retrieves values from the data objects and sets the relevant edit information	
 	private void setEditInformation() {
+		assert (editItemNumber > 0);
+		
 		try {
 			editItemNumber = commandObj.getIndex();
 			editTitle = commandObj.getTaskObject().getTitle();
 			if (!editTitle.equals("")) {
 				isEditTitle = true;
 			}
-			editDate = commandObj.getTaskObject().getStartDate();
-			if (editDate != -1) {
+			editDate = commandObj.getTaskObject().getStartDateTime().toLocalDate();
+			if (editDate.compareTo(LocalDate.MAX) < 0) {
 				isEditDate = true;
 			}
-			editTime = commandObj.getTaskObject().getStartTime();
-			if (editTime != -1) {
+			editTime = commandObj.getTaskObject().getStartDateTime().toLocalTime();
+			if (editTime.compareTo(LocalTime.MAX) < 0) {
 				isEditTime = true;
 			}
 		} catch (NullPointerException e) {
@@ -113,38 +118,72 @@ public class Edit {
 			TaskObject task = taskList.get(i);
 			if (task.getTaskId() == editTaskId) { // if this is the task to be edited
 				if (isEditTitle) {
-					originalTitle = task.getTitle();
-					
-					if (!originalTitle.equals(editTitle)) {
-						task.setTitle(editTitle);
-						LOGGER.log(Level.INFO, "Title edited");
-					} else {
-						isEditTitle = false;
-					}
+					editTitle(task);
 				} 
 				
-				if (isEditDate) {
-					originalDate = task.getStartDate();
-					
-					if (originalDate != editDate) {
-						task.setStartDate(editDate);
-						LOGGER.log(Level.INFO, "Date edited");
-					} else {
-						isEditDate = false;
-					} 
-				}
-				
-				if (isEditTime) {
-					originalTime = task.getStartTime();
-				
-					if (originalTime != editTime) {
-						task.setStartTime(editTime);
-						LOGGER.log(Level.INFO, "Time edited");
-					} else {
-						isEditTime = false;
+				if (isEditDate && isEditTime) {
+					editDateAndTime(task);
+				} else {
+					if (!isEditTime) {
+						editDate(task);
+					}
+					if (!isEditDate) {
+						editTime(task);
 					}
 				}
+
 			}
+		}
+	}
+
+	private void editTitle(TaskObject task) {
+		originalTitle = task.getTitle();
+		
+		if (!originalTitle.equals(editTitle)) {
+			task.setTitle(editTitle);
+			LOGGER.log(Level.INFO, "Title edited");
+		} else {
+			isEditTitle = false;
+		}
+	}
+	
+	private void editDateAndTime(TaskObject task) {
+		originalDate = task.getStartDateTime().toLocalDate();
+		originalTime = task.getStartDateTime().toLocalTime();
+		
+		if (originalDate.compareTo(editDate) != 0 && originalTime.compareTo(editTime) != 0) {		
+			task.setStartDateTime(LocalDateTime.of(editDate, editTime));
+			LOGGER.log(Level.INFO, "Date and time edited");
+		} else if (originalTime.compareTo(editTime) == 0) {
+			isEditTime = false;
+			editDate(task);
+		} else if (originalDate.compareTo(editDate) == 0) {
+			isEditDate = false;
+			editTime(task);
+		} 
+	}
+	
+	private void editDate(TaskObject task) {
+		originalDate = task.getStartDateTime().toLocalDate();
+		
+		if (originalDate.compareTo(editDate) != 0) {		
+			originalTime = task.getStartDateTime().toLocalTime();
+			task.setStartDateTime(LocalDateTime.of(editDate, originalTime));
+			LOGGER.log(Level.INFO, "Date edited");
+		} else {
+			isEditDate = false;
+		} 
+	}
+	
+	private void editTime(TaskObject task) {
+		originalTime = task.getStartDateTime().toLocalTime();
+		
+		if (originalTime.compareTo(editTime) != 0) {
+			originalDate = task.getStartDateTime().toLocalDate();
+			task.setStartDateTime(LocalDateTime.of(originalDate, editTime));
+			LOGGER.log(Level.INFO, "Time edited");
+		} else {
+			isEditTime = false;
 		}
 	}
 	
@@ -243,7 +282,7 @@ public class Edit {
 		return originalTitle;
 	}
 	
-	public int getOriginalDate() {
+	public LocalDate getOriginalDate() {
 		return originalDate;
 	}
 	
