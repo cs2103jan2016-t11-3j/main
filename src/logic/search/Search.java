@@ -201,22 +201,23 @@ public class Search extends Display {
 		boolean isFound = false;
 		if (index >= 0 && index < lastOutputTaskList.size()) {
 			int taskIdToSearch = lastOutputTaskList.get(index).getTaskId();
-			for (int i = 0; i < taskList.size(); i++) {
-				if (taskList.get(i).getTaskId() == taskIdToSearch) {
-					TaskObject foundTask = taskList.get(i);
-					setOutput(foundTask);
-					isFound = true;
-				}
-			}
+			isFound = findTaskWithIndex(taskIdToSearch);
 		} else {
 			NullPointerException e = new NullPointerException("invalid index");
 			throw e;
 		}
-
-		if (!isFound) {
-			outputSearchResults();
-			// Message that cannot be found
+	}
+	
+	private boolean findTaskWithIndex(int taskIdToSearch) {
+		boolean isFound = false;
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getTaskId() == taskIdToSearch) {
+				TaskObject foundTask = taskList.get(i);
+				setOutput(foundTask);
+				isFound = true;
+			}
 		}
+		return isFound;
 	}
 	
 	private void setOutput() {
@@ -239,10 +240,6 @@ public class Search extends Display {
 			output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 			output.add(foundTask.getTimeOutputString());
 		}
-	}
-
-	private void outputSearchResults() {
-		output.add(String.format(MESSAGE_TIMINGS_NOT_FOUND));
 	}
 	
 }
