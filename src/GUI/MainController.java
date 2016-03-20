@@ -22,6 +22,18 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 
+/**
+ * Controls the TaskWindow to allow interaction with the program
+ * Inputs keyed in textfield read with enter key pressed
+ * Tasks displayed in tableview updates after every command
+ * Feedback message displayed above the textfield
+ * HelpPopup initiated with with F1 hotkey pressed
+ * Program closes with Esc pressed
+ * 
+ * @author Seow Hwee
+ *
+ */
+
 public class MainController implements Initializable {
 	
 	static String _input;
@@ -148,6 +160,28 @@ public class MainController implements Initializable {
 		setCellProperty();
 		taskTable.setItems(taskData);
 	}
+	
+	public void populateIndex() {
+		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
+			@Override
+			public void updateIndex(int index) {
+				super.updateIndex(index);
+				if (isEmpty() || index < 0) {
+					setText(null);
+				} else {
+					setText(Integer.toString(index+1));
+				}
+			}
+		});
+	}
+	
+	public void populateColumns() {
+		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
+		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
+		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
+		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
+	}
 
 	private void setCellProperty() {
 		taskColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
@@ -168,6 +202,7 @@ public class MainController implements Initializable {
 				return cell;
 			}
 		});
+
 		timeColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
@@ -185,28 +220,6 @@ public class MainController implements Initializable {
 				};
 				return cell;
 			}
-		});
-	}
-
-	public void populateColumns() {
-		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
-		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
-		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
-		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
-		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
-	}
-
-	public void populateIndex() {
-		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
-		    @Override
-			public void updateIndex(int index) {
-		        super.updateIndex(index);
-		        if (isEmpty() || index < 0) {
-		            setText(null);
-		        } else {
-		            setText(Integer.toString(index+1));
-		        }
-		    }
 		});
 	}
 

@@ -10,6 +10,15 @@ import logic.Logic;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
+/**
+ * Launches the program, initiating the TaskWindow users interact with
+ * Creates Logic object within class to interact with backend component
+ * Passes input from user to logic
+ * Gets output from logic after input command run in logic
+ * 
+ * @author Seow Hwee
+ *
+ */
 
 public class UIMain extends Application {
 	
@@ -44,7 +53,6 @@ public class UIMain extends Application {
 		printOutput();
 	}
 	
-
 	private static void printOutput() {
 		ArrayList<String> output = logic.getOutput();
 		for (int i = 0; i < output.size(); i++) {
@@ -52,9 +60,10 @@ public class UIMain extends Application {
 		}
 	}
 
-	public String getMessage() {
-		
+	public String getMessage() {	
 		ArrayList<String> output = logic.getOutput();
+		assert output != null: "Output = null, check logic output message";
+		
 		if(output.size() == 1) {
 			return output.get(0);
 		}

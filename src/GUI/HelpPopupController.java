@@ -20,6 +20,16 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+/**
+ * Controls the HelpPopup to allow access to help manual
+ * Help topic displayed sorted by command type, ie. add, view, delete...
+ * Display topic changes with left/right arrowkeys pressed
+ * Popup closes with Esc pressed
+ * 
+ * @author Seow Hwee
+ *
+ */
+
 public class HelpPopupController implements Initializable {
 	
 	static Stage helpStage = new Stage();
