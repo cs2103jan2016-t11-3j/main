@@ -10,18 +10,10 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 public class TimeOutput {
-
-	public static final String CATEGORY_EVENT = "event";
-	public static final String CATEGORY_DEADLINE = "deadline";
-	public static final String CATEGORY_FLOATING = "floating";
-
-	private static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
-	private static final String MESSAGE_NULL_POINTER_EXCEPTION = "Not enough arguments within target object";
-
-	private static final String DISPLAY_TIME_EVENT_1 = "on %1s, from %2s to %3s";
-	private static final String DISPLAY_TIME_EVENT_2 = "from %1s to %2s";
-	private static final String DISPLAY_TIME_DEADLINE = "by %1s";
 
 	public static void setTimeOutputForGui(ArrayList<TaskObject> taskList) {
 		for (int i = 0; i < taskList.size(); i++) {

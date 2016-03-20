@@ -43,6 +43,7 @@ public class UIMain extends Application {
 		logic.run(input);
 		printOutput();
 	}
+	
 
 	private static void printOutput() {
 		ArrayList<String> output = logic.getOutput();
@@ -62,6 +63,9 @@ public class UIMain extends Application {
 
 	public ArrayList<TaskObject> getLastOutputTaskList() {
 		taskList = logic.getLastOutputTaskList();
+		
+		assert taskList != null: "Output = null, check logic lastOutputTaskList";
+		
 		return taskList;
 	}
 

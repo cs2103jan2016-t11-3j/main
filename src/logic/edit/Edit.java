@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import common.CommandObject;
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates an Edit object which will edit the title of a selected task to the
  * desired title. <br>
@@ -29,9 +32,6 @@ import common.TaskObject;
  */
 
 public class Edit {
-
-	private static final String MESSAGE_TITLE_EDIT = "Task title edited from '%1$s' to '%2$s'.";
-	private static final String MESSAGE_DATE_EDIT = "Task date edited from '%1$s' to '%2$s'.";
 
 	private CommandObject commandObj;
 	private ArrayList<TaskObject> lastOutputTaskList;

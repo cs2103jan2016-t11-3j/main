@@ -6,17 +6,11 @@ import logic.add.Add;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 public class Recurring {
 
-	public final static String FREQ_HOURLY = "HOURLY";
-	public final static String FREQ_DAILY = "DAILY";
-	public final static String FREQ_WEEKLY = "WEEKLY";
-	public final static String FREQ_MONTHLY = "MONTHLY";
-	public final static String FREQ_YEARLY = "YEARLY";
-
-	private static final String CATEGORY_EVENT = "event";
-	
-	private static final String MESSAGE_INVALID_RECURRENCE = "No valid end of recurrence";
 	/*
 	 * Insert following methods in Logic() constructor:
 	 * Recurring.checkRecurringDeadlines(taskList);

@@ -24,21 +24,29 @@ public class AddParser extends CommandParser {
 	 * to task/date/time
 	 * 
 	 * @param input    string input from user
+	 * @throws Exception 
 	 */
-	public TaskObject process(String input) {
+	public TaskObject process(String input) throws Exception {
 		setTask(input);
 		setTaskObject();
 		return TO;
 	}
 	
-	public void setTask(String input) {
-		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_FINAL);
+	/**
+	 * method will split string into task and date-time. Calls datetimeparser for
+	 * date-time string and sets task in AddParser class
+	 * 
+	 * @param input
+	 * @throws Exception
+	 */
+	public void setTask(String input) throws Exception {
+		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_DATE_TIME_IDENTIFIER);
 		Matcher matcher = dateTimePattern.matcher(input);
 		
 		String identifier = null;
 		
 		if (matcher.find()) {
-			identifier = getTrimmedString(input ,matcher.start(), input.length());
+			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
 			input = getTrimmedString(input, 0, matcher.start());
 		}
 		
@@ -50,6 +58,7 @@ public class AddParser extends CommandParser {
 		
 		_task = input;
 	}
+	
 	
 	private void setDateTime(DateTimeParser dtp) {
 		_startDate = dtp.getStartDate();

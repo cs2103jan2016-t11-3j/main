@@ -4,6 +4,9 @@ import logic.display.Display;
 import common.TaskObject;
 import java.util.ArrayList;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 
 /**
  * Creates a Search object which facilitates the finding of tasks matching the search strings.
@@ -19,9 +22,6 @@ import java.util.ArrayList;
  */
 
 public class Search extends Display {
-	
-	private static final String MESSAGE_NO_TITLE_RESULTS_FOUND = "Keyword \'%1$s\' not found.";
-	private static final String MESSAGE_NO_DATE_RESULTS_FOUND = "No task found for the specified date.";
 	
 	/**
 	 * @param matchedTasks - a list maintained by the search object which contains

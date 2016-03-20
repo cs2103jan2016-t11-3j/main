@@ -7,9 +7,10 @@ import common.CommandObject;
 import common.TaskObject;
 import logic.Logic;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 public class Overdue extends Mark {
-	
-private final String MESSAGE_OVERDUE = "Task: %1s is marked as overdue";
 	
 	public Overdue(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.index = commandObj.getIndex();

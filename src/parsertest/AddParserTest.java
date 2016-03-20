@@ -4,35 +4,65 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import common.TaskObject;
+
 import parser.AddParser;
 
 public class AddParserTest {
 	
 	AddParser AP = new AddParser();
+	TaskObject TO = new TaskObject();
 	@Test
-	public void testProcess() {
-		AP.process("add buy cake for 7th june by 6 june 9am");
+	public void testProcess() throws Exception {
+		
+		
+		
+		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
+		assertEquals("5pm lecture", AP.getTask());
+		assertEquals(1600, AP.getStartTime());
+		//assertEquals(20160907, AP.getStartDate());
+		assertEquals("2016-03-22T16:00",TO.getStartDateTime().toString());
+		assertEquals(-1, AP.getEndTime());
+		assertEquals(-1, AP.getEndDate());
+		
+	}
+/*
+	AP.process("buy cake for 7th june by 6 june 9am");
 		assertEquals("buy cake for 7th june", AP.getTask());
 		assertEquals(900, AP.getStartTime());
 		assertEquals(20160606, AP.getStartDate());
 		assertEquals(-1, AP.getEndTime());
 		assertEquals(-1, AP.getEndDate());
 		
-		AP.process("add bdae party from 6 june 9am to 2359hr 6/6");
+		AP.process("bdae party from 6 june 9am to 2359hr 6/6");
 		assertEquals("bdae party", AP.getTask());
 		assertEquals(900, AP.getStartTime());
 		assertEquals(20160606, AP.getStartDate());
 		assertEquals(2359, AP.getEndTime());
 		assertEquals(20160606, AP.getEndDate());
 		
-		AP.process("add bdae party on 8 sept 12pm by 7sept 8am");
+		AP.process("bdae party on 8 sept 12pm by 7sept 8am");
 		assertEquals("bdae party on 8 sept 12pm", AP.getTask());
 		assertEquals(800, AP.getStartTime());
 		assertEquals(20160907, AP.getStartDate());
 		assertEquals(-1, AP.getEndTime());
 		assertEquals(-1, AP.getEndDate());
-	}
-
+		
+		AP.process("by 7sept 8am");
+		assertEquals("", AP.getTask());
+		assertEquals(800, AP.getStartTime());
+		assertEquals(20160907, AP.getStartDate());
+		assertEquals(-1, AP.getEndTime());
+		assertEquals(-1, AP.getEndDate());
+		
+		TO = AP.process("be nice to merrel by today 9pm");
+		assertEquals("be nice to merrel", AP.getTask());
+		assertEquals(2100, AP.getStartTime());
+		//assertEquals(20160907, AP.getStartDate());
+		assertEquals("2016-03-20T21:00",TO.getStartDateTime().toString());
+		assertEquals(-1, AP.getEndTime());
+		assertEquals(-1, AP.getEndDate());
+	*/
 	@Test
 	public void testSetTask() {
 		//AP.setTask("add do this Wednesday");

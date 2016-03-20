@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
+
 /**
  * Creates a Save object to perform two main types of operations. <br>
  * 1) Save to - Permanently changes the default location for the file to be saved. Also saves
@@ -23,11 +26,6 @@ import common.TaskObject;
  *
  */
 public class Save {
-
-	private static final String MESSAGE_SAVE_TO = "Tasks have been, and will continue to be saved to %1s";
-	private static final String MESSAGE_SAVE_AS = "Tasks have been saved to %1s";
-	private static final String MESSAGE_SAVE_INVALID = "Save command is invalid";
-	private static final String MESSAGE_SAVE_ERROR = "Error saving file to %1s";
 
 	private boolean isSaved = false;
 	private int saveCommand = 0;
