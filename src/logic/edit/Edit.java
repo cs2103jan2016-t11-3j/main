@@ -40,7 +40,7 @@ public class Edit {
 	private static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'.";
 	private static final String MESSAGE_TITLE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
 	private static final String MESSAGE_TITLE_EDIT = "Title edited from '%1$s' to '%2$s'.";
-	private static final String MESSAGE_TITLE_DATE_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%1$s' to '%2$s'.";
+	private static final String MESSAGE_TITLE_DATE_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%3$s' to '%4$s'.";
 	private static final Logger LOGGER = Logger.getLogger(Edit.class.getName());
 	
 	private CommandObject commandObj;
@@ -73,6 +73,7 @@ public class Edit {
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
+		//checkEditInformation();
 		int editTaskId = getTaskIdOfTaskToBeEdited();
 		editTask(editTaskId);
 		saveExternal();
@@ -109,29 +110,50 @@ public class Edit {
 		return lastOutputTaskList.get(editItemNumber-1).getTaskId();
 	}
 
-	// Edits the title of the task based on the task ID passed
+	/**
+	 * Core method of Edit. Reads in the task ID to be edited and edits the respective information
+	 * based on the boolean checks. The data is only edited if it is different from the current.
+	 * @param editTaskId
+	 */
 	private void editTask(int editTaskId) {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
 			if (task.getTaskId() == editTaskId) { // if this is the task to be edited
-				if (isEditTitle) 
+				if (isEditTitle) {
 					originalTitle = task.getTitle();
-					task.setTitle(editTitle);
-					LOGGER.log(Level.INFO, "Title edited");
+					
+					if (!originalTitle.equals(editTitle)) {
+						task.setTitle(editTitle);
+						LOGGER.log(Level.INFO, "Title edited");
+					} else {
+						isEditTitle = false;
+					}
 				} 
 				if (isEditDate) {
 					originalDate = task.getStartDate();
-					task.setStartDate(editDate);
-					LOGGER.log(Level.INFO, "Date edited");
-				} 
+					
+					if (originalDate != editDate) {
+						task.setStartDate(editDate);
+						LOGGER.log(Level.INFO, "Date edited");
+					} else {
+						isEditDate = false;
+					} 
+				}
 				if (isEditTime) {
 					originalTime = task.getStartTime();
-					task.setStartTime(editTime);
-					LOGGER.log(Level.INFO, "Time edited");
+				
+					if (originalTime != editTime) {
+						task.setStartTime(editTime);
+						LOGGER.log(Level.INFO, "Time edited");
+					} else {
+						isEditTime = false;
+					}
+				}
 			}
 		}
 	}
 	
+	// Saves the updated file to Storage
 	private void saveExternal() {
 		try {
 			FileStorage storage = FileStorage.getInstance();
@@ -177,6 +199,15 @@ public class Edit {
 		}
 	
 	}
+	
+	// FOR DEBUGGING
+	private void checkEditInformation() {
+		System.out.println("isEditTitle = " + isEditTitle);
+		System.out.println("isEditDate = " + isEditDate);
+		System.out.println("isEditTime = " + isEditTime);
+	}
+	
+	// ------------------------- OUTPUT MESSAGES -------------------------
 	
 	private void outputTitleDateTimeEditedMessage() {
 		output.add(String.format(MESSAGE_TITLE_DATE_TIME_EDIT, originalTitle, editTitle, 
