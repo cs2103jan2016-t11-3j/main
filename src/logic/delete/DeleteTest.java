@@ -24,7 +24,7 @@ public class DeleteTest {
 	private TaskObject taskThree = new TaskObject("Dinner tonight", LocalDateTime.of(2016, 02, 26, 19, 00), "deadline", "incomplete", 24);
 	private CommandObject delete = new CommandObject(Index.INDEX_DELETE, new TaskObject(), 1);
 	private CommandObject deleteFail = new CommandObject(Index.INDEX_DELETE, new TaskObject(), 2);
-	private TaskObject deleteQuick = new TaskObject("");
+	private TaskObject deleteQuick = new TaskObject();
 	private Deque<CommandObject> testUndoList = new ArrayDeque<CommandObject> ();
 
 	/* For all NORMAL Delete **************************************************/
@@ -74,6 +74,7 @@ public class DeleteTest {
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
+
 	@Test
 	//Successful Quick delete test(One try)
 	public void testQuickSuccess() {
@@ -115,7 +116,7 @@ public class DeleteTest {
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
-	
+
 	@Test
 	// Delete all
 	public void testDeleteAll() {
