@@ -60,8 +60,7 @@ public class Strings {
 	public static final String MESSAGE_SAVE_ERROR = "Error saving file to %1s";
 	
 	//Search Constants
-	public static final String MESSAGE_NO_TITLE_RESULTS_FOUND = "Keyword \'%1$s\' not found.";
-	public static final String MESSAGE_NO_DATE_RESULTS_FOUND = "No task found for the specified date.";
+	public static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	public static final String MESSAGE_TIMINGS_FOUND = "Timings for %1s:";
 	public static final String MESSAGE_TIMINGS_NOT_FOUND = "Task not found";
 	

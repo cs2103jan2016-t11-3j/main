@@ -16,23 +16,25 @@ import static logic.constants.Strings.*;
 
 /**
  * Creates a Search object which facilitates the finding of tasks matching the search strings.
- * Search is a subclass of Display
+ * Search is a subclass of Display.
  * <br> Search can be implemented in 4 ways:
  * <br> 1) Search by title - searches for tasks where the title contains the search keyword
  * <br> 2) Search by date - searches for tasks where the date matches the search date (for deadlines)
  * or if the date falls between the start and end date (for events)
+ * <br> 3) Search by time - searches for tasks where the time matches the search time (for deadlines)
+ * or if the time falls between the start and end dates AND times (for events); i.e. for an event 
+ * "overseas camp 5jan-9jan 12pm-8pm", a search of '7jan 4pm' will return this event but a search
+ * of '1jan 4pm' will not.
+ * <br> 4) Search by index - searches for a specific index and returns all tasks that are linked
+ * to this index if it is a recurring task 
+ * It stores all search results in an arraylist and calls the superclass Display, where the search
+ * results would be displayed.
  * 
- * 
- * If the task contains either the start
- * or the end time, it will be added to the same ArrayList of matched tasks. Only applies
- * for deadlines and events.
  * @author ChongYan, RuiBin
  *
  */
 
 public class Search extends Display {
-	
-	private static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	
 	/**
 	 * @param matchedTasks - a list maintained by the search object which contains
@@ -83,9 +85,13 @@ public class Search extends Display {
 	 */
 	public ArrayList<String> run() {
 		setSearchInformation();
+		printSearchInformation();
 		processSearch();
 		setOutput();
 		
+		for (int i = 0; i < output.size(); i++) {
+			System.out.println(output.get(i));
+		}
 		return output;
 	}
 	
