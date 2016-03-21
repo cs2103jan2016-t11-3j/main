@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.logging.*;
 
 import common.TaskObject;
+import logic.timeOutput.TimeOutput;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -25,9 +26,9 @@ public class Display {
 	
 	private static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
 	private static final String MESSAGE_SEARCH_RESULTS = "Search results:";
-	private static final String DISPLAY_RESULT_DEADLINE = "%1$s. %2$s, %3$s, %4$shrs, %5$s";
-	private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
-	private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
+	//private static final String DISPLAY_RESULT_DEADLINE = "%1$s. %2$s, %3$s, %4$shrs, %5$s";
+	//private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
+	//private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
 	protected static final Logger LOGGER = Logger.getLogger(Display.class.getName());
 	
 	private ArrayList<TaskObject> taskList;
@@ -80,9 +81,14 @@ public class Display {
 		} else {
 			output.add(MESSAGE_SEARCH_RESULTS);
 			for (int i = 0; i < taskList.size(); i++) {
-				TaskObject task = taskList.get(i);
-				outputTaskList.add(task);
-				
+				outputTaskList.add(taskList.get(i));
+			}
+			
+			TimeOutput.setTimeOutputForGui(taskList);
+		}
+			
+			
+			/*
 				String taskCategory = task.getCategory();
 				String taskTitle = task.getTitle();
 				int taskStartDate = task.getStartDate();
@@ -94,7 +100,7 @@ public class Display {
 				
 				/* Output format for the tasks differs according to the category.
 				 * This switch statement calls the relevant method and passes in the relevant arguments.
-				 */
+				 
 				switch (taskCategory) {
 					case "deadline" :
 						String taskEndDateInOutputFormat = parseDate(taskEndDate);
@@ -114,7 +120,8 @@ public class Display {
 				
 			}
 		}
-		
+		*/
+			
 		return output;
 	}
 	
@@ -122,23 +129,7 @@ public class Display {
 		output.add(MESSAGE_EMPTY_LIST);
 	}
 
-	// Returns the date in DD/MM/YY format
-	private String parseDate(int date) {
-		String day = "";
-		String month = "";
-		String year = "";
-		
-		try {
-			String dateInString = "" + date;
-			day = dateInString.substring(6, 8);
-			month = dateInString.substring(4, 6);
-			year = dateInString.substring(0, 4);
-		} catch (IndexOutOfBoundsException e) {
-			e.printStackTrace();
-		}
-		
-		return day + "/" + month + "/" + year;
-	}
+
 	
 	private void outputDeadlineTask(int num, String taskTitle, String taskEndDate, int taskEndTime, String taskStatus) {
 		output.add(String.format(DISPLAY_RESULT_DEADLINE, num, taskTitle, taskEndDate, taskEndTime, taskStatus));
