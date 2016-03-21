@@ -1,6 +1,8 @@
 package parser;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +15,7 @@ public class EditParser extends CommandParser {
 
 	private TaskObject TO = new TaskObject();
 
-	public DateTimeParser dtp = new DateTimeParser();
+	
 	private int _index = -1;
 	
 	/**
@@ -25,19 +27,21 @@ public class EditParser extends CommandParser {
 		convertToArray(input); //change this to extract index
 		input = cleanString(input);
 		
-		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
+		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH2);
 		Matcher matcher = dateTimePattern.matcher(input);
 		
 		String identifier = null;
 		
 		if (matcher.find()) {
-			identifier = getTrimmedString(input ,matcher.start(), input.length());
+			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
+			System.out.println(identifier);
 			input = getTrimmedString(input, 0, matcher.start());
 		}
 		
 		if (identifier != null) {
+			DateTimeParser dtp = new DateTimeParser();
 			dtp.parseDateTime(identifier, false);
-			setDateTime();
+			setDateTime(dtp);
         }
 		
 		_task = input;
@@ -88,39 +92,13 @@ public class EditParser extends CommandParser {
 		}
 	}
 	
-	public void setDateTime() {
+	public void setDateTime(DateTimeParser dtp) {
 		_startDateTime = dtp.getStartDateTime();
 		_endDateTime = dtp.getEndDateTime();
 		_startTime = dtp.getStartTime();
 		_startDate = dtp.getStartDate();
 		_endTime = dtp.getEndTime();
 		_endDate = dtp.getEndDate();
-	}
-	
-	//this method sets the date for the object by using the date processor 
-	//class to performing the processing
-	public void setDate(String input) {
-		if (input.contains("start")) {
-			setStartDate(dtp.getStartDate());
-		} else if (input.contains("end")) {
-			setEndDate(dtp.getStartDate());
-		} else {
-			setStartDate(dtp.getStartDate());
-			setEndDate(dtp.getEndDate());
-		}
-	}
-	
-	//this method sets the time for the object by using the time processor 
-	//class to performing the processing
-	public void setTime(String input) {
-		if (input.contains("start")) {
-			setStartTime(dtp.getStartTime());
-		} else if (input.contains("end")) {
-			setEndTime(dtp.getStartTime());
-		} else {
-			setStartTime(dtp.getStartTime());
-			setEndTime(dtp.getEndTime());
-		}
 	}
 	
 	public String getTask() {
@@ -185,16 +163,7 @@ public class EditParser extends CommandParser {
  		setEndDate(-1);
  		setStartTime(-1);
  		setEndTime(-1);
+ 		_startDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
+ 		_endDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
  	}
- 	
- 	/*
- 	 * if (isDateTime(clean_string)) {
-		dtp.parseDateTime(clean_string, false);
-		setDateTime();
-		setDate(input);
-		setTime(input);
-	} else {
-		setTask(clean_string);
-	} 
- 	 */
 }

@@ -23,7 +23,7 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by tmr 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals("2016-03-21T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-22T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		

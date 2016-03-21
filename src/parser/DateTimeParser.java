@@ -51,16 +51,16 @@ public class DateTimeParser {
 	private String startD;
 	private String endD;
 	
-	private LocalDate startDate = null;
-	private LocalDate endDate = null;
-	private LocalTime startTime = null;
-	private LocalTime endTime = null;
-	private LocalDate untilDate = null;
-	private LocalTime untilTime = null;
+	private LocalDate startDate = LocalDate.MAX;
+	private LocalDate endDate = LocalDate.MAX;
+	private LocalTime startTime = LocalTime.MAX;
+	private LocalTime endTime = LocalTime.MAX;
+	private LocalDate untilDate = LocalDate.MAX;
+	private LocalTime untilTime = LocalTime.MAX;
 	
-	private LocalDateTime startDateTime = null;
-	private LocalDateTime endDateTime = null;
-	private LocalDateTime untilDateTime = null;
+	private LocalDateTime startDateTime = LocalDateTime.MAX;
+	private LocalDateTime endDateTime = LocalDateTime.MAX;
+	private LocalDateTime untilDateTime = LocalDateTime.MAX;
 	
 	TaskObject TO = new TaskObject();
 	List<String> dtlist = new ArrayList<String>();
@@ -99,7 +99,7 @@ public class DateTimeParser {
 				if(input.contains("to")) {
 					endDateTime = startDateTime;
 				}
-				separateDateTime(input, "start");	
+				separateDateTime(input, "start");
 				break;
 			}
 			setLocalDateTime(isForAdd, tasktype);
@@ -239,6 +239,11 @@ public class DateTimeParser {
 			//logger.log(Level.INFO, "Time format found");
 			_time = getTrimmedString(input, timeMatcher.start(), timeMatcher.end());
 			_date = input.replaceAll(_time, "").trim();
+			if (_date.matches("(start|end)")) {
+				type = _date;
+				System.out.println(type);
+				_date = ""; 
+			}
 		} else {
 			//logger.log(Level.INFO, "Time format NOT found");
 			_date = input;
@@ -250,6 +255,7 @@ public class DateTimeParser {
 
 	public void setDateTime(String type, DateParser DP, TimeParser TP) {
 		if (type.matches("start")) {
+			System.out.println("start");
 			_startTime = TP.getTime();
 			_startDate = DP.getStartDate();
 			startT = TP.getTimeString();
@@ -261,6 +267,7 @@ public class DateTimeParser {
 			untilTime = TP.getTimeObject();
 			untilDate = DP.getDateObject();
 		} else {
+			System.out.println(type + "if");
 			_endTime = TP.getTime();
 			_endDate = DP.getStartDate();
 			endT = TP.getTimeString();
@@ -296,10 +303,11 @@ public class DateTimeParser {
 				endD = startD; //for special case of lazy ppl not typing end date
 				endDate = startDate;
 			}
-			if(task.toString() == "event") {
+			if (task.toString() == "event") {
 				endDateTime = LocalDateTime.of(endDate, endTime);
 			}
 		}
+		endDateTime = LocalDateTime.of(endDate, endTime);
 		startDateTime = LocalDateTime.of(startDate, startTime);
 	}
 	
@@ -389,4 +397,6 @@ public class DateTimeParser {
 	public LocalDateTime getEndDateTime() {
 		return endDateTime;
 	}
+	
+	
 }

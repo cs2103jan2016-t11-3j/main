@@ -81,6 +81,7 @@ public class DateParser {
 	 */
 	public void processDate(String input) {
 		if (!input.isEmpty()) {
+			System.out.println(input);
 			furtherProcessDate(input);
 			if (start_month == -1) {
 				start_month = end_month;

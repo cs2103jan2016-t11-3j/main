@@ -10,7 +10,7 @@ public class Parser {
 	private static final String ADD_COMMAND = "add";
 	private static final int ADD_INDEX = 1;
 	
-	private static final String SEARCH_COMMAND_1 = "view";
+	
 	private static final String SEARCH_COMMAND_2 = "search";
 	private static final String SEARCH_COMMAND_3 = "sort";
 	private static final String SEARCH_COMMAND_4 = "find";
@@ -50,6 +50,9 @@ public class Parser {
 	private static final String NOTDONE_COMMAND_1 = "undone";
 	private static final String NOTDONE_COMMAND_2 = "incomplete";
 	private static final int NOTDONE_INDEX = 11;
+	
+	private static final String VIEW_RECURRING_COMMAND_1 = "view";
+	private static final int VIEW_RECURRING_INDEX = 12;
 	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
@@ -117,6 +120,8 @@ public class Parser {
 			parseNotDone(command);
 		} else if (isSearch(command)) {
 			parseSearch(command);
+		} else if (command.startsWith(VIEW_RECURRING_COMMAND_1)) {
+			parseView(command);
 		} else {
 			parseSearch(command);
 		}
@@ -170,6 +175,19 @@ public class Parser {
 		}
 		
 	}
+	
+	public void parseView(String command) throws Exception {
+		int temp = command.indexOf(" ");
+		if (temp != -1) {
+			CO.setCommandType(VIEW_RECURRING_INDEX);
+	 		command = command.substring(temp + 1);
+	 		temp = Integer.parseInt(command);
+	 		CO.setIndex(temp);
+		} else {
+			parseSearch(command);
+		}
+		
+ 	}
 	
 	/**
 	 * method sets command type, index of task to edit and parts of the task to edit
@@ -264,7 +282,7 @@ public class Parser {
 	 * method checks if the search keyword is present
 	 */
  	public boolean isSearch(String command) {
- 		if(command.startsWith(SEARCH_COMMAND_1) || command.startsWith(SEARCH_COMMAND_2) 
+ 		if(command.startsWith(SEARCH_COMMAND_2) 
  			|| command.startsWith(SEARCH_COMMAND_3) || command.startsWith(SEARCH_COMMAND_4) 
  			|| command.startsWith(SEARCH_COMMAND_5) || command.startsWith(SEARCH_COMMAND_6)) {
  			return true;
@@ -285,6 +303,7 @@ public class Parser {
  		index = extractDeleteIndex(command);
  		CO.setIndex(index);
  	}
+ 	
  	
  	/**
  	 * this method returns the number that is after the delete command as an integer
