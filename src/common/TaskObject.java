@@ -50,13 +50,6 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = taskId;
 	}
 	
-	// FOR WHAT???
-	public TaskObject (LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
-		this.startDateTime = startDateTime;
-		this.endDateTime = endDateTime;
-		this.interval = interval;
-	}
-	
 	// Constructor for processing undo for edit of title and date/time
 	public TaskObject(String title, LocalDateTime startDateTime) {
 		this.title = title;
@@ -75,6 +68,18 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.startDateTime = startDateTime;
 	}
 
+	// Constructor for dummyTask in searchByIndex
+	public TaskObject (LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.interval = interval;
+	}
+	
+	// Constructor for AddTest
+	public TaskObject (String title, int taskId) {
+		this.title = title;
+		this.taskId = taskId;
+	}
 	
 	// empty constructor
 	public TaskObject() {
@@ -257,8 +262,6 @@ public class TaskObject implements Comparable<TaskObject> {
 		setEndDate(-1);
 		setStartTime(-1);
 		setEndTime(-1);
-		setStartDateTime(LocalDateTime.MAX);
-		setEndDateTime(LocalDateTime.MAX);
 	}
 
     @Override
