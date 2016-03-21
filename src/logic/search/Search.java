@@ -13,8 +13,6 @@ import java.util.logging.Level;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
-import com.sun.media.jfxmedia.logging.Logger;
-
 
 /**
  * Creates a Search object which facilitates the finding of tasks matching the search strings.
@@ -180,7 +178,7 @@ public class Search extends Display {
 			LocalDate taskStartDate = list.get(i).getStartDateTime().toLocalDate();
 			LocalDate taskEndDate = list.get(i).getEndDateTime().toLocalDate();
 			
-			if (list.get(i).getCategory().equals("event")) {
+			if (list.get(i).getCategory().equals(CATEGORY_EVENT)) {
 				if (searchDate.isAfter(taskStartDate) && searchDate.isBefore(taskEndDate)) {
 					// if the search date is within the start and end dates of this event
 					match.add(list.get(i));
@@ -195,15 +193,29 @@ public class Search extends Display {
 		return match;
 	}
 	
-	// Finds all tasks that have the same start start or end time as the search time
+	// Finds all tasks that have the same start/end time as the search time, or if the search time
+	// falls between the start and end times AND dates (only for events)
 	private ArrayList<TaskObject> searchByTime(ArrayList<TaskObject> list) {
 		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
 		
 		for (int i = 0; i < list.size(); i++) {
 			LocalTime taskStartTime = list.get(i).getStartDateTime().toLocalTime();
-			LocalTime taskEndTime= list.get(i).getEndDateTime().toLocalTime();
-			if (searchTime.compareTo(taskStartTime) == 0 || searchTime.compareTo(taskEndTime) == 0) {
-				match.add(list.get(i));
+			LocalTime taskEndTime = list.get(i).getEndDateTime().toLocalTime();
+
+			if (list.get(i).getCategory().equals(CATEGORY_EVENT)) {
+				LocalDate taskStartDate = list.get(i).getStartDateTime().toLocalDate();
+				LocalDate taskEndDate = list.get(i).getEndDateTime().toLocalDate();
+				
+				// if it is an event, it checks if there had been a search date that is within the start and end dates
+				// if so, it then checks if the search time is within the start and end times
+				if (searchDate.isAfter(taskStartDate) && searchDate.isBefore(taskEndDate) &&
+						searchTime.isAfter(taskStartTime) && searchTime.isBefore(taskEndTime)) {
+					match.add(list.get(i));
+				}
+			} else {
+				if (searchTime.compareTo(taskStartTime) == 0 || searchTime.compareTo(taskEndTime) == 0) {
+					match.add(list.get(i));
+				}
 			}
 		}
 		
