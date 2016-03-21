@@ -6,6 +6,8 @@ import org.junit.Test;
 import common.*;
 import logic.*;
 
+import static logic.constants.Index.*;
+
 import java.util.ArrayList;
 
 public class DoneTest {
@@ -20,7 +22,7 @@ public class DoneTest {
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
 		ArrayList<String> actualOutput = new ArrayList<String> ();
 		TaskObject taskTest = new TaskObject("1");
-		CommandObject test = new CommandObject(CommandFacade.INDEX_COMPLETE, taskTest, 1);
+		CommandObject test = new CommandObject(INDEX_COMPLETE, taskTest, 1);
 		taskList.add(taskOne);
 		taskList.add(taskTwo);
 		lastOutput.add(taskOne);

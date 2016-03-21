@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Deque;
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class DeleteTest {
 	private final ArrayList<TaskObject> lastOutputList = new ArrayList<TaskObject> ();
 	private TaskObject taskOne = new TaskObject("Hello", 200);
 	private TaskObject taskTwo = new TaskObject("Nonsense", 178);
-	private TaskObject taskThree = new TaskObject("Dinner tonight", 20160226, 1900, "deadline", "incomplete", 24);
+	private TaskObject taskThree = new TaskObject("Dinner tonight", LocalDateTime.of(2016, 02, 26, 19, 00), "deadline", "incomplete", 24);
 	private CommandObject delete = new CommandObject(Index.INDEX_DELETE, new TaskObject(), 1);
 	private CommandObject deleteFail = new CommandObject(Index.INDEX_DELETE, new TaskObject(), 2);
 	private TaskObject deleteQuick = new TaskObject("");
