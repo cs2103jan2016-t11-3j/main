@@ -17,7 +17,7 @@ public class Interval implements Comparator<Interval> {
 	private int interval;
 	private int count;
 	private LocalDateTime until;
-	private String byDay = "";
+	private String byDay = "";	// for multiple occurrences within the same frequency -- TO BE DONE
 	
 	public Interval() {
 	}

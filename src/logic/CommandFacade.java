@@ -416,22 +416,13 @@ public class CommandFacade {
 	 */
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
 		String originalTitle = editOriginal.getOriginalTitle();
-		LocalDateTime originalDateTime = editOriginal.getOriginalDateTime();
+		LocalDateTime originalStartDateTime = editOriginal.getOriginalStartDateTime();
+		LocalDateTime originalEndDateTime = editOriginal.getOriginalEndDateTime();
+		Interval originalInterval = editOriginal.getOriginalInterval();
 		CommandObject newCommandObj = new CommandObject();
 
-		if (editOriginal.getIsEditTitle() && editOriginal.getIsEditDateAndTime()) {
-			newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle, originalDateTime),
-					editOriginal.getEditItemNumber());
-		} else {
-			if (!editOriginal.getIsEditDateAndTime()) {	// only title was edited
-				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle),
-						editOriginal.getEditItemNumber());
-			} else { // only date/time was edited
-				newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalDateTime),
-						editOriginal.getEditItemNumber());
-			}
-		}
-
+		newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle, originalStartDateTime,
+				originalEndDateTime, originalInterval), editOriginal.getEditItemNumber());
 		list.push(newCommandObj);
 	}
 

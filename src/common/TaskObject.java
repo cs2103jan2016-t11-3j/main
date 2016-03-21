@@ -50,22 +50,12 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = taskId;
 	}
 	
-	// Constructor for processing undo for edit of title and date/time
-	public TaskObject(String title, LocalDateTime startDateTime) {
+	// Constructor for processing undo of edit tasks
+	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
 		this.title = title;
 		this.startDateTime = startDateTime;
-	}
-	
-	// Constructor for processing undo for edit of title
-	public TaskObject(String title) {
-		this.title = title;
-		this.startDateTime = LocalDateTime.MAX;
-	}
-	
-	// Constructor for processing undo for edit of date/time
-	public TaskObject(LocalDateTime startDateTime) {
-		this.title = "";
-		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.interval = interval;
 	}
 
 	// Constructor for dummyTask in searchByIndex
