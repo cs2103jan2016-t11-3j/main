@@ -1,8 +1,9 @@
 package common;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
-public class Interval {
+public class Interval implements Comparator<Interval> {
 	
 	public final String FREQ_HOURLY = "HOURLY";
 	public final String FREQ_DAILY = "DAILY";
@@ -102,5 +103,11 @@ public class Interval {
 	
 	public void setByDay(String byDay) {
 		this.byDay = byDay;
+	}
+
+	@Override
+	public int compare(Interval arg0, Interval arg1) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

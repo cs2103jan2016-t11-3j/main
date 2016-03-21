@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.*;
 
 import common.CommandObject;
+import common.Interval;
 import common.TaskObject;
 
 import static logic.constants.Index.*;
@@ -48,14 +49,17 @@ public class Edit {
 	private LocalDateTime originalDateTime;
 	private LocalDate originalDate;
 	private LocalTime originalTime;
+	private Interval originalInterval;
 	private String editTitle;
 	private LocalDate editDate;
 	private LocalTime editTime;
 	private int editItemNumber;
+	private Interval editInterval;
 	
 	boolean isEditDate = false;
 	boolean isEditTitle = false;
 	boolean isEditTime = false;
+	boolean isEditInterval = false;
 	
 	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList) {
 		this.commandObj = commandObj;
@@ -97,6 +101,10 @@ public class Edit {
 			if (!editTime.equals(LocalTime.MAX)) {
 				isEditTime = true;
 			}
+			editInterval = commandObj.getTaskObject().getInterval();
+			if (commandObj.getTaskObject().getIsRecurring()) {		// MIGHT NEED TO CHANGE THIS CHECK
+				isEditInterval = true;
+			}
 		} catch (NullPointerException e) {
 			LOGGER.log(Level.WARNING, "Error setting edit information");
 		}
@@ -132,7 +140,10 @@ public class Edit {
 						editTime(task);
 					}
 				}
-
+				
+				if (isEditInterval) {
+					editInterval(task);
+				}
 			}
 		}
 	}
@@ -191,6 +202,18 @@ public class Edit {
 		}
 	}
 	
+	private void editInterval(TaskObject task) {
+		originalInterval = task.getInterval();
+		
+		if (!originalInterval.equals(editInterval)) {
+			task.setInterval(editInterval);
+			LOGGER.log(Level.INFO, "Interval edited");
+		} else {
+			isEditInterval = false;
+		}
+	}
+	
+	
 	// Saves the updated file to Storage
 	private void saveExternal() {
 		try {
@@ -202,6 +225,16 @@ public class Edit {
 			System.exit(1);
 		}
 	}
+	
+	
+	// FOR DEBUGGING
+	private void checkEditInformation() {
+		System.out.println("isEditTitle = " + isEditTitle);
+		System.out.println("isEditDate = " + isEditDate);
+		System.out.println("isEditTime = " + isEditTime);
+	}
+	
+	// ------------------------- OUTPUT MESSAGES -------------------------
 	
 	/*
 	 * 7 combinations:
@@ -235,17 +268,11 @@ public class Edit {
 		} else if (!isEditTime) {
 			outputTitleDateEditedMessage();
 		}
-	
+		
+		if (isEditInterval) {
+			appendIntervalEditedMessage();
+		}
 	}
-	
-	// FOR DEBUGGING
-	private void checkEditInformation() {
-		System.out.println("isEditTitle = " + isEditTitle);
-		System.out.println("isEditDate = " + isEditDate);
-		System.out.println("isEditTime = " + isEditTime);
-	}
-	
-	// ------------------------- OUTPUT MESSAGES -------------------------
 	
 	private void outputTitleDateTimeEditedMessage() {
 		output.add(String.format(MESSAGE_TITLE_DATE_TIME_EDIT, originalTitle, editTitle, 
@@ -274,6 +301,14 @@ public class Edit {
 
 	private void outputTitleDateEditedMessage() {
 		output.add(String.format(MESSAGE_TITLE_DATE_EDIT, originalTitle, editTitle, originalDate, editDate));
+	}
+	
+	private void appendIntervalEditedMessage() {
+		assert (output.size() == 1);
+		
+		String message = output.remove(output.size()-1);
+		message = message.concat(" " + MESSAGE_INTERVAL_EDIT);
+		output.add(message);
 	}
 
 	// ------------------------- GETTERS -------------------------
