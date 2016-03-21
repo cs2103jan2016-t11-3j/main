@@ -34,7 +34,6 @@ public class EditParser extends CommandParser {
 		
 		if (matcher.find()) {
 			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
-			System.out.println(identifier);
 			input = getTrimmedString(input, 0, matcher.start());
 		}
 		

@@ -241,7 +241,6 @@ public class DateTimeParser {
 			_date = input.replaceAll(_time, "").trim();
 			if (_date.matches("(start|end)")) {
 				type = _date;
-				System.out.println(type);
 				_date = ""; 
 			}
 		} else {
@@ -255,7 +254,6 @@ public class DateTimeParser {
 
 	public void setDateTime(String type, DateParser DP, TimeParser TP) {
 		if (type.matches("start")) {
-			System.out.println("start");
 			_startTime = TP.getTime();
 			_startDate = DP.getStartDate();
 			startT = TP.getTimeString();
@@ -267,7 +265,6 @@ public class DateTimeParser {
 			untilTime = TP.getTimeObject();
 			untilDate = DP.getDateObject();
 		} else {
-			System.out.println(type + "if");
 			_endTime = TP.getTime();
 			_endDate = DP.getStartDate();
 			endT = TP.getTimeString();
