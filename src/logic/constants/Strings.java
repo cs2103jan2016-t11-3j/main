@@ -9,6 +9,12 @@ public class Strings {
 	public static final String CATEGORY_FLOATING = "floating";
 	public static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 	
+	// Logic Constants
+	public static final String MESSAGE_ALERT_EVENT = "Events today:";
+	public static final String MESSAGE_ALERT_DEADLINE = "Deadlines today:";
+	public static final String MESSAGE_INFORMATION_EVENT = "Task: %1s; Time: %2s";
+	public static final String MESSAGE_INFORMATION_DEADLINE = "Task: %1s; Due: %2s";
+	
 	// Recurring Constants
 	public static final String FREQ_HOURLY = "HOURLY";
 	public static final String FREQ_DAILY = "DAILY";
