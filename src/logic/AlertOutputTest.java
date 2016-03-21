@@ -121,4 +121,47 @@ public class AlertOutputTest {
 		
 		assertEquals(expectedOutput, testDriver.getAlertOutput());
 	}
+	
+	@Test
+	// Event with no start time, end time, on different day
+	public void testH() {
+		TaskObject task = new TaskObject("event 8", LocalDateTime.of(LocalDate.now(), LocalTime.MAX), 
+				LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(23, 59)), "event", "incomplete", 8);
+		taskList.add(task);
+		LogicStub testDriver = new LogicStub(taskList, alertOutput);
+		testDriver.createAlertOutput(taskList);
+		
+		expectedOutput.add("Task: event 8; Time: to 23:59 on 2016-03-23 ");
+		
+		assertEquals(expectedOutput, testDriver.getAlertOutput());
+	}
+	
+	@Test
+	// Deadline with time
+	public void testI() {
+		TaskObject task = new TaskObject("deadline 9", LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59)),
+				"deadline", "incomplete", 9);
+		taskList.add(task);
+		LogicStub testDriver = new LogicStub(taskList, alertOutput);
+		testDriver.createAlertOutput(taskList);
+		
+		expectedOutput.add("Deadlines today:");
+		expectedOutput.add("Task: deadline 9; Due: 23:59");
+		
+		assertEquals(expectedOutput, testDriver.getAlertOutput());
+	}
+	
+	@Test
+	// Deadline without time
+	public void testJ() {
+		TaskObject task = new TaskObject("deadline 10", LocalDateTime.of(LocalDate.now(), LocalTime.MAX),
+				"deadline", "incomplete", 10);
+		taskList.add(task);
+		LogicStub testDriver = new LogicStub(taskList, alertOutput);
+		testDriver.createAlertOutput(taskList);
+		
+		expectedOutput.add("Task: deadline 10; Due: today");
+		
+		assertEquals(expectedOutput, testDriver.getAlertOutput());
+	}
 }
