@@ -263,7 +263,6 @@ public class Add {
 		if (checkIndividualTimeClash(currentStart, currentEnd, newStart, newEnd)) {
 			this.isClash = true;
 			addToClashedTasks(current);
-			clashedTasks.add(current);
 			logger.log(Level.INFO, "detected a clash between non-recurring tasks");
 		}
 	}
@@ -411,6 +410,14 @@ public class Add {
 
 	public TaskObject getTask() {
 		return task;
+	}
+	
+	public boolean getIsClash() {
+		return isClash;
+	}
+	
+	public ArrayList<TaskObject> getClashedTasks() {
+		return clashedTasks;
 	}
 
 	public void setOutput(ArrayList<String> output) {

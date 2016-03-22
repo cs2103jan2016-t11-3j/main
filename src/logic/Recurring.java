@@ -53,7 +53,7 @@ public class Recurring {
 	public static void setAllRecurringEventTimes(TaskObject task) {
 		Interval interval = task.getInterval();
 		LocalDateTimePair eventDateTime = task.getTaskDateTimes().get(0);
-		
+
 		// in case there is an existing list and the interval is changed
 		task.removeAllDateTimes();
 
@@ -65,8 +65,8 @@ public class Recurring {
 		} else {
 			if (interval.getCount() != -1) {
 				for (int i = 0; i < interval.getCount(); i++) {
-					eventDateTime = setNextEventTime(interval, eventDateTime);
 					task.addToTaskDateTimes(eventDateTime);
+					eventDateTime = setNextEventTime(interval, eventDateTime);
 				}
 			}
 		}
