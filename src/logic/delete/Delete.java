@@ -18,37 +18,54 @@ import static logic.constants.Strings.*;
 /**
  * Creates a "Delete" object to facilitate the deletion of a task from task list
  * internally, before updating the file at its default location. <br>
- * There are two ways which Delete can be run: <br>
- * 1) Normal delete <br>
+ * 
+ * There are five ways which Delete can be run: <br>
+ * 1) Quick delete <br>
+ * Input command: 'delete'
+ * Pre-condition that user has to add a task in his last command. Quick delete does not require 
+ * the user to input an index for deletion, it automatically deletes the last added task. 
+ * This will remove the entire task and all its occurrences, even if it is a recurring task. <br>
+ * 
+ * 2) Delete all <br>
+ * Input command: 'delete all'
+ * This clears all lists - task list, undo list and redo list. 
+ * 
+ * 3) Normal delete <br>
+ * Input command: 'delete [index]'
  * Pre-condition that user has to use a search/display function first. With that
  * task list which was displayed, the user proceeds to decide which item in the
  * list he wishes to delete. <br>
- * 2) Quick delete <br>
- * Pre-condition that user has to add a task in his last command. Quick delete
- * does not require the user to input an index for deletion, it automatically
- * deletes the last added task.
  * 
- * @author ChongYan
+ * 4) Normal delete on recurring task <br>
+ * Input command: 'delete [index]'
+ * If the task to be deleted is a recurring task, the upcoming occurrence will be deleted and be
+ * replaced by the second occurrence.
+ *  
+ * 5) Delete all on recurring task
+ * Input command: 'delete [index] all'
+ * The recurring task and all related occurrences will be deleted.
+ *
+ * @author ChongYan, RuiBin
  *
  */
 
 public class Delete {
 
-	private final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s";
-	private final String MESSAGE_ERROR = "Error deleting task from TaskFinder. ";
-	private final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
-	private final String MESSAGE_NULL_POINTER = "Attempted to access a non-existent task. ";
-	private final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
-	private final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
 	private static final Logger LOGGER = Logger.getLogger(Delete.class.getName());
-
-	private final int INDEX_DELETE = 4;
 
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
 
 	// This is the task which is actually removed from TaskFinder
 	private TaskObject removedTask = new TaskObject();
+	// Stores the position of the task to be removed in the taskList 
+	private int removedTaskIndex = -1;
+	// Actual name of the task which is to be deleted
+	private String removedTaskName = "";
+	// Actual task ID of the task requested to be deleted
+	private int taskIdToBeDeleted = -1;
+	// Check if the task to be deleted is a recurring task
+	private boolean isRecurringTask = false;
 
 	// Attributes that should be passed in when the delete object is first
 	// constructed
@@ -62,12 +79,7 @@ public class Delete {
 	private boolean hasDeletedInternal = false;
 	private boolean hasDeletedExternal = false;
 
-	// Actual task ID of the task requested to be deleted
-	private int taskIdToDelete = -1;
-
-	// Actual name of the task which is to be deleted
-	private String taskName = "";
-
+	
 	// Constructors
 	public Delete() {
 
@@ -131,6 +143,7 @@ public class Delete {
 	 */
 	public ArrayList<String> run() {
 		assert (!taskList.isEmpty());
+
 		try {
 			if (commandObj.getIndex() == -1) {
 				runQuickDelete();
@@ -138,7 +151,17 @@ public class Delete {
 				if (commandObj.getIndex() == 0) {
 					runDeleteAll();
 				} else {
-					runNormalDelete();
+					setDeleteInformation();
+
+					if (isRecurringTask) {
+						if (commandObj.getTaskObject().getTitle().equals("all")) {
+							runNormalDelete();
+						} else {
+							runRecurrenceDelete();
+						}
+					} else {
+						runNormalDelete();
+					}
 				}
 			}
 		} catch (NullPointerException e) {
@@ -159,8 +182,11 @@ public class Delete {
 			createErrorOutput();
 		} else if (undoList.peek().getCommandType() == INDEX_DELETE) {
 			assert (!taskList.isEmpty());
-			hasDeletedInternal = removeTask(taskList.size() - 1);
+			
+			setDeleteInformationForQuickDelete();
+			hasDeletedInternal = deleteInternal(taskList.size() - 1);
 			hasDeletedExternal = deleteExternal();
+			
 			if (hasDeletedInternal && hasDeletedExternal) {
 				createOutput();
 				LOGGER.log(Level.INFO, "Quick delete executed");
@@ -171,7 +197,19 @@ public class Delete {
 			createQuickDeleteUnavailableErrorOutput();
 		}
 	}
-
+	
+	// Clears everything - task list, undo list, redo list and the storage file
+	private void runDeleteAll() {
+		taskList.clear();
+		undoList.clear();
+		redoList.clear();
+		deleteExternal();
+		LOGGER.log(Level.INFO, "Delete all executed");
+		
+		createDeletedAllOutput();
+	}
+	
+	// Delete is handled differently if it is a recurring task
 	private void runNormalDelete() throws NullPointerException {
 		assert (!taskList.isEmpty());
 		hasDeletedInternal = deleteInternal();
@@ -185,18 +223,51 @@ public class Delete {
 			createErrorOutput();
 		}
 	}
-
-	// Clears everything - task list, undo list, redo list and the storage file
-	private void runDeleteAll() {
-		taskList.clear();
-		undoList.clear();
-		redoList.clear();
-		deleteExternal();
-		LOGGER.log(Level.INFO, "Delete all executed");
-
-		createDeletedAllOutput();
+	
+	private void runRecurrenceDelete() {
+		
 	}
+	
+	// ----------------------- PROCESSING DELETE -----------------------
+	
+	private void setDeleteInformationForQuickDelete() {
+		removedTask = taskList.get(taskList.size() - 1);
+		removedTaskName = removedTask.getTitle();
+	}
+	
+	private void setDeleteInformation() {
+		setTaskIdToBeDeleted();
+		setRemovedTask();
+		setTaskName();
+		setIsRecurringTask();
+	}
+	
+	private void setTaskIdToBeDeleted() {
+		int index = commandObj.getIndex();
+		assert (index > 0 && index <= lastOutputTaskList.size());
 
+		taskIdToBeDeleted = lastOutputTaskList.get(index - 1).getTaskId();
+	}
+	
+	private void setRemovedTask() {
+		assert (taskIdToBeDeleted > 0);
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getTaskId() == taskIdToBeDeleted) {
+				removedTask = taskList.get(i);
+				removedTaskIndex = i;
+			}
+		}
+	}
+	
+	private void setTaskName() {
+		removedTaskName = removedTask.getTitle();
+	}
+	
+	private void setIsRecurringTask() {
+		isRecurringTask = removedTask.getIsRecurring();
+	}
+/*
 	private boolean removeTask(int index) {
 		assert (index > 0 && index <= taskList.size());
 		try {
@@ -208,25 +279,27 @@ public class Delete {
 			return false;
 		}
 	}
-
-	private boolean deleteInternal() throws NullPointerException {
-		obtainTaskId();
-		if (taskIdToDelete != -1) {
-			for (int i = 0; i < taskList.size(); i++) {
-				if (taskList.get(i).getTaskId() == taskIdToDelete) {
-					return removeTask(i);
-				}
-			}
+*/
+	private boolean deleteInternal() {
+		try {
+			taskList.remove(removedTaskIndex);
+			return true;
+		} catch (NullPointerException e) {
+			return false;
 		}
-		return false;
+	}
+	
+	// For quick delete
+	private boolean deleteInternal(int index) {
+		try {
+			taskList.remove(index);
+			return true;
+		} catch (NullPointerException e) {
+			return false;
+		}
 	}
 
-	private void obtainTaskId() {
-		int index = commandObj.getIndex();
-		assert (index > 0 && index <= lastOutputTaskList.size());
 
-		taskIdToDelete = lastOutputTaskList.get(index - 1).getTaskId();
-	}
 
 	private boolean deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();
@@ -243,9 +316,11 @@ public class Delete {
 		}
 		return true;
 	}
+	
+	// ----------------------- CREATING OUTPUT -----------------------
 
 	private void createOutput() {
-		String text = String.format(MESSAGE_DELETE, taskName);
+		String text = String.format(MESSAGE_DELETE, removedTaskName);
 		output.add(text);
 	}
 
@@ -263,7 +338,8 @@ public class Delete {
 		output.add(MESSAGE_DELETED_ALL);
 	}
 
-	// GETTERS AND SETTERS
+	// ----------------------- GETTERS AND SETTERS -----------------------
+	
 	public CommandObject getCommandObject() {
 		return commandObj;
 	}
@@ -300,8 +376,8 @@ public class Delete {
 		this.commandObj = commandObj;
 	}
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
+	public void setTaskName(String removedTaskName) {
+		this.removedTaskName = removedTaskName;
 	}
 
 	public void setRemovedTask(TaskObject removedTask) {

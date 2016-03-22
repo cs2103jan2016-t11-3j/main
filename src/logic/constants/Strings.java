@@ -50,7 +50,7 @@ public class Strings {
 	public static final String MESSAGE_START_DATE_EDIT = "Start date edited from '%1$s' to '%2$s'. ";
 	public static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'. ";
 	public static final String MESSAGE_START_TIME_EDIT = "Start time edited from '%1$s' to '%2$s'. ";
-	public static final String MESSAGE_END_DATE_EDIT = "End time edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_END_DATE_EDIT = "End date edited from '%1$s' to '%2$s'. ";
 	public static final String MESSAGE_END_TIME_EDIT = "End time edited from '%1$s' to '%2$s'. ";
 	public static final String MESSAGE_INTERVAL_EDIT = "Interval edited. ";
 	public static final String MESSAGE_NO_EDIT = "No edits have been made.";

@@ -302,6 +302,10 @@ public class Parser {
  		int index;
  		index = extractDeleteIndex(command);
  		CO.setIndex(index);
+ 		if (index > 0 && command.contains("all")) {
+ 			TO.setTitle("all");
+ 			CO.setTaskObject(TO);
+ 		}
  	}
  	
  	
@@ -313,12 +317,13 @@ public class Parser {
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
  			throw new Exception("Missing index");
- 		} else if (command.contains("all")) {
+ 		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) {
  			return 0;
  		} else {
 	 		int index = command.indexOf(" ") + 1;
-	 		newString = command.substring(index);
+	 		newString = command.substring(index).replaceAll("[a-zA-Z]+", "").trim();
  		}
+ 		
 	 	return Integer.parseInt(newString);
  	}
 
