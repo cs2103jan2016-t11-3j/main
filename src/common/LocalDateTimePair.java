@@ -39,4 +39,8 @@ public class LocalDateTimePair {
 	public void setEndDateTime(LocalDateTime endDateTime) {
 		this.endDateTime = endDateTime;
 	}
+	
+	public void printDetails() {
+		
+	}
 }

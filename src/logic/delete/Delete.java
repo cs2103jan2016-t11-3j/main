@@ -61,6 +61,8 @@ public class Delete {
 	private TaskObject removedTask = new TaskObject();
 	// Stores the position of the task to be removed in the taskList 
 	private int removedTaskIndex = -1;
+	// Stores the details of the removed occurrence of the task
+	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair();
 	// Actual name of the task which is to be deleted
 	private String removedTaskName = "";
 	// Actual task ID of the task requested to be deleted
@@ -68,8 +70,7 @@ public class Delete {
 	// Check if the task to be deleted is a recurring task
 	private boolean isRecurringTask = false;
 
-	// Attributes that should be passed in when the delete object is first
-	// constructed
+	// Attributes that should be passed in when the delete object is first constructed
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
@@ -227,11 +228,16 @@ public class Delete {
 	
 	// Gets the array list of LocalDateTimePair from the task and removes the upcoming occurrence
 	private void runRecurrenceDelete() {
-		ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
-		assert (!taskDateTimes.isEmpty());
-		
-		taskDateTimes.remove(0);
-		removedTask.setTaskDateTimes(taskDateTimes);
+		try {
+			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
+			assert (!taskDateTimes.isEmpty());
+			
+			removedTaskOccurrenceDetails = taskDateTimes.remove(0);
+			removedTask.setTaskDateTimes(taskDateTimes);
+			createRecurrenceOutput();
+		} catch (IndexOutOfBoundsException e) {
+			createErrorRecurrenceOutput();
+		}
 		
 		// might need additional handling for deletion of indefinite recurring tasks
 	}
@@ -328,8 +334,11 @@ public class Delete {
 	// ----------------------- CREATING OUTPUT -----------------------
 
 	private void createOutput() {
-		String text = String.format(MESSAGE_DELETE, removedTaskName);
-		output.add(text);
+		if (isRecurringTask) {
+			output.add(String.format(MESSAGE_RECURRENCE_DELETE_ALL));
+		} else {
+			output.add(String.format(MESSAGE_DELETE, removedTaskName));
+		}
 	}
 
 	private void createErrorOutput() {
@@ -345,6 +354,15 @@ public class Delete {
 	private void createDeletedAllOutput() {
 		output.add(MESSAGE_DELETED_ALL);
 	}
+	
+	private void createRecurrenceOutput() {
+		output.add(MESSAGE_RECURRENCE_DELETE);
+	}
+	
+	private void createErrorRecurrenceOutput() {
+		removedTask = null;
+		output.add(MESSAGE_RECURRENCE_DELETE_ERROR);
+	}
 
 	// ----------------------- GETTERS AND SETTERS -----------------------
 	
@@ -358,6 +376,10 @@ public class Delete {
 
 	public ArrayList<String> getOutput() {
 		return output;
+	}
+	
+	public LocalDateTimePair getRemovedTaskOccurrenceDetails() {
+		return removedTaskOccurrenceDetails;
 	}
 
 	public void setOutput(ArrayList<String> output) {
@@ -391,4 +413,6 @@ public class Delete {
 	public void setRemovedTask(TaskObject removedTask) {
 		this.removedTask = removedTask;
 	}
+	
+	
 }

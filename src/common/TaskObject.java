@@ -21,6 +21,19 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected Interval interval = new Interval();
 	protected ArrayList<LocalDateTimePair> taskDateTimes = new ArrayList<LocalDateTimePair> (); // stores all dates and times related to a task
 	
+	// Constructor for recurring event tasks
+	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String category, String status,
+			int taskId, boolean isRecurring, ArrayList<LocalDateTimePair> taskDateTimes) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+		this.isRecurring = isRecurring;
+		this.taskDateTimes = taskDateTimes;
+	}
+	
 	// Constructor for event tasks
 	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String category, String status, int taskId) {
 		this.title = title;
@@ -29,6 +42,18 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.category = category;
 		this.status = status;
 		this.taskId = taskId;
+	}
+	// Constructor for recurring deadline tasks
+	public TaskObject(String title, LocalDateTime startDateTime, String category, String status, int taskId, 
+			boolean isRecurring, ArrayList<LocalDateTimePair> taskDateTimes) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.endDateTime = LocalDateTime.MAX;
+		this.category = category;
+		this.status = status;
+		this.taskId = taskId;
+		this.isRecurring = isRecurring;
+		this.taskDateTimes = taskDateTimes;
 	}
 	
 	// Constructor for deadline tasks
@@ -72,6 +97,11 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskId = taskId;
 	}
 	
+	// Constructor for deleting all for recurring tasks
+	public TaskObject(String title){
+		this.title = title;
+	}
+	
 	// empty constructor
 	public TaskObject() {
 		
@@ -112,20 +142,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.category = category;
 		this.status = status;
 		this.taskId = taskId;
-	}
-	
-	// Constructor for search keyword, delete, save and for edit-title functions
-	public TaskObject(String title){
-		this.title = title;
-		this.startDate = -1;
-		this.endDate = -1;
-		this.startTime = -1;
-		this.endTime = -1;
-		this.category = "";
-		this.status = "";
-		this.taskId = -1;
 	}*/
-	
 	
 
 	public String getTitle() {

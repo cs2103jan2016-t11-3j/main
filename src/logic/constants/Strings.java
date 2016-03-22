@@ -36,7 +36,10 @@ public class Strings {
 	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
 	public static final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
-
+	public static final String MESSAGE_RECURRENCE_DELETE = "Most recent occurrence deleted";
+	public static final String MESSAGE_RECURRENCE_DELETE_ALL = "All occurrences deleted";
+	public static final String MESSAGE_RECURRENCE_DELETE_ERROR = "Error deleting most recent occurrence";
+	
 	//Display Constants
 	public static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
 	public static final String MESSAGE_SEARCH_RESULTS = "Search results:";
