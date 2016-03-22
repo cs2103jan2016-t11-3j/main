@@ -14,7 +14,7 @@ import java.io.File;
 
 import common.TaskObject;
 
-import static logic.constants.Index.*; 
+import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
 /**
@@ -40,6 +40,10 @@ public class Add {
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
+
+	private boolean isEvent = false;
+	private boolean isDeadline = false;
+	private boolean isFloating = false;
 
 	private static Logger logger = Logger.getLogger(Add.class.getName());
 
@@ -74,7 +78,7 @@ public class Add {
 			fileHandler.setFormatter(formatter);
 			logger.setUseParentHandlers(false);
 
-			logger.log(Level.INFO, "First log");
+			logger.log(Level.INFO, "First log, going to start processing for adding");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -92,39 +96,10 @@ public class Add {
 	public ArrayList<String> run() {
 		assert (!task.getTitle().equals(""));
 		setUpLogger();
-		logger.log(Level.INFO, "going to start processing task for adding");
 		try {
-			String taskType = task.getCategory();
-			if (taskType.equals("event")) {
-				assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
-				assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
-				logger.log(Level.INFO, "event to be added");
-
-				isClash = checkIfClash();
-				addTask();
-			} else {
-				if (taskType.equals("deadline")) {
-					assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
-					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
-
-					logger.log(Level.INFO, "deadline to be added");
-
-					boolean isOverdue = checkIfOverdue();
-					if (isOverdue) {
-						setTaskStatus(isOverdue);
-					}
-					addTask();
-				} else {
-					assert (taskType.equals("floating"));
-					assert (task.getStartDateTime().equals(LocalDateTime.MAX));
-					assert (task.getEndDateTime().equals(LocalDateTime.MAX));
-
-					logger.log(Level.INFO, "floating to be added");
-
-					addTask();
-					// Recurrence not possible for floating tasks
-				}
-			}
+			determineTaskCategory();
+			processTaskInformation();
+			addTask();
 			createOutput();
 		} catch (DateTimeException e) {
 			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
@@ -133,8 +108,73 @@ public class Add {
 			e.printStackTrace();
 			output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
 			logger.log(Level.WARNING, "tried to retrieve an unavailable object");
+		} catch (Exception e) {
+			e.printStackTrace();
+			output.add(MESSAGE_FAIL);
+			logger.log(Level.WARNING, "task does not have a valid category");
 		}
 		return output;
+	}
+
+	private void determineTaskCategory() {
+		if (task.getCategory().equals(CATEGORY_EVENT)) {
+			this.isEvent = true;
+		}
+		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
+			this.isDeadline = true;
+		}
+		if (task.getCategory().equals(CATEGORY_FLOATING)) {
+			this.isFloating = true;
+		}
+	}
+
+	private void processTaskInformation() throws Exception {
+		if (isEvent) {
+			assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
+			assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
+			logger.log(Level.INFO, "event to be added");
+			processEventDetails();
+		}
+		if (isDeadline) {
+			assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
+			assert (task.getEndDateTime().equals(LocalDateTime.MAX));
+			logger.log(Level.INFO, "deadline to be added");
+			processDeadlineDetails();
+		}
+		if (isFloating) {
+			assert (task.getStartDateTime().equals(LocalDateTime.MAX));
+			assert (task.getEndDateTime().equals(LocalDateTime.MAX));
+			logger.log(Level.INFO, "floating to be added");
+		} 
+		if (!isEvent && !isDeadline &&!isFloating) {
+			Exception e = new Exception("Invalid task");
+			throw e;
+		}
+	}
+	
+	private void processEventDetails() {
+		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+		if (task.getIsRecurring()) {
+			addRecurringTimes(task);
+		}
+		isClash = checkIfClash();
+	}
+	
+	private void processDeadlineDetails() {
+		boolean isOverdue = checkIfOverdue();
+		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+		if (isOverdue) {
+			setTaskStatus(isOverdue);
+		}
+	}
+	
+	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
+		task.addToTaskDateTimes(pair);
+	}
+	
+	private void addRecurringTimes(TaskObject task) {
+		Recurring.setAllRecurringEventTimes(task);
 	}
 
 	/**
