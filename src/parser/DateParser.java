@@ -133,19 +133,25 @@ public class DateParser {
 	 * @param input
 	 */
 	public void processRelativeDate(String input) {
+		input = input.trim();
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
 			if (input.matches("today")) {
 				dateObject = LocalDate.now();
 			} else {
 				dateObject = LocalDate.now().plusDays(1);
 			}
-		} else if (input.matches(Constants.REGEX_DAYS_TEXT)) {
+		} else if (input.matches("("+"(next )?"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
 			input = input.replaceAll("next ", "").trim();
 			dateObject = LocalDate.now();
-			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-				dateObject = dateObject.plusDays(1);
+			if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusWeeks(1);
+			} else {
+				while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+					//
+					dateObject = dateObject.plusDays(1);
+				}	
 			}
-		} else if (input.matches("next " + "(week|wk)")) {
+		} else if (input.matches("next " + "(week|wk)(s)?")) {
 			dateObject = LocalDate.now().plusWeeks(1);
 		}
 	}
@@ -315,8 +321,9 @@ public class DateParser {
 		} else if (start_year == -1) {
 			start_year = DEFAULT_YEAR;
 		}
-		
-		if (start_day != -1 && start_month != -1 && start_year != -1) {
+		if (start_day > 31 || start_month > 12) {
+			startDate = 0;
+		} else if (start_day != -1 && start_month != -1 && start_year != -1) {
 			startDate = start_day + start_month * 100 + start_year * 10000;
 		}
 		
@@ -346,34 +353,10 @@ public class DateParser {
 	}
 	
 	
-	//this method returns the date for search query
-	public int getSearchDate() {
-		if (start_year == -1) {
-			start_year = DEFAULT_YEAR;
-		}
-		
-		if (end_year == -1) {
-			end_year = DEFAULT_YEAR;
-		} else if (end_year < 100) {
-			end_year = 2000 + end_year;
-		}
-		
-		if (start_year == -1) {
-			start_year = end_year;
-		} else if (start_year < 100) {
-			start_year = 2000 + start_year;
-		}
-		
-		if (start_month == -1) {
-			start_month = 0;
-		}
-		
-		return start_day + start_month * 100 + start_year * 10000;
-	}
 	
 	//if already set due to relative date, the method will not set the date again
 	public void setDateObject(String input, DateTimeFormatter dateFormatter) {
-		if (dateObject == LocalDate.MAX) {
+		if (dateObject == LocalDate.MAX && !input.isEmpty()) {
 			dateObject = LocalDate.parse(input, dateFormatter);
 		}
 	}
@@ -417,6 +400,7 @@ public class DateParser {
 		
 		startDate = -1;
 		endDate = -1;
+		dateObject = LocalDate.MAX;
 	}
 	
 	public int getStartDay() {

@@ -1,4 +1,4 @@
-package parser;
+	package parser;
 
 /*REGEX GUIDE (regular expression)
  * (?i) means regex is case insensitive

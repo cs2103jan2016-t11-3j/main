@@ -51,7 +51,7 @@ public class ParserTest {
 		tempParser.allocate("add 5pm lecture every tuesday at 4pm until 9june");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("5pm lecture", tempParser.getTask());
-		assertEquals("2016-03-22T16:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-29T16:00",tempParser.getStartDateTime().toString());
 		//test for until
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
