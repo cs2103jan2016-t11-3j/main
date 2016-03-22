@@ -5,11 +5,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import common.TaskObject;
+
 import parser.Parser;
 
 public class ParserTest {
 	
 	Parser tempParser = new Parser();
+	
 
 	@Test
 	public void testAllocateCommandType() throws Exception {
@@ -18,6 +21,7 @@ public class ParserTest {
 		assertEquals("homework IE2100", tempParser.getTask());
 		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("deadline", tempParser.getCategory());
 		reset();
 		
 		tempParser.allocate("add homework IE2100 by tmr 9am");
@@ -41,6 +45,7 @@ public class ParserTest {
 		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
 		assertEquals("2016-02-29T20:00",tempParser.getEndDateTime().toString());
 		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("event", tempParser.getCategory());
 		reset();
 		
 		tempParser.allocate("add 5pm lecture every tuesday at 4pm until 9june");
@@ -49,6 +54,7 @@ public class ParserTest {
 		assertEquals("2016-03-22T16:00",tempParser.getStartDateTime().toString());
 		//test for until
 		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("deadline", tempParser.getCategory());
 		reset();
 		
 		tempParser.allocate("search hi 7/9/2016 7pm");

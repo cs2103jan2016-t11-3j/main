@@ -176,6 +176,15 @@ public class Parser {
 		
 	}
 	
+	/**
+	 * method sets command type to view more details for recurring tasks
+	 * if there is no index to specify the recurring task, parseSearch will be 
+	 * invoked 
+	 * 
+	 * @param command
+	 * 				user's input for the system, such as "view 5" to view task 5 in the list
+	 * @throws Exception
+	 */
 	public void parseView(String command) throws Exception {
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
@@ -192,7 +201,8 @@ public class Parser {
 	/**
 	 * method sets command type, index of task to edit and parts of the task to edit
 	 * 
-	 * @param command   user's input
+	 * @param command   
+	 * 				user's input for the system, such as "edit 5 6pm start" 
 	 * @throws Exception 
 	 */
 	public void parseEdit(String command) throws Exception {
@@ -255,14 +265,16 @@ public class Parser {
 			TO.setCategory("deadline");
 			TO.setEndTime(TO.getStartTime());
 			TO.setEndDate(TO.getStartDate());
+		} else if (isRecurring()) {
+			TO.setCategory("recurring");
 		} else {
 			TO.setCategory("event"); //edited mistake here
 		}
 	}
 	
 	public boolean isFloating() {
-		if (TO.getStartDate() == -1 && TO.getEndDate() == -1
-				&& TO.getStartTime() == -1 && TO.getEndTime() ==-1) {
+		if (TO.getEndDateTime().equals(LocalDateTime.MAX) 
+				&& TO.getStartDateTime().equals(LocalDateTime.MAX)) {
 			return true;
 		} else {
 			return false;
@@ -270,8 +282,15 @@ public class Parser {
 	}
 	
 	public boolean isDeadline() {
-		if (TO.getEndDate() == -1
-				&& TO.getEndTime() == -1) {
+		if (TO.getEndDateTime().equals(LocalDateTime.MAX)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isRecurring() {
+		if (TO.getIsRecurring()) {
 			return true;
 		} else {
 			return false;
@@ -383,6 +402,10 @@ public class Parser {
  	
  	public String getStatus() {
  		return TO.getStatus();
+ 	}
+ 	
+ 	public String getCategory() {
+ 		return TO.getCategory();
  	}
  	
  	public void resetTaskObj() {
