@@ -3,6 +3,7 @@ package logic.delete;
 import storage.*;
 
 import common.CommandObject;
+import common.LocalDateTimePair;
 import common.TaskObject;
 
 import java.io.IOException;
@@ -224,8 +225,15 @@ public class Delete {
 		}
 	}
 	
+	// Gets the array list of LocalDateTimePair from the task and removes the upcoming occurrence
 	private void runRecurrenceDelete() {
+		ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
+		assert (!taskDateTimes.isEmpty());
 		
+		taskDateTimes.remove(0);
+		removedTask.setTaskDateTimes(taskDateTimes);
+		
+		// might need additional handling for deletion of indefinite recurring tasks
 	}
 	
 	// ----------------------- PROCESSING DELETE -----------------------

@@ -251,6 +251,10 @@ public class TaskObject implements Comparable<TaskObject> {
 		return taskDateTimes;
 	}
 	
+	public void setTaskDateTimes(ArrayList<LocalDateTimePair> newTaskDateTimes) {
+		this.taskDateTimes = newTaskDateTimes;
+	}
+	
 	// Checks if title, dates and times are invalid values
 	public boolean isSearchKeywordPresent() {
 		if (title.equals("") && startDate == -1 && endDate == -1 && startTime == -1 && endTime == -1)
