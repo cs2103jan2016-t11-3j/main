@@ -53,7 +53,7 @@ public class AddParser extends CommandParser {
 		if (identifier != null) {
 			DateTimeParser dtp = new DateTimeParser();
 			TO = dtp.parse(identifier, true);
-			setDateTime(dtp);
+			//setDateTime(dtp);
         }
 		
 		_task = input;
@@ -72,8 +72,8 @@ public class AddParser extends CommandParser {
 	
 	private void setTaskObject() {
 		TO.setTitle(_task);
-		TO.setStartDateTime(_startDateTime);
-		TO.setEndDateTime(_endDateTime);
+		//TO.setStartDateTime(_startDateTime);
+		//TO.setEndDateTime(_endDateTime);
 		TO.setStartTime(_startTime);
 		TO.setEndTime(_endTime);
 		TO.setEndDate(_endDate);

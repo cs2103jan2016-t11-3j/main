@@ -309,6 +309,8 @@ public class DateTimeParser {
 		}
 		endDateTime = LocalDateTime.of(endDate, endTime);
 		startDateTime = LocalDateTime.of(startDate, startTime);
+		TO.setStartDateTime(startDateTime);
+		TO.setEndDateTime(endDateTime);
 	}
 	
 	private void setInterval(int interval, String frequency) throws Exception {
