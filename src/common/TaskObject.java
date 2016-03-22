@@ -76,57 +76,6 @@ public class TaskObject implements Comparable<TaskObject> {
 	public TaskObject() {
 		
 	}
-	
-	/*
-	// Constructor for event tasks
-	public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
-		this.title = title;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.category = category;
-		this.status = status;
-		this.taskId = taskId;
-	}
-	
-	// Constructor for deadline tasks
-	public TaskObject(String title, int endDate, int endTime, String category, String status, int taskId){
-		this.title = title;
-		this.startDate = endDate;
-		this.endDate = endDate;
-		this.startTime = endTime;
-		this.endTime = endTime;
-		this.category = category;
-		this.status = status;
-		this.taskId = taskId;
-	}
-	
-	// Constructor for floating tasks
-	public TaskObject(String title, String category, String status, int taskId) {
-		this.title = title;
-		this.startDate = -1;
-		this.endDate = -1;
-		this.startTime = -1;
-		this.endTime = -1;
-		this.category = category;
-		this.status = status;
-		this.taskId = taskId;
-	}
-	
-	// Constructor for search keyword, delete, save and for edit-title functions
-	public TaskObject(String title){
-		this.title = title;
-		this.startDate = -1;
-		this.endDate = -1;
-		this.startTime = -1;
-		this.endTime = -1;
-		this.category = "";
-		this.status = "";
-		this.taskId = -1;
-	}*/
-	
-	
 
 	public String getTitle() {
 		if (title == null)
@@ -247,6 +196,10 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskDateTimes.remove(index);
 	}
 	
+	public void removeAllDateTimes() {
+		this.taskDateTimes.clear();
+	}
+	
 	public ArrayList<LocalDateTimePair> getTaskDateTimes() {
 		return taskDateTimes;
 	}
@@ -278,3 +231,56 @@ public class TaskObject implements Comparable<TaskObject> {
     }
 
 }
+
+
+
+/*
+// Constructor for event tasks
+public TaskObject(String title, int startDate, int endDate, int startTime, int endTime, String category, String status, int taskId) {
+	this.title = title;
+	this.startDate = startDate;
+	this.endDate = endDate;
+	this.startTime = startTime;
+	this.endTime = endTime;
+	this.category = category;
+	this.status = status;
+	this.taskId = taskId;
+}
+
+// Constructor for deadline tasks
+public TaskObject(String title, int endDate, int endTime, String category, String status, int taskId){
+	this.title = title;
+	this.startDate = endDate;
+	this.endDate = endDate;
+	this.startTime = endTime;
+	this.endTime = endTime;
+	this.category = category;
+	this.status = status;
+	this.taskId = taskId;
+}
+
+// Constructor for floating tasks
+public TaskObject(String title, String category, String status, int taskId) {
+	this.title = title;
+	this.startDate = -1;
+	this.endDate = -1;
+	this.startTime = -1;
+	this.endTime = -1;
+	this.category = category;
+	this.status = status;
+	this.taskId = taskId;
+}
+
+// Constructor for search keyword, delete, save and for edit-title functions
+public TaskObject(String title){
+	this.title = title;
+	this.startDate = -1;
+	this.endDate = -1;
+	this.startTime = -1;
+	this.endTime = -1;
+	this.category = "";
+	this.status = "";
+	this.taskId = -1;
+}*/
+
+
