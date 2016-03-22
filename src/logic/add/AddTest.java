@@ -364,5 +364,23 @@ public class AddTest {
 		assertEquals(expectedOutput, actualOutput);
 	}
 	/*********************************************************************************/
+	
+	@Test
+	// Adds recurrent task with preset "until"
+	public void testS() {
+		ArrayList<String> actualOutput = new ArrayList<String>();
+
+		TaskObject task = new TaskObject("event 15", 15);
+		task.setCategory("event");
+		task.setStartDateTime(LocalDateTime.of(2016, 05, 18, 12, 00));
+		task.setEndDateTime(LocalDateTime.of(2016, 05, 18, 11, 00));
+		Add add = new Add(task, -1, testArray);
+		actualOutput = add.run();
+
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Failed to add task. Reason: Invalid time input.");
+
+		assertEquals(expectedOutput, actualOutput);
+	}
 }
 

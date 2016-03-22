@@ -128,6 +128,10 @@ public class Add {
 		}
 	}
 
+	/**
+	 * Control flow to determine adding process for each type of task
+	 * @throws Exception
+	 */
 	private void processTaskInformation() throws Exception {
 		if (isEvent) {
 			assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
@@ -145,36 +149,50 @@ public class Add {
 			assert (task.getStartDateTime().equals(LocalDateTime.MAX));
 			assert (task.getEndDateTime().equals(LocalDateTime.MAX));
 			logger.log(Level.INFO, "floating to be added");
-		} 
-		if (!isEvent && !isDeadline &&!isFloating) {
+		}
+		if (!isEvent && !isDeadline && !isFloating) {
 			Exception e = new Exception("Invalid task");
 			throw e;
 		}
 	}
-	
+
+	/*****************************************************************************/
+	/**
+	 * Checks for clashes between events (including recurrent times) and adds to taskList
+	 * Also creates all dates and times for recurrent tasks
+	 */
 	private void processEventDetails() {
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 		if (task.getIsRecurring()) {
 			addRecurringTimes(task);
 		}
-		isClash = checkIfClash();
+		checkIfEventsClash();
+	}
+
+	/**
+	 * Copies startDateTime and endDateTime to taskDateTimes
+	 * @param startDateTime
+	 * @param endDateTime
+	 */
+	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
+		task.addToTaskDateTimes(pair);
+	}
+
+	private void addRecurringTimes(TaskObject task) {
+		Recurring.setAllRecurringEventTimes(task);
 	}
 	
+	/***********************************************************************************/
+	/**
+	 *  Checks if a deadline is overdue, modifies status if necessary, adds to taskList
+	 */
 	private void processDeadlineDetails() {
 		boolean isOverdue = checkIfOverdue();
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 		if (isOverdue) {
 			setTaskStatus(isOverdue);
 		}
-	}
-	
-	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
-		task.addToTaskDateTimes(pair);
-	}
-	
-	private void addRecurringTimes(TaskObject task) {
-		Recurring.setAllRecurringEventTimes(task);
 	}
 
 	/**
@@ -204,32 +222,50 @@ public class Add {
 		logger.log(Level.INFO, "toggled a task's status if applicable");
 	}
 
-	private boolean checkIfClash() throws NullPointerException {
-		boolean hasClashes = false;
+	/*********************************************************************************/
+	/**
+	 * Group of functions checking for clashes between events.
+	 */
+	
+	private void checkIfEventsClash() throws NullPointerException {
 		if (task.getStartDateTime().isAfter(task.getEndDateTime())) {
 			DateTimeException e = new DateTimeException("Start Date Time after End Date Time");
 			throw e;
 		}
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals("event")) {
-				if (checkAcrossAllTimes(taskList.get(i), i)) {
-					hasClashes = true;
-				}
+				checkAllExistingTimes(taskList.get(i));
 			}
 		}
 		logger.log(Level.INFO, "checked if events clash");
-		return hasClashes;
 	}
 
-	private boolean checkAcrossAllTimes(TaskObject current, int i) throws NullPointerException {
-		boolean hasClashes = false;
-		if (checkTimeClash(current)) {
-			clashedTasks.add(taskList.get(i));
-			logger.log(Level.INFO, "detected a clash between non-recurring tasks");
+	private void checkAllExistingTimes(TaskObject current) throws NullPointerException {
+		ArrayList<LocalDateTimePair> currentTaskDateTimes = current.getTaskDateTimes();
+		ArrayList<LocalDateTimePair> newTaskDateTimes = task.getTaskDateTimes();
 
-			hasClashes = true;
+		for (int i = 0; i < currentTaskDateTimes.size(); i++) {
+			for (int j = 0; j < newTaskDateTimes.size(); j++) {
+				processIndividualClashes(i, j, currentTaskDateTimes, newTaskDateTimes, current);
+			}
 		}
-		return hasClashes;
+	}
+
+	private void processIndividualClashes(int currentIndex, int newIndex,
+			ArrayList<LocalDateTimePair> currentTaskDateTimes, ArrayList<LocalDateTimePair> newTaskDateTimes, 
+			TaskObject current) {
+		
+		LocalDateTime currentStart = currentTaskDateTimes.get(currentIndex).getStartDateTime();
+		LocalDateTime currentEnd = currentTaskDateTimes.get(currentIndex).getEndDateTime();
+		LocalDateTime newStart = newTaskDateTimes.get(newIndex).getStartDateTime();
+		LocalDateTime newEnd = newTaskDateTimes.get(newIndex).getEndDateTime();
+		
+		if (checkIndividualTimeClash(currentStart, currentEnd, newStart, newEnd)) {
+			this.isClash = true;
+			addToClashedTasks(current);
+			clashedTasks.add(current);
+			logger.log(Level.INFO, "detected a clash between non-recurring tasks");
+		}
 	}
 
 	/**
@@ -247,12 +283,8 @@ public class Add {
 	 *            The TaskObject passed into the function from the task list.
 	 * @return
 	 */
-	private boolean checkTimeClash(TaskObject current) throws DateTimeException {
-
-		LocalDateTime currentStart = current.getStartDateTime();
-		LocalDateTime currentEnd = current.getEndDateTime();
-		LocalDateTime newStart = task.getStartDateTime();
-		LocalDateTime newEnd = task.getEndDateTime();
+	private boolean checkIndividualTimeClash(LocalDateTime currentStart, LocalDateTime currentEnd, 
+			LocalDateTime newStart, LocalDateTime newEnd) throws DateTimeException {
 
 		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
 			if (currentStart.isBefore(newEnd) || currentStart.isEqual(newEnd)) {
@@ -280,6 +312,11 @@ public class Add {
 		return false;
 	}
 
+	/********************************************************************************/
+	/**
+	 * Group of functions for addition of task
+	 */
+	
 	private void addTask() {
 		addInternal();
 		addExternal();
@@ -320,6 +357,10 @@ public class Add {
 		addedExternal = true;
 
 	}
+	/****************************************************************************/
+	/**
+	 * Group of functions for creating output.
+	 */
 
 	private void createOutput() {
 		if (addedInternal && addedExternal) {
@@ -344,6 +385,19 @@ public class Add {
 		text = String.format(MESSAGE_CLASH, task.getTitle(), clashedTasks.get(i).getTitle());
 		// NEED A BETTER WAY TO OUTPUT CLASHES
 		return text;
+	}
+	/***************************************************************************/
+	
+	private void addToClashedTasks(TaskObject current) {
+		boolean canAdd = true;
+		for (int i = 0; i < clashedTasks.size(); i++) {
+			if (clashedTasks.get(i).getTaskId() == current.getTaskId()) {
+				canAdd = false;
+			}
+		}
+		if (canAdd) {
+			clashedTasks.add(current);
+		}
 	}
 
 	// GETTERS, SETTERS
