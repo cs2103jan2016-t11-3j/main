@@ -128,6 +128,7 @@ public class DateTimeParser {
 			separateDateTime(input, "start");
 			break;
 		case recurring:
+			TO.setIsRecurring(true);
 			recur(input);
 			break;
 		default:
@@ -175,8 +176,9 @@ public class DateTimeParser {
 	 * 
 	 * @param input  frequency from the user's input
 	 * 			e.g. every 2 tuesday
+	 * @throws Exception 
 	 */
-	public void getStartDateFromInterval(String input) {
+	public void getStartDateFromInterval(String input) throws Exception {
 		input = input.replaceFirst("every","").trim();
 		String _freq = "";
 		int _interval = 1;
@@ -224,8 +226,9 @@ public class DateTimeParser {
 	 * @param input		user's input containing date and time
 	 * 			e.g. 7pm 9 june, tmr 9am
 	 * @param isStart   type of time/date the user's input will be stored, either as start, end or until
+	 * @throws Exception 
 	 */
-	public void separateDateTime(String input, String type) {
+	public void separateDateTime(String input, String type) throws Exception {
 		input = input.replaceFirst("until", "").trim();
 		
 		Pattern time = Pattern.compile(Constants.REGEX_TIME_FORMAT);
@@ -276,7 +279,7 @@ public class DateTimeParser {
 
 	
 	public void processParallel(DateParser DP, TimeParser TP, String _date,
-			String _time) {
+			String _time) throws Exception {
 		_time = cleanString(_time);
 		_date = cleanString(_date);
 		DP.processDate(_date);

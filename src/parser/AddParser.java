@@ -52,7 +52,7 @@ public class AddParser extends CommandParser {
 		
 		if (identifier != null) {
 			DateTimeParser dtp = new DateTimeParser();
-			dtp.parseDateTime(identifier, true);
+			TO = dtp.parse(identifier, true);
 			setDateTime(dtp);
         }
 		

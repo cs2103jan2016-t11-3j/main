@@ -78,8 +78,9 @@ public class DateParser {
 	 * This method takes in a string input returns LocalDate to the datetimeparser
 	 * 
 	 * @param input    date string that is in the format
+	 * @throws Exception 
 	 */
-	public void processDate(String input) {
+	public void processDate(String input) throws Exception {
 		if (!input.isEmpty()) {
 			furtherProcessDate(input);
 			if (start_month == -1) {
@@ -97,8 +98,9 @@ public class DateParser {
 	 * 1. Month spelt out:    3rd june 2013 - 4th june 2014
 	 * 2. "slash" format:     4/5-5/6
 	 * 3. incomplete format:  3 - 6 june 2015
+	 * @throws Exception 
 	 */
-	public void furtherProcessDate(String input) {
+	public void furtherProcessDate(String input) throws Exception {
 		if (hasMonth(input)) {
 			setMonth(input);
 			input = removeMonth(input);
@@ -107,6 +109,8 @@ public class DateParser {
 			setMonthWithSlash(input);
 		} else if (isRelative(input)) { 
 			processRelativeDate(input);
+		} else {
+			throw new Exception("Invalid Date Format");
 		}
 	}
 	
@@ -210,7 +214,6 @@ public class DateParser {
 		} else if (templist.size() == 1) {
 			_day = Integer.parseInt(templist.get(0));
 		}
-		
 		//set attributes
 		start_day = _day;
 		start_year = _year;
@@ -221,8 +224,9 @@ public class DateParser {
 	 * 
 	 * @param input  input by user for one date, in dd/mm/yyyy format
 	 * @param i      indicator if date is start or end date
+	 * @throws Exception 
 	 */
-	public void setMonthWithSlash(String input) {
+	public void setMonthWithSlash(String input) throws Exception {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		
 		for (String temp : input.split("/")) {
@@ -231,13 +235,17 @@ public class DateParser {
 			int tempInt = Integer.parseInt(temp);
 			list.add(tempInt);
 		}
-		
-		start_day = list.get(0);
-		start_month = list.get(1);
-		
-		if (list.size() == 3) {
-			start_year = list.get(2);
+		if (list.size() != 1) {
+			start_day = list.get(0);
+			start_month = list.get(1);
+			
+			if (list.size() == 3) {
+				start_year = list.get(2);
+			}	
+		} else {
+			throw new Exception("Invalid Date");
 		}
+		
 	}
 	
 	/**
@@ -312,8 +320,9 @@ public class DateParser {
 	 * and forming yyyyMMdd string
 	 * 
 	 * passes date in string format to setDateObject method for setting the LocalDate value
+	 * @throws Exception 
 	 */
-	public void setDates() {
+	public void setDates() throws Exception {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 		
 		if (start_year < 100 && start_year != -1) {
@@ -322,7 +331,7 @@ public class DateParser {
 			start_year = DEFAULT_YEAR;
 		}
 		if (start_day > 31 || start_month > 12) {
-			startDate = 0;
+			throw new Exception("Invalid Date");
 		} else if (start_day != -1 && start_month != -1 && start_year != -1) {
 			startDate = start_day + start_month * 100 + start_year * 10000;
 		}
