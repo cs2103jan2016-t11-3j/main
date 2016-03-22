@@ -13,7 +13,7 @@ public class DateProcessorTest {
 	DateParser DP = new DateParser();
 	
 	@Test
-	public void testProcessDate() {
+	public void testProcessDate() throws Exception {
 		/*POSITIVE VALUE PARTITION CASES*/
 		/*case 1: test ability to read ddmm formats*/
 		DP.processDate("7/6");
@@ -37,13 +37,21 @@ public class DateProcessorTest {
 		
 		/*NEGATIVE VALUE TEST CASES*/
 		/*case 5: test ability to reject non-slash separated numbers*/
-		DP.processDate("7.6");
-		assertEquals(LocalDate.MAX, DP.getDateObject());
+		try {
+			DP.processDate("7.6");
+			assert false;
+		} catch (Exception e) {
+			assert true;
+		}
 		reset();
 		
-		/*case 6: test ability to reject non-valid date ranges*/
-		DP.processDate("51 july 1030");
-		assertEquals(LocalDate.MAX, DP.getDateObject());
+		/*case 6: test if exception is thrown when date is not valid*/
+		try {
+			DP.processDate("51 july 1030");
+			assert false;
+		} catch (Exception e) {
+			assert true;
+		}
 		reset();
 	}
 
@@ -142,7 +150,7 @@ public class DateProcessorTest {
 	}
 
 	@Test
-	public void testSetMonthWithSlash() {
+	public void testSetMonthWithSlash() throws Exception {
 		
 		//test 1: test recognition of partially completed date
 		DP.setMonthWithSlash("7/8");

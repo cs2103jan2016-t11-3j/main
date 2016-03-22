@@ -4,10 +4,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import common.TaskObject;
+
 import parser.DateTimeParser;
 
 public class DateTimeProcessorTest {
 	DateTimeParser DTP = new DateTimeParser();
+	TaskObject TO = new TaskObject();
+	
 	@Test
 	public void testParseDateTime() throws Exception {
 		//DTP.parseDateTime("by 9.13pm", false);
@@ -22,6 +26,13 @@ public class DateTimeProcessorTest {
 		
 		DTP.parseDateTime("by 9.13pm", false);
 		assertEquals(2113, DTP.getStartTime());
+		
+		TO = DTP.parse("every monday 8pm until 9 jan 2017", true);
+		assertTrue(TO.getIsRecurring());
+		assertEquals("WEEKLY",TO.getInterval().getFrequency());
+		assertEquals(1,TO.getInterval().getTimeInterval());
+		//assertEquals("",TO.getInterval().getUntil().toString());
+		
 	}
 
 	@Test

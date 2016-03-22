@@ -15,19 +15,7 @@ public class AddParserTest {
 	@Test
 	public void testProcess() throws Exception {
 		
-		
-		
-		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
-		assertEquals("5pm lecture", AP.getTask());
-		assertEquals(1600, AP.getStartTime());
-		//assertEquals(20160907, AP.getStartDate());
-		assertEquals("2016-03-22T16:00",TO.getStartDateTime().toString());
-		assertEquals(-1, AP.getEndTime());
-		assertEquals(-1, AP.getEndDate());
-		
-	}
-/*
-	AP.process("buy cake for 7th june by 6 june 9am");
+		AP.process("buy cake for 7th june by 6 june 9am");
 		assertEquals("buy cake for 7th june", AP.getTask());
 		assertEquals(900, AP.getStartTime());
 		assertEquals(20160606, AP.getStartDate());
@@ -59,9 +47,19 @@ public class AddParserTest {
 		assertEquals("be nice to merrel", AP.getTask());
 		assertEquals(2100, AP.getStartTime());
 		//assertEquals(20160907, AP.getStartDate());
-		assertEquals("2016-03-20T21:00",TO.getStartDateTime().toString());
+		assertEquals("2016-03-22T21:00",TO.getStartDateTime().toString());
 		assertEquals(-1, AP.getEndTime());
 		assertEquals(-1, AP.getEndDate());
+		
+		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
+		assertEquals("5pm lecture", AP.getTask());
+		assertEquals(1600, AP.getStartTime());
+		assertEquals("2016-03-29T16:00",TO.getStartDateTime().toString());
+		assertTrue(TO.getIsRecurring());
+		
+	}
+/*
+	
 	*/
 	@Test
 	public void testSetTask() {
