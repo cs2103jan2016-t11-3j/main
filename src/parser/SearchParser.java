@@ -23,7 +23,7 @@ public class SearchParser extends CommandParser {
 		
 		if (identifier != null) {
 			DateTimeParser dtp = new DateTimeParser();
-			dtp.parseDateTime(identifier, false);
+			TO = dtp.parse(identifier, false);
 			setDateTime(dtp);
         }
 		

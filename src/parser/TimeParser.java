@@ -16,8 +16,9 @@ public class TimeParser {
 	 * 
 	 *@param input  time input from user
 	 *			e.g. 21:59hr, 7.13pm
+	 * @throws Exception 
 	 */
-	public void processTime(String input) {
+	public void processTime(String input) throws Exception {
 		if (!input.isEmpty()) {
 			furtherProcessTime(input);
 			convertToString();
@@ -84,21 +85,26 @@ public class TimeParser {
 	/**
 	 * method will convert time from integer format in HHmm to string format in HH:mm 
 	 * and create LocalTime object
+	 * @throws Exception 
 	 */
-	private void convertToString() {
+	private void convertToString() throws Exception {
 		String minute, hour;
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		
 		if (time < 1000) {
 			minute = "0" + Integer.toString(time);
 		} else {
 			minute = Integer.toString(time);
 		}
 		
-		hour = minute.substring(0, 2);
-		minute = minute.substring(2);
-		
-		timeString = hour + ":" + minute;
-		timeObject = LocalTime.parse(timeString, timeFormatter);
+		if (minute.length() == 4 && time < 2400) {
+			hour = minute.substring(0, 2);
+			minute = minute.substring(2);
+			timeString = hour + ":" + minute;
+			timeObject = LocalTime.parse(timeString, timeFormatter);	
+		} else {
+			throw new Exception("Invalid Time");
+		}
 	}
 	
 	

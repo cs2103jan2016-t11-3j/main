@@ -48,16 +48,19 @@ public class Recurring {
 		task.setEndDateTime(newEndDateTime);
 	}
 
-	/* For add ********************************************************************/
+	/* For add and edit ***************************************************************/
 
 	public static void setAllRecurringEventTimes(TaskObject task) {
 		Interval interval = task.getInterval();
 		LocalDateTimePair eventDateTime = task.getTaskDateTimes().get(0);
+		
+		// in case there is an existing list and the interval is changed
+		task.removeAllDateTimes();
 
 		if (!interval.getUntil().equals(LocalDateTime.MAX)) {
 			while (eventDateTime.getStartDateTime().isBefore(interval.getUntil())) {
-				eventDateTime = setNextEventTime(interval, eventDateTime);
 				task.addToTaskDateTimes(eventDateTime);
+				eventDateTime = setNextEventTime(interval, eventDateTime);
 			}
 		} else {
 			if (interval.getCount() != -1) {
