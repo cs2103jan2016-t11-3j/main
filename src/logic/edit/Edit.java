@@ -12,6 +12,7 @@ import java.util.logging.*;
 import common.CommandObject;
 import common.Interval;
 import common.TaskObject;
+import logic.Recurring;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -277,6 +278,7 @@ public class Edit {
 		
 		if (!originalInterval.equals(editInterval)) {
 			task.setInterval(editInterval);
+			Recurring.setAllRecurringEventTimes(task); // Calls the Recurring class to update the list of recurrence timings
 			LOGGER.log(Level.INFO, "Interval edited");
 		} else {
 			isEditInterval = false;
