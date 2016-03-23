@@ -342,6 +342,9 @@ public class Parser {
 	 		int index = command.indexOf(" ") + 1;
 	 		newString = command.substring(index).replaceAll("[a-zA-Z]+", "").trim();
  		}
+ 		//implementation for delete particular recurring/all recurring
+ 		//delete 2 this ?
+ 		//delete 2 all ?
  		
 	 	return Integer.parseInt(newString);
  	}

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class TaskObject implements Comparable<TaskObject> {
 
 	protected String title = "";
-	protected LocalDateTime startDateTime; //newly added
-	protected LocalDateTime endDateTime; //newly added
+	protected LocalDateTime startDateTime = LocalDateTime.MAX; //newly added
+	protected LocalDateTime endDateTime = LocalDateTime.MAX; //newly added
 	protected int startDate;
 	protected int endDate;
 	protected int startTime;
