@@ -51,7 +51,9 @@ public class EditTest {
 		testList.add(new TaskObject("Confinement", LocalDateTime.of(LocalDate.parse("2012-02-14"), LocalTime.parse("08:00")),
 				LocalDateTime.of(LocalDate.parse("2012-02-21"), LocalTime.parse("12:00")), "event", "incomplete", 10));
 		
+		// Tests for editing between categories
 		testList.add(new TaskObject("CS2107 presentation", "floating", "incomplete", 11));
+		testList.add(new TaskObject("Europe trip", "floating", "incomplete", 12));
 		
 		
 		// For recurrence event with taskID 13
@@ -71,7 +73,7 @@ public class EditTest {
 		testTimings.add(pairTwo);
 		testTimings.add(pairThree);
 		testTimings.add(pairFour);
-		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 12, true, testTimings));
+		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 13, true, testTimings));
 		
 		
 		
@@ -233,7 +235,7 @@ public class EditTest {
 		correctOutput.clear();
 	}
 	
-	@Test // Test edit for modifying a floating task to a deadline - adding a start date and time
+	@Test // Test edit for modifying floating -> deadline - adding a start date and time
 	public void testK() {
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-04-18"), LocalTime.parse("09:00"));
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
@@ -252,12 +254,20 @@ public class EditTest {
 		correctOutput.clear();
 	}
 	
+	@Test // Test edit for modifying floating -> event - adding a start & end date and time
+	public void testL() {
+		
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 11);
+		
+	}
+	
+	
 	@Test // Test edit for recurrence event - edit for start times
 	public void testM() {
 		// 1st assert - check output
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("14:00"));
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
-		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 12);
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 13);
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();
