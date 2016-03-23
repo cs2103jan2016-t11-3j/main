@@ -64,6 +64,7 @@ public class DateTimeParser {
 	
 	TaskObject TO = new TaskObject();
 	List<String> dtlist = new ArrayList<String>();
+	TaskType tasktype;
 	
 	private static Logger logger = Logger.getLogger("DateTimeParser");
 	
@@ -84,7 +85,7 @@ public class DateTimeParser {
 		if (isForAdd) {
 			parseDateTimeForAdd(input);
 		} else {
-			TaskType tasktype = getTaskType(input);
+			tasktype = getTaskType(input);
 			//separate stuff for different task types
 			switch(tasktype) {
 			case event:
@@ -114,7 +115,7 @@ public class DateTimeParser {
 	 * @throws Exception 
 	 */
 	private void parseDateTimeForAdd(String input) throws Exception {
-		TaskType tasktype = getTaskType(input);
+		tasktype = getTaskType(input);
 		//separate stuff for different task types
 		switch(tasktype) {
 		case event:
@@ -166,7 +167,7 @@ public class DateTimeParser {
 			}
 		}
 		
-		if (startDate == LocalDate.MAX || startDate == LocalDate.now()) {
+		if (startDate == LocalDate.MAX || startDate.equals(LocalDate.now())) {
 			getStartDateFromInterval(intervalString);
 		}
 	}
@@ -193,6 +194,11 @@ public class DateTimeParser {
 		DateParser DP = new DateParser();
 		DP.processDate(_freq);
 		startDate = DP.getDateObject();
+		if (tasktype.equals(TaskType.event)) {
+			endDate = DP.getDateObject();	
+		}
+		
+		setLocalDateTime(false, TaskType.event);
 	}
 	
 	/**
@@ -298,11 +304,10 @@ public class DateTimeParser {
 	 */
 	public void setLocalDateTime(boolean isForAdd, TaskType task) {
 		if (isForAdd) {
-			if (task.toString() == "event" && _endDate == -1) { 
-				if(_startDate == -1) {
+			if (task.toString() == "event" && endDate.equals(LocalDate.MAX)) { 
+				if(startDate.equals(LocalDate.MAX)) {
 					startDate = LocalDate.now();
 				}
-				_endDate = _startDate;
 				endD = startD; //for special case of lazy ppl not typing end date
 				endDate = startDate;
 			}
@@ -310,6 +315,7 @@ public class DateTimeParser {
 				endDateTime = LocalDateTime.of(endDate, endTime);
 			}
 		}
+		//setting the startdatetime and enddatetime
 		endDateTime = LocalDateTime.of(endDate, endTime);
 		startDateTime = LocalDateTime.of(startDate, startTime);
 		TO.setStartDateTime(startDateTime);
