@@ -51,6 +51,21 @@ public class TimeOutput {
 			e.printStackTrace();
 		}
 	}
+	
+	public static String setEventTimeOutput(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		String line = "";
+		try {
+			String[] start = createDateTimeArray(startDateTime);
+			String[] end = createDateTimeArray(endDateTime);
+			line = formatEventTimeOutput(start, end);
+		} catch (DateTimeException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		
+		return line;
+	}
 
 	private static String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException {
 		String formattedString = "";
@@ -124,6 +139,7 @@ public class TimeOutput {
 		return timeArray;
 	}
 
+	/*
 	public static ArrayList<String> setRecurringEventTimeOutput(TaskObject foundTask) throws Exception {
 		ArrayList<String> output = new ArrayList<String>();
 		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
@@ -153,4 +169,5 @@ public class TimeOutput {
 		}
 		return output;
 	}
+	*/
 }

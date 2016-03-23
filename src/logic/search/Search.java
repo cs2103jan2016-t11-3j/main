@@ -6,6 +6,7 @@ import common.TaskObject;
 import common.CommandObject;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -225,6 +226,10 @@ public class Search extends Display {
 		return match;
 	}
 	
+	/**
+	 * Retrieves the task contained in the last output task list via an index, and proceeds
+	 * to output all the timings associated with the task
+	 */
 	private void searchByIndex() {
 		assert (searchIndex > 0 && searchIndex <= lastOutputTaskList.size());
 
@@ -257,15 +262,20 @@ public class Search extends Display {
 	}
 	
 	private void setOutput(TaskObject foundTask) {
+		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
 			try {
-				output = TimeOutput.setRecurringEventTimeOutput(foundTask);
+				for (int i = 0; i < foundTask.getTaskDateTimes().size(); i++) {
+					LocalDateTime startDateTime = foundTask.getTaskDateTimes().get(i).getStartDateTime();
+					LocalDateTime endDateTime = foundTask.getTaskDateTimes().get(i).getEndDateTime();
+					String timeOutput = TimeOutput.setEventTimeOutput(startDateTime, endDateTime);
+					output.add(timeOutput);
+				}
 			} catch (Exception e) {
 				output.add(MESSAGE_INVALID_RECURRENCE);
 			}
 		} else {
 			TimeOutput.setEventTimeOutput(foundTask);
-			output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 			output.add(foundTask.getTimeOutputString());
 		}
 	}
