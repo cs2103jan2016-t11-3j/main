@@ -86,20 +86,10 @@ public class MainController implements Initializable {
 		
 		display(); //start program with all tasks in table
 
-		try {
-			startAlertPopup();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	}	
 
-	private void startAlertPopup() throws IOException {
-		Parent alert = FXMLLoader.load(getClass().getResource("AlertPopup.fxml"));
-		
-		Stage alertStage = new Stage();
-		alertStage.setScene(new Scene(alert));
-		alertStage.show();
-	}
+	}	
+
+
 
 	@FXML
 	//reads input on enter

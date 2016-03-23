@@ -1,5 +1,6 @@
 package GUI;
 	
+import java.io.IOException;
 import java.util.ArrayList;
 
 import common.TaskObject;
@@ -23,20 +24,36 @@ import javafx.scene.Scene;
 public class UIMain extends Application {
 	
 	static Logic logic = new Logic();
-	Stage window;
+	Stage mainWindow;
 	static String input;
 	static ArrayList<TaskObject> taskList;
+	AlertPopupController alertPopup;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		window = primaryStage;
+		startMain(primaryStage);
+		startAlertPopup();
+	}
+
+	private void startMain(Stage primaryStage) throws IOException {
+		mainWindow = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 650, 500);
 		
-		window.setTitle("Adult TaskFinder");
-		window.setScene(scene);
-		window.show();
+		mainWindow.setTitle("Adult TaskFinder");
+		mainWindow.setScene(scene);
+		mainWindow.show();
+	}	
+	
+	
+	private void startAlertPopup() throws IOException {
+		Parent alert = FXMLLoader.load(getClass().getResource("AlertPopup.fxml"));
+
+		Stage alertStage = new Stage();
+		alertStage.setScene(new Scene(alert, 300, 200));
+		alertStage.showAndWait();
 	}
+
 	
 	public static void main(String[] args) {
 		launch(args);
