@@ -23,6 +23,11 @@ public class RecurringTest {
 		task.setIsRecurring(true);
 		Interval interval = new Interval("WEEKLY", 1, 5, "");
 		task.setInterval(interval);
+		
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+		
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
@@ -43,6 +48,11 @@ public class RecurringTest {
 		task.setIsRecurring(true);
 		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 04, 25, 14, 00), "");
 		task.setInterval(interval);
+		
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+		
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
@@ -61,6 +71,11 @@ public class RecurringTest {
 		task.setIsRecurring(true);
 		Interval interval = new Interval("WEEKLY", 1, 0, "");
 		task.setInterval(interval);
+		
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+		
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
@@ -83,6 +98,11 @@ public class RecurringTest {
 		task.setIsRecurring(true);
 		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 03, 16, 14, 00), "");
 		task.setInterval(interval);
+		
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+		
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
@@ -103,6 +123,11 @@ public class RecurringTest {
 		task.setIsRecurring(true);
 		Interval interval = new Interval("DAILY", 3, 10, "");
 		task.setInterval(interval);
+		
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+		
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 

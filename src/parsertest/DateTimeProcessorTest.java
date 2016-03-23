@@ -19,10 +19,12 @@ public class DateTimeProcessorTest {
 		
 		
 	
-		TO = DTP.parse("every thursday from 8am to 9am until 9june", true);
+		TO = DTP.parse("every saturday from 8am to 9am until 9june", true);
 		assertTrue(TO.getIsRecurring());
 		assertEquals("WEEKLY",TO.getInterval().getFrequency());
 		assertEquals(1,TO.getInterval().getTimeInterval());
+		assertEquals("",TO.getStartDateTime().toString());
+		assertEquals("",TO.getEndDateTime().toString());
 		
 	}
 	/*
