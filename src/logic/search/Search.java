@@ -86,7 +86,7 @@ public class Search extends Display {
 	 */
 	public ArrayList<String> run() {
 		setSearchInformation();
-		printSearchInformation();
+		//printSearchInformation();
 		processSearch();
 		setOutput();
 		

@@ -1,8 +1,12 @@
 package logic.edit;
 import static org.junit.Assert.*;
+
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import common.CommandObject;
+import common.LocalDateTimePair;
 import common.TaskObject;
 
 import java.time.LocalDate;
@@ -13,18 +17,21 @@ import java.util.ArrayList;
 import static logic.constants.Index.*;
 
 // Can consider test cases for situations where a time is added, i.e. from MAX to a specified time - how to display that?
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class EditTest {
 	
 	private static ArrayList<TaskObject> testList = new ArrayList<TaskObject> ();
 	private static ArrayList<String> actualOutput = new ArrayList<String>();
 	private static ArrayList<String> correctOutput = new ArrayList<String>();
+	private ArrayList<LocalDateTimePair> testTimings = new ArrayList<LocalDateTimePair>();
+	
 	
 	private CommandObject testCommandObject;
 	private TaskObject testTaskObject;
 
 	@Test // Populate the task list
-	public void test() {
+	public void populate() {
 	
 		testList.add(new TaskObject("Study hard for finals", LocalDateTime.of(LocalDate.parse("2016-05-25"), LocalTime.parse("09:00")),
 				"deadline", "incomplete", 1));
@@ -43,6 +50,30 @@ public class EditTest {
 				LocalDateTime.of(LocalDate.parse("2016-07-15"), LocalTime.parse("17:00")), "event", "incomplete", 9));
 		testList.add(new TaskObject("Confinement", LocalDateTime.of(LocalDate.parse("2012-02-14"), LocalTime.parse("08:00")),
 				LocalDateTime.of(LocalDate.parse("2012-02-21"), LocalTime.parse("12:00")), "event", "incomplete", 10));
+		
+		testList.add(new TaskObject("CS2107 presentation", "floating", "incomplete", 11));
+		
+		
+		// For recurrence event with taskID 13
+		LocalDateTime startOne = LocalDateTime.of(LocalDate.parse("2016-03-25"), LocalTime.parse("16:00"));
+		LocalDateTime endOne = LocalDateTime.of(LocalDate.parse("2016-03-25"), LocalTime.parse("18:00"));
+		LocalDateTime startTwo = LocalDateTime.of(LocalDate.parse("2016-04-01"), LocalTime.parse("16:00"));
+		LocalDateTime endTwo = LocalDateTime.of(LocalDate.parse("2016-04-01"), LocalTime.parse("18:00"));
+		LocalDateTime startThree = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("16:00"));
+		LocalDateTime endThree = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("18:00"));
+		LocalDateTime startFour = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("16:00"));
+		LocalDateTime endFour = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("18:00"));
+		LocalDateTimePair pairOne = new LocalDateTimePair(startOne, endOne);
+		LocalDateTimePair pairTwo = new LocalDateTimePair(startTwo, endTwo);		
+		LocalDateTimePair pairThree = new LocalDateTimePair(startThree, endThree);		
+		LocalDateTimePair pairFour = new LocalDateTimePair(startFour, endFour);		
+		testTimings.add(pairOne);
+		testTimings.add(pairTwo);
+		testTimings.add(pairThree);
+		testTimings.add(pairFour);
+		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 11, true, testTimings));
+		
+		
 		
 	}
 	
@@ -200,6 +231,38 @@ public class EditTest {
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
+	}
+	
+	@Test // Test edit for recurrence event - edit for start times
+	public void testM() {
+		// 1st assert - check output
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("14:00"));
+		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 13);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("All start times edited to '14:00'.");
+		
+		assertEquals(actualOutput, correctOutput);
+		
+		// 2nd assert - check timings
+		TaskObject editedTask = testEdit.getEditTask();
+		ArrayList<LocalDateTimePair> actualTimings = editedTask.getTaskDateTimes();
+		LocalDateTime actualFirstTiming = actualTimings.get(0).getStartDateTime();
+		LocalDateTime correctFirstTiming = LocalDateTime.of(LocalDate.parse("2016-03-25"), LocalTime.parse("14:00"));
+		LocalDateTime actualSecondTiming = actualTimings.get(1).getStartDateTime();
+		LocalDateTime correctSecondTiming = LocalDateTime.of(LocalDate.parse("2016-04-01"), LocalTime.parse("14:00"));
+		LocalDateTime actualThirdTiming = actualTimings.get(2).getStartDateTime();
+		LocalDateTime correctThirdTiming = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("14:00"));
+		LocalDateTime actualFourthTiming = actualTimings.get(3).getStartDateTime();
+		LocalDateTime correctFourthTiming = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("14:00"));
+		
+		assertEquals(actualFirstTiming, correctFirstTiming);
+		assertEquals(actualSecondTiming, correctSecondTiming);
+		assertEquals(actualThirdTiming, correctThirdTiming);
+		assertEquals(actualFourthTiming, correctFourthTiming);
+		
 	}
 
 }

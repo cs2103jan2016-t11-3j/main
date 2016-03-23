@@ -15,13 +15,14 @@ public class Strings {
 	public static final String MESSAGE_INFORMATION_EVENT = "Task: %1s; Time: %2s";
 	public static final String MESSAGE_INFORMATION_DEADLINE = "Task: %1s; Due: %2s";
 	
-	// Recurring Constants
+	// Recurring/Interval Constants
 	public static final String FREQ_HOURLY = "HOURLY";
 	public static final String FREQ_DAILY = "DAILY";
 	public static final String FREQ_WEEKLY = "WEEKLY";
 	public static final String FREQ_MONTHLY = "MONTHLY";
 	public static final String FREQ_YEARLY = "YEARLY";
 	public static final String MESSAGE_INVALID_RECURRENCE = "No valid end of recurrence";
+	public static final String MESSAGE_INVALID_FREQUENCY = "Invalid frequency";
 	
 	//Add Constants
 	public static final String MESSAGE_ADD = "Task added: ";
@@ -62,10 +63,10 @@ public class Strings {
 	public static final String MESSAGE_NO_EDIT = "No edits have been made.";
 
 	//Mark Constants
-	public static final String MESSAGE_DONE = "Task: %1s marked as completed";
+	public static final String MESSAGE_DONE = "Task: '%1s' marked as completed";
 	public static final String MESSAGE_MARK_ERROR = "Error marking task as complete";
-	public static final String MESSAGE_INCOMPLETE = "Task: %1s is marked as incomplete";
-	public static final String MESSAGE_OVERDUE = "Task: %1s is marked as overdue";
+	public static final String MESSAGE_INCOMPLETE = "Task: '%1s' is marked as incomplete";
+	public static final String MESSAGE_OVERDUE = "Task: '%1s' is marked as overdue";
 	
 	//Save Constants
 	public static final String MESSAGE_SAVE_TO = "Tasks have been, and will continue to be saved to %1s";

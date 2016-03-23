@@ -49,6 +49,8 @@ public class Edit {
 	private ArrayList<String> tempOutput = new ArrayList<String>();
 	private ArrayList<String> output = new ArrayList<String>();
 	
+	private TaskObject editTask; // task to be edited
+	private int editTaskId;
 	private String originalTitle = "";
 	private LocalDateTime originalStartDateTime = LocalDateTime.MAX;
 	private LocalDate originalStartDate = LocalDate.MAX;
@@ -90,8 +92,9 @@ public class Edit {
 	public ArrayList<String> run() {
 		setEditInformation();
 		//checkEditInformation();
-		int editTaskId = getTaskIdOfTaskToBeEdited();
-		editTask(editTaskId);
+		getTaskIdOfTaskToBeEdited();
+		editTask();
+		updateCategory();
 		saveExternal();
 		
 		setOutput();
@@ -129,17 +132,16 @@ public class Edit {
 			//	isEditInterval = true;
 			//}
 			
-			isRecurringTask = commandObj.getTaskObject().getIsRecurring();
 		} catch (NullPointerException e) {
 			LOGGER.log(Level.WARNING, "Error setting edit information");
 		}
 	}
 
-	private int getTaskIdOfTaskToBeEdited() {
+	private void getTaskIdOfTaskToBeEdited() {
 		assert (editItemNumber > 0 && editItemNumber <= lastOutputTaskList.size());
 		LOGGER.log(Level.INFO, "Obtained task ID to be edited");
 		
-		return lastOutputTaskList.get(editItemNumber-1).getTaskId();
+		editTaskId = lastOutputTaskList.get(editItemNumber-1).getTaskId();
 	}
 
 	/**
@@ -147,12 +149,13 @@ public class Edit {
 	 * based on the boolean checks. The data is only edited if it is different from the current.
 	 * @param editTaskId
 	 */
-	private void editTask(int editTaskId) {
+	private void editTask() {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
 			if (task.getTaskId() == editTaskId) { 
 				taskCategory = task.getCategory();
-				
+				isRecurringTask = task.getIsRecurring();
+
 				if (isEditTitle) {
 					editTitle(task);
 				} 
@@ -187,6 +190,8 @@ public class Edit {
 				if (isEditInterval) {
 					editInterval(task);
 				}
+				
+				editTask = task;
 			}
 		}
 	}
@@ -247,8 +252,9 @@ public class Edit {
 				LocalDateTime taskNewStartDateTime = LocalDateTime.of(taskOriginalStartDate, editStartTime);
 				taskDateTime.setStartDateTime(taskNewStartDateTime);
 			}
-		} catch (Exception e) {
 			isEditStartTimeForAllOccurrences = true;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -309,8 +315,9 @@ public class Edit {
 				LocalDateTime taskNewEndDateTime = LocalDateTime.of(taskOriginalEndDate, editEndTime);
 				taskDateTime.setEndDateTime(taskNewEndDateTime);
 			}
-		} catch (Exception e) {
 			isEditEndTimeForAllOccurrences = true;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -339,6 +346,21 @@ public class Edit {
 		}
 	}
 	
+	// Updates the category of the task in case it has been modified
+	private void updateCategory() {
+		LocalDateTime newStartDateTime = editTask.getStartDateTime();
+		LocalDateTime newEndDateTime = editTask.getEndDateTime();
+		
+		if (newStartDateTime.equals(LocalDateTime.MAX) && newEndDateTime.equals(LocalDateTime.MAX)) {
+			editTask.setCategory("floating");
+		} else {
+			if (newEndDateTime.equals(LocalDateTime.MAX)) {
+				editTask.setCategory("deadline");
+			} else {
+				editTask.setCategory("event");
+			}
+		}
+	}
 	
 	// Saves the updated file to Storage
 	private void saveExternal() {
@@ -358,10 +380,13 @@ public class Edit {
 		System.out.println("isEditTitle = " + isEditTitle);
 		System.out.println("isEditStartDate = " + isEditStartDate);
 		System.out.println("isEditStartTime = " + isEditStartTime);
+		System.out.println("isEditStartTimeForAllOccurrences = " + isEditStartTimeForAllOccurrences);
 		System.out.println("isEditEndDate = " + isEditEndDate);
 		System.out.println("isEditEndTime = " + isEditEndTime);
+		System.out.println("isEditEndTimeForAllOccurrences = " + isEditEndTimeForAllOccurrences);
 		System.out.println("isEditInterval = " + isEditInterval);
 		System.out.println("isRecurringTask = " + isRecurringTask);
+		System.out.println("taskCategory = " + taskCategory);
 	}
 	
 	// ------------------------- OUTPUT MESSAGES -------------------------
@@ -369,6 +394,8 @@ public class Edit {
 
 	// Output for deadlines is slightly different as they should not have start/end dates/times
 	private void setOutput() {
+		//checkEditInformation();
+		
 		if (isEditTitle) {
 			outputTitleEditedMessage();
 		}
@@ -470,6 +497,10 @@ public class Edit {
 	}
 
 	// ------------------------- GETTERS -------------------------
+	
+	public TaskObject getEditTask() {
+		return editTask;
+	}
 	
 	public int getEditItemNumber() {
 		return editItemNumber;
