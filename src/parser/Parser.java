@@ -335,7 +335,7 @@ public class Parser {
  	public int extractDeleteIndex(String command) throws Exception {		
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
- 			throw new Exception("Missing index");
+ 			return -1;
  		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) {
  			return 0;
  		} else {
