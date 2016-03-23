@@ -40,7 +40,4 @@ public class LocalDateTimePair {
 		this.endDateTime = endDateTime;
 	}
 	
-	public void printDetails() {
-		
-	}
 }
