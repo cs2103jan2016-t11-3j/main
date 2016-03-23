@@ -20,16 +20,35 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+/**
+ * Controls the HelpPopup to allow access to help manual
+ * Help topic displayed sorted by command type, ie. add, view, delete...
+ * Display topic changes with left/right arrowkeys pressed
+ * Popup closes with Esc pressed
+ * 
+ * @author Seow Hwee
+ *
+ */
+
 public class HelpPopupController implements Initializable {
 	
 	static Stage helpStage = new Stage();
-	static ArrayList<String> displayList = Controller.getHelpList(1);
+	static ArrayList<String> displayList = MainController.getHelpList(1);
 	static int page = 1;
 	
 	@FXML
 	private TextFlow helpBox;
 	@FXML
 	private TextArea helpText;
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		assert helpText != null : "fx:id=\"helpText\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+        assert helpBox != null : "fx:id=\"helpBox\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+
+		setHelpContent();
+	}
 	
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
@@ -46,12 +65,7 @@ public class HelpPopupController implements Initializable {
 		if (event.getCode() == KeyCode.LEFT && page > 1) {
 			page--;		
 		}
-		displayList = Controller.getHelpList(page);	
-		setHelpContent();
-	}
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+		displayList = MainController.getHelpList(page);	
 		setHelpContent();
 	}
 	

@@ -9,6 +9,12 @@ public class Strings {
 	public static final String CATEGORY_FLOATING = "floating";
 	public static final String MESSAGE_INVALID_COMMAND = "Invalid command";
 	
+	// Logic Constants
+	public static final String MESSAGE_ALERT_EVENT = "Events today:";
+	public static final String MESSAGE_ALERT_DEADLINE = "Deadlines today:";
+	public static final String MESSAGE_INFORMATION_EVENT = "Task: %1s; Time: %2s";
+	public static final String MESSAGE_INFORMATION_DEADLINE = "Task: %1s; Due: %2s";
+	
 	// Recurring Constants
 	public static final String FREQ_HOURLY = "HOURLY";
 	public static final String FREQ_DAILY = "DAILY";
@@ -30,7 +36,10 @@ public class Strings {
 	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
 	public static final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
-
+	public static final String MESSAGE_RECURRENCE_DELETE = "Most recent occurrence deleted";
+	public static final String MESSAGE_RECURRENCE_DELETE_ALL = "All occurrences deleted";
+	public static final String MESSAGE_RECURRENCE_DELETE_ERROR = "Error deleting most recent occurrence";
+	
 	//Display Constants
 	public static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
 	public static final String MESSAGE_SEARCH_RESULTS = "Search results:";
@@ -39,13 +48,15 @@ public class Strings {
 	public static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s. TaskId: %4$s";
 
 	//Edit Constants
-	public static final String MESSAGE_TITLE_DATE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%3$s' to '%4$s', time edited from '%5$s' to '%6$s'.";
-	public static final String MESSAGE_DATE_TIME_EDIT = "Date edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
-	public static final String MESSAGE_DATE_EDIT = "Date edited from '%1$s' to '%2$s'.";
-	public static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'.";
-	public static final String MESSAGE_TITLE_TIME_EDIT = "Title edited from '%1$s' to '%2$s', time edited from '%3$s' to '%4$s'.";
-	public static final String MESSAGE_TITLE_EDIT = "Title edited from '%1$s' to '%2$s'.";
-	public static final String MESSAGE_TITLE_DATE_EDIT = "Title edited from '%1$s' to '%2$s', date edited from '%3$s' to '%4$s'.";
+	public static final String MESSAGE_TITLE_EDIT = "Title edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_DATE_EDIT = "Date edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_START_DATE_EDIT = "Start date edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_START_TIME_EDIT = "Start time edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_END_DATE_EDIT = "End date edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_END_TIME_EDIT = "End time edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_INTERVAL_EDIT = "Interval edited. ";
+	public static final String MESSAGE_NO_EDIT = "No edits have been made.";
 
 	//Mark Constants
 	public static final String MESSAGE_DONE = "Task: %1s marked as completed";
@@ -60,8 +71,7 @@ public class Strings {
 	public static final String MESSAGE_SAVE_ERROR = "Error saving file to %1s";
 	
 	//Search Constants
-	public static final String MESSAGE_NO_TITLE_RESULTS_FOUND = "Keyword \'%1$s\' not found.";
-	public static final String MESSAGE_NO_DATE_RESULTS_FOUND = "No task found for the specified date.";
+	public static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	public static final String MESSAGE_TIMINGS_FOUND = "Timings for %1s:";
 	public static final String MESSAGE_TIMINGS_NOT_FOUND = "Task not found";
 	

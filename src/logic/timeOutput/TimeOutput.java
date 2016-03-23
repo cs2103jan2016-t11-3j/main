@@ -51,6 +51,21 @@ public class TimeOutput {
 			e.printStackTrace();
 		}
 	}
+	
+	public static String setEventTimeOutput(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		String line = "";
+		try {
+			String[] start = createDateTimeArray(startDateTime);
+			String[] end = createDateTimeArray(endDateTime);
+			line = formatEventTimeOutput(start, end);
+		} catch (DateTimeException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		
+		return line;
+	}
 
 	private static String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException {
 		String formattedString = "";
@@ -113,17 +128,19 @@ public class TimeOutput {
 	private static String[] createDateTimeArray(LocalDateTime time) throws DateTimeException {
 		String[] timeArray = new String[2];
 		if (!time.toLocalTime().equals(LocalTime.MAX)) {
-			String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-			timeArray = line.split("T", 2);
+			timeArray[0] = time.toLocalDate().toString();
+			timeArray[1] = time.toLocalTime().toString();
+			// String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			// timeArray = line.split("T", 2);
 		} else {
-			LocalDate date = time.toLocalDate();
-			String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-			timeArray[0] = line;
+			timeArray[0] = time.toLocalDate().toString();
 			timeArray[1] = "";
+			// String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		}
 		return timeArray;
 	}
 
+	/*
 	public static ArrayList<String> setRecurringEventTimeOutput(TaskObject foundTask) throws Exception {
 		ArrayList<String> output = new ArrayList<String>();
 		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
@@ -133,7 +150,7 @@ public class TimeOutput {
 		Interval interval = foundTask.getInterval();
 
 		TaskObject dummyTask = new TaskObject(startDateTime, endDateTime, interval);
-		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) {
+		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) { // if there is no end date specified
 			while (dummyTask.getStartDateTime().isBefore(dummyTask.getInterval().getUntil())) {
 				TimeOutput.setEventTimeOutput(dummyTask);
 				output.add(dummyTask.getTimeOutputString());
@@ -153,4 +170,5 @@ public class TimeOutput {
 		}
 		return output;
 	}
+	*/
 }

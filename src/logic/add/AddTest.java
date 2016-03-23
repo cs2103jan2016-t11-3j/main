@@ -364,5 +364,88 @@ public class AddTest {
 		assertEquals(expectedOutput, actualOutput);
 	}
 	/*********************************************************************************/
+
+	@Test
+	// Adds recurrent task with preset "until"
+	public void testS() throws Exception {
+		ArrayList<String> actualOutput = new ArrayList<String>();
+		Interval interval = new Interval("WEEKLY", 2, LocalDateTime.of(2016, 9, 24, 12, 00), "");
+
+		TaskObject task = new TaskObject("event 16", 16);
+		task.setCategory("event");
+		task.setStartDateTime(LocalDateTime.of(2016, 06, 18, 12, 00));
+		task.setEndDateTime(LocalDateTime.of(2016, 06, 18, 14, 00));
+		task.setInterval(interval);
+		task.setIsRecurring(true);
+		Add add = new Add(task, -1, testArray);
+		actualOutput = add.run();
+
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Task added: event 16");
+		assertEquals(expectedOutput, actualOutput);
+		
+		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair> ();
+		
+		LocalDateTime testStart = LocalDateTime.of(2016, 06, 18, 12, 00);
+		LocalDateTime testEnd = LocalDateTime.of(2016, 06, 18, 14, 00);
+		
+		while(testStart.isBefore(LocalDateTime.of(2016, 9, 24, 12, 00))) {
+			LocalDateTimePair pair = new LocalDateTimePair(testStart, testEnd);
+			expectedDateTimes.add(pair);
+			testStart = testStart.plusWeeks(2);
+			testEnd = testEnd.plusWeeks(2);
+		}
+		
+		assertEquals(expectedDateTimes.size(), task.getTaskDateTimes().size());
+		
+		for (int i = 0; i < expectedDateTimes.size(); i++) {
+			assertEquals(expectedDateTimes.get(i).getStartDateTime(), task.getTaskDateTimes().get(i).getStartDateTime());
+			assertEquals(expectedDateTimes.get(i).getEndDateTime(), task.getTaskDateTimes().get(i).getEndDateTime());
+		}
+	}
+	
+	@Test
+	// Adds recurrent task with preset "count"
+	public void testT() throws Exception {
+		ArrayList<String> actualOutput = new ArrayList<String>();
+		Interval interval = new Interval("DAILY", 6, 5, "");
+
+		TaskObject task = new TaskObject("event 17", 17);
+		task.setCategory("event");
+		task.setStartDateTime(LocalDateTime.of(2016, 06, 26, 12, 00));
+		task.setEndDateTime(LocalDateTime.of(2016, 06, 26, 14, 00));
+		task.setInterval(interval);
+		task.setIsRecurring(true);
+		Add add = new Add(task, -1, testArray);
+		actualOutput = add.run();
+
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Task added: event 17");
+		expectedOutput.add("Task: event 17 clashes with event 16");
+		assertEquals(expectedOutput, actualOutput);
+		
+		assertTrue(add.getIsClash());
+		
+		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair> ();
+		
+		LocalDateTime testStart = LocalDateTime.of(2016, 06, 26, 12, 00);
+		LocalDateTime testEnd = LocalDateTime.of(2016, 06, 26, 14, 00);
+		
+		for(int i = 0; i < interval.getCount(); i++) {
+			LocalDateTimePair pair = new LocalDateTimePair(testStart, testEnd);
+			expectedDateTimes.add(pair);
+			testStart = testStart.plusDays(6);
+			testEnd = testEnd.plusDays(6);
+		}
+		
+		assertEquals(expectedDateTimes.size(), task.getTaskDateTimes().size());
+		
+		for (int i = 0; i < expectedDateTimes.size(); i++) {
+			//System.out.println(task.getTaskDateTimes().get(i).getStartDateTime().toString());
+			//System.out.println(task.getTaskDateTimes().get(i).getEndDateTime().toString());
+			assertEquals(expectedDateTimes.get(i).getStartDateTime(), task.getTaskDateTimes().get(i).getStartDateTime());
+			assertEquals(expectedDateTimes.get(i).getEndDateTime(), task.getTaskDateTimes().get(i).getEndDateTime());
+		}
+	}
 }
 

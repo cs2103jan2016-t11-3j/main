@@ -22,7 +22,19 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 
-public class Controller implements Initializable {
+/**
+ * Controls the TaskWindow to allow interaction with the program
+ * Inputs keyed in textfield read with enter key pressed
+ * Tasks displayed in tableview updates after every command
+ * Feedback message displayed above the textfield
+ * HelpPopup initiated with with F1 hotkey pressed
+ * Program closes with Esc pressed
+ * 
+ * @author Seow Hwee
+ *
+ */
+
+public class MainController implements Initializable {
 	
 	static String _input;
 	static UIMain _UI = new UIMain();
@@ -50,25 +62,74 @@ public class Controller implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
-	private TableColumn<TaskObject, String> timeColumn;
+	private TableColumn<TaskObject, String> timeColumn;	
 	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	
+		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert endDateColumn != null : "fx:id=\"endDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert timeColumn != null : "fx:id=\"timeColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert indexColumn != null : "fx:id=\"indexColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert startDateColumn != null : "fx:id=\"startDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert statusColumn != null : "fx:id=\"statusColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert feedbackMessage != null : "fx:id=\"feedbackMessage\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert userInput != null : "fx:id=\"userInput\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
+		
+		display(); //start program with all tasks in table
+	}	
+
 	@FXML
-	public void handleEnterPressed(KeyEvent event) {
+	//reads input on enter
+	public void handleEnterPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.ENTER) {
-    	System.out.println(userInput.getText());
-    	_input = userInput.getText();
-    	_UI.passInput(_input);
-    	userInput.clear(); //clears textfield after each input
-    	displayMessage(); //print feedback message
-    	display(); //refreshes table after every command
-    	}
+			System.out.println(userInput.getText()); //to be removed
+			readInput();
+			passInput();
+			clearTextField();
+			feedbackUser();
+		}
+	}
+	
+	private void readInput() {
+		_input = userInput.getText();
+	}
+
+	private void passInput() throws IOException {
+		if(_input.startsWith("help")) {
+			popupController.startHelp();
+		} else {
+			_UI.passInput(_input);
+		}
+	}
+
+	private void clearTextField() {
+		userInput.clear(); // clears textfield after each input
+	}
+
+	private void feedbackUser() {
+		displayMessage(); // print feedback message
+		display(); // refreshes table after every command
+	}
+	
+	private void displayMessage() {
+		feedbackMessage.setText(_UI.getMessage());
+		feedbackBox.getChildren().clear();
+		feedbackBox.getChildren().add(feedbackMessage);
+	}
+	
+	private void display() {
+		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());		
+		fillTable(taskData);
 	}
 	
 	@FXML
 	public void handleHelpPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
 			popupController.startHelp();
-			System.out.println("help activated"); //to be removed aft everything is stable
 		}
 	}
 	
@@ -105,17 +166,6 @@ public class Controller implements Initializable {
 		}
 		return _UI.getHelpOutput();
 	}
-	
-	private void displayMessage() {
-		feedbackMessage.setText(_UI.getMessage());
-		feedbackBox.getChildren().clear();
-		feedbackBox.getChildren().add(feedbackMessage);
-	}
-
-	private void display() {
-		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());		
-		fillTable(taskData);
-	}
 
 	private ArrayList<TaskObject> getOutputTaskList() {
 		return _UI.getLastOutputTaskList();
@@ -126,6 +176,28 @@ public class Controller implements Initializable {
 		populateColumns();
 		setCellProperty();
 		taskTable.setItems(taskData);
+	}
+	
+	public void populateIndex() {
+		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
+			@Override
+			public void updateIndex(int index) {
+				super.updateIndex(index);
+				if (isEmpty() || index < 0) {
+					setText(null);
+				} else {
+					setText(Integer.toString(index+1));
+				}
+			}
+		});
+	}
+	
+	public void populateColumns() {
+		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
+		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
+		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
+		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
+		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
 	}
 
 	private void setCellProperty() {
@@ -147,6 +219,7 @@ public class Controller implements Initializable {
 				return cell;
 			}
 		});
+
 		timeColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
@@ -166,43 +239,4 @@ public class Controller implements Initializable {
 			}
 		});
 	}
-
-	public void populateColumns() {
-		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
-		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
-		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
-		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
-		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
-	}
-
-	public void populateIndex() {
-		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
-		    @Override
-			public void updateIndex(int index) {
-		        super.updateIndex(index);
-		        if (isEmpty() || index < 0) {
-		            setText(null);
-		        } else {
-		            setText(Integer.toString(index+1));
-		        }
-		    }
-		});
-	}
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert endDateColumn != null : "fx:id=\"endDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert timeColumn != null : "fx:id=\"timeColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert indexColumn != null : "fx:id=\"indexColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert startDateColumn != null : "fx:id=\"startDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert statusColumn != null : "fx:id=\"statusColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert feedbackMessage != null : "fx:id=\"feedbackMessage\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert userInput != null : "fx:id=\"userInput\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'UIScene.fxml'.";
-        assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
-
-		display(); //start program with all tasks in table
-	}	
 } 

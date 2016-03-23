@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.logging.*;
 
 import common.CommandObject;
+import common.Interval;
 import common.TaskObject;
+import logic.Recurring;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -40,21 +42,34 @@ public class Edit {
 	private static final Logger LOGGER = Logger.getLogger(Edit.class.getName());
 	
 	private CommandObject commandObj;
+	private String taskCategory;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<TaskObject> taskList;
-
+	private ArrayList<String> tempOutput = new ArrayList<String>();
 	private ArrayList<String> output = new ArrayList<String>();
-	private String originalTitle;
-	private LocalDate originalDate;
-	private LocalTime originalTime;
-	private String editTitle;
-	private LocalDate editDate;
-	private LocalTime editTime;
-	private int editItemNumber;
 	
-	boolean isEditDate = false;
+	private String originalTitle = "";
+	private LocalDateTime originalStartDateTime = LocalDateTime.MAX;
+	private LocalDate originalStartDate = LocalDate.MAX;
+	private LocalTime originalStartTime = LocalTime.MAX;
+	private LocalDateTime originalEndDateTime = LocalDateTime.MAX;
+	private LocalDate originalEndDate = LocalDate.MAX;
+	private LocalTime originalEndTime = LocalTime.MAX;
+	private Interval originalInterval = new Interval();
+	private String editTitle;
+	private LocalDate editStartDate;
+	private LocalTime editStartTime;
+	private LocalDate editEndDate;
+	private LocalTime editEndTime;
+	private int editItemNumber;
+	private Interval editInterval;
+	
 	boolean isEditTitle = false;
-	boolean isEditTime = false;
+	boolean isEditStartDate = false;
+	boolean isEditStartTime = false;
+	boolean isEditEndDate = false;
+	boolean isEditEndTime = false;
+	boolean isEditInterval = false;
 	
 	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList) {
 		this.commandObj = commandObj;
@@ -69,7 +84,7 @@ public class Edit {
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
-		checkEditInformation();
+		//checkEditInformation();
 		int editTaskId = getTaskIdOfTaskToBeEdited();
 		editTask(editTaskId);
 		saveExternal();
@@ -88,13 +103,25 @@ public class Edit {
 			if (!editTitle.equals("")) {
 				isEditTitle = true;
 			}
-			editDate = commandObj.getTaskObject().getStartDateTime().toLocalDate();
-			if (editDate.compareTo(LocalDate.MAX) < 0) {
-				isEditDate = true;
+			editStartDate = commandObj.getTaskObject().getStartDateTime().toLocalDate();
+			if (!editStartDate.isEqual(LocalDate.MAX)) {
+				isEditStartDate = true;
 			}
-			editTime = commandObj.getTaskObject().getStartDateTime().toLocalTime();
-			if (editTime.compareTo(LocalTime.MAX) < 0) {
-				isEditTime = true;
+			editStartTime = commandObj.getTaskObject().getStartDateTime().toLocalTime();
+			if (!editStartTime.equals(LocalTime.MAX)) {
+				isEditStartTime = true;
+			}
+			editEndDate = commandObj.getTaskObject().getEndDateTime().toLocalDate();
+			if (!editEndDate.isEqual(LocalDate.MAX)) {
+				isEditEndDate = true;
+			}
+			editEndTime = commandObj.getTaskObject().getEndDateTime().toLocalTime();
+			if (!editEndTime.equals(LocalTime.MAX)) {
+				isEditEndTime = true;
+			}
+			editInterval = commandObj.getTaskObject().getInterval();
+			if (commandObj.getTaskObject().getIsRecurring()) {		// MIGHT NEED TO CHANGE THIS CHECK
+				isEditInterval = true;
 			}
 		} catch (NullPointerException e) {
 			LOGGER.log(Level.WARNING, "Error setting edit information");
@@ -116,22 +143,35 @@ public class Edit {
 	private void editTask(int editTaskId) {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
-			if (task.getTaskId() == editTaskId) { // if this is the task to be edited
+			if (task.getTaskId() == editTaskId) { 
+				taskCategory = task.getCategory();
+				
 				if (isEditTitle) {
 					editTitle(task);
 				} 
-				
-				if (isEditDate && isEditTime) {
-					editDateAndTime(task);
+				if (isEditStartDate && isEditStartTime) {
+					editStartDateAndTime(task);
 				} else {
-					if (!isEditTime) {
-						editDate(task);
+					if (isEditStartDate) {
+						editStartDate(task);
 					}
-					if (!isEditDate) {
-						editTime(task);
+					if (isEditStartTime) {
+						editStartTime(task);
 					}
 				}
-
+				if (isEditEndDate && isEditEndTime) {
+					editEndDateAndTime(task);
+				} else {
+					if (isEditEndDate) {
+						editEndDate(task);
+					}
+					if (isEditEndTime) {
+						editEndTime(task);
+					}
+				}
+				if (isEditInterval) {
+					editInterval(task);
+				}
 			}
 		}
 	}
@@ -147,45 +187,104 @@ public class Edit {
 		}
 	}
 	
-	private void editDateAndTime(TaskObject task) {
-		originalDate = task.getStartDateTime().toLocalDate();
-		originalTime = task.getStartDateTime().toLocalTime();
+	private void editStartDateAndTime(TaskObject task) {
+		originalStartDateTime = task.getStartDateTime();
+		originalStartDate = originalStartDateTime.toLocalDate();
+		originalStartTime = originalStartDateTime.toLocalTime();
 		
-		if (originalDate.compareTo(editDate) != 0 && originalTime.compareTo(editTime) != 0) {		
-			task.setStartDateTime(LocalDateTime.of(editDate, editTime));
-			LOGGER.log(Level.INFO, "Date and time edited");
-		} else if (originalTime.compareTo(editTime) == 0) {
-			isEditTime = false;
-			editDate(task);
-		} else if (originalDate.compareTo(editDate) == 0) {
-			isEditDate = false;
-			editTime(task);
+		if (!originalStartDate.isEqual(editStartDate) && !originalStartTime.equals(editStartTime)) {		
+			task.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
+			LOGGER.log(Level.INFO, "Start date and time edited");
+		} else if (originalStartTime.equals(editStartTime)) { // if old and new times are the same, only edit date
+			isEditStartTime = false;
+			editStartDate(task);
+		} else if (originalStartDate.isEqual(editStartDate)) { // if old and new dates are the same, only edit time
+			isEditStartDate = false;
+			editStartTime(task);
 		} 
 	}
 	
-	private void editDate(TaskObject task) {
-		originalDate = task.getStartDateTime().toLocalDate();
+	private void editStartDate(TaskObject task) {
+		originalStartDateTime = task.getStartDateTime();
+		originalStartDate = originalStartDateTime.toLocalDate();
 		
-		if (originalDate.compareTo(editDate) != 0) {		
-			originalTime = task.getStartDateTime().toLocalTime();
-			task.setStartDateTime(LocalDateTime.of(editDate, originalTime));
-			LOGGER.log(Level.INFO, "Date edited");
+		if (!originalStartDate.isEqual(editStartDate)) {		
+			originalStartTime = originalStartDateTime.toLocalTime();
+			task.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+			LOGGER.log(Level.INFO, "Start date edited");
 		} else {
-			isEditDate = false;
+			isEditStartDate = false;
 		} 
 	}
 	
-	private void editTime(TaskObject task) {
-		originalTime = task.getStartDateTime().toLocalTime();
+	private void editStartTime(TaskObject task) {
+		originalStartDateTime = task.getStartDateTime();
+		originalStartTime = originalStartDateTime.toLocalTime();
 		
-		if (originalTime.compareTo(editTime) != 0) {
-			originalDate = task.getStartDateTime().toLocalDate();
-			task.setStartDateTime(LocalDateTime.of(originalDate, editTime));
-			LOGGER.log(Level.INFO, "Time edited");
+		if (!originalStartTime.equals(editStartTime)) {
+			originalStartDate = originalStartDateTime.toLocalDate();
+			task.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
+			LOGGER.log(Level.INFO, "Start time edited");
 		} else {
-			isEditTime = false;
+			isEditStartTime = false;
 		}
 	}
+	
+	private void editEndDateAndTime(TaskObject task) {
+		originalEndDateTime = task.getEndDateTime();
+		originalEndDate = originalEndDateTime.toLocalDate();
+		originalEndTime = originalEndDateTime.toLocalTime();
+		
+		if (!originalEndDate.isEqual(editEndDate) && !originalEndTime.equals(editEndTime)) {		
+			task.setEndDateTime(LocalDateTime.of(editEndDate, editEndTime));
+			LOGGER.log(Level.INFO, "End date and time edited");
+		} else if (originalEndTime.equals(editEndTime)) { // if old and new times are the same, only edit date
+			isEditEndTime = false;
+			editEndDate(task);
+		} else if (originalEndDate.isEqual(editEndDate)) { // if old and new dates are the same, only edit time
+			isEditEndDate = false;
+			editEndTime(task);
+		} 
+	}
+	
+	private void editEndDate(TaskObject task) {
+		originalEndDateTime = task.getEndDateTime();
+		originalEndDate = originalEndDateTime.toLocalDate();
+		
+		if (!originalEndDate.isEqual(editEndDate)) {		
+			originalEndTime = originalEndDateTime.toLocalTime();
+			task.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+			LOGGER.log(Level.INFO, "End date edited");
+		} else {
+			isEditEndDate = false;
+		} 
+	}
+	
+	private void editEndTime(TaskObject task) {
+		originalEndDateTime = task.getEndDateTime();
+		originalEndTime = originalEndDateTime.toLocalTime();
+		
+		if (!originalEndTime.equals(editEndTime)) {
+			originalEndDate = originalEndDateTime.toLocalDate();
+			task.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
+			LOGGER.log(Level.INFO, "End time edited");
+		} else {
+			isEditEndTime = false;
+		}
+	}
+	
+	private void editInterval(TaskObject task) {
+		originalInterval = task.getInterval();
+		
+		if (!originalInterval.equals(editInterval)) {
+			task.setInterval(editInterval);
+			Recurring.setAllRecurringEventTimes(task); // Calls the Recurring class to update the list of recurrence timings
+			LOGGER.log(Level.INFO, "Interval edited");
+		} else {
+			isEditInterval = false;
+		}
+	}
+	
 	
 	// Saves the updated file to Storage
 	private void saveExternal() {
@@ -199,77 +298,96 @@ public class Edit {
 		}
 	}
 	
-	/*
-	 * 7 combinations:
-	 * TITLE	DATE	TIME
-	 * 	 -		DATE	TIME
-	 * 	 -		DATE	 -
-	 *   -   	 -		TIME
-	 * TITLE	 -		TIME
-	 * TITLE	 -		 -
-	 * TITLE	DATE	 -
-	 */
-	private void setOutput() {
-		if (isEditTitle && isEditDate && isEditTime) {
-			outputTitleDateTimeEditedMessage();
-		} else if (!isEditTitle) {
-			if (isEditDate && isEditTime) {
-				outputDateTimeEditedMessage();
-			} else {
-				if (!isEditTime) {	// no time, only date
-					outputDateEditedMessage();
-				} else { // // no date, only time
-					outputTimeEditedMessage();
-				}
-			}
-		} else if (!isEditDate) {
-			if (isEditTitle && isEditTime) {
-				outputTitleTimeEditedMessage();
-			} else if (!isEditTime) {
-				outputTitleEditedMessage();
-			}
-		} else if (!isEditTime) {
-			outputTitleDateEditedMessage();
-		}
-	
-	}
 	
 	// FOR DEBUGGING
 	private void checkEditInformation() {
 		System.out.println("isEditTitle = " + isEditTitle);
-		System.out.println("isEditDate = " + isEditDate);
-		System.out.println("isEditTime = " + isEditTime);
+		System.out.println("isEditStartDate = " + isEditStartDate);
+		System.out.println("isEditStartTime = " + isEditStartTime);
+		System.out.println("isEditEndDate = " + isEditEndDate);
+		System.out.println("isEditEndTime = " + isEditEndTime);
+		System.out.println("isEditInterval = " + isEditInterval);
 	}
 	
 	// ------------------------- OUTPUT MESSAGES -------------------------
 	
-	private void outputTitleDateTimeEditedMessage() {
-		output.add(String.format(MESSAGE_TITLE_DATE_TIME_EDIT, originalTitle, editTitle, 
-				originalDate, editDate, originalTime, editTime));
-	}
 
-	private void outputDateTimeEditedMessage() {
-		output.add(String.format(MESSAGE_DATE_TIME_EDIT, originalDate, editDate, originalTime, editTime));
-	}
-	
-	private void outputDateEditedMessage() {
-		output.add(String.format(MESSAGE_DATE_EDIT, originalDate, editDate));
-	}
-
-	private void outputTimeEditedMessage() {
-		output.add(String.format(MESSAGE_TIME_EDIT, originalTime, editTime));
-	}
-	
-	private void outputTitleTimeEditedMessage() {
-		output.add(String.format(MESSAGE_TITLE_TIME_EDIT, originalTitle, editTitle, originalTime, editTime));
+	// Output for deadlines is slightly different as they should not have start/end dates/times
+	private void setOutput() {
+		if (isEditTitle) {
+			outputTitleEditedMessage();
+		}
+		if (isEditStartDate) {
+			if (taskCategory.equals("deadline")) {
+				outputDateEditedMessage();
+			} else {
+				outputStartDateEditedMessage();
+			}
+		}
+		if (isEditStartTime) {
+			if (taskCategory.equals("deadline")) {
+				outputTimeEditedMessage();
+			} else {
+				outputStartTimeEditedMessage();
+			}
+		}
+		if (isEditEndDate) {
+			outputEndDateEditedMessage();
+		}
+		if (isEditEndTime) {
+			outputEndTimeEditedMessage();
+		}
+		if (isEditInterval) {
+			outputIntervalEditedMessage();
+		}
+		
+		concatenateOutput();
 	}
 	
 	private void outputTitleEditedMessage() {
-		output.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
+		tempOutput.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
+	}
+	
+	private void outputDateEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_DATE_EDIT, originalStartDate, editStartDate));
+	}
+	
+	private void outputStartDateEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_START_DATE_EDIT, originalStartDate, editStartDate));
 	}
 
-	private void outputTitleDateEditedMessage() {
-		output.add(String.format(MESSAGE_TITLE_DATE_EDIT, originalTitle, editTitle, originalDate, editDate));
+	private void outputTimeEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime));
+	}
+	
+	private void outputStartTimeEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_START_TIME_EDIT, originalStartTime, editStartTime));
+	}
+
+	private void outputEndDateEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_END_DATE_EDIT, originalEndDate, editEndDate));
+	}
+
+	private void outputEndTimeEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_END_TIME_EDIT, originalEndTime, editEndTime));
+	}
+	
+	private void outputIntervalEditedMessage() {
+		tempOutput.add(MESSAGE_INTERVAL_EDIT);
+	}
+	
+	// Combines all the output strings into 1 string
+	private void concatenateOutput() {
+		if (tempOutput.isEmpty()) {
+			output.add(MESSAGE_NO_EDIT);
+		} else {
+			String concatOutput = "";
+			for (int i = 0; i < tempOutput.size(); i++) {
+				concatOutput = concatOutput.concat(tempOutput.get(i));
+			}
+			
+			output.add(concatOutput.trim());
+		}
 	}
 
 	// ------------------------- GETTERS -------------------------
@@ -282,16 +400,43 @@ public class Edit {
 		return originalTitle;
 	}
 	
-	public LocalDate getOriginalDate() {
-		return originalDate;
+	public LocalDateTime getOriginalStartDateTime() {
+		return originalStartDateTime;
 	}
 	
-	public boolean getIsEditDate() {
-		return isEditDate;
+	public LocalDateTime getOriginalEndDateTime() {
+		return originalEndDateTime;
+	}
+	
+	public Interval getOriginalInterval() {
+		return originalInterval;
 	}
 	
 	public boolean getIsEditTitle() {
 		return isEditTitle;
 	}
-
+	
+	public boolean getIsEditStartDateAndTime() {
+		return isEditStartDate || isEditStartTime;
+	}
+	
+	public boolean getIsEditStartDate() {
+		return isEditStartDate;
+	}
+	
+	public boolean getIsEditStartTime() {
+		return isEditStartTime;
+	}
+	
+	public boolean getIsEditEndDateAndTime() {
+		return isEditEndDate || isEditEndTime;
+	}
+	
+	public boolean getIsEditEndDate() {
+		return isEditEndDate;
+	}
+	
+	public boolean getIsEditEndTime() {
+		return isEditEndTime;
+	}
 }

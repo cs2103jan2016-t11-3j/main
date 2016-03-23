@@ -20,6 +20,10 @@ public class TimeOutputTest {
 	private ArrayList<String> actualTimeOutput = new ArrayList<String>();
 	private static ArrayList<String> expectedTimeOutput = new ArrayList<String>();
 
+	/**********************************************************************************/
+	/**
+	 * Tests for setTimeOutputForGui
+	 */
 	@Test
 	public void testA() {
 		TaskObject taskOne = new TaskObject("deadline with time and date", "deadline", "incomplete", 1);
@@ -30,7 +34,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("by 16:00:00 on 2016-03-15");
+		expectedTimeOutput.add("by 16:00 on 2016-03-15");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -46,7 +50,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 2016-03-12, from 15:00:00 to 16:00:00 on 2016-03-15");
+		expectedTimeOutput.add("on 2016-03-12, from 15:00 to 16:00 on 2016-03-15");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -62,7 +66,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 2016-03-15, from 15:00:00 to 16:00:00");
+		expectedTimeOutput.add("on 2016-03-15, from 15:00 to 16:00");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -108,7 +112,7 @@ public class TimeOutputTest {
 		for(int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 2016-03-15, from 13:00:00 to 2016-03-16");
+		expectedTimeOutput.add("on 2016-03-15, from 13:00 to 2016-03-16");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -124,8 +128,26 @@ public class TimeOutputTest {
 		for(int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("from 2016-03-15 to 14:00:00 on 2016-03-16");
+		expectedTimeOutput.add("from 2016-03-15 to 14:00 on 2016-03-16");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
+	}
+	
+	/*******************************************************************************/
+	/**
+	 * Tests for setEventTimeOutput(LocalDateTime , LocalDateTime )
+	 * Possible paths for this function mostly tested in preceding tests
+	 */
+	
+	@Test
+	// Regular event with start date, time, end date, time
+	public void testH() {
+		LocalDateTime startDateTime = LocalDateTime.of(LocalDate.of(2016, 11, 16), LocalTime.of(9, 30));
+		LocalDateTime endDateTime= LocalDateTime.of(LocalDate.of(2016, 11, 19), LocalTime.of(3, 20));
+		
+		String actualOutput = TimeOutput.setEventTimeOutput(startDateTime, endDateTime);
+		String expectedOutput = "on 2016-11-16, from 09:30 to 03:20 on 2016-11-19";
+		
+		assertEquals(expectedOutput, actualOutput);
 	}
 }

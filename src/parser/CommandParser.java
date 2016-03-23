@@ -64,8 +64,8 @@ public abstract class CommandParser {
 	protected int _startTime = -1;
 	protected int _endTime = -1;
 	
-	protected LocalDateTime _startDateTime;
-	protected LocalDateTime _endDateTime;
+	protected LocalDateTime _startDateTime = LocalDateTime.MAX;
+	protected LocalDateTime _endDateTime = LocalDateTime.MAX;
 	
 	public abstract TaskObject process(String input) throws Exception;
 	

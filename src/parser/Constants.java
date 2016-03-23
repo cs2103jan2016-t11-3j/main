@@ -1,4 +1,4 @@
-package parser;
+	package parser;
 
 /*REGEX GUIDE (regular expression)
  * (?i) means regex is case insensitive
@@ -148,7 +148,9 @@ public class Constants {
     public static final String REGEX_FINAL = "(" + REGEX_DATE_TIME_IDENTIFIER + "|" 
     		+ REGEX_RELATIVE_DATE_ALL + "|" + REGEX_RELATIVE_TIME_1 + ")$";
     
+    public static final String REGEX_EDIT_STARTEND = "(?i)(start|end)";
     public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
     		+ REGEX_DATETIME_FORMAT + ")$";
-    
+    public static final String REGEX_SEARCH2 = "(" + REGEX_FINAL + "|"
+    		+ "(" + REGEX_DATETIME_FORMAT  + "( " + REGEX_EDIT_STARTEND + ")?)"+ ")$";
 }

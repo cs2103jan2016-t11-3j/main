@@ -13,69 +13,96 @@ public class DateProcessorTest {
 	DateParser DP = new DateParser();
 	
 	@Test
-	public void testProcessDate() {
-		
-		//test 1: test for ability to read uncompleted dates
+	public void testProcessDate() throws Exception {
+		/*POSITIVE VALUE PARTITION CASES*/
+		/*case 1: test ability to read ddmm formats*/
 		DP.processDate("7/6");
-		assertEquals(6, DP.getStartMonth());
-		assertEquals(7, DP.getStartDay());
-		assertEquals(2016, DP.getStartYear());
-		assertEquals(20160607, DP.getStartDate());
+		assertEquals("2016-06-07", DP.getDateObject().toString());
 		reset();
 		
-		//test 2: test for ability to read uncompleted dates for events
+		/*case 2: test ability to read ddmonthyyyy formats*/
 		DP.processDate("6 june 2014");
-		assertEquals(6, DP.getStartMonth());
-		assertEquals(6, DP.getStartDay());
-		assertEquals(2014, DP.getStartYear());
+		assertEquals("2014-06-06", DP.getDateObject().toString());
 		reset();
 		
-		
+		/*case 3: test ability to read ddmmyyyy formats*/
 		DP.processDate("5/6/16");
-		assertEquals(6, DP.getStartMonth());
-		assertEquals(5, DP.getStartDay());
-		assertEquals(2016, DP.getStartYear());
-		assertEquals(20160605, DP.getSearchDate());
+		assertEquals("2016-06-05", DP.getDateObject().toString());
+		reset();
+		
+		/*case 4: test ability to read relative dates*/
+		DP.processDate("next friday");
+		assertEquals("2016-03-25", DP.getDateObject().toString());
+		reset();
+		
+		/*NEGATIVE VALUE TEST CASES*/
+		/*case 5: test ability to reject non-slash separated numbers*/
+		try {
+			DP.processDate("7.6");
+			assert false;
+		} catch (Exception e) {
+			assert true;
+		}
+		reset();
+		
+		/*case 6: test if exception is thrown when date is not valid*/
+		try {
+			DP.processDate("51 july 1030");
+			assert false;
+		} catch (Exception e) {
+			assert true;
+		}
 		reset();
 	}
 
 	
 	@Test
 	public void testHasMonth() {
-		//test ability to recognise months in various conditions
-		//misspelt, full date format and short forms
-		assertTrue(DP.hasMonth("jannuary"));
-		assertTrue(DP.hasMonth(" November"));
-		assertTrue(DP.hasMonth("feb"));
-		assertTrue(DP.hasMonth("DeCemmber"));
-		assertTrue(DP.hasMonth("3rd March 2015"));
+		/*test for cases in the positive value partition*/
+		assertTrue(DP.hasMonth("jannuary")); //misspelt
+		assertTrue(DP.hasMonth(" November")); //untrimmed
+		assertTrue(DP.hasMonth("feb")); //short forms
+		assertTrue(DP.hasMonth("DeCemmber")); //inconsistent casing
+		assertTrue(DP.hasMonth("3rd March 2015")); //full ddMonthyyyy format
+		
+		/*test for cases in the negative value partition*/
+		assertFalse(DP.hasMonth("first month"));
 	}
 
 	@Test
 	public void testHasSlash() {
-		//test if dates have slashes
+		/*test for values in the positive partition*/
 		assertTrue(DP.hasSlash("4/5/3"));
+		
+		/*tests for the values in the negative partition*/
+		assertFalse(DP.hasSlash("4.5.3"));
+		assertFalse(DP.hasSlash("5 june 05"));
 	}
 	
 	@Test
 	public void testIsRelative() {
-		//test if dates have slashes
+		/*test for values in the positive partition (relative dates)*/
 		assertTrue(DP.isRelative("tmr"));
 		assertTrue(DP.isRelative("today"));
 		assertTrue(DP.isRelative("next week"));
 		assertTrue(DP.isRelative("next wednesday"));
+		
 	}
 	
 	@Test
 	public void testProcessRelativeDate() {
-		DP.processRelativeDate("tmr");
-		assertEquals("2016-03-19",DP.getDateObject().toString());
 		
-		DP.processRelativeDate("next tuesday");
-		assertEquals("2016-03-22",DP.getDateObject().toString());
+		DP.processRelativeDate("next tue");
+		assertEquals("2016-03-29",DP.getDateObject().toString());
+		reset();
+		
+		DP.processRelativeDate("tmr");
+		assertEquals("2016-03-23",DP.getDateObject().toString());
+		reset();
 		
 		DP.processRelativeDate("next week");
-		assertEquals("2016-03-25",DP.getDateObject().toString());
+		assertEquals("2016-03-29",DP.getDateObject().toString());
+		reset();
 	}
 
 	@Test
@@ -123,7 +150,7 @@ public class DateProcessorTest {
 	}
 
 	@Test
-	public void testSetMonthWithSlash() {
+	public void testSetMonthWithSlash() throws Exception {
 		
 		//test 1: test recognition of partially completed date
 		DP.setMonthWithSlash("7/8");

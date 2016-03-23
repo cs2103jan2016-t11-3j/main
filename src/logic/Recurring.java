@@ -16,8 +16,116 @@ public class Recurring {
 	 * Recurring.checkRecurringDeadlines(taskList);
 	 * Recurring.checkRecurringEvents(taskList);
 	 */
+	
+	/* For logic ************************************************************/
+	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getIsRecurring()) {
+				updateEvent(taskList.get(i));
+			}
+		}
+	}
+	
+	public static void updateEvent(TaskObject task) {
+		LocalDateTime eventEndTime = task.getEndDateTime();
+		if (eventEndTime.isAfter(LocalDateTime.now())) {
+			renewEvent(task);
+		}
+	}
+	
+	public static void renewEvent(TaskObject task) {
+		LocalDateTime newStartDateTime;
+		LocalDateTime newEndDateTime;
+		LocalDateTimePair nextEvent;
+		
+		task.removeFromTaskDateTimes(0);
+		
+		nextEvent = task.getTaskDateTimes().get(0);
+		newStartDateTime = nextEvent.getStartDateTime();
+		newEndDateTime = nextEvent.getEndDateTime();
+		
+		task.setStartDateTime(newStartDateTime);
+		task.setEndDateTime(newEndDateTime);
+	}
 
-	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) throws Exception {
+	/* For add and edit ***************************************************************/
+
+	public static void setAllRecurringEventTimes(TaskObject task) {
+		Interval interval = task.getInterval();
+		LocalDateTimePair eventDateTime = task.getTaskDateTimes().get(0);
+
+		// in case there is an existing list and the interval is changed
+		task.removeAllDateTimes();
+
+		if (!interval.getUntil().equals(LocalDateTime.MAX)) {
+			while (eventDateTime.getStartDateTime().isBefore(interval.getUntil())) {
+				task.addToTaskDateTimes(eventDateTime);
+				eventDateTime = setNextEventTime(interval, eventDateTime);
+			}
+		} else {
+			if (interval.getCount() != -1) {
+				for (int i = 0; i < interval.getCount(); i++) {
+					task.addToTaskDateTimes(eventDateTime);
+					eventDateTime = setNextEventTime(interval, eventDateTime);
+				}
+			}
+		}
+	}
+
+	public static LocalDateTimePair setNextEventTime(Interval interval, LocalDateTimePair eventDateTime) {
+		LocalDateTime startDateTime = eventDateTime.getStartDateTime();
+		LocalDateTime endDateTime = eventDateTime.getEndDateTime();
+		LocalDateTimePair nextEvent = new LocalDateTimePair();
+
+		if (interval.getByDay().equals("")) {
+			nextEvent = obtainNextEventTime(interval, startDateTime, endDateTime);
+		} else {
+			// implementation with byDay
+		}
+
+		return nextEvent;
+	}
+
+	public static LocalDateTimePair obtainNextEventTime(Interval interval, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		String frequency = interval.getFrequency();
+		int timeInterval = interval.getTimeInterval();
+		
+		switch (frequency) {
+		case FREQ_HOURLY:
+			startDateTime = startDateTime.plusHours(timeInterval);
+			endDateTime = endDateTime.plusHours(timeInterval);
+			break;
+
+		case FREQ_DAILY:
+			startDateTime = startDateTime.plusDays(timeInterval);
+			endDateTime = endDateTime.plusDays(timeInterval);
+			break;
+
+		case FREQ_WEEKLY:
+			startDateTime = startDateTime.plusWeeks(timeInterval);
+			endDateTime = endDateTime.plusWeeks(timeInterval);
+			break;
+
+		case FREQ_MONTHLY:
+			startDateTime = startDateTime.plusMonths(timeInterval);
+			endDateTime = endDateTime.plusMonths(timeInterval);
+			break;
+
+		case FREQ_YEARLY:
+			startDateTime = startDateTime.plusYears(timeInterval);
+			endDateTime = endDateTime.plusYears(timeInterval);
+			break;
+		}
+		
+		return new LocalDateTimePair(startDateTime, endDateTime);
+	}
+}
+
+
+
+/*
+ * UNUSED METHODS FROM PRIOR IMPLEMENTATION OF RECURRING
+ * 	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) throws Exception {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
@@ -39,34 +147,33 @@ public class Recurring {
 		LocalDateTime eventEndDateTime = task.getEndDateTime();
 		if (eventEndDateTime.isBefore(LocalDateTime.now())) {
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
-	
-	private static boolean checkIfStillRecurring(TaskObject task) throws Exception{
+
+	private static boolean checkIfStillRecurring(TaskObject task) throws Exception {
 		int count = task.getInterval().getCount();
 		LocalDateTime until = task.getInterval().getUntil();
-		
+
 		if (count != -1) {
 			if (count == 0) {
 				return false;
-			} else {
-				task.getInterval().setCount(count - 1);
-				return true;
 			}
+
+			task.getInterval().setCount(count - 1);
+			return true;
 		} else {
 			if (!until.equals(LocalDateTime.MAX)) {
 				if (until.isBefore(LocalDateTime.now())) {
 					return false;
-				} else {
-					return true;
 				}
+				return true;
 			} else {
 				Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
 				throw e;
 			}
-		}		
+		}
 	}
 
 	public static void setNextEventTime(TaskObject task) {
@@ -102,9 +209,10 @@ public class Recurring {
 		} else {
 			// implementation for by day
 		}
-	}
 	
 	private static void markEventAsDone(TaskObject task) {
 		task.setStatus("done");
 	}
-}
+
+	}
+	*/

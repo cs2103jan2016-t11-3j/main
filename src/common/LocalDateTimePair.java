@@ -19,6 +19,11 @@ public class LocalDateTimePair {
 		this.endDateTime = LocalDateTime.MAX; // System defined value
 	}
 	
+	// Empty constructor
+	public LocalDateTimePair() {
+		
+	}
+	
 	public LocalDateTime getStartDateTime() {
 		return startDateTime;
 	}
@@ -33,5 +38,9 @@ public class LocalDateTimePair {
 	
 	public void setEndDateTime(LocalDateTime endDateTime) {
 		this.endDateTime = endDateTime;
+	}
+	
+	public void printDetails() {
+		
 	}
 }

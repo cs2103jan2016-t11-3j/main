@@ -8,7 +8,9 @@ import logic.timeOutput.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -48,7 +50,7 @@ import common.TaskObject;
 public class Logic {
 
 	// Maintained throughout the entire running operation of the program
-	private ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
+	protected ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
 	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
 	private int taskId;
@@ -59,6 +61,8 @@ public class Logic {
 	private ArrayList<String> output = new ArrayList<String>();
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
+	// Output list containing events and deadlines for alerting
+	protected ArrayList<String> alertOutput = new ArrayList<String>();
 
 	/**
 	 * Constructor called by UI. Loads all existing tasks and checks each task
@@ -70,6 +74,7 @@ public class Logic {
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
 		loadTaskList();
+		TimeOutput.setTimeOutputForGui(taskList);
 		setStartingTaskId();
 		checkOverdue();
 		try {
@@ -77,6 +82,7 @@ public class Logic {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		createAlertOutput(taskList);
 	}
 
 	/**
@@ -95,6 +101,94 @@ public class Logic {
 		this.undoList = undoList;
 		this.redoList = redoList;
 		this.lastOutputTaskList = taskList;
+	}
+
+	protected void createAlertOutput(ArrayList<TaskObject> taskList) {
+		String taskInformation = "";
+		boolean hasEvent = false;
+		boolean hasDeadline = false;
+		alertOutput.add(MESSAGE_ALERT_EVENT);
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
+				if (taskList.get(i).getStartDateTime().toLocalDate().isEqual(LocalDate.now())) {
+					String time = createEventAlertTime(taskList.get(i));
+					taskInformation = String.format(MESSAGE_INFORMATION_EVENT, taskList.get(i).getTitle(), time);
+					alertOutput.add(taskInformation);
+					hasEvent = true;
+				}
+			}
+		}
+
+		if (!hasEvent) {
+			alertOutput.remove(alertOutput.size() - 1);
+		}
+
+		alertOutput.add(MESSAGE_ALERT_DEADLINE);
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
+				if (taskList.get(i).getStartDateTime().toLocalDate().isEqual(LocalDate.now())) {
+					String time = createDeadlineAlertTime(taskList.get(i).getStartDateTime());
+					taskInformation = String.format(MESSAGE_INFORMATION_DEADLINE, taskList.get(i).getTitle(), time);
+					alertOutput.add(taskInformation);
+					hasDeadline = true;
+				}
+			}
+		}
+
+		if (!hasDeadline) {
+			alertOutput.remove(alertOutput.size() - 1);
+		}
+	}
+
+	private String createDeadlineAlertTime(LocalDateTime deadline) {
+		String endTime;
+		if (deadline.toLocalTime().equals(LocalTime.MAX)) {
+			endTime = "today";
+		} else {
+			endTime = deadline.toLocalTime().toString();
+		}
+		return endTime;
+	}
+
+	private String createEventAlertTime(TaskObject task) {
+		String timeString;
+		String startTime = "";
+		String endDate = "";
+		String endTime = "";
+
+		// without start time
+		if (task.getStartDateTime().toLocalTime().equals(LocalTime.MAX)) {
+			startTime = "";
+		} else {
+			// with start time
+			startTime = task.getStartDateTime().toLocalTime().toString() + " ";
+		}
+
+		// if start date == end date
+		if (task.getEndDateTime().toLocalDate().equals(task.getStartDateTime().toLocalDate())) {
+			// with end time
+			if (!task.getEndDateTime().toLocalTime().equals(LocalTime.MAX)) {
+				endTime = "to " + task.getEndDateTime().toLocalTime().toString() + " ";
+			} else {
+				// without end time
+				if (startTime.equals("")) {
+					startTime = "not specified ";
+				} else {
+					startTime = "from " + startTime + "today ";
+				}
+			}
+		} else {
+			endDate = task.getEndDateTime().toLocalDate().toString() + " ";
+			// with end time
+			if (!task.getEndDateTime().toLocalTime().equals(LocalTime.MAX)) {
+				endTime = "to " + task.getEndDateTime().toLocalTime().toString() + " ";
+				endDate = "on " + endDate;
+			} else {
+				endDate = "to " + endDate;
+			}
+		}
+		timeString = startTime + endTime + endDate;
+		return timeString;
 	}
 
 	// Takes in a String argument from UI component
@@ -230,6 +324,10 @@ public class Logic {
 
 	public ArrayList<TaskObject> getLastOutputTaskList() {
 		return lastOutputTaskList;
+	}
+
+	public ArrayList<String> getAlertOutput() {
+		return alertOutput;
 	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
