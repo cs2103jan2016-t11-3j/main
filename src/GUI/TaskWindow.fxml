@@ -9,57 +9,62 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="layout" prefHeight="600" prefWidth="450.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainController">
-   <center>
-      <TableView fx:id="taskTable" onKeyPressed="#handleEscReleased" onKeyReleased="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
-        <columns>
-          <TableColumn fx:id="indexColumn" editable="false" prefWidth="30.0" sortable="false" text="No." />
-          <TableColumn fx:id="taskColumn" editable="false" prefWidth="180.0" sortable="false" text="Task Name" />
-            <TableColumn fx:id="statusColumn" editable="false" prefWidth="90.0" sortable="false" text="Status" />
-            <TableColumn fx:id="startDateColumn" editable="false" prefWidth="80.0" sortable="false" text="Start Date" />
-            <TableColumn fx:id="endDateColumn" editable="false" prefWidth="80.0" sortable="false" text="Date Due" />
-            <TableColumn fx:id="timeColumn" editable="false" prefWidth="120.0" sortable="false" text="Time" />
-        </columns>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="8.0" />
-         </padding>
-      </TableView>
-   </center>
-   <top>
-      <Label alignment="CENTER" text="AdultTaskFinder" textFill="#5e412f" BorderPane.alignment="BOTTOM_CENTER">
-         <font>
-            <Font name="Agency FB Bold" size="30.0" />
-         </font>
-         <BorderPane.margin>
-            <Insets top="10.0" />
-         </BorderPane.margin>
-      </Label>
-   </top>
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
-   <bottom>
-      <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <TextFlow fx:id="feedbackBox" prefHeight="50.0" prefWidth="200.0">
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainController">
+   <children>
+      <BorderPane fx:id="layout" prefHeight="600" prefWidth="370.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-border-radius: 20px;">
+         <bottom>
+            <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text fx:id="feedbackMessage" fill="#5e412f" strokeType="OUTSIDE" strokeWidth="0.0">
-                     <font>
-                        <Font name="Agency FB" size="18.0" />
-                     </font>
-                  </Text>
+                  <TextFlow fx:id="feedbackBox" prefHeight="50.0" prefWidth="200.0">
+                     <children>
+                        <Text fx:id="feedbackMessage" fill="#5e412f" strokeType="OUTSIDE" strokeWidth="0.0">
+                           <font>
+                              <Font name="Agency FB" size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" top="10.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextFlow>
+                  <TextField fx:id="userInput" onKeyPressed="#handleEscReleased" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help" style="-fx-background-radius: 0.5em;" />
                </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
+            </VBox>
+         </bottom>
+         <center>
+            <TableView fx:id="taskTable" onKeyPressed="#handleEscReleased" onKeyReleased="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
+               <columns>
+                  <TableColumn fx:id="indexColumn" editable="false" prefWidth="30.0" sortable="false" text="No." />
+                  <TableColumn fx:id="taskColumn" editable="false" prefWidth="280.0" sortable="false" text="Task Name" />
+                  <TableColumn fx:id="statusColumn" editable="false" prefWidth="90.0" sortable="false" text="Status" />
+                  <TableColumn fx:id="timeColumn" editable="false" prefWidth="180.0" sortable="false" text="Time" />
+               </columns>
                <padding>
-                  <Insets left="5.0" top="10.0" />
-               </padding></TextFlow>
-            <TextField fx:id="userInput" onKeyPressed="#handleEscReleased" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help" style="-fx-background-radius: 0.5em;" />
-         </children>
-      </VBox>
-   </bottom>
-</BorderPane>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="8.0" />
+               </padding>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </TableView>
+         </center>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <top>
+            <Label alignment="CENTER" text="AdultTaskFinder" textFill="#5e412f" BorderPane.alignment="BOTTOM_CENTER">
+               <font>
+                  <Font name="Agency FB Bold" size="30.0" />
+               </font>
+               <BorderPane.margin>
+                  <Insets top="10.0" />
+               </BorderPane.margin>
+            </Label>
+         </top>
+      </BorderPane>
+      <fx:include source="AlertPopup.fxml"/>
+   </children>
+</StackPane>

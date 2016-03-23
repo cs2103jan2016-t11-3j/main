@@ -21,6 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -44,7 +45,6 @@ public class MainController implements Initializable {
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 	HelpPopupController popupController = new HelpPopupController();
-	
 	
 	@FXML
 	private TextField userInput;
@@ -86,11 +86,8 @@ public class MainController implements Initializable {
 		
 		display(); //start program with all tasks in table
 
-
 	}	
-
-
-
+	
 	@FXML
 	//reads input on enter
 	public void handleEnterPressed(KeyEvent event) throws IOException {
@@ -208,8 +205,6 @@ public class MainController implements Initializable {
 	public void populateColumns() {
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
-		endDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("endDate"));
-		startDateColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, Integer>("startDate"));
 		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
 	}
 
