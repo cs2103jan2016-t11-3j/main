@@ -81,5 +81,10 @@ public class UIMain extends Application {
 	public ArrayList<String> getHelpOutput() {
 		return logic.getOutput();
 	}
+	
+	public ArrayList<String> getAlertOutput() {
+		return logic.getAlertOutput();
+	}
+	
 
 }

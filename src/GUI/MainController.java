@@ -9,7 +9,10 @@ import common.TaskObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -20,6 +23,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -40,6 +44,7 @@ public class MainController implements Initializable {
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 	HelpPopupController popupController = new HelpPopupController();
+	
 	
 	@FXML
 	private TextField userInput;
@@ -80,7 +85,21 @@ public class MainController implements Initializable {
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
 		
 		display(); //start program with all tasks in table
-	}	
+
+		try {
+			startAlertPopup();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	}	
+
+	private void startAlertPopup() throws IOException {
+		Parent alert = FXMLLoader.load(getClass().getResource("AlertPopup.fxml"));
+		
+		Stage alertStage = new Stage();
+		alertStage.setScene(new Scene(alert));
+		alertStage.show();
+	}
 
 	@FXML
 	//reads input on enter
@@ -165,6 +184,10 @@ public class MainController implements Initializable {
 			break;
 		}
 		return _UI.getHelpOutput();
+	}
+
+	public static ArrayList<String> getAlertOutput() {
+		return _UI.getAlertOutput();
 	}
 
 	private ArrayList<TaskObject> getOutputTaskList() {
