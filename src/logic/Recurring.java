@@ -28,7 +28,7 @@ public class Recurring {
 	
 	public static void updateEvent(TaskObject task) {
 		LocalDateTime eventEndTime = task.getEndDateTime();
-		if (eventEndTime.isAfter(LocalDateTime.now())) {
+		if (LocalDateTime.now().isAfter(eventEndTime)) {
 			renewEvent(task);
 		}
 	}
