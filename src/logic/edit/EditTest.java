@@ -71,7 +71,7 @@ public class EditTest {
 		testTimings.add(pairTwo);
 		testTimings.add(pairThree);
 		testTimings.add(pairFour);
-		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 11, true, testTimings));
+		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 12, true, testTimings));
 		
 		
 		
@@ -233,12 +233,31 @@ public class EditTest {
 		correctOutput.clear();
 	}
 	
+	@Test // Test edit for modifying a floating task to a deadline - adding a start date and time
+	public void testK() {
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-04-18"), LocalTime.parse("09:00"));
+		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 11);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("Date edited from '+999999999-12-31' to '2016-04-18'. "
+				+ "Time edited from '23:59:59.999999999' to '09:00'.");
+		
+		String actualCategory = testEdit.getEditTask().getCategory();
+		String correctCategory = "deadline";
+		
+		assertEquals(actualCategory, correctCategory);
+		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
+	}
+	
 	@Test // Test edit for recurrence event - edit for start times
 	public void testM() {
 		// 1st assert - check output
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("14:00"));
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
-		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 13);
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 12);
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();

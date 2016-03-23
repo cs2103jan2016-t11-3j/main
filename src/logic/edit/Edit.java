@@ -43,7 +43,6 @@ public class Edit {
 	private static final Logger LOGGER = Logger.getLogger(Edit.class.getName());
 	
 	private CommandObject commandObj;
-	private String taskCategory;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> tempOutput = new ArrayList<String>();
@@ -153,7 +152,6 @@ public class Edit {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
 			if (task.getTaskId() == editTaskId) { 
-				taskCategory = task.getCategory();
 				isRecurringTask = task.getIsRecurring();
 
 				if (isEditTitle) {
@@ -386,7 +384,6 @@ public class Edit {
 		System.out.println("isEditEndTimeForAllOccurrences = " + isEditEndTimeForAllOccurrences);
 		System.out.println("isEditInterval = " + isEditInterval);
 		System.out.println("isRecurringTask = " + isRecurringTask);
-		System.out.println("taskCategory = " + taskCategory);
 	}
 	
 	// ------------------------- OUTPUT MESSAGES -------------------------
@@ -400,7 +397,7 @@ public class Edit {
 			outputTitleEditedMessage();
 		}
 		if (isEditStartDate) {
-			if (taskCategory.equals("deadline")) {
+			if (editTask.getCategory().equals("deadline")) {
 				outputDateEditedMessage();
 			} else {
 				outputStartDateEditedMessage();
@@ -408,13 +405,13 @@ public class Edit {
 		}
 		if (isEditStartTime) {
 			if (isEditStartTimeForAllOccurrences) {
-				if (taskCategory.equals("deadline")) {
+				if (editTask.getCategory().equals("deadline")) {
 					outputTimeEditedForAllOccurrencesMessage();
 				} else {
 					outputStartTimeEditedForAllOccurrencesMessage();
 				}
 			} else {
-				if (taskCategory.equals("deadline")) {
+				if (editTask.getCategory().equals("deadline")) {
 					outputTimeEditedMessage();
 				} else {
 					outputStartTimeEditedMessage();
