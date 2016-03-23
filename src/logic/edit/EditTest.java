@@ -266,7 +266,6 @@ public class EditTest {
 		correctOutput.add("Start date edited from '+999999999-12-31' to '2016-06-18'. Start time edited from '23:59:59.999999999' to '10:00'. " + 
 				"End date edited from '+999999999-12-31' to '2016-08-08'. End time edited from '23:59:59.999999999' to '20:00'.");
 		
-<<<<<<< HEAD
 		String actualCategory = testEdit.getEditTask().getCategory();
 		String correctCategory = CATEGORY_EVENT;
 		
@@ -274,9 +273,7 @@ public class EditTest {
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
 
-=======
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 12);
->>>>>>> b346a0e1ffc187becdb40d75ac024211be5e65fd
 		
 	}
 	
