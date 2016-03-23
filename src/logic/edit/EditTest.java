@@ -15,6 +15,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
 
 // Can consider test cases for situations where a time is added, i.e. from MAX to a specified time - how to display that?
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -256,8 +257,23 @@ public class EditTest {
 	
 	@Test // Test edit for modifying floating -> event - adding a start & end date and time
 	public void testL() {
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-06-18"), LocalTime.parse("10:00"));
+		LocalDateTime testEndDateTime = LocalDateTime.of(LocalDate.parse("2016-08-08"), LocalTime.parse("20:00"));
+		testTaskObject = new TaskObject("", testStartDateTime, testEndDateTime, "", "", -1);		
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 12);
+				
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("Start date edited from '+999999999-12-31' to '2016-06-18'. Start time edited from '23:59:59.999999999' to '10:00'. " + 
+				"End date edited from '+999999999-12-31' to '2016-08-08'. End time edited from '23:59:59.999999999' to '20:00'.");
 		
-		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 11);
+		String actualCategory = testEdit.getEditTask().getCategory();
+		String correctCategory = CATEGORY_EVENT;
+		
+		assertEquals(actualCategory, correctCategory);
+		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
+
 		
 	}
 	
