@@ -72,6 +72,10 @@ public class FileStorageTest {
     public void tearDown() throws Exception {
     }
 
+    /**
+     * Tests that files can be saved and read from storage.
+     * @throws IOException
+     */
     @Test
     public void testSaveLoad() throws IOException {
         IStorage storage = FileStorage.getInstance();
@@ -79,7 +83,12 @@ public class FileStorageTest {
         ArrayList<TaskObject> actualTaskList = storage.load();
         AssertHelper.assertTaskListEquals("SaveLoad" , taskList1 , actualTaskList);
     }
-
+    
+    /**
+     * Tests that files can be saved and the saved files persists after storage is closed,
+     * and that the files can still be read subsequently. 
+     * @throws IOException
+     */
     @Test
     public void testSaveLoadSeperate() throws IOException {
         IStorage storage = FileStorage.getInstance();
@@ -89,7 +98,11 @@ public class FileStorageTest {
         ArrayList<TaskObject> actualTaskList = storage.load();
         AssertHelper.assertTaskListEquals("SaveLoad" , taskList1 , actualTaskList);
     }
-
+    
+    /**
+     * Tests that files are updated by new saves and the updated list is read subsequently.
+     * @throws IOException
+     */
     @Test
     public void testOverWrite() throws IOException {
         IStorage storage = FileStorage.getInstance();
@@ -98,7 +111,10 @@ public class FileStorageTest {
         ArrayList<TaskObject> actualTaskList = storage.load();
         AssertHelper.assertTaskListEquals("SaveLoad" , taskList2 , actualTaskList);
     }
-
+    /**
+     * Tests that a copy can be created and read from a different location.
+     * @throws IOException
+     */
     @Test
     public void testCreateCopyLoadFrom() throws IOException {
         IStorage storage = FileStorage.getInstance();
@@ -109,17 +125,34 @@ public class FileStorageTest {
         AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList1 , actualTaskList);
     }
 
-
+    /**
+     * Tests that the preferred directory to save files can be changed and storage reads from the 
+     * new preferred directory subsequently.
+     * @throws InvalidPathException
+     * @throws JsonSyntaxException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     @Test
     public void testChangeSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
+        ArrayList<TaskObject> actualTaskListOldSave = storage.load();
         storage.changeSaveLocation(moveDir);
         storage.save(taskList2);
-        ArrayList<TaskObject> actualTaskList = storage.load();
-        AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList2 , actualTaskList);
+        ArrayList<TaskObject> actualTaskListNewSave = storage.load();
+        AssertHelper.assertTaskListEquals("CreateCopyLoadFromNew" , taskList2 , actualTaskListNewSave);
+        AssertHelper.assertTaskListEquals("CreateCopyLoadFromOld" , taskList2 , actualTaskListOldSave);
     }
     
+    /**
+     * Tests that storage correctly identifies that a save location is invalid and throws an exception
+     * when attempted to change the preferred directory to an invalid location.
+     * @throws InvalidPathException
+     * @throws JsonSyntaxException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     @Test (expected = InvalidPathException.class)
     public void testChangeInvalidSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
         IStorage storage = FileStorage.getInstance();

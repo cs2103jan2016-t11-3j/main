@@ -41,12 +41,22 @@ public class FilePathTest extends storage.FilePath {
         Files.deleteIfExists(path2);
         
     }
-    
+    /**
+     * This is a case to detect that there is no existing preferred directory settings
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     @Test(expected = FileNotFoundException.class)
     public void testGetPathNoFile() throws FileNotFoundException, IOException {
         getPath();
     }
     
+    /**
+     * This is a case to check that the corrected preferred directory settings is 
+     * read when the settings have been written to disk previously.
+     * @throws NoSuchFileException
+     * @throws IOException
+     */
     @Test
     public void testGetPath() throws NoSuchFileException, IOException {
         String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -57,16 +67,27 @@ public class FilePathTest extends storage.FilePath {
         assertEquals("Returned file Path", expectedFilePath , actualFilePath);
     }
 
+    /**
+     * Test case for checking that a valid folder can indeed be used by storage.
+     */
     @Test
     public void testCheckValidFolder() {
         checkDirectory(".");
     }
 
+    /**
+     * Test case for checking that an invalid folder is indeed not usable by storage.
+     */
     @Test(expected = InvalidPathException.class)
     public void testCheckInalidPath() {
         checkDirectory("fail");
     }
     
+    /**
+     * Test case to check that the change Directory command indeed changes the stored
+     * settings on the file saved on disk.
+     * @throws IOException
+     */
     @Test
     public void testChangeDirectory() throws IOException {
         String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -76,6 +97,12 @@ public class FilePathTest extends storage.FilePath {
         assertEquals( "Change Directory to bin" , expectedPath.toString() , getPath() );
     }
     
+    /**
+     * Test case to check that the change Directory command indeed changes the stored 
+     * settings on the file saved on disk and can create the new directory if it does not
+     * already exist.
+     * @throws IOException
+     */
     @Test
     public void testChangeNewDirectory() throws IOException {
         String saveDir = Paths.get(".").toAbsolutePath().normalize().toString();
