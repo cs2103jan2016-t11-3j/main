@@ -30,7 +30,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("by 16:00:00 on 2016-03-15");
+		expectedTimeOutput.add("by 16:00 on 2016-03-15");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -46,7 +46,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 2016-03-12, from 15:00:00 to 16:00:00 on 2016-03-15");
+		expectedTimeOutput.add("on 2016-03-12, from 15:00 to 16:00 on 2016-03-15");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -62,7 +62,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 2016-03-15, from 15:00:00 to 16:00:00");
+		expectedTimeOutput.add("on 2016-03-15, from 15:00 to 16:00");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -108,7 +108,7 @@ public class TimeOutputTest {
 		for(int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 2016-03-15, from 13:00:00 to 2016-03-16");
+		expectedTimeOutput.add("on 2016-03-15, from 13:00 to 2016-03-16");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -124,7 +124,7 @@ public class TimeOutputTest {
 		for(int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("from 2016-03-15 to 14:00:00 on 2016-03-16");
+		expectedTimeOutput.add("from 2016-03-15 to 14:00 on 2016-03-16");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}

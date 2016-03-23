@@ -128,12 +128,13 @@ public class TimeOutput {
 	private static String[] createDateTimeArray(LocalDateTime time) throws DateTimeException {
 		String[] timeArray = new String[2];
 		if (!time.toLocalTime().equals(LocalTime.MAX)) {
-			String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-			timeArray = line.split("T", 2);
+			timeArray[0] = time.toLocalDate().toString();
+			timeArray[1] = time.toLocalTime().toString();
+			// String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			// timeArray = line.split("T", 2);
 		} else {
-			LocalDate date = time.toLocalDate();
-			String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-			timeArray[0] = line;
+			// String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+			timeArray[0] = time.toLocalDate().toString();
 			timeArray[1] = "";
 		}
 		return timeArray;
