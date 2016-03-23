@@ -15,7 +15,29 @@ public class AddParserTest {
 	@Test
 	public void testProcess() throws Exception {
 		
-		AP.process("buy cake for 7th june by 6 june 9am");
+		AP.process("buy homework");
+		assertEquals("buy homework", AP.getTask());
+		
+		
+		
+		
+		TO = AP.process("be nice to merrel by today 9pm");
+		assertEquals("be nice to merrel", AP.getTask());
+		assertEquals("2016-03-24T21:00",TO.getStartDateTime().toString());
+		assertEquals(-1, AP.getEndTime());
+		assertEquals(-1, AP.getEndDate());
+		
+		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
+		assertEquals("5pm lecture", AP.getTask());
+		assertEquals("2016-03-29T16:00",TO.getStartDateTime().toString());
+		assertTrue(TO.getIsRecurring());
+		
+		TO = AP.process("5pm lecture every thursday from 8am to 9am until 9june");
+		assertEquals("5pm lecture", AP.getTask());
+		assertEquals("2016-03-24T08:00",TO.getStartDateTime().toString());
+	}
+/*
+	AP.process("buy cake for 7th june by 6 june 9am");
 		assertEquals("buy cake for 7th june", AP.getTask());
 		assertEquals(900, AP.getStartTime());
 		assertEquals(20160606, AP.getStartDate());
@@ -42,24 +64,6 @@ public class AddParserTest {
 		assertEquals(20160907, AP.getStartDate());
 		assertEquals(-1, AP.getEndTime());
 		assertEquals(-1, AP.getEndDate());
-		
-		TO = AP.process("be nice to merrel by today 9pm");
-		assertEquals("be nice to merrel", AP.getTask());
-		assertEquals(2100, AP.getStartTime());
-		//assertEquals(20160907, AP.getStartDate());
-		assertEquals("2016-03-22T21:00",TO.getStartDateTime().toString());
-		assertEquals(-1, AP.getEndTime());
-		assertEquals(-1, AP.getEndDate());
-		
-		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
-		assertEquals("5pm lecture", AP.getTask());
-		assertEquals(1600, AP.getStartTime());
-		assertEquals("2016-03-29T16:00",TO.getStartDateTime().toString());
-		assertTrue(TO.getIsRecurring());
-		
-	}
-/*
-	
 	*/
 	@Test
 	public void testSetTask() {

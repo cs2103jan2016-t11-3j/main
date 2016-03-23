@@ -155,7 +155,7 @@ public class DateTimeParser {
 			input = input.replaceFirst(untilstring, "");
 			untilDateTime = LocalDateTime.of(untilDate, untilTime);
 		}
-
+		
 		Matcher intervalMatcher = interval.matcher(input);
 		if(intervalMatcher.find()) {
 			intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
@@ -165,7 +165,8 @@ public class DateTimeParser {
 				parseDateTime(input,true);
 			}
 		}
-		if(startDate == LocalDate.MAX) {
+		
+		if (startDate == LocalDate.MAX || startDate == LocalDate.now()) {
 			getStartDateFromInterval(intervalString);
 		}
 	}
@@ -230,6 +231,7 @@ public class DateTimeParser {
 	 */
 	public void separateDateTime(String input, String type) throws Exception {
 		input = input.replaceFirst("until", "").trim();
+		input = input.replaceFirst("from", "").trim();
 		
 		Pattern time = Pattern.compile(Constants.REGEX_TIME_FORMAT);
 		Matcher timeMatcher = time.matcher(input);
@@ -250,6 +252,7 @@ public class DateTimeParser {
 			//logger.log(Level.INFO, "Time format NOT found");
 			_date = input;
 		}
+	
 		processParallel(DP, TP, _date, _time);
 		setDateTime(type, DP, TP);
 	}
@@ -362,7 +365,7 @@ public class DateTimeParser {
 	
 	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
 	private String cleanString(String input) {
-		if (input.contains("today")) {
+		if (input.contains("today") || input.contains("tomorrow")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim();
 		} else {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();	
@@ -400,5 +403,9 @@ public class DateTimeParser {
 		return endDateTime;
 	}
 	
+	public void reset() {
+		startDateTime = LocalDateTime.MAX;
+		endDateTime = LocalDateTime.MAX;
+	}
 	
 }

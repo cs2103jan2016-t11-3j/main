@@ -17,6 +17,15 @@ public class ParserTest {
 
 	@Test
 	public void testAllocateCommandType() throws Exception {
+		tempParser.allocate("add homework");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("homework", tempParser.getTask());
+		assertEquals(LocalDateTime.MAX,tempParser.getStartDateTime());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("floating", tempParser.getCategory());
+		reset();
+		
 		
 		/*ADD COMMAND POSITIVE-VALUE PARTITION*/
 		/*case 1: adding deadline*/
@@ -30,10 +39,10 @@ public class ParserTest {
 		reset();
 		
 		/*case 2: adding deadline with relative date*/
-		tempParser.allocate("add homework IE2100 by tmr 9am");
+		tempParser.allocate("add homework IE2100 by tomorrow 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals("2016-03-24T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-25T09:00",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
@@ -60,15 +69,28 @@ public class ParserTest {
 		reset();
 		
 		/*case 5: adding recurring task with relative start date*/
-		tempParser.allocate("add 5pm lecture every tuesday at 4pm until 9june");
+		tempParser.allocate("add 5pm lecture every friday at 4pm until 9june");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("5pm lecture", tempParser.getTask());
-		assertEquals("2016-03-29T16:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-25T16:00",tempParser.getStartDateTime().toString());
 		assertEquals("WEEKLY",tempParser.TO.getInterval().getFrequency());
 		assertEquals(1,tempParser.TO.getInterval().getTimeInterval());
 		assertEquals("2016-06-09T23:59:59.999999999",tempParser.TO.getInterval().getUntil().toString());
 		assertEquals("incomplete", tempParser.getStatus());
-		assertEquals("recurring", tempParser.getCategory());
+		assertEquals("deadline", tempParser.getCategory());
+		reset();
+		
+		/*case 5: adding recurring task with relative start date*/
+		tempParser.allocate("add 5pm lecture every thursday from 8am to 9am until 9june");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("5pm lecture", tempParser.getTask());
+		assertEquals("2016-03-24T08:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-24T09:00",tempParser.getEndDateTime().toString());
+		assertEquals("WEEKLY",tempParser.TO.getInterval().getFrequency());
+		assertEquals(1,tempParser.TO.getInterval().getTimeInterval());
+		assertEquals("2016-06-09T23:59:59.999999999",tempParser.TO.getInterval().getUntil().toString());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("event", tempParser.getCategory());
 		reset();
 		
 		/*case 6: searches for normal user input*/
