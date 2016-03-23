@@ -7,8 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import storage.Constants;
-
 public class AtfLogger {
 
     static private FileHandler fileHandler;

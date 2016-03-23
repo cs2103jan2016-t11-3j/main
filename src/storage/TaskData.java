@@ -78,18 +78,5 @@ public class TaskData {
         logger.info(String.format(Constants.LOG_LOADED, filePath));
         return taskList;
     }
-    
-    /**
-     * 
-     * @param taskList
-     * @param filePath
-     * @throws IOException Fail to Delete
-     */
-    static void deleteTasks(ArrayList<TaskObject> taskList, String filePath) 
-            throws IOException {
-        Path path = Paths.get(filePath);
-        Files.deleteIfExists(path);
-        
-    }
 
 }
