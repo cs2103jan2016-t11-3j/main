@@ -89,7 +89,9 @@ public class AlertOutputTest {
 		LogicStub testDriver = new LogicStub(taskList, alertOutput);
 		testDriver.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: event 5; Time: 00:00 to 23:59 on 2016-03-23 ");
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		
+		expectedOutput.add("Task: event 5; Time: 00:00 to 23:59 on " + date + " ");
 		
 		assertEquals(expectedOutput, testDriver.getAlertOutput());
 	}
@@ -103,7 +105,9 @@ public class AlertOutputTest {
 		LogicStub testDriver = new LogicStub(taskList, alertOutput);
 		testDriver.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: event 6; Time: 00:00 to 2016-03-23 ");
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		
+		expectedOutput.add("Task: event 6; Time: 00:00 to " + date + " ");
 		
 		assertEquals(expectedOutput, testDriver.getAlertOutput());
 	}
@@ -117,7 +121,9 @@ public class AlertOutputTest {
 		LogicStub testDriver = new LogicStub(taskList, alertOutput);
 		testDriver.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: event 7; Time: to 2016-03-23 ");
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		
+		expectedOutput.add("Task: event 7; Time: to " + date + " ");
 		
 		assertEquals(expectedOutput, testDriver.getAlertOutput());
 	}
@@ -131,7 +137,9 @@ public class AlertOutputTest {
 		LogicStub testDriver = new LogicStub(taskList, alertOutput);
 		testDriver.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: event 8; Time: to 23:59 on 2016-03-23 ");
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		
+		expectedOutput.add("Task: event 8; Time: to 23:59 on " + date + " ");
 		
 		assertEquals(expectedOutput, testDriver.getAlertOutput());
 	}
