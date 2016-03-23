@@ -21,12 +21,23 @@ import static logic.constants.Strings.*;
 /**
  * Creates an Edit object which will edit the title of a selected task to the
  * desired title. <br>
- * Precondition that Edit must be preceded by a command such as "search" or
- * "display", or else the function will not work. This is because "search" and
- * "display" creates a last output task list which will be utilised by the Edit
- * object. <br>
- * Current capability of Edit is only limited to editing the title.
- * Implementation should be extended to changing any part of the TaskObject.
+ * 
+ * All the edit information is first set based on the information in the CommandObject that is 
+ * passed in the constructor. This is done by having boolean checks for each attribute. The 
+ * attributes that can be edited are:
+ * 1. Title
+ * 2. Start date
+ * 3. Start time
+ * 4. End date
+ * 5. End time
+ * 6. Interval <br>
+ * 
+ * If the task to be edited is a recurring task, the editing will be handled differently:
+ * (a) Edit of start/end time - this will edit the start/end time for all occurrences in the 
+ * recurrence, by default
+ * (b) Edit of start/end date - this will edit the start/end date for only the upcoming occurrence,
+ * by default
+ * 
  * 
  * @param CommandObject
  *            commandObj - Contains information regarding what to change. The
@@ -43,6 +54,7 @@ public class Edit {
 	private static final Logger LOGGER = Logger.getLogger(Edit.class.getName());
 	
 	private CommandObject commandObj;
+	private int editItemIndex;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> tempOutput = new ArrayList<String>();
@@ -63,7 +75,6 @@ public class Edit {
 	private LocalTime editStartTime;
 	private LocalDate editEndDate;
 	private LocalTime editEndTime;
-	private int editItemNumber;
 	private Interval editInterval;
 	
 	boolean isEditTitle = false;
@@ -102,10 +113,10 @@ public class Edit {
 	
 	// Retrieves values from the data objects and sets the relevant edit information	
 	private void setEditInformation() {
-		assert (editItemNumber > 0);
+		assert (editItemIndex > 0);
 		
 		try {
-			editItemNumber = commandObj.getIndex();
+			editItemIndex = commandObj.getIndex();
 			editTitle = commandObj.getTaskObject().getTitle();
 			if (!editTitle.equals("")) {
 				isEditTitle = true;
@@ -137,10 +148,10 @@ public class Edit {
 	}
 
 	private void getTaskIdOfTaskToBeEdited() {
-		assert (editItemNumber > 0 && editItemNumber <= lastOutputTaskList.size());
+		assert (editItemIndex > 0 && editItemIndex <= lastOutputTaskList.size());
 		LOGGER.log(Level.INFO, "Obtained task ID to be edited");
 		
-		editTaskId = lastOutputTaskList.get(editItemNumber-1).getTaskId();
+		editTaskId = lastOutputTaskList.get(editItemIndex-1).getTaskId();
 	}
 
 	/**
@@ -223,17 +234,37 @@ public class Edit {
 		
 	}
 	
+	/* If it is a recurring task, the timing details of the first occurrence will be retrieved
+	 * from the TaskObject and edited. If not, the the timing details in the TaskObject will be
+	 * edited directly.
+	 */
 	private void editStartDate(TaskObject task) {
-		originalStartDateTime = task.getStartDateTime();
-		originalStartDate = originalStartDateTime.toLocalDate();
-		
-		if (!originalStartDate.isEqual(editStartDate)) {		
+		if (isRecurringTask) {
+			ArrayList<LocalDateTimePair> taskDateTimes = task.getTaskDateTimes();
+			LocalDateTimePair taskDateTimeFirst = taskDateTimes.get(0); // gets the first occurrence
+			originalStartDateTime = taskDateTimeFirst.getStartDateTime();
+			originalStartDate = originalStartDateTime.toLocalDate();
 			originalStartTime = originalStartDateTime.toLocalTime();
-			task.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
-			LOGGER.log(Level.INFO, "Start date edited");
+			
+			if (!originalStartDate.isEqual(editStartDate)) {
+				taskDateTimeFirst.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+				LOGGER.log(Level.INFO, "Start date edited for recurring task");
+			} else {
+				isEditStartDate = false;
+			}
 		} else {
-			isEditStartDate = false;
-		} 
+			originalStartDateTime = task.getStartDateTime();
+			originalStartDate = originalStartDateTime.toLocalDate();
+			originalStartTime = originalStartDateTime.toLocalTime();
+			
+			if (!originalStartDate.isEqual(editStartDate)) {		
+				task.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+				LOGGER.log(Level.INFO, "Start date edited");
+			} else {
+				isEditStartDate = false;
+			} 
+		}
+		
 	}
 	
 	// Edits the start time for all recurring occurrences 
@@ -258,10 +289,10 @@ public class Edit {
 	
 	private void editStartTime(TaskObject task) {
 		originalStartDateTime = task.getStartDateTime();
+		originalStartDate = originalStartDateTime.toLocalDate();
 		originalStartTime = originalStartDateTime.toLocalTime();
 		
 		if (!originalStartTime.equals(editStartTime)) {
-			originalStartDate = originalStartDateTime.toLocalDate();
 			task.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
 			LOGGER.log(Level.INFO, "Start time edited");
 		} else {
@@ -286,17 +317,37 @@ public class Edit {
 		} 
 	}
 	
+	/* If it is a recurring task, the timing details of the first occurrence will be retrieved
+	 * from the TaskObject and edited. If not, the the timing details in the TaskObject will be
+	 * edited directly.
+	 */
 	private void editEndDate(TaskObject task) {
-		originalEndDateTime = task.getEndDateTime();
-		originalEndDate = originalEndDateTime.toLocalDate();
-		
-		if (!originalEndDate.isEqual(editEndDate)) {		
+		if (isRecurringTask) {
+			ArrayList<LocalDateTimePair> taskDateTimes = task.getTaskDateTimes();
+			LocalDateTimePair taskDateTimeFirst = taskDateTimes.get(0); // gets the first occurrence
+			originalEndDateTime = taskDateTimeFirst.getEndDateTime();
+			originalEndDate = originalEndDateTime.toLocalDate();
 			originalEndTime = originalEndDateTime.toLocalTime();
-			task.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
-			LOGGER.log(Level.INFO, "End date edited");
+			
+			if (!originalEndDate.isEqual(editEndDate)) {
+				taskDateTimeFirst.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+				LOGGER.log(Level.INFO, "End date edited for recurring task");
+			} else {
+				isEditEndDate = false;
+			}
 		} else {
-			isEditEndDate = false;
-		} 
+			originalEndDateTime = task.getEndDateTime();
+			originalEndDate = originalEndDateTime.toLocalDate();
+			originalEndTime = originalEndDateTime.toLocalTime();
+			
+			if (!originalEndDate.isEqual(editEndDate)) {		
+				task.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+				LOGGER.log(Level.INFO, "End date edited");
+			} else {
+				isEditEndDate = false;
+			} 
+		}
+		
 	}
 	
 	// Edits the end time for all recurring occurrences 
@@ -321,10 +372,10 @@ public class Edit {
 	
 	private void editEndTime(TaskObject task) {
 		originalEndDateTime = task.getEndDateTime();
+		originalEndDate = originalEndDateTime.toLocalDate();
 		originalEndTime = originalEndDateTime.toLocalTime();
 		
 		if (!originalEndTime.equals(editEndTime)) {
-			originalEndDate = originalEndDateTime.toLocalDate();
 			task.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
 			LOGGER.log(Level.INFO, "End time edited");
 		} else {
@@ -350,12 +401,12 @@ public class Edit {
 		LocalDateTime newEndDateTime = editTask.getEndDateTime();
 		
 		if (newStartDateTime.equals(LocalDateTime.MAX) && newEndDateTime.equals(LocalDateTime.MAX)) {
-			editTask.setCategory("floating");
+			editTask.setCategory(CATEGORY_FLOATING);
 		} else {
 			if (newEndDateTime.equals(LocalDateTime.MAX)) {
-				editTask.setCategory("deadline");
+				editTask.setCategory(CATEGORY_DEADLINE);
 			} else {
-				editTask.setCategory("event");
+				editTask.setCategory(CATEGORY_EVENT);
 			}
 		}
 	}
@@ -397,7 +448,7 @@ public class Edit {
 			outputTitleEditedMessage();
 		}
 		if (isEditStartDate) {
-			if (editTask.getCategory().equals("deadline")) {
+			if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
 				outputDateEditedMessage();
 			} else {
 				outputStartDateEditedMessage();
@@ -405,13 +456,13 @@ public class Edit {
 		}
 		if (isEditStartTime) {
 			if (isEditStartTimeForAllOccurrences) {
-				if (editTask.getCategory().equals("deadline")) {
+				if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
 					outputTimeEditedForAllOccurrencesMessage();
 				} else {
 					outputStartTimeEditedForAllOccurrencesMessage();
 				}
 			} else {
-				if (editTask.getCategory().equals("deadline")) {
+				if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
 					outputTimeEditedMessage();
 				} else {
 					outputStartTimeEditedMessage();
@@ -499,8 +550,8 @@ public class Edit {
 		return editTask;
 	}
 	
-	public int getEditItemNumber() {
-		return editItemNumber;
+	public int geteditItemIndex() {
+		return editItemIndex;
 	}
 
 	public String getOriginalTitle() {
