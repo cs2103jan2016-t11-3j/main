@@ -16,7 +16,7 @@ public class RecurringTest {
 	public ArrayList<TaskObject> testArray = new ArrayList<TaskObject>();
 
 	@Test
-	// Interval containing counts > 0
+	// Interval containing counts > 0 
 	public void testA() throws Exception {
 		TaskObject task = new TaskObject("IE2130 Lecture", LocalDateTime.of(2016, 03, 17, 14, 00),
 				LocalDateTime.of(2016, 03, 17, 16, 00), "event", "incomplete", 1);
