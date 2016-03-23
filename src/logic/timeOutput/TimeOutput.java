@@ -133,9 +133,9 @@ public class TimeOutput {
 			// String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 			// timeArray = line.split("T", 2);
 		} else {
-			// String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 			timeArray[0] = time.toLocalDate().toString();
 			timeArray[1] = "";
+			// String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		}
 		return timeArray;
 	}
