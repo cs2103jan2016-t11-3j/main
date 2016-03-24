@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,16 +23,26 @@ public class AlertPopupController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		populateList();
-		alertPane.requestFocus();
+		populateAlertList();
+		setFocusToAlert();
 	}
 
-	private void populateList() {
+	private void setFocusToAlert() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				alertTasks.requestFocus();
+			}
+		});
+	}
+
+	private void populateAlertList() {
 		ArrayList<String> output = MainController.getAlertOutput();
 		ObservableList<String> items =FXCollections.observableArrayList(output);
 		
 		alertTasks.setItems(items);
 	}
+	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
