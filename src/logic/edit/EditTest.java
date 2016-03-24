@@ -277,7 +277,7 @@ public class EditTest {
 		
 	}
 	
-	@Test // Test edit for recurrence event - edit for start dates
+	@Test // Test edit for recurrence event - edit start date of first occurrence
 	public void testM() {
 		// 1st assert - check output
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-03-26"), LocalTime.MAX);
@@ -310,11 +310,11 @@ public class EditTest {
 	}
 	
 	
-	@Test // Test edit for recurrence event - edit for start times
+	@Test // Test edit for recurrence event - edit start times for all occurrences
 	public void testN() {
 		// 1st assert - check output
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("14:00"));
-		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
+		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1, true, new ArrayList<LocalDateTimePair>());
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 14);
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
