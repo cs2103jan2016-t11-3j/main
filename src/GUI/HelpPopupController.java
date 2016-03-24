@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -40,6 +41,8 @@ public class HelpPopupController implements Initializable {
 	private TextFlow helpBox;
 	@FXML
 	private TextArea helpText;
+	@FXML
+	private Label topicLabel;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -70,8 +73,9 @@ public class HelpPopupController implements Initializable {
 	}
 	
 	private void setHelpContent() {
+		topicLabel.setText(displayList.get(0));
 		helpText.clear();
-		for (int i = 0; i < displayList.size(); i++) {
+		for (int i = 1; i < displayList.size(); i++) {
 			helpText.appendText(displayList.get(i) + "\n");
 		}
 		
