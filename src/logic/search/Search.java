@@ -86,7 +86,7 @@ public class Search extends Display {
 	 */
 	public ArrayList<String> run() {
 		setSearchInformation();
-		//printSearchInformation();
+		printSearchInformation();
 		processSearch();
 		setOutput();
 		
@@ -181,9 +181,12 @@ public class Search extends Display {
 		for (int i = 0; i < list.size(); i++) {
 			LocalDate taskStartDate = list.get(i).getStartDateTime().toLocalDate();
 			LocalDate taskEndDate = list.get(i).getEndDateTime().toLocalDate();
+			System.out.println("start date = " + taskStartDate.toString());
+			System.out.println("end date = " + taskEndDate.toString());
 			
 			if (list.get(i).getCategory().equals(CATEGORY_EVENT)) {
-				if (searchDate.isAfter(taskStartDate) && searchDate.isBefore(taskEndDate)) {
+				if ((searchDate.isAfter(taskStartDate) && searchDate.isBefore(taskEndDate)) ||
+						searchDate.isEqual(taskStartDate) || searchDate.isEqual(taskEndDate)) {
 					// if the search date is within the start and end dates of this event
 					match.add(list.get(i));
 				}
