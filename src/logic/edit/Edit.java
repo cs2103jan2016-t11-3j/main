@@ -32,19 +32,22 @@ import static logic.constants.Strings.*;
  * 5. End time
  * 6. Interval <br>
  * 
- * If the task to be edited is a recurring task, the editing will be handled differently:
- * (a) Edit of start/end time - this will edit the start/end time for all occurrences in the 
- * recurrence, by default
- * (b) Edit of start/end date - this will edit the start/end date for only the upcoming occurrence,
- * by default
- * 
+ * If the task to be edited is a recurring task, there are 2 ways that the edit can be processed:
+ * (a) Edit only the upcoming occurrence - this will be the default option, where only the date/time 
+ * data for the first occurrence in the ArrayList<LocalDateTimePair> will be modified.
+ * (b) Edit all occurrences - this will be called if the user input contains the 'all' keyword, i.e.
+ * 'edit all <index> ...'. This will edit the date/time details for all occurrences in the ArrayList.
  * 
  * @param CommandObject
- *            commandObj - Contains information regarding what to change. The
- *            TaskObject contained within this attribute contains the desired
- *            title of a particular object, while the index contained within
- *            this attribute contains the relative position of the task in the
- *            last output task list.
+ *     	commandObj - Contains information regarding what to change. The TaskObject contained 
+ *      within this attribute contains the desired title of a particular object, while the index 
+ *      contained within this attribute contains the relative position of the task in the last 
+ *      output task list.
+ * @param ArrayList<TaskObject>
+ * 		lastOutputTaskList - Contains the task list that is currently being displayed to the user.
+ * @param ArrayList<TaskObject>
+ * 		taskList - Contains the entire list of all tasks.
+ * 	
  * @author ChongYan, RuiBin
  *
  */
@@ -533,6 +536,7 @@ public class Edit {
 			originalEndDateTime = taskDateTimeFirst.getEndDateTime();
 			originalEndDate = originalEndDateTime.toLocalDate();
 			originalEndTime = originalEndDateTime.toLocalTime();
+			System.out.println("original end time in editEndTime = " + originalEndTime.toString());
 			
 			if (!originalEndTime.equals(editEndTime)) {
 				taskDateTimeFirst.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
@@ -611,18 +615,29 @@ public class Edit {
 	// ------------------------- OUTPUT MESSAGES -------------------------
 	
 
-	// Output for deadlines is slightly different as they should not have start/end dates/times
+	/*
+	 * The Deadline check is because output for deadlines is slightly different, as they should 
+	 * not have start/end dates/times.
+	 * If the original date/time is equal to MAX value, then there was no previous date/time so
+	 * the output should be 'added' instead of 'edited'.
+	 */
 	private void setOutput() {
-		//checkEditInformation();
-		
 		if (isEditTitle) {
 			outputTitleEditedMessage();
 		}
 		if (isEditStartDate) {
 			if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
-				outputDateEditedMessage();
+				if (originalStartDate.equals(LocalDate.MAX)) {
+					outputDateAddedMessage();
+				} else {
+					outputDateEditedMessage();
+				}
 			} else {
-				outputStartDateEditedMessage();
+				if (originalStartDate.equals(LocalDate.MAX)) {
+					outputStartDateAddedMessage();
+				} else {
+					outputStartDateEditedMessage();
+				}
 			}
 		}
 		if (isEditStartTime) {
@@ -634,20 +649,36 @@ public class Edit {
 				}
 			} else {
 				if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
-					outputTimeEditedMessage();
+					if (originalStartTime.equals(LocalTime.MAX)) {
+						outputTimeAddedMessage();
+					} else {
+						outputTimeEditedMessage();
+					}
 				} else {
-					outputStartTimeEditedMessage();
+					if (originalStartTime.equals(LocalTime.MAX)) {
+						outputStartTimeAddedMessage();
+					} else {
+						outputStartTimeEditedMessage();
+					}
 				}
 			}
 		}
 		if (isEditEndDate) {
-			outputEndDateEditedMessage();
+			if (originalEndDate.equals(LocalDate.MAX)) {
+				outputEndDateAddedMessage();
+			} else {
+				outputEndDateEditedMessage();
+			}
 		}
 		if (isEditEndTime) {
 			if (isEditEndTimeForAllOccurrences) {
 				outputEndTimeEditedForAllOccurrencesMessage();
 			} else {
-				outputEndTimeEditedMessage();
+				if (originalEndTime.equals(LocalTime.MAX)) {
+					outputEndTimeAddedMessage();
+				} else {
+					outputEndTimeEditedMessage();
+				}
 			}
 		}
 		if (isEditInterval) {
@@ -661,10 +692,16 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
 	}
 	
+	private void outputDateAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_DATE_ADD, editStartDate));
+	}
 	private void outputDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_EDIT, originalStartDate, editStartDate));
 	}
 	
+	private void outputStartDateAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_START_DATE_ADD, editStartDate));
+	}
 	private void outputStartDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_EDIT, originalStartDate, editStartDate));
 	}
@@ -677,10 +714,16 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
 	}
 
+	private void outputTimeAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_ADD, editStartTime));
+	}
 	private void outputTimeEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime));
 	}
 	
+	private void outputStartTimeAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_START_TIME_ADD, editStartTime));
+	}
 	private void outputStartTimeEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_TIME_EDIT, originalStartTime, editStartTime));
 	}
@@ -689,10 +732,16 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT, editEndTime));
 	}
 
+	private void outputEndDateAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_END_DATE_ADD, editEndDate));
+	}
 	private void outputEndDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_DATE_EDIT, originalEndDate, editEndDate));
 	}
 
+	private void outputEndTimeAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_END_TIME_ADD, editEndTime));
+	}
 	private void outputEndTimeEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_TIME_EDIT, originalEndTime, editEndTime));
 	}

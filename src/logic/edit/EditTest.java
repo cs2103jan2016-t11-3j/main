@@ -76,6 +76,7 @@ public class EditTest {
 		
 		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 13, true, testTimings));
 		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 14, true, testTimings));
+		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 15, true, testTimings));
 		
 	}
 	
@@ -243,8 +244,7 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();
-		correctOutput.add("Date edited from '+999999999-12-31' to '2016-04-18'. "
-				+ "Time edited from '23:59:59.999999999' to '09:00'.");
+		correctOutput.add("Added date '2016-04-18'. Added time '09:00'.");
 		
 		String actualCategory = testEdit.getEditTask().getCategory();
 		String correctCategory = "deadline";
@@ -263,8 +263,7 @@ public class EditTest {
 				
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();
-		correctOutput.add("Start date edited from '+999999999-12-31' to '2016-06-18'. Start time edited from '23:59:59.999999999' to '10:00'. " + 
-				"End date edited from '+999999999-12-31' to '2016-08-08'. End time edited from '23:59:59.999999999' to '20:00'.");
+		correctOutput.add("Added start date '2016-06-18'. Added start time '10:00'. Added end date '2016-08-08'. Added end time '20:00'.");
 		
 		String actualCategory = testEdit.getEditTask().getCategory();
 		String correctCategory = CATEGORY_EVENT;
@@ -322,6 +321,7 @@ public class EditTest {
 		correctOutput.add("All start times edited to '14:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
 		
 		// 2nd assert - check timings
 		TaskObject editedTask = testEdit.getEditTask();
@@ -341,5 +341,70 @@ public class EditTest {
 		assertEquals(actualFourthTiming, correctFourthTiming);
 		
 	}
-
+	
+	@Test // Test edit for recurrence event - edit end time for 1 occurrence
+	public void testO() {
+		// 1st assert - check output
+		LocalDateTime testEndDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("23:59"));
+		testTaskObject = new TaskObject("", LocalDateTime.MAX, testEndDateTime, "", "", -1);
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 15);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("End time edited from '18:00' to '23:59'.");
+		
+		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
+		
+		// 2nd assert - check timings
+		TaskObject editedTask = testEdit.getEditTask();
+		ArrayList<LocalDateTimePair> actualTimings = editedTask.getTaskDateTimes();
+		LocalDateTime actualFirstTiming = actualTimings.get(0).getEndDateTime();
+		LocalDateTime correctFirstTiming = LocalDateTime.of(LocalDate.parse("2016-03-25"), LocalTime.parse("23:59"));
+		LocalDateTime actualSecondTiming = actualTimings.get(1).getEndDateTime();
+		LocalDateTime correctSecondTiming = LocalDateTime.of(LocalDate.parse("2016-04-01"), LocalTime.parse("18:00"));
+		LocalDateTime actualThirdTiming = actualTimings.get(2).getEndDateTime();
+		LocalDateTime correctThirdTiming = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("18:00"));
+		LocalDateTime actualFourthTiming = actualTimings.get(3).getEndDateTime();
+		LocalDateTime correctFourthTiming = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("18:00"));
+		
+		assertEquals(actualFirstTiming, correctFirstTiming);
+		assertEquals(actualSecondTiming, correctSecondTiming);
+		assertEquals(actualThirdTiming, correctThirdTiming);
+		assertEquals(actualFourthTiming, correctFourthTiming);
+		
+	}
+	
+	@Test // Test edit for recurrence event - edit end time for all occurrences
+	public void testP() {
+		// 1st assert - check output
+		LocalDateTime testEndDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("23:59"));
+		testTaskObject = new TaskObject("", LocalDateTime.MAX, testEndDateTime, "", "", -1, true, new ArrayList<>()); // BOOLEAN FLAG SET TO TRUE
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 15);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("All end times edited to '23:59'.");
+		
+		assertEquals(actualOutput, correctOutput);
+		
+		// 2nd assert - check timings
+		TaskObject editedTask = testEdit.getEditTask();
+		ArrayList<LocalDateTimePair> actualTimings = editedTask.getTaskDateTimes();
+		LocalDateTime actualFirstTiming = actualTimings.get(0).getEndDateTime();
+		LocalDateTime correctFirstTiming = LocalDateTime.of(LocalDate.parse("2016-03-25"), LocalTime.parse("23:59"));
+		LocalDateTime actualSecondTiming = actualTimings.get(1).getEndDateTime();
+		LocalDateTime correctSecondTiming = LocalDateTime.of(LocalDate.parse("2016-04-01"), LocalTime.parse("23:59"));
+		LocalDateTime actualThirdTiming = actualTimings.get(2).getEndDateTime();
+		LocalDateTime correctThirdTiming = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("23:59"));
+		LocalDateTime actualFourthTiming = actualTimings.get(3).getEndDateTime();
+		LocalDateTime correctFourthTiming = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("23:59"));
+		
+		assertEquals(actualFirstTiming, correctFirstTiming);
+		assertEquals(actualSecondTiming, correctSecondTiming);
+		assertEquals(actualThirdTiming, correctThirdTiming);
+		assertEquals(actualFourthTiming, correctFourthTiming);
+		
+	}
+		
 }
