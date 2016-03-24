@@ -6,7 +6,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
+import java.time.DayOfWeek;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 import common.TaskObject;
 import common.Interval;
@@ -127,48 +132,69 @@ public class TimeOutput {
 
 	private static String[] createDateTimeArray(LocalDateTime time) throws DateTimeException {
 		String[] timeArray = new String[2];
+		
+		timeArray[0] = processRelativeDate(time.toLocalDate());
+		
 		if (!time.toLocalTime().equals(LocalTime.MAX)) {
-			timeArray[0] = time.toLocalDate().toString();
 			timeArray[1] = time.toLocalTime().toString();
-			// String line = time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-			// timeArray = line.split("T", 2);
 		} else {
-			timeArray[0] = time.toLocalDate().toString();
 			timeArray[1] = "";
-			// String line = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		}
 		return timeArray;
 	}
+	
+	private static String processRelativeDate(LocalDate date) {
+		String dateString = "";
+		boolean isInTheSameWeek = checkIfInTheSameWeek(date);
+		if (isInTheSameWeek) {
+			dateString = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		} else {
+			dateString = date.toString();
+		}
+		return dateString;
+	}
+	
+	private static boolean checkIfInTheSameWeek(LocalDate date) {
+		DayOfWeek sunday = DayOfWeek.SUNDAY; 
+		LocalDate thisSunday = LocalDate.now().with(TemporalAdjusters.nextOrSame(sunday));
+		LocalDate lastSunday = thisSunday.minusWeeks(1);
+		
+		if (date.isBefore(thisSunday) && date.isAfter(lastSunday)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
 
-	/*
-	public static ArrayList<String> setRecurringEventTimeOutput(TaskObject foundTask) throws Exception {
-		ArrayList<String> output = new ArrayList<String>();
-		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
+/*
+public static ArrayList<String> setRecurringEventTimeOutput(TaskObject foundTask) throws Exception {
+	ArrayList<String> output = new ArrayList<String>();
+	output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 
-		LocalDateTime startDateTime = foundTask.getStartDateTime();
-		LocalDateTime endDateTime = foundTask.getEndDateTime();
-		Interval interval = foundTask.getInterval();
+	LocalDateTime startDateTime = foundTask.getStartDateTime();
+	LocalDateTime endDateTime = foundTask.getEndDateTime();
+	Interval interval = foundTask.getInterval();
 
-		TaskObject dummyTask = new TaskObject(startDateTime, endDateTime, interval);
-		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) { // if there is no end date specified
-			while (dummyTask.getStartDateTime().isBefore(dummyTask.getInterval().getUntil())) {
+	TaskObject dummyTask = new TaskObject(startDateTime, endDateTime, interval);
+	if (!interval.getUntil().isEqual(LocalDateTime.MAX)) { // if there is no end date specified
+		while (dummyTask.getStartDateTime().isBefore(dummyTask.getInterval().getUntil())) {
+			TimeOutput.setEventTimeOutput(dummyTask);
+			output.add(dummyTask.getTimeOutputString());
+			Recurring.setNextEventTime(dummyTask);
+		}
+	} else {
+		if (interval.getCount() != -1) {
+			for (int i = 0; i <= interval.getCount(); i++) {
 				TimeOutput.setEventTimeOutput(dummyTask);
 				output.add(dummyTask.getTimeOutputString());
 				Recurring.setNextEventTime(dummyTask);
 			}
 		} else {
-			if (interval.getCount() != -1) {
-				for (int i = 0; i <= interval.getCount(); i++) {
-					TimeOutput.setEventTimeOutput(dummyTask);
-					output.add(dummyTask.getTimeOutputString());
-					Recurring.setNextEventTime(dummyTask);
-				}
-			} else {
-				Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
-				throw e;
-			}
+			Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
+			throw e;
 		}
-		return output;
 	}
-	*/
+	return output;
 }
+*/
