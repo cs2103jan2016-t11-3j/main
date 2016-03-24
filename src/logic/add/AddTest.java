@@ -17,15 +17,13 @@ import com.sun.javafx.tk.Toolkit.Task;
 import common.TaskObject;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-// Updated to include all time inputs as LocalDateTime
 public class AddTest {
 
-	// static declaration for continuous adding to the testArray
 	private static ArrayList<TaskObject> testArray = new ArrayList<TaskObject>();
 
 	/*********************************************************************************/
 	@Test
-	// Add floating task
+	// Add floating task. No partitions
 	public void testA() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 		TaskObject task = new TaskObject("Dinner tonight", 1);
@@ -41,7 +39,7 @@ public class AddTest {
 
 	/*********************************************************************************/
 	@Test
-	// Add deadline
+	// Add deadline not yet due
 	public void testB() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 		TaskObject task = new TaskObject("Assignment 1", 2);
