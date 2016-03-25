@@ -46,11 +46,6 @@ public class DateTimeParser {
 	private int _startDate = -1;
 	private int _endDate = -1;
 	
-	private String startT;
-	private String endT;
-	private String startD;
-	private String endD;
-	
 	private LocalDate startDate = LocalDate.MAX;
 	private LocalDate endDate = LocalDate.MAX;
 	private LocalTime startTime = LocalTime.MAX;
@@ -70,6 +65,7 @@ public class DateTimeParser {
 	
 	public TaskObject parse(String input, boolean isForAdd) throws Exception {
 		parseDateTime(input, isForAdd);
+		setLocalDateTime(isForAdd, tasktype);
 		return TO;
 	}
 	
@@ -85,25 +81,34 @@ public class DateTimeParser {
 		if (isForAdd) {
 			parseDateTimeForAdd(input);
 		} else {
-			tasktype = getTaskType(input);
-			//separate stuff for different task types
-			switch(tasktype) {
-			case event:
-				for (String temp : input.split("to")) {
-					dtlist.add(temp);
-				}
-				separateDateTime(dtlist.get(0), "start");
-				separateDateTime(dtlist.get(1), "end");
-				break;
-			case deadline:
-			default:
-				if(input.contains("to")) {
-					endDateTime = startDateTime;
-				}
-				separateDateTime(input, "start");
-				break;
+			parseDateTimeOthers(input);
+		}
+	}
+
+	/**
+	 * method will parse date time string according to its task type
+	 * 
+	 * @param input   user's input in a string format
+	 * @throws Exception 
+	 */
+	public void parseDateTimeOthers(String input) throws Exception {
+		tasktype = getTaskType(input);
+		//separate stuff for different task types
+		switch(tasktype) {
+		case event:
+			for (String temp : input.split("to")) {
+				dtlist.add(temp);
 			}
-			setLocalDateTime(isForAdd, tasktype);
+			separateDateTime(dtlist.get(0), "start");
+			separateDateTime(dtlist.get(1), "end");
+			break;
+		case deadline:
+		default:
+			if(input.contains("to")) {
+				endDateTime = startDateTime;
+			}
+			separateDateTime(input, "start");
+			break;
 		}
 	}
 	
@@ -135,7 +140,6 @@ public class DateTimeParser {
 		default:
 			break;
 		}
-		setLocalDateTime(true, tasktype);
 	}
 	
 	/**
@@ -167,7 +171,7 @@ public class DateTimeParser {
 			}
 		}
 		
-		if (startDate == LocalDate.MAX || startDate.equals(LocalDate.now())) {
+		if (startDate == LocalDate.MAX) {
 			getStartDateFromInterval(intervalString);
 		}
 	}
@@ -266,21 +270,12 @@ public class DateTimeParser {
 
 	public void setDateTime(String type, DateParser DP, TimeParser TP) {
 		if (type.matches("start")) {
-			_startTime = TP.getTime();
-			_startDate = DP.getStartDate();
-			startT = TP.getTimeString();
-			startD = DP.getDateString();
 			startTime = TP.getTimeObject();
 			startDate = DP.getDateObject();
 		} else if (type.matches("until")) {
-			_startDate = DP.getStartDate();
 			untilTime = TP.getTimeObject();
 			untilDate = DP.getDateObject();
 		} else {
-			_endTime = TP.getTime();
-			_endDate = DP.getStartDate();
-			endT = TP.getTimeString();
-			endD = DP.getDateString();
 			endTime = TP.getTimeObject();
 			endDate = DP.getDateObject();
 		}
@@ -308,7 +303,7 @@ public class DateTimeParser {
 				if(startDate.equals(LocalDate.MAX)) {
 					startDate = LocalDate.now();
 				}
-				endD = startD; //for special case of lazy ppl not typing end date
+				//endD = startD; //for special case of lazy ppl not typing end date
 				endDate = startDate;
 			}
 			if (task.toString() == "event") {
@@ -372,7 +367,7 @@ public class DateTimeParser {
 	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
 	private String cleanString(String input) {
 		if (input.contains("today") || input.contains("tomorrow")) {
-			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim();
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim(); //trim specially
 		} else {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();	
 		}

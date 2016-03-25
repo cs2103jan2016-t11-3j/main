@@ -95,10 +95,10 @@ public class MainController implements Initializable {
 	}
 
 	private void setColumnStyle() {
-		indexColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 15");
-		statusColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 15");
-		taskColumn.setStyle("-fx-font-size: 15");
-		timeColumn.setStyle("-fx-font-size: 15");
+		indexColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 17; -fx-font-family: 'Agency FB'");
+		statusColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 17; -fx-font-family: 'Agency FB'");
+		taskColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
+		timeColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
 	}	
 	
 	@FXML

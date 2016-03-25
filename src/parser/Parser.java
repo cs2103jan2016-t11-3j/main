@@ -207,6 +207,13 @@ public class Parser {
 	 */
 	public void parseEdit(String command) throws Exception {
 		CO.setCommandType(EDIT_INDEX);
+		
+		if (command.contains("edit all")) {
+			command = command.replaceFirst("edit all", "").trim();
+			TO.setIsRecurring(true);
+		} else {
+			command = command.replaceFirst("edit", "").trim();
+		}
 		CommandParser EP = new EditParser();
 		TO = EP.process(command);
 		CO.setTaskObject(TO);

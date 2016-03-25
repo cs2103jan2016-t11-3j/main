@@ -11,7 +11,7 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainController">
    <children>
-      <BorderPane fx:id="layout" prefHeight="600" prefWidth="370.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-border-radius: 20px;">
+      <BorderPane fx:id="layout" prefHeight="600" prefWidth="370.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: 100% 100%; -fx-border-radius: 20px;">
          <center>
             <TableView fx:id="taskTable" onKeyPressed="#handleEscReleased" onKeyReleased="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
                <columns>
