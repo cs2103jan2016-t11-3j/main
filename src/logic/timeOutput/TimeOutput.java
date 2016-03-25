@@ -32,28 +32,30 @@ public class TimeOutput {
 	 * 2. with event across days, start and end date in the same week as the
 	 * current week:
 	 * "on Thursday 24/03/16, from 15:00 to 16:00 on Friday 25/03/16" <br>
-	 * 3. with event across days, start date in current week, end date in next week:
-	 * "on Thursday 24/03/16, from 15:00 to 16:00 on next Friday 01/04/16" <br>
+	 * 3. with event across days, start date in current week, end date in next
+	 * week: "on Thursday 24/03/16, from 15:00 to 16:00 on next Friday 01/04/16"
+	 * <br>
 	 * 4. with events within a day, start and end date in different week from
 	 * current week: "on 31/03/16, from 15:00 to 16:00" <br>
-	 * 5. with events across days, start and end date in different week from 
-	 * current week: "on 31/03/16, from 15:00 to 16:00 on 01/04/2016" <br> 
+	 * 5. with events across days, start and end date in different week from
+	 * current week: "on 31/03/16, from 15:00 to 16:00 on 01/04/2016" <br>
 	 * 
-	 * * if start time does not exist, format will be "from -date- to -end time- on date" <br>
-	 * * if both start, end time do not exist, format will be "from -date- to -end date-" <br>
-	 * * if only end time does not exist, format will be "on -start date-, from 
+	 * * if start time does not exist, format will be
+	 * "from -date- to -end time- on date" <br>
+	 * * if both start, end time do not exist, format will be
+	 * "from -date- to -end date-" <br>
+	 * * if only end time does not exist, format will be "on -start date-, from
 	 * -start time- to -end date-" <br>
 	 * 
 	 * <br>
 	 * For deadlines, the following are the permutations for display: <br>
-	 * 1. deadlines without time in same week:
-	 * "by Thursday 24/03/16" <br>
-	 * 2. deadlines with time in same week:
-	 * "by 15:00 on Thursday 24/03/16" <br>
+	 * 1. deadlines without time in same week: "by Thursday 24/03/16" <br>
+	 * 2. deadlines with time in same week: "by 15:00 on Thursday 24/03/16" <br>
+	 * 
 	 * @param taskList
-	 * contains all the tasks for the user
+	 *            contains all the tasks for the user
 	 */
-	
+
 	public static void setTimeOutputForGui(ArrayList<TaskObject> taskList) {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
@@ -71,9 +73,16 @@ public class TimeOutput {
 
 	public static void setEventTimeOutput(TaskObject event) {
 		String line;
+		String[] start;
+		String[] end;
+		
 		try {
-			String[] start = createDateTimeArray(event.getStartDateTime(), false);
-			String[] end = createDateTimeArray(event.getEndDateTime(), true);
+			start = createDateTimeArray(event.getStartDateTime(), false);
+			if (checkIfInTheSameWeek(event.getStartDateTime().toLocalDate())) {
+				end = createDateTimeArray(event.getEndDateTime(), true);
+			} else {
+				end = createDateTimeArray(event.getEndDateTime(), false);
+			}
 			line = formatEventTimeOutput(start, end);
 			event.setTimeOutputString(line);
 		} catch (DateTimeException e) {
@@ -90,8 +99,7 @@ public class TimeOutput {
 
 		try {
 			start = createDateTimeArray(startDateTime, false);
-			if (checkStartEndRelativeDifference(startDateTime, endDateTime) == 1) {
-				// only if endDate is in week after startDate
+			if (checkIfInTheSameWeek(startDateTime.toLocalDate())) {
 				end = createDateTimeArray(endDateTime, true);
 			} else {
 				end = createDateTimeArray(endDateTime, false);
@@ -228,20 +236,6 @@ public class TimeOutput {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	private static int checkStartEndRelativeDifference(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-		LocalDate startDate = startDateTime.toLocalDate();
-		LocalDate endDate = endDateTime.toLocalDate();
-
-		startDate = startDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-		endDate = endDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-
-		if (startDate.plusWeeks(1).isEqual(endDate)) {
-			return 1;
-		} else {
-			return 0;
 		}
 	}
 }
