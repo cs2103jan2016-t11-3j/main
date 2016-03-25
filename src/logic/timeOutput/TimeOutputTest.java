@@ -38,7 +38,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("by 16:00 on 2016-03-15");
+		expectedTimeOutput.add("by 16:00 on 15/03/16");
 		
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}

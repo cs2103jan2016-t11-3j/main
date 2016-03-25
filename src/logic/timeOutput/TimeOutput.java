@@ -21,6 +21,39 @@ import static logic.constants.Strings.*;
 
 public class TimeOutput {
 
+	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
+
+	/**
+	 * Formats a time output for GUI to display, for the entire list of tasks.
+	 * For events, the following are the permutations for display: <br>
+	 * 
+	 * 1. with event within a day, start and end date in the same week as the
+	 * current week: "on Thursday 24/03/16, from 15:00 to 16:00" <br>
+	 * 2. with event across days, start and end date in the same week as the
+	 * current week:
+	 * "on Thursday 24/03/16, from 15:00 to 16:00 on Friday 25/03/16" <br>
+	 * 3. with event across days, start date in current week, end date in next week:
+	 * "on Thursday 24/03/16, from 15:00 to 16:00 on next Friday 01/04/16" <br>
+	 * 4. with events within a day, start and end date in different week from
+	 * current week: "on 31/03/16, from 15:00 to 16:00" <br>
+	 * 5. with events across days, start and end date in different week from 
+	 * current week: "on 31/03/16, from 15:00 to 16:00 on 01/04/2016" <br> 
+	 * 
+	 * * if start time does not exist, format will be "from -date- to -end time- on date" <br>
+	 * * if both start, end time do not exist, format will be "from -date- to -end date-" <br>
+	 * * if only end time does not exist, format will be "on -start date-, from 
+	 * -start time- to -end date-" <br>
+	 * 
+	 * <br>
+	 * For deadlines, the following are the permutations for display: <br>
+	 * 1. deadlines without time in same week:
+	 * "by Thursday 24/03/16" <br>
+	 * 2. deadlines with time in same week:
+	 * "by 15:00 on Thursday 24/03/16" <br>
+	 * @param taskList
+	 * contains all the tasks for the user
+	 */
+	
 	public static void setTimeOutputForGui(ArrayList<TaskObject> taskList) {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
@@ -36,18 +69,11 @@ public class TimeOutput {
 		}
 	}
 
-	/**
-	 * Formats the timing for GUI to display for events, takes in the
-	 * LocalDateTime objects startDateTime and endDateTime and processes it to
-	 * form an output for GUI
-	 * 
-	 * @param event
-	 */
 	public static void setEventTimeOutput(TaskObject event) {
 		String line;
 		try {
-			String[] start = createDateTimeArray(event.getStartDateTime());
-			String[] end = createDateTimeArray(event.getEndDateTime());
+			String[] start = createDateTimeArray(event.getStartDateTime(), false);
+			String[] end = createDateTimeArray(event.getEndDateTime(), true);
 			line = formatEventTimeOutput(start, end);
 			event.setTimeOutputString(line);
 		} catch (DateTimeException e) {
@@ -56,19 +82,27 @@ public class TimeOutput {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static String setEventTimeOutput(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		String line = "";
+		String[] start;
+		String[] end;
+
 		try {
-			String[] start = createDateTimeArray(startDateTime);
-			String[] end = createDateTimeArray(endDateTime);
+			start = createDateTimeArray(startDateTime, false);
+			if (checkStartEndRelativeDifference(startDateTime, endDateTime) == 1) {
+				// only if endDate is in week after startDate
+				end = createDateTimeArray(endDateTime, true);
+			} else {
+				end = createDateTimeArray(endDateTime, false);
+			}
 			line = formatEventTimeOutput(start, end);
 		} catch (DateTimeException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
-		
+
 		return line;
 	}
 
@@ -78,19 +112,21 @@ public class TimeOutput {
 			formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], end[1]);
 			// End Date will not be printed
 		} else {
-			if (!end[1].equals("") && !start[1].equals("")) {
+			if (!end[1].equals("") && !start[1].equals("")) { // if both start
+																// and end time
+																// exist
 				String endDateTime = end[1].concat(" on ").concat(end[0]);
 				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], endDateTime);
 				// End Date will be printed
 			} else {
-				if (end[1].equals("")) {
-					if (start[1].equals("")) {
+				if (end[1].equals("")) { // if end time does not exist
+					if (start[1].equals("")) { // if start time does not exist
 						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
-					} else {
+					} else { // if start time exists
 						formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], end[0]);
 					}
-				} else {
-					if (start[1].equals("")) {
+				} else { // if end time exists
+					if (start[1].equals("")) { // if start time does not exist
 						String endDateTime = end[1].concat(" on ").concat(end[0]);
 						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], endDateTime);
 					}
@@ -108,7 +144,7 @@ public class TimeOutput {
 	public static void setDeadlineTimeOutput(TaskObject deadline) {
 		String line;
 		try {
-			String[] start = createDateTimeArray(deadline.getStartDateTime());
+			String[] start = createDateTimeArray(deadline.getStartDateTime(), false);
 			line = formatDeadlineTimeOutput(start);
 			deadline.setTimeOutputString(line);
 		} catch (DateTimeException e) {
@@ -130,11 +166,11 @@ public class TimeOutput {
 		return formattedString;
 	}
 
-	private static String[] createDateTimeArray(LocalDateTime time) throws DateTimeException {
+	private static String[] createDateTimeArray(LocalDateTime time, boolean isEndDate) throws DateTimeException {
 		String[] timeArray = new String[2];
-		
-		timeArray[0] = processRelativeDate(time.toLocalDate());
-		
+
+		timeArray[0] = processRelativeDate(time.toLocalDate(), isEndDate);
+
 		if (!time.toLocalTime().equals(LocalTime.MAX)) {
 			timeArray[1] = time.toLocalTime().toString();
 		} else {
@@ -142,59 +178,70 @@ public class TimeOutput {
 		}
 		return timeArray;
 	}
-	
-	private static String processRelativeDate(LocalDate date) {
+
+	private static String processRelativeDate(LocalDate date, boolean isEndDate) {
 		String dateString = "";
+		String dayOfWeek = "";
 		boolean isInTheSameWeek = checkIfInTheSameWeek(date);
+		// event in this week: e.g Thursday 24/03/16, applies to both start end
 		if (isInTheSameWeek) {
-			dateString = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+			dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+			dateString = dayOfWeek + " " + date.format(formatter);
 		} else {
-			dateString = date.toString();
+			// only applies for ending date of events
+			if (isEndDate) {
+				boolean isInTheNextWeek = checkIfInTheNextWeek(date);
+				if (isInTheNextWeek) {
+					// event end date in next week: e.g. next Monday 28/03/16
+					dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+					dateString = "next " + dayOfWeek + " " + date.format(formatter);
+				} else {
+					// event end date not in next week: e.g. 19/04/16
+					dateString = date.format(formatter);
+				}
+			} else {
+				// event start date, deadline date: e.g. 19/04/16
+				dateString = date.format(formatter);
+			}
 		}
 		return dateString;
 	}
-	
+
 	private static boolean checkIfInTheSameWeek(LocalDate date) {
-		DayOfWeek sunday = DayOfWeek.SUNDAY; 
+		DayOfWeek sunday = DayOfWeek.SUNDAY;
 		LocalDate thisSunday = LocalDate.now().with(TemporalAdjusters.nextOrSame(sunday));
 		LocalDate lastSunday = thisSunday.minusWeeks(1);
-		
-		if (date.isBefore(thisSunday) && date.isAfter(lastSunday)) {
+
+		if (!date.isAfter(thisSunday) && date.isAfter(lastSunday)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-}
 
-/*
-public static ArrayList<String> setRecurringEventTimeOutput(TaskObject foundTask) throws Exception {
-	ArrayList<String> output = new ArrayList<String>();
-	output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
+	private static boolean checkIfInTheNextWeek(LocalDate date) {
+		DayOfWeek sunday = DayOfWeek.SUNDAY;
+		LocalDate thisSunday = LocalDate.now().with(TemporalAdjusters.nextOrSame(sunday));
+		LocalDate nextSunday = thisSunday.plusWeeks(1);
 
-	LocalDateTime startDateTime = foundTask.getStartDateTime();
-	LocalDateTime endDateTime = foundTask.getEndDateTime();
-	Interval interval = foundTask.getInterval();
-
-	TaskObject dummyTask = new TaskObject(startDateTime, endDateTime, interval);
-	if (!interval.getUntil().isEqual(LocalDateTime.MAX)) { // if there is no end date specified
-		while (dummyTask.getStartDateTime().isBefore(dummyTask.getInterval().getUntil())) {
-			TimeOutput.setEventTimeOutput(dummyTask);
-			output.add(dummyTask.getTimeOutputString());
-			Recurring.setNextEventTime(dummyTask);
-		}
-	} else {
-		if (interval.getCount() != -1) {
-			for (int i = 0; i <= interval.getCount(); i++) {
-				TimeOutput.setEventTimeOutput(dummyTask);
-				output.add(dummyTask.getTimeOutputString());
-				Recurring.setNextEventTime(dummyTask);
-			}
+		if (!date.isAfter(nextSunday) && date.isAfter(thisSunday)) {
+			return true;
 		} else {
-			Exception e = new Exception(MESSAGE_INVALID_RECURRENCE);
-			throw e;
+			return false;
 		}
 	}
-	return output;
+
+	private static int checkStartEndRelativeDifference(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		LocalDate startDate = startDateTime.toLocalDate();
+		LocalDate endDate = endDateTime.toLocalDate();
+
+		startDate = startDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+		endDate = endDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+		if (startDate.plusWeeks(1).isEqual(endDate)) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }
-*/
