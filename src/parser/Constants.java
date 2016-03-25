@@ -116,11 +116,11 @@ public class Constants {
     		+ REGEX_DAYS_TEXT + ")";
     public static final String REGEX_RECURRING_START = "(" + REGEX_DATETIME_FORMAT + "|"
     		+ REGEX_DEADLINE_IDENTIFIER + "|" + REGEX_EVENT_IDENTIFIER + "|" 
-    		+ REGEX_POINT_TASK_IDENTIFIER+ ")?";
+    		+ REGEX_POINT_TASK_IDENTIFIER + ")?";
     public static final String REGEX_RECURRING_UNTIL = "(?i)(until) (" 
     		+ REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATE_ALL + ")";
-    public static final String REGEX_RECURRING_TASK_IDENTIFIER = REGEX_RECURRING_INTERVAL
-    		+ " (" + REGEX_RECURRING_START + ")? " + REGEX_RECURRING_UNTIL;
+    public static final String REGEX_RECURRING_TASK_IDENTIFIER = "(" + REGEX_RECURRING_INTERVAL
+    		+ "( " + REGEX_RECURRING_START + ")?" +"( " + REGEX_RECURRING_UNTIL + ")?" +")";
     /*"(?i)([0-9]+ )?"
      * examples of recurring tasks 
      * add go gym every monday at 9am until 9 june (freq:WEEK;interval:1;until:20160606 localtime)
@@ -151,6 +151,6 @@ public class Constants {
     public static final String REGEX_EDIT_STARTEND = "(?i)(start|end)";
     public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
     		+ REGEX_DATETIME_FORMAT + ")$";
-    public static final String REGEX_SEARCH2 = "(" + REGEX_FINAL + "|"
+    public static final String REGEX_SEARCH2 = "(" +REGEX_RECURRING_INTERVAL + "|"+ REGEX_FINAL + "|"
     		+ "(" + REGEX_DATETIME_FORMAT  + "( " + REGEX_EDIT_STARTEND + ")?)"+ ")$";
 }

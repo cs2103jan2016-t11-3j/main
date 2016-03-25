@@ -102,6 +102,10 @@ public class DateTimeParser {
 			separateDateTime(dtlist.get(0), "start");
 			separateDateTime(dtlist.get(1), "end");
 			break;
+		case recurring:
+			TO.setIsRecurring(true);
+			recur(input);
+			break;
 		case deadline:
 		default:
 			if(input.contains("to")) {
@@ -195,8 +199,13 @@ public class DateTimeParser {
 		} else {
 			_freq = input;
 		}
+		
 		DateParser DP = new DateParser();
-		DP.processDate(_freq);
+		
+		if (!_freq.matches(Constants.REGEX_TIME_ATTRIBUTES)) {
+			DP.processDate(_freq);	
+		}
+		
 		startDate = DP.getDateObject();
 		if (tasktype.equals(TaskType.event)) {
 			endDate = DP.getDateObject();	
