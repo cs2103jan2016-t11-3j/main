@@ -27,7 +27,7 @@ import static logic.constants.Strings.*;
  * Deadlines to be added will be checked if it is already overdue - overdue
  * deadlines will have their status toggled to "overdue" before being added.
  * 
- * @author ChongYan
+ * @author ChongYan, RuiBin
  *
  */
 public class Add {
@@ -94,24 +94,29 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
-		assert (!task.getTitle().equals(""));
-		setUpLogger();
-		try {
-			determineTaskCategory();
-			processTaskInformation();
-			addTask();
-			createOutput();
-		} catch (DateTimeException e) {
-			output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
-			logger.log(Level.WARNING, "date within input task is invalid");
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
-			logger.log(Level.WARNING, "tried to retrieve an unavailable object");
-		} catch (Exception e) {
-			e.printStackTrace();
-			output.add(MESSAGE_FAIL);
-			logger.log(Level.WARNING, "task does not have a valid category");
+		// Special processing to handle undoing the deletion of an occurrence of a recurring task
+		if (task.getIsContainingOnlyTaskDateTimes()) {
+			addSingleOccurrence(task.getTaskDateTimes());
+		} else {
+			assert (!task.getTitle().equals(""));
+			setUpLogger();
+			try {
+				determineTaskCategory();
+				processTaskInformation();
+				addTask();
+				createOutput();
+			} catch (DateTimeException e) {
+				output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+				logger.log(Level.WARNING, "date within input task is invalid");
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+				output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
+				logger.log(Level.WARNING, "tried to retrieve an unavailable object");
+			} catch (Exception e) {
+				e.printStackTrace();
+				output.add(MESSAGE_FAIL);
+				logger.log(Level.WARNING, "task does not have a valid category");
+			}
 		}
 		return output;
 	}
@@ -315,6 +320,14 @@ public class Add {
 	/**
 	 * Group of functions for addition of task
 	 */
+	
+	private void addSingleOccurrence(ArrayList<LocalDateTimePair> dateTimePair) {
+		assert (dateTimePair.size() == 1);
+		
+		LocalDateTimePair occurrenceDetails = dateTimePair.get(0);
+		ArrayList<LocalDateTimePair> allOccurrencesDetails = taskList.get(index-1).getTaskDateTimes();
+		allOccurrencesDetails.add(0, occurrenceDetails); // adds it back to the front of the recurrence list
+	}
 	
 	private void addTask() {
 		addInternal();
