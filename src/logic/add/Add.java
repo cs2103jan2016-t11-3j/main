@@ -164,7 +164,7 @@ public class Add {
 	private void processEventDetails() {
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 		if (task.getIsRecurring()) {
-			addRecurringTimes(task);
+			addRecurringEventTimes(task);
 		}
 		checkIfEventsClash();
 	}
@@ -179,7 +179,7 @@ public class Add {
 		task.addToTaskDateTimes(pair);
 	}
 
-	private void addRecurringTimes(TaskObject task) {
+	private void addRecurringEventTimes(TaskObject task) {
 		Recurring.setAllRecurringEventTimes(task);
 	}
 	
@@ -190,9 +190,19 @@ public class Add {
 	private void processDeadlineDetails() {
 		boolean isOverdue = checkIfOverdue();
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+		if (task.getIsRecurring()) {
+			addRecurringDeadlineTimes(task);
+		}
 		if (isOverdue) {
 			setTaskStatus(isOverdue);
+			if (task.getIsRecurring()) {
+				Recurring.updateDeadline(task);
+			}
 		}
+	}
+	
+	private void addRecurringDeadlineTimes(TaskObject task) {
+		Recurring.setAllRecurringDeadlineTimes(task);
 	}
 
 	/**
