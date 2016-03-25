@@ -87,7 +87,7 @@ public class RecurringTest {
 
 		assertEquals(0, testArray.get(0).getInterval().getCount());
 
-		assertEquals("done", testArray.get(0).getStatus());
+		assertEquals("completed", testArray.get(0).getStatus());
 	}
 
 	@Test
