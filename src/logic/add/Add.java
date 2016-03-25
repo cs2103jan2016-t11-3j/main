@@ -201,7 +201,7 @@ public class Add {
 		if (isOverdue) {
 			setTaskStatus(isOverdue);
 			if (task.getIsRecurring()) {
-				Recurring.updateDeadline(task);
+				Recurring.updateDeadline(task, taskList);
 			}
 		}
 	}
