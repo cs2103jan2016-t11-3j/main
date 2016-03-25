@@ -68,7 +68,7 @@ public class EditParser extends CommandParser {
 		}
 		
 		//remove "edit" and "number"
-		list.remove(0);
+		//list.remove(0);
 		String index = list.get(0);
 		_index = Integer.parseInt(index);
 		list.remove(0); 	// REMOVED THIS BECAUSE EDIT FUNCTION NEEDS THE INDEX NUMBER
@@ -79,7 +79,7 @@ public class EditParser extends CommandParser {
 	 * without "edit" and the index number
 	 */
 	public String cleanString(String input) {
-		input = input.replaceFirst(Constants.REGEX_EDIT, "").trim();
+		input = input.replaceFirst("[\\d+]", "").trim();
 		return input;
 	}
 	
