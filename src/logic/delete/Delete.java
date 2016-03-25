@@ -179,7 +179,7 @@ public class Delete {
 	 * undoList contains a CommandObject with a delete command, and proceeds to
 	 * remove the task if it is the case.
 	 */
-	private void runQuickDelete() {
+	private void runQuickDelete() throws NullPointerException, IndexOutOfBoundsException {
 		if (undoList.isEmpty()) {
 			createErrorOutput();
 		} else if (undoList.peek().getCommandType() == INDEX_DELETE) {
@@ -212,7 +212,7 @@ public class Delete {
 	}
 	
 	// Delete is handled differently if it is a recurring task
-	private void runNormalDelete() throws NullPointerException {
+	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException {
 		assert (!taskList.isEmpty());
 		hasDeletedInternal = deleteInternal();
 		if (hasDeletedInternal) {
@@ -227,7 +227,7 @@ public class Delete {
 	}
 	
 	// Gets the array list of LocalDateTimePair from the task and removes the upcoming occurrence
-	private void runRecurrenceDelete() {
+	private void runRecurrenceDelete() throws NullPointerException, IndexOutOfBoundsException {
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
 			assert (!taskDateTimes.isEmpty());
@@ -281,19 +281,7 @@ public class Delete {
 	private void setIsRecurringTask() {
 		isRecurringTask = removedTask.getIsRecurring();
 	}
-/*
-	private boolean removeTask(int index) {
-		assert (index > 0 && index <= taskList.size());
-		try {
-			setTaskName(taskList.get(index).getTitle());
-			setRemovedTask(taskList.get(index));
-			taskList.remove(index);
-			return true;
-		} catch (NullPointerException e) {
-			return false;
-		}
-	}
-*/
+
 	private boolean deleteInternal() {
 		try {
 			taskList.remove(removedTaskIndex);
@@ -312,8 +300,6 @@ public class Delete {
 			return false;
 		}
 	}
-
-
 
 	private boolean deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();

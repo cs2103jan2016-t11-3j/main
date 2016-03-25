@@ -218,29 +218,36 @@ public class CommandFacade {
 	 * to remove the specified task.
 	 */
 	private void deleteFunction() {
+		// 2 possible things that can be removed
 		TaskObject removedTask = new TaskObject();
+		LocalDateTimePair removedOccurrenceDetails = new LocalDateTimePair(); // will be filled if it is a recurrence-delete
+		Pair<TaskObject, LocalDateTimePair> pair = new Pair<TaskObject, LocalDateTimePair>();
+		
 		if (index == -1) { // no task specified
-			removedTask = quickDelete();
+			pair = quickDelete(removedTask, removedOccurrenceDetails);
 		} else {
-			removedTask = normalDelete();
+			pair = normalDelete(removedTask, removedOccurrenceDetails );
 		}
 
 		boolean isDeleteAll = checkIfCommandIsDeleteAll();
 		if (!isDeleteAll) {
-			processUndoForDelete(removedTask);
+			processUndoForDelete(pair.getFirst(), pair.getSecond());
 		}
 	}
 
-	private TaskObject quickDelete() {
+	private Pair<TaskObject, LocalDateTimePair> quickDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
 		CommandObject cmd = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
 		Delete delete = new Delete(cmd, taskList, undoList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
 
-		return delete.getRemovedTask();
+		removedTask = delete.getRemovedTask();
+		removedOccurrenceDetails = delete.getRemovedTaskOccurrenceDetails();
+		return new Pair<TaskObject, LocalDateTimePair>(removedTask, removedOccurrenceDetails);
+		
 	}
 
-	private TaskObject normalDelete() {
+	private Pair<TaskObject, LocalDateTimePair> normalDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList);
 		setOutput(delete.run());
 		setTaskList(delete.getTaskList());
@@ -248,7 +255,10 @@ public class CommandFacade {
 		setUndoList(delete.getUndoList());
 		setRedoList(delete.getRedoList());
 
-		return delete.getRemovedTask();
+		removedTask = delete.getRemovedTask();
+		removedOccurrenceDetails = delete.getRemovedTaskOccurrenceDetails();
+		return new Pair<TaskObject, LocalDateTimePair>(removedTask, removedOccurrenceDetails);
+		
 	}
 
 	// If the command was 'delete all', all the 3 lists would be empty
@@ -259,14 +269,13 @@ public class CommandFacade {
 	// Checks that removedTask is not null, then adds the corresponding
 	// CommandObject to the
 	// undo list or the redo list
-	private void processUndoForDelete(TaskObject removedTask) {
+	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
 		assert removedTask != null;
 
-		CommandObject newCommandObj = new CommandObject(commandType, removedTask, index);
 		if (isUndoAction) {
-			addToList(newCommandObj, redoList);
+			addToList(removedTask, removedOccurrenceDetails, redoList);
 		} else {
-			addToList(newCommandObj, undoList);
+			addToList(removedTask, removedOccurrenceDetails, undoList);
 		}
 	}
 
@@ -366,15 +375,38 @@ public class CommandFacade {
 		}
 	}
 
-	// ------------------------- METHODS TO POPULATE UNDO/REDO LIST -------------------------
+	// ------------------------- OVERLOADED METHODS TO POPULATE UNDO/REDO LIST -------------------------
 
+	/**
+	 * Method for adding a CommandObject containing "add"  to either the undoList or redoList, 
+	 * which is previously determined by the caller.
+	 * <br>
+	 * A "delete" CommandObject will be pushed into the list.
+	 * The index of the previously added TaskObject will be added into the CommandObject to 
+	 * facilitate future deletion. <br>
+	 */
+	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
+		assert (commandType == INDEX_ADD);
+		
+		CommandObject newCommandObj = new CommandObject();
+		
+		if (index == -1) {
+			// if task was previously added to the end of the list
+			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
+		} else {
+			// if task was previously added to a pre-determined location in
+			// the list
+			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
+		}
+		
+		list.push(newCommandObj);
+	}
+	
 	/**
 	 * Method for adding a CommandObject containing "add" or "delete" to either
 	 * the undoList or redoList, which is previously determined by the caller.
 	 * <br>
-	 * For command "add", a "delete" CommandObject will be pushed into the list.
-	 * The index of the previously added TaskObject will be added into the
-	 * CommandObject to facilitate future deletion. <br>
+	 * For command "add", 
 	 * For command "delete", an "add" CommandObject will be pushed into the
 	 * list, together with a copy of the task which was just deleted.
 	 * 
@@ -383,24 +415,27 @@ public class CommandFacade {
 	 * @param list
 	 *            Either a undoList or a redoList
 	 */
-	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
-		assert (commandType == INDEX_ADD || commandType == INDEX_DELETE);
+	private void addToList(TaskObject removedTask, LocalDateTimePair dateTimePair, Deque<CommandObject> list) {
+		assert (commandType == INDEX_DELETE);
 		
 		CommandObject newCommandObj = new CommandObject();
 
-		if (commandType == INDEX_ADD) {
-			if (index == -1) {
-				// if task was previously added to the end of the list
-				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
-			} else {
-				// if task was previously added to a pre-determined location in
-				// the list
-				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
-			}
-		} else if (commandType == INDEX_DELETE) {
-			newCommandObj = new CommandObject(INDEX_ADD, commandObj.getTaskObject(), index);
+		/*
+		 * 2 types of delete:
+		 * 1. delete task
+		 * 2. delete first timing occurrence in ArrayList<LocalDateTimePair>
+		 */
+		
+		if (dateTimePair.getStartDateTime().equals(LocalDateTime.MAX) &&
+				dateTimePair.getEndDateTime().equals(LocalDateTime.MAX)	) {
+			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
+		} else {
+			ArrayList<LocalDateTimePair> removedOccurrenceDetails = new ArrayList<LocalDateTimePair>();
+			removedOccurrenceDetails.add(dateTimePair);
+			TaskObject taskObjContainingRemovedOccurrenceDetails = new TaskObject(removedOccurrenceDetails);
+			newCommandObj = new CommandObject(INDEX_ADD, taskObjContainingRemovedOccurrenceDetails, index);
 		}
-
+		
 		list.push(newCommandObj);
 	}
 
@@ -415,6 +450,7 @@ public class CommandFacade {
 	 *            Either an undoList or redoList
 	 */
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
+		
 		String originalTitle = editOriginal.getOriginalTitle();
 		LocalDateTime originalStartDateTime = editOriginal.getOriginalStartDateTime();
 		LocalDateTime originalEndDateTime = editOriginal.getOriginalEndDateTime();
@@ -422,7 +458,7 @@ public class CommandFacade {
 		CommandObject newCommandObj = new CommandObject();
 
 		newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle, originalStartDateTime,
-				originalEndDateTime, originalInterval), editOriginal.getEditItemNumber());
+				originalEndDateTime, originalInterval), editOriginal.geteditItemIndex());
 		list.push(newCommandObj);
 	}
 
@@ -488,17 +524,16 @@ public class CommandFacade {
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
 
-	/* For testing
+	
 	private void printTaskObjectFields(TaskObject taskObj) {
 		System.out.println("title = " + taskObj.getTitle());
-		System.out.println("start date = " + taskObj.getStartDate());
-		System.out.println("end date = " + taskObj.getEndDate());
-		System.out.println("start time = " + taskObj.getStartTime());
-		System.out.println("end time = " + taskObj.getEndTime());
+		System.out.println("start date time = " + taskObj.getStartDateTime());
+		System.out.println("start end time = " + taskObj.getEndDateTime());
 		System.out.println("category = " + taskObj.getCategory());
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
-	}*/
+		System.out.println("isRecurring = " + taskObj.getIsRecurring());
+	}
 
 	// ------------------------- GETTERS AND SETTERS -------------------------
 

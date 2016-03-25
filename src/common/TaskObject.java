@@ -9,17 +9,20 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String title = "";
 	protected LocalDateTime startDateTime = LocalDateTime.MAX; //newly added
 	protected LocalDateTime endDateTime = LocalDateTime.MAX; //newly added
-	protected int startDate;
-	protected int endDate;
-	protected int startTime;
-	protected int endTime;
-	protected String category; // deadline, event, or floating
-	protected String status; //completed, overdue or incomplete
+	protected String category = ""; // deadline, event, or floating
+	protected String status = ""; //completed, overdue or incomplete
 	protected int taskId;
 	protected String timeOutputString = ""; // stores date time in the desired output for GUI
 	protected boolean isRecurring;
 	protected Interval interval = new Interval();
 	protected ArrayList<LocalDateTimePair> taskDateTimes = new ArrayList<LocalDateTimePair> (); // stores all dates and times related to a task
+	protected boolean isContainingOnlyTaskDateTimes = false;
+	
+	// Not used in Logic anymore
+	protected int startDate;
+	protected int endDate;
+	protected int startTime;
+	protected int endTime;
 	
 	// Constructor for recurring event tasks
 	public TaskObject(String title, LocalDateTime startDateTime, LocalDateTime endDateTime, String category, String status,
@@ -100,6 +103,12 @@ public class TaskObject implements Comparable<TaskObject> {
 	// Constructor for deleting all for recurring tasks
 	public TaskObject(String title){
 		this.title = title;
+	}
+	
+	// Constructor for undoing deleting of one occurrence of recurring task
+	public TaskObject(ArrayList<LocalDateTimePair> taskDateTimes) {
+		this.taskDateTimes = taskDateTimes;
+		this.isContainingOnlyTaskDateTimes = true;
 	}
 	
 	// empty constructor
@@ -193,6 +202,10 @@ public class TaskObject implements Comparable<TaskObject> {
 	
 	public String getTimeOutputString() {
 		return timeOutputString;
+	}
+	
+	public boolean getIsContainingOnlyTaskDateTimes() {
+		return isContainingOnlyTaskDateTimes;
 	}
 	
 	public void setTitle(String newTitle) {
