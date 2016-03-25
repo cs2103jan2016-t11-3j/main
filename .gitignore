@@ -1,6 +1,7 @@
 *.log
 *.csv
 *.txt
+*.txt.*
 
 /bin/
 /lib/
