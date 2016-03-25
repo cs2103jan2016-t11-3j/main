@@ -13,39 +13,40 @@ public class EditProcessorTest {
 	TaskObject Tempshit = new TaskObject();
 	@Test
 	public void testProcessEdit() throws Exception {
-		Tempshit = EP.process("edit 4 9.13pm end");
-		//assertEquals(2113, Tempshit.getStartTime());
-		assertEquals(2113, Tempshit.getEndTime());
+		Tempshit = EP.process("4 9.13pm end");
 		assertEquals("+999999999-12-31T23:59:59.999999999", Tempshit.getStartDateTime().toString());
 		assertEquals("+999999999-12-31T21:13", Tempshit.getEndDateTime().toString());
 		reset();
 		
-		Tempshit = EP.process("edit 4 by 9.13pm");
-		assertEquals(2113, Tempshit.getStartTime());
+		Tempshit = EP.process("4 by 9.13pm");
 		assertEquals("+999999999-12-31T21:13", Tempshit.getStartDateTime().toString());
 		assertEquals("+999999999-12-31T23:59:59.999999999", Tempshit.getEndDateTime().toString());
 		reset();
 		
-		Tempshit = EP.process("edit 4 st3131");
+		Tempshit = EP.process("4 st3131");
 		assertEquals("st3131", Tempshit.getTitle());
 		reset();
 		
-		Tempshit = EP.process("edit 4 from 8june to 7july");
-		assertEquals(20160608, Tempshit.getStartDate());
-		assertEquals(20160707, Tempshit.getEndDate());
+		Tempshit = EP.process("4 from 8june to 7july");
+		//assertEquals(20160608, Tempshit.getStartDate());
+		//assertEquals(20160707, Tempshit.getEndDate());
 		reset();
 		
-		Tempshit = EP.process("edit 4 9.13pm");
-		assertEquals(2113, Tempshit.getStartTime());
+		Tempshit = EP.process("4 9.13pm");
+		//assertEquals("+999999999-12-31T21:13", Tempshit.getStartDateTime().toString());
+		//assertEquals(2113, Tempshit.getStartTime());
 		reset();
 		
-		
+		Tempshit = EP.process("4 every friday");
+		assertEquals(1, Tempshit.getInterval().getTimeInterval());
+		assertEquals("WEEKLY", Tempshit.getInterval().getFrequency());
+		reset();
 	}
 	
 	@Test
 	public void testCleanString() {
-		assertEquals("do this task", EP.cleanString("edit 3 do this task"));
-		assertEquals("by 9.13pm", EP.cleanString("edit 4 by 9.13pm"));
+		assertEquals("do this task", EP.cleanString("3 do this task"));
+		assertEquals("by 9.13pm", EP.cleanString("4 by 9.13pm"));
 	}
 	
 	@Test

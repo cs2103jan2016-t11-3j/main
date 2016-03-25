@@ -35,6 +35,16 @@ public class DateProcessorTest {
 		assertEquals("2016-03-25", DP.getDateObject().toString());
 		reset();
 		
+		/*case 5: boundary value for positive-value partition (31)*/
+		DP.processDate("31 july 2000");
+		assertEquals("2000-07-31", DP.getDateObject().toString());
+		reset();
+		
+		/*case 6: boundary value for positive-value partition (31)*/
+		DP.processDate("31/12/2000");
+		assertEquals("2000-12-31", DP.getDateObject().toString());
+		reset();
+		
 		/*NEGATIVE VALUE TEST CASES*/
 		/*case 5: test ability to reject non-slash separated numbers*/
 		try {
@@ -48,6 +58,15 @@ public class DateProcessorTest {
 		/*case 6: test if exception is thrown when date is not valid*/
 		try {
 			DP.processDate("51 july 1030");
+			assert false;
+		} catch (Exception e) {
+			assert true;
+		}
+		reset();
+		
+		/*case 7: test if exception is thrown when date is at boundary*/
+		try {
+			DP.processDate("32 july 1030");
 			assert false;
 		} catch (Exception e) {
 			assert true;
@@ -97,11 +116,11 @@ public class DateProcessorTest {
 		reset();
 		
 		DP.processRelativeDate("tmr");
-		assertEquals("2016-03-23",DP.getDateObject().toString());
+		assertEquals("2016-03-25",DP.getDateObject().toString());
 		reset();
 		
 		DP.processRelativeDate("next week");
-		assertEquals("2016-03-29",DP.getDateObject().toString());
+		assertEquals("2016-03-31",DP.getDateObject().toString());
 		reset();
 	}
 

@@ -202,7 +202,7 @@ public class DateTimeParser {
 		
 		DateParser DP = new DateParser();
 		
-		if (!_freq.matches(Constants.REGEX_TIME_ATTRIBUTES)) {
+		if (_freq.matches(Constants.REGEX_DAYS_TEXT)) {
 			DP.processDate(_freq);	
 		}
 		

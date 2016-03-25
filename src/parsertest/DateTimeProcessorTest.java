@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import common.TaskObject;
-
+import parser.Constants;
 import parser.DateTimeParser;
 
 public class DateTimeProcessorTest {
@@ -16,15 +16,29 @@ public class DateTimeProcessorTest {
 	public void testParseDateTime() throws Exception {
 		//DTP.parseDateTime("by 9.13pm", false);
 		//assertEquals(2113, DTP.getStartTime());
-		
-		
+		String temp = "every 2 hour by 7pm";
+		assertTrue(temp.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
 	
-		TO = DTP.parse("every saturday from 8am to 9am until 9june", true);
+		
+		
+		TO = DTP.parse("every day", true);
 		assertTrue(TO.getIsRecurring());
-		assertEquals("WEEKLY",TO.getInterval().getFrequency());
+		assertEquals("DAILY",TO.getInterval().getFrequency());
 		assertEquals(1,TO.getInterval().getTimeInterval());
-		assertEquals("",TO.getStartDateTime().toString());
-		assertEquals("",TO.getEndDateTime().toString());
+		assertEquals("2016-04-01T23:59:59.999999999",TO.getStartDateTime().toString());
+		//assertEquals("",TO.getEndDateTime().toString());
+		
+		TO = DTP.parse("every day from 28 june 8am to 9am until 9june", true);
+		assertTrue(TO.getIsRecurring());
+		assertEquals("DAILY",TO.getInterval().getFrequency());
+		assertEquals(1,TO.getInterval().getTimeInterval());
+		assertEquals("2016-06-28T08:00",TO.getStartDateTime().toString());
+		assertEquals("2016-06-28T09:00",TO.getEndDateTime().toString());
+		assertEquals("2016-06-09T23:59:59.999999999",TO.getInterval().getUntil().toString());
+		TO.resetAttributes();
+		
+		
+		
 		
 	}
 	/*
@@ -60,7 +74,7 @@ public class DateTimeProcessorTest {
 		assertEquals("recurring", temp);
 		
 		temp = DTP.getTaskType("every month from 5th march 9am to 11am until 9 jan 2017").toString();
-		assertEquals("recurring", temp);	
+		assertEquals("recurring", temp);
 	}
 	
 	@Test
