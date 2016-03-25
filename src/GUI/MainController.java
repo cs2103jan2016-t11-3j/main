@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import common.TaskObject;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,13 +14,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -68,7 +72,8 @@ public class MainController implements Initializable {
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;	
-	
+
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	
@@ -84,8 +89,16 @@ public class MainController implements Initializable {
 		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
 		
+		setColumnStyle();
 		display(); //start program with all tasks in table
+		
+	}
 
+	private void setColumnStyle() {
+		indexColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 15");
+		statusColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 15");
+		taskColumn.setStyle("-fx-font-size: 15");
+		timeColumn.setStyle("-fx-font-size: 15");
 	}	
 	
 	@FXML
@@ -246,5 +259,12 @@ public class MainController implements Initializable {
 				return cell;
 			}
 		});
+	}
+	@FXML
+	public void handleTabPressed(KeyEvent event) {
+		if (event.getCode() == KeyCode.TAB) {
+			taskTable.setFocusTraversable(true);
+			userInput.setFocusTraversable(true);
+		}
 	}
 } 
