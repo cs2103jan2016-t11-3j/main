@@ -20,29 +20,37 @@ public class AlertPopupController implements Initializable {
     private ListView<String> alertTasks;
     @FXML
     private VBox alertPane;
+    ArrayList<String> output = MainController.getAlertOutput();
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		populateAlertList();
-		setFocusToAlert();
+	    setAlertOutput();
+	    if (output.isEmpty()) {
+	    	alertPane.setVisible(false);
+	    } else {
+	    	populateAlertList();
+			setFocusToAlert();	
+	    }
 	}
 
+	private void setAlertOutput() {
+		output = MainController.getAlertOutput();
+	}
+
+	private void populateAlertList() {
+		ObservableList<String> items =FXCollections.observableArrayList(output);
+		alertTasks.setItems(items);
+	}
+	
 	private void setFocusToAlert() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				alertTasks.requestFocus();
+				alertPane.requestFocus();
 			}
 		});
 	}
 
-	private void populateAlertList() {
-		ArrayList<String> output = MainController.getAlertOutput();
-		ObservableList<String> items =FXCollections.observableArrayList(output);
-		
-		alertTasks.setItems(items);
-	}
-	
 	@FXML
 	public void handleEnterPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
