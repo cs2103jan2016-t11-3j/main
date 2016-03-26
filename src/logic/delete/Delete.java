@@ -246,8 +246,9 @@ public class Delete {
 
 			removedTaskOccurrenceDetails = taskDateTimes.remove(0);
 			removedTask.setTaskDateTimes(taskDateTimes);
-			// update startDateTime to the new first occurrence in the ArrayList of LocalDateTimePair
+			// update startDateTime and endDateTime to the new first occurrence in the ArrayList of LocalDateTimePair
 			removedTask.setStartDateTime(taskDateTimes.get(0).getStartDateTime());
+			removedTask.setEndDateTime(taskDateTimes.get(0).getEndDateTime());
 			
 			TimeOutput.setTaskTimeOutput(removedTask); // to update the recurrence date in GUI
 			createRecurrenceOutput();
