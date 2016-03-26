@@ -238,4 +238,14 @@ public class TimeOutput {
 			return false;
 		}
 	}
+	
+	public static void setTaskTimeOutput(TaskObject task) {
+		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
+			setDeadlineTimeOutput(task);
+		} else {
+			if (task.getCategory().equals(CATEGORY_EVENT)) {
+				setEventTimeOutput(task);
+			}
+		}
+	}
 }
