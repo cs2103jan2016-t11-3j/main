@@ -331,12 +331,19 @@ public class Add {
 	 * Group of functions for addition of task
 	 */
 	
+	// For processing undo of deletion of a single occurrence
 	private void addSingleOccurrence(ArrayList<LocalDateTimePair> dateTimePair) {
 		assert (dateTimePair.size() == 1);
 		
+		TaskObject taskToBeModified = taskList.get(index-1);
 		LocalDateTimePair occurrenceDetails = dateTimePair.get(0);
-		ArrayList<LocalDateTimePair> allOccurrencesDetails = taskList.get(index-1).getTaskDateTimes();
-		allOccurrencesDetails.add(0, occurrenceDetails); // adds it back to the front of the recurrence list
+		ArrayList<LocalDateTimePair> allOccurrencesDetails = taskToBeModified.getTaskDateTimes();
+		
+		// adds it back to the front of the recurrence list
+		allOccurrencesDetails.add(0, occurrenceDetails); 
+		// updates the startDateTime to that of the occurrence that has been added back
+		taskToBeModified.setStartDateTime(occurrenceDetails.getStartDateTime()); 
+		
 	}
 	
 	private void addTask() {

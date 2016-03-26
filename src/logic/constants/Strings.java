@@ -34,12 +34,13 @@ public class Strings {
 	//Delete Constants
 	public static final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s";
 	public static final String MESSAGE_DELETE_ERROR = "Error deleting task from TaskFinder. ";
-	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable";
+	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
-	public static final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder";
-	public static final String MESSAGE_RECURRENCE_DELETE = "Most recent occurrence deleted";
-	public static final String MESSAGE_RECURRENCE_DELETE_ALL = "All occurrences deleted";
-	public static final String MESSAGE_RECURRENCE_DELETE_ERROR = "Error deleting most recent occurrence";
+	public static final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder.";
+	public static final String MESSAGE_RECURRENCE_DELETE = "Most recent occurrence deleted.";
+	public static final String MESSAGE_RECURRENCE_DELETE_ALL = "All occurrences deleted.";
+	public static final String MESSAGE_RECURRENCE_DELETE_ERROR = "Error deleting most recent occurrence.";
+	public static final String MESSAGE_ONLY_ONE_OCCURRENCE_REMAINING = "Only one occurrence remaining. ";
 	
 	//Display Constants
 	public static final String MESSAGE_EMPTY_LIST = "Task list is empty.";

@@ -5,6 +5,7 @@ import storage.*;
 import common.CommandObject;
 import common.LocalDateTimePair;
 import common.TaskObject;
+import logic.timeOutput.TimeOutput;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -73,6 +74,7 @@ public class Delete {
 	// Attributes that should be passed in when the delete object is first constructed
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> lastOutputTaskList;
+	private ArrayList<String> tempOutput = new ArrayList<String>();
 	private ArrayList<String> output = new ArrayList<String>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
 	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
@@ -156,10 +158,17 @@ public class Delete {
 					setDeleteInformation();
 
 					if (isRecurringTask) {
-						if (commandObj.getTaskObject().getTitle().equals("all")) {
-							runNormalDelete();
-						} else {
-							runRecurrenceDelete();
+						try {
+							if (commandObj.getTaskObject().getTitle().equals("all")) {
+								runNormalDelete();
+							}
+						} catch (NullPointerException e) {
+							if (removedTask.getTaskDateTimes().size() > 1){
+								runRecurrenceDelete();
+							} else { // if there is only 1 occurrence left, delete the entire task
+								createOnlyOneOccurrenceRemainingOutput();
+								runNormalDelete();
+							}
 						}
 					} else {
 						runNormalDelete();
@@ -167,10 +176,12 @@ public class Delete {
 				}
 			}
 		} catch (NullPointerException e) {
-			output.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
+			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
 		} catch (IndexOutOfBoundsException e) {
-			output.add(MESSAGE_DELETE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
+			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
 		}
+		
+		concatenateOutput();
 		return output;
 	}
 
@@ -230,10 +241,14 @@ public class Delete {
 	private void runRecurrenceDelete() throws NullPointerException, IndexOutOfBoundsException {
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
-			assert (!taskDateTimes.isEmpty());
-			
+			assert (taskDateTimes.size() > 1);
+
 			removedTaskOccurrenceDetails = taskDateTimes.remove(0);
 			removedTask.setTaskDateTimes(taskDateTimes);
+			// update startDateTime to the new first occurrence in the ArrayList of LocalDateTimePair
+			removedTask.setStartDateTime(taskDateTimes.get(0).getStartDateTime());
+			
+			TimeOutput.setTaskTimeOutput(removedTask); // to update the recurrence date in GUI
 			createRecurrenceOutput();
 		} catch (IndexOutOfBoundsException e) {
 			createErrorRecurrenceOutput();
@@ -321,33 +336,48 @@ public class Delete {
 
 	private void createOutput() {
 		if (isRecurringTask) {
-			output.add(String.format(MESSAGE_RECURRENCE_DELETE_ALL));
+			tempOutput.add(String.format(MESSAGE_RECURRENCE_DELETE_ALL));
 		} else {
-			output.add(String.format(MESSAGE_DELETE, removedTaskName));
+			tempOutput.add(String.format(MESSAGE_DELETE, removedTaskName));
 		}
 	}
 
 	private void createErrorOutput() {
 		removedTask = null;
-		output.add(MESSAGE_DELETE_ERROR);
+		tempOutput.add(MESSAGE_DELETE_ERROR);
 	}
 
 	private void createQuickDeleteUnavailableErrorOutput() {
 		removedTask = null;
-		output.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
+		tempOutput.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
 	}
 
 	private void createDeletedAllOutput() {
-		output.add(MESSAGE_DELETED_ALL);
+		tempOutput.add(MESSAGE_DELETED_ALL);
 	}
 	
 	private void createRecurrenceOutput() {
-		output.add(MESSAGE_RECURRENCE_DELETE);
+		tempOutput.add(MESSAGE_RECURRENCE_DELETE);
 	}
 	
 	private void createErrorRecurrenceOutput() {
 		removedTask = null;
-		output.add(MESSAGE_RECURRENCE_DELETE_ERROR);
+		tempOutput.add(MESSAGE_RECURRENCE_DELETE_ERROR);
+	}
+	
+	private void createOnlyOneOccurrenceRemainingOutput() {
+		tempOutput.add(MESSAGE_ONLY_ONE_OCCURRENCE_REMAINING);
+	}
+	
+	private void concatenateOutput() {
+		assert (!tempOutput.isEmpty());
+
+		String concatOutput = "";
+		for (int i = 0; i < tempOutput.size(); i++) {
+			concatOutput = concatOutput.concat(tempOutput.get(i));
+		}
+		
+		output.add(concatOutput.trim());
 	}
 
 	// ----------------------- GETTERS AND SETTERS -----------------------
