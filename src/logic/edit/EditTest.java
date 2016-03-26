@@ -314,6 +314,7 @@ public class EditTest {
 		// 1st assert - check output
 		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("14:00"));
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1, true, new ArrayList<LocalDateTimePair>());
+		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 14);
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
@@ -380,6 +381,7 @@ public class EditTest {
 		// 1st assert - check output
 		LocalDateTime testEndDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.parse("23:59"));
 		testTaskObject = new TaskObject("", LocalDateTime.MAX, testEndDateTime, "", "", -1, true, new ArrayList<>()); // BOOLEAN FLAG SET TO TRUE
+		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 15);
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);

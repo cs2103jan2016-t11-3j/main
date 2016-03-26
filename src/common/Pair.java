@@ -1,6 +1,6 @@
 package common;
 
-public class Pair <S, T>{
+public class Pair <S, T> {
 
 	private S first;
 	private T second;

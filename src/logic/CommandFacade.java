@@ -270,7 +270,7 @@ public class CommandFacade {
 	// CommandObject to the
 	// undo list or the redo list
 	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
-		assert removedTask != null;
+		assert removedTask != null;	// MODIFY THIS CHECK
 
 		if (isUndoAction) {
 			addToList(removedTask, removedOccurrenceDetails, redoList);
@@ -451,14 +451,11 @@ public class CommandFacade {
 	 */
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
 		
-		String originalTitle = editOriginal.getOriginalTitle();
-		LocalDateTime originalStartDateTime = editOriginal.getOriginalStartDateTime();
-		LocalDateTime originalEndDateTime = editOriginal.getOriginalEndDateTime();
-		Interval originalInterval = editOriginal.getOriginalInterval();
+		TaskObject originalTask = editOriginal.getOriginalTask();
+		originalTask.setIsEditAll(editOriginal.getIsEditAll());
+		
 		CommandObject newCommandObj = new CommandObject();
-
-		newCommandObj = new CommandObject(INDEX_EDIT, new TaskObject(originalTitle, originalStartDateTime,
-				originalEndDateTime, originalInterval), editOriginal.geteditItemIndex());
+		newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editOriginal.getEditItemIndex());
 		list.push(newCommandObj);
 	}
 
@@ -522,17 +519,6 @@ public class CommandFacade {
 	private void printInvalidCommandMessage() {
 		output.clear();
 		output.add(MESSAGE_INVALID_COMMAND);
-	}
-
-	
-	private void printTaskObjectFields(TaskObject taskObj) {
-		System.out.println("title = " + taskObj.getTitle());
-		System.out.println("start date time = " + taskObj.getStartDateTime());
-		System.out.println("start end time = " + taskObj.getEndDateTime());
-		System.out.println("category = " + taskObj.getCategory());
-		System.out.println("status = " + taskObj.getStatus());
-		System.out.println("task id = " + taskObj.getTaskId());
-		System.out.println("isRecurring = " + taskObj.getIsRecurring());
 	}
 
 	// ------------------------- GETTERS AND SETTERS -------------------------

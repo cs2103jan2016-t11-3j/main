@@ -16,6 +16,9 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected boolean isRecurring;
 	protected Interval interval = new Interval();
 	protected ArrayList<LocalDateTimePair> taskDateTimes = new ArrayList<LocalDateTimePair> (); // stores all dates and times related to a task
+	
+	// Checks to facilitate undo processes
+	protected boolean isEditAll = false;
 	protected boolean isContainingOnlyTaskDateTimes = false;
 	
 	// Not used in Logic anymore
@@ -269,6 +272,13 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.isRecurring = isRecurring;
 	}
 	
+	public boolean getIsEditAll() {
+		return isEditAll;
+	}
+	
+	public void setIsEditAll(boolean bool) {
+		isEditAll = bool;
+	}
 	public void addToTaskDateTimes(LocalDateTimePair pair) {
 		this.taskDateTimes.add(pair);
 	}
@@ -287,6 +297,22 @@ public class TaskObject implements Comparable<TaskObject> {
 	
 	public void setTaskDateTimes(ArrayList<LocalDateTimePair> newTaskDateTimes) {
 		this.taskDateTimes = newTaskDateTimes;
+	}
+	
+	// Essentially creates a copy of the task object that is passed into this method
+	public void setTaskObject(TaskObject task) {
+		this.title = task.getTitle();
+		this.startDateTime = task.getStartDateTime();
+		this.endDateTime = task.getEndDateTime();
+		this.category = task.getCategory();
+		this.status = task.getStatus();
+		this.taskId = task.getTaskId();
+		this.timeOutputString = task.getTimeOutputString();
+		this.isRecurring = task.getIsRecurring();
+		this.interval = task.getInterval();
+		this.taskDateTimes = task.getTaskDateTimes();
+		this.isEditAll = task.getIsEditAll();
+		this.isContainingOnlyTaskDateTimes = task.getIsContainingOnlyTaskDateTimes();
 	}
 	
 	// Checks if title, dates and times are invalid values
