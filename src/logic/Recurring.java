@@ -31,13 +31,10 @@ public class Recurring {
 			renewEvent(task);
 			eventEndTime = task.getEndDateTime();
 		}
-		
-		System.out.println(task.getTaskDateTimes().size());
 
 		if (task.getTaskDateTimes().size() <= 1) {
 			if (LocalDateTime.now().isAfter(eventEndTime)) {
 				markAsDone(task);
-				System.out.println("marked as done");
 			}
 		}
 	}
@@ -202,29 +199,41 @@ public class Recurring {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
-					updateDeadline(taskList.get(i), taskList);
+					updateDeadline(taskList.get(i), taskList, "overdue");
 				}
 			}
 		}
 	}
 
 	/**
+	 * Method used when starting the program, and when a recurring task is marked
+	 * <br>
 	 * If the current time has passed the said recurrent time, this function
 	 * updates the deadline by creating a new task with this recurrent time and
-	 * adds it to the task list, with the status set as overdue. This is due to
-	 * the premise that marking a recurring deadline as complete automatically
+	 * adds it to the task list, with the status set as overdue/complete. This is due 
+	 * to the premise that marking a recurring deadline as complete automatically
 	 * creates a new task with that deadline and marking it as complete
 	 * 
 	 * @param task
 	 */
-	public static void updateDeadline(TaskObject task, ArrayList<TaskObject> taskList) {
+	public static void updateDeadline(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+		if (status.equals("overdue")) {
+			updateDeadlineToOverdue(task, taskList, status);
+		} else {
+			if (status.equals("completed")) {
+				updateDeadlineToCompleted(task, taskList, status);
+			}
+		}
+	}
+	
+	private static void updateDeadlineToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status) {
 		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
 		String taskName = task.getTitle();
 
 		// Continually splits tasks until recurring task is no longer overdue
 		// number of recurring times must also be more than 1
 		while (LocalDateTime.now().isAfter(deadlineDateTime) && task.getTaskDateTimes().size() > 1) {
-			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList);
+			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList, status);
 			renewDeadline(task);
 			deadlineDateTime = task.getStartDateTime();
 		}
@@ -232,8 +241,20 @@ public class Recurring {
 		// Special case for only 1 timing left
 		if (task.getTaskDateTimes().size() == 1) {
 			if (LocalDateTime.now().isAfter(deadlineDateTime)) {
-				markAsOverdue(task);
+				task.setStatus(status);
 			}
+		}
+	}
+	
+	private static void updateDeadlineToCompleted(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
+		String taskName = task.getTitle();
+		
+		if (task.getTaskDateTimes().size() == 1) {
+			task.setStatus(status);
+		} else {
+			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList, status);
+			renewDeadline(task);
 		}
 	}
 
@@ -248,9 +269,9 @@ public class Recurring {
 	}
 
 	private static void splitTaskFromRecurringDeadline(LocalDateTime deadline, String title,
-			ArrayList<TaskObject> taskList) {
+			ArrayList<TaskObject> taskList, String status) {
 		int taskId = generateTaskId(taskList);
-		TaskObject splitDeadline = createOverdueDeadlineTaskObject(deadline, title, taskId);
+		TaskObject splitDeadline = createOverdueDeadlineTaskObject(deadline, title, taskId, status);
 		Add add = new Add(splitDeadline, -1, taskList);
 		add.run();
 		// adds the split deadline into the taskList
@@ -267,15 +288,11 @@ public class Recurring {
 		return id;
 	}
 
-	private static TaskObject createOverdueDeadlineTaskObject(LocalDateTime deadline, String title, int taskId) {
-		TaskObject splitDeadline = new TaskObject(title, deadline, CATEGORY_EVENT, "overdue", taskId);
+	private static TaskObject createOverdueDeadlineTaskObject(LocalDateTime deadline, String title, int taskId, String status) {
+		TaskObject splitDeadline = new TaskObject(title, deadline, CATEGORY_EVENT, status, taskId);
 		splitDeadline.setIsRecurring(false);
 		splitDeadline.addToTaskDateTimes(new LocalDateTimePair(deadline));
 		TimeOutput.setDeadlineTimeOutput(splitDeadline);
 		return splitDeadline;
-	}
-
-	private static void markAsOverdue(TaskObject task) {
-		task.setStatus("overdue");
 	}
 }

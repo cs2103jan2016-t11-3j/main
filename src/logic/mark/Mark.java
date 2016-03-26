@@ -76,20 +76,7 @@ public abstract class Mark {
 		}
 	}
 
-	protected boolean changeStatus() {
-		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() == taskIdToMark) {
-				taskName = taskList.get(i).getTitle();
-				statusBeforeChange = taskList.get(i).getStatus();
-				markedTask = taskList.get(i);
-				taskList.get(i).setStatus("completed");
-				
-				LOGGER.log(Level.INFO, "Status changed to \'completed\'");
-				return true;
-			}
-		}
-		return false;
-	}
+	protected abstract boolean changeStatus();
 
 	protected void createErrorOutput() {
 		output.add(MESSAGE_MARK_ERROR);

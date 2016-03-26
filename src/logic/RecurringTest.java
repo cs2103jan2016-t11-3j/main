@@ -176,7 +176,7 @@ public class RecurringTest {
 	public void testG() throws Exception{
 		TaskObject task = new TaskObject("buy tissue", LocalDateTime.of(2016, 7, 13, 15, 00), "deadline", "incomplete", 7);
 		task.setIsRecurring(true);
-		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 9, 13, 15, 00), "");
+		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 9, 14, 15, 00), "");
 		task.setInterval(interval);
 		
 		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime());
@@ -206,7 +206,7 @@ public class RecurringTest {
 	public void testH() throws Exception{
 		TaskObject task = new TaskObject("buy lunch", LocalDateTime.of(2016, 3, 14, 15, 00), "deadline", "incomplete", 8);
 		task.setIsRecurring(true);
-		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 5, 16, 15, 00), "");
+		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 5, 16, 14, 59), "");
 		task.setInterval(interval);
 		
 		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime());
@@ -231,6 +231,10 @@ public class RecurringTest {
 				System.out.println(testArray.get(i).getStartDateTime().toString());
 				System.out.println(testArray.get(i).getStatus());
 			}
+		}
+
+		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
+			System.out.println(task.getTaskDateTimes().get(i).getStartDateTime().toString());
 		}
 	}
 	
@@ -266,9 +270,6 @@ public class RecurringTest {
 			}
 		}
 		
-		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
-			System.out.println(task.getTaskDateTimes().get(i).getStartDateTime().toString());
-		}
 	}
 	
 	@Test
