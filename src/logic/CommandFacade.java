@@ -384,19 +384,25 @@ public class CommandFacade {
 	 * A "delete" CommandObject will be pushed into the list.
 	 * The index of the previously added TaskObject will be added into the CommandObject to 
 	 * facilitate future deletion. <br>
+	 * If the added task was a recurring task, 
 	 */
 	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
 		assert (commandType == INDEX_ADD);
 		
 		CommandObject newCommandObj = new CommandObject();
 		
-		if (index == -1) {
-			// if task was previously added to the end of the list
+		if (index == -1) {	// if task was previously added to the end of the list
+			if (commandObj.getTaskObject().getIsRecurring()) {
+				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size()); // isEditAll set to 'true'
+			} else {
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
-		} else {
-			// if task was previously added to a pre-determined location in
-			// the list
-			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
+			}
+		} else {	// if task was previously added to a pre-determined location in the list
+			if (commandObj.getTaskObject().getIsRecurring()) {
+				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index); // isEditAll set to 'true'
+			} else {
+				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
+			}
 		}
 		
 		list.push(newCommandObj);

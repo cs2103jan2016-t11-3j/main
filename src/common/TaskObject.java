@@ -108,10 +108,15 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.title = title;
 	}
 	
-	// Constructor for undoing deleting of one occurrence of recurring task
+	// Constructor for undoing the deletion of one occurrence of a recurring task
 	public TaskObject(ArrayList<LocalDateTimePair> taskDateTimes) {
 		this.taskDateTimes = taskDateTimes;
 		this.isContainingOnlyTaskDateTimes = true;
+	}
+	
+	// Constructor for undoing an addition of a recurring task
+	public TaskObject(boolean bool) {
+		this.isEditAll = bool;
 	}
 	
 	// empty constructor
