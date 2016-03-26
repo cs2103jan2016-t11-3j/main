@@ -7,6 +7,8 @@ import java.util.logging.*;
 import common.CommandObject;
 import common.TaskObject;
 
+import static logic.constants.Index.*;
+
 /**
  * The UndoRedo class is a parent class of the Undo and Redo classes.
  * The run method reads in the command type and then calls the corresponding child class.
@@ -23,14 +25,6 @@ import common.TaskObject;
 
 public class UndoRedo {
 
-	protected static final int INDEX_ADD = 1;
-	protected static final int INDEX_EDIT = 3;
-	protected static final int INDEX_DELETE = 4;
-	protected static final int INDEX_UNDO = 5;
-	protected static final int INDEX_REDO = 6;
-	protected static final int INDEX_COMPLETE = 10;
-	protected static final int INDEX_INCOMPLETE = 11;
-	protected static final int INDEX_OVERDUE = 12;
 	protected static final Logger LOGGER = Logger.getLogger(UndoRedo.class.getName());
 	
 	protected ArrayList<TaskObject> taskList;

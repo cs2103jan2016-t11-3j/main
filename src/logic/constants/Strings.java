@@ -1,5 +1,7 @@
 package logic.constants;
 
+import common.TaskObject;
+
 public class Strings {
 	//common Constants
 	public static final String CATEGORY_EVENT = "event";
@@ -103,7 +105,16 @@ public class Strings {
 	public static final String MESSAGE_UNDO_ERROR = "Nothing to undo!";
 	public static final String MESSAGE_UNDO_LIST_EMPTY = "Undo list is empty.";
 	
-
+	// FOR PACKAGE-WIDE DEBUGGING PURPOSES
+	public static void printTaskObjectFields(TaskObject taskObj) {
+		System.out.println("title = " + taskObj.getTitle());
+		System.out.println("start date time = " + taskObj.getStartDateTime());
+		System.out.println("start end time = " + taskObj.getEndDateTime());
+		System.out.println("category = " + taskObj.getCategory());
+		System.out.println("status = " + taskObj.getStatus());
+		System.out.println("task id = " + taskObj.getTaskId());
+		System.out.println("isRecurring = " + taskObj.getIsRecurring());
+	}
 
 }
 
