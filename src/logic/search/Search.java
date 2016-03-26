@@ -48,10 +48,10 @@ public class Search extends Display {
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	
-	private String searchTitle;
-	private LocalDate searchDate;
-	private LocalTime searchTime;
-	private int searchIndex;
+	private String searchTitle = "";
+	private LocalDate searchDate = LocalDate.MAX;
+	private LocalTime searchTime = LocalTime.MAX;
+	private int searchIndex = -1;
 	boolean isSearchTitle = false;
 	boolean isSearchDate = false;
 	boolean isSearchTime = false;
@@ -71,25 +71,17 @@ public class Search extends Display {
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
 	
-	public ArrayList<String> getOutput() {
-		return output;
-	}
-	
-	public ArrayList<TaskObject> getLastOutputTaskList() {
-		return super.getLastOutputTaskList();
-	}
-	
 	/** 
 	 * Overrides Display's run(). <br>
-	 * First searches within the titles of each task, if no results obtained,
-	 * it will search within the start/end dates of each task.
+	 * Sets the boolean checks to determine which search implementation is to be called.
+	 * Then proceeds to process the search.
 	 */
 	public ArrayList<String> run() {
 		setSearchInformation();
-		printSearchInformation();
+		//printSearchInformation();
 		processSearch();
 		setOutput();
-		
+
 		return output;
 	}
 	
@@ -117,16 +109,6 @@ public class Search extends Display {
 		}
 		
 		//printSearchInformation();
-	}
-	
-	// FOR DEBUG
-	private void printSearchInformation() {
-		System.out.println("search title = " + searchTitle);
-		System.out.println("search date = " + searchDate);
-		System.out.println("search time = " + searchTime);
-		System.out.println("isSearchTitle = " + isSearchTitle);
-		System.out.println("isSearchDate = " + isSearchDate);
-		System.out.println("isSearchTime = " + isSearchTime);
 	}
 
 	private void processSearch() {
@@ -181,8 +163,6 @@ public class Search extends Display {
 		for (int i = 0; i < list.size(); i++) {
 			LocalDate taskStartDate = list.get(i).getStartDateTime().toLocalDate();
 			LocalDate taskEndDate = list.get(i).getEndDateTime().toLocalDate();
-			System.out.println("start date = " + taskStartDate.toString());
-			System.out.println("end date = " + taskEndDate.toString());
 			
 			if (list.get(i).getCategory().equals(CATEGORY_EVENT)) {
 				if ((searchDate.isAfter(taskStartDate) && searchDate.isBefore(taskEndDate)) ||
@@ -190,7 +170,7 @@ public class Search extends Display {
 					// if the search date is within the start and end dates of this event
 					match.add(list.get(i));
 				}
-			} else {	// deadline
+			} else if (list.get(i).getCategory().equals(CATEGORY_DEADLINE)) {	
 				if (searchDate.isEqual(taskStartDate) || searchDate.isEqual(taskEndDate)) {
 					match.add(list.get(i));
 				}
@@ -200,27 +180,29 @@ public class Search extends Display {
 		return match;
 	}
 	
-	// Finds all tasks that have the same start/end time as the search time, or if the search time
-	// falls between the start and end times AND dates (only for events)
+	/*
+	 *  Search-by-time is only valid if there is a search-by-date as well.
+	 *  Finds all tasks that have the same start/end time as the search time, or if the search time
+	 *  falls between the start and end times AND dates (only for events)
+	 */
 	private ArrayList<TaskObject> searchByTime(ArrayList<TaskObject> list) {
+		list = searchByDate(list); // Does a search-by-date first
+		
 		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
 		
 		for (int i = 0; i < list.size(); i++) {
 			LocalTime taskStartTime = list.get(i).getStartDateTime().toLocalTime();
 			LocalTime taskEndTime = list.get(i).getEndDateTime().toLocalTime();
-
+			
 			if (list.get(i).getCategory().equals(CATEGORY_EVENT)) {
-				LocalDate taskStartDate = list.get(i).getStartDateTime().toLocalDate();
-				LocalDate taskEndDate = list.get(i).getEndDateTime().toLocalDate();
-				
 				// if it is an event, it checks if there had been a search date that is within the start and end dates
 				// if so, it then checks if the search time is within the start and end times
-				if (searchDate.isAfter(taskStartDate) && searchDate.isBefore(taskEndDate) &&
-						searchTime.isAfter(taskStartTime) && searchTime.isBefore(taskEndTime)) {
+				if ((searchTime.isAfter(taskStartTime) && searchTime.isBefore(taskEndTime)) ||
+						searchTime.equals(taskStartTime) || searchTime.equals(taskEndTime))  {
 					match.add(list.get(i));
 				}
 			} else {
-				if (searchTime.compareTo(taskStartTime) == 0 || searchTime.compareTo(taskEndTime) == 0) {
+				if (searchTime.equals(taskStartTime) || searchTime.equals(taskEndTime)) {
 					match.add(list.get(i));
 				}
 			}
@@ -283,4 +265,30 @@ public class Search extends Display {
 		}
 	}
 	
+	// FOR DEBUG
+	private void printSearchInformation() {
+		System.out.println("search title = " + searchTitle);
+		System.out.println("search date = " + searchDate);
+		System.out.println("search time = " + searchTime);
+		System.out.println("isSearchTitle = " + isSearchTitle);
+		System.out.println("isSearchDate = " + isSearchDate);
+		System.out.println("isSearchTime = " + isSearchTime);
+		System.out.println("isSearchIndex = " + isSearchIndex);
+		System.out.println();
+	}
+
+	
+	// ------------------------- GETTERS -------------------------
+	
+	public ArrayList<TaskObject> getMatchedTasks() {
+		return matchedTasks;
+	}
+	
+	public ArrayList<String> getOutput() {
+		return output;
+	}
+	
+	public ArrayList<TaskObject> getLastOutputTaskList() {
+		return super.getLastOutputTaskList();
+	}
 }

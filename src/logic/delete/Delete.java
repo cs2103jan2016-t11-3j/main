@@ -159,8 +159,7 @@ public class Delete {
 
 					if (isRecurringTask) {
 						try {
-							if (commandObj.getTaskObject().getTitle().equals("all") ||	/// REMOVE THE FIRST CHECK
-									commandObj.getTaskObject().getIsEditAll()) {
+							if (commandObj.getTaskObject().getIsEditAll()) {
 								runNormalDelete();
 							}
 						} catch (NullPointerException e) {

@@ -108,6 +108,17 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.title = title;
 	}
 	
+	// Constructor for SearchTest - search-by-date for deadline
+	public TaskObject(LocalDateTime dateTime) {
+		this.startDateTime = dateTime;
+	}
+	
+	// Constructor for SearchTest - search-by-time for event
+	public TaskObject(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+	}
+	
 	// Constructor for undoing the deletion of one occurrence of a recurring task
 	public TaskObject(ArrayList<LocalDateTimePair> taskDateTimes) {
 		this.taskDateTimes = taskDateTimes;
