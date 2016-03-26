@@ -120,9 +120,8 @@ public class TimeOutput {
 			formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], end[1]);
 			// End Date will not be printed
 		} else {
-			if (!end[1].equals("") && !start[1].equals("")) { // if both start
-																// and end time
-																// exist
+			if (!end[1].equals("") && !start[1].equals("")) { 
+				// if both start and end time exist
 				String endDateTime = end[1].concat(" on ").concat(end[0]);
 				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], endDateTime);
 				// End Date will be printed

@@ -25,16 +25,20 @@ public class Recurring {
 	}
 
 	public static void updateEvent(TaskObject task) {
-		Interval interval = task.getInterval();
 		LocalDateTime eventEndTime = task.getEndDateTime();
-		int count = interval.getCount();
 
-		if (LocalDateTime.now().isAfter(eventEndTime)) {
-			if (count > 0) {
-				interval.setCount(count - 1);
-				task.setInterval(interval);
-			}
+		while (LocalDateTime.now().isAfter(eventEndTime) && task.getTaskDateTimes().size() > 1) {
 			renewEvent(task);
+			eventEndTime = task.getEndDateTime();
+		}
+		
+		System.out.println(task.getTaskDateTimes().size());
+
+		if (task.getTaskDateTimes().size() <= 1) {
+			if (LocalDateTime.now().isAfter(eventEndTime)) {
+				markAsDone(task);
+				System.out.println("marked as done");
+			}
 		}
 	}
 
@@ -43,18 +47,16 @@ public class Recurring {
 		LocalDateTime newEndDateTime;
 		LocalDateTimePair nextEvent;
 
-		if (!task.getTaskDateTimes().isEmpty()) {
-			task.removeFromTaskDateTimes(0);
+		assert (task.getTaskDateTimes().size() > 1);
 
-			nextEvent = task.getTaskDateTimes().get(0);
-			newStartDateTime = nextEvent.getStartDateTime();
-			newEndDateTime = nextEvent.getEndDateTime();
+		task.removeFromTaskDateTimes(0);
 
-			task.setStartDateTime(newStartDateTime);
-			task.setEndDateTime(newEndDateTime);
-		} else {
-			markAsDone(task);
-		}
+		nextEvent = task.getTaskDateTimes().get(0);
+		newStartDateTime = nextEvent.getStartDateTime();
+		newEndDateTime = nextEvent.getEndDateTime();
+
+		task.setStartDateTime(newStartDateTime);
+		task.setEndDateTime(newEndDateTime);
 	}
 
 	private static void markAsDone(TaskObject task) {
@@ -75,7 +77,8 @@ public class Recurring {
 		task.removeAllDateTimes();
 
 		if (!interval.getUntil().equals(LocalDateTime.MAX)) {
-			while (eventDateTime.getStartDateTime().isBefore(interval.getUntil())) {
+			while (!eventDateTime.getStartDateTime().isAfter(interval.getUntil())) {
+				// not after == before and equal
 				task.addToTaskDateTimes(eventDateTime);
 				eventDateTime = setNextEventTime(interval, eventDateTime);
 			}
@@ -167,7 +170,8 @@ public class Recurring {
 		task.removeAllDateTimes();
 
 		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) {
-			while (deadlineDateTime.getStartDateTime().isBefore(interval.getUntil())) {
+			while (!deadlineDateTime.getStartDateTime().isAfter(interval.getUntil())) {
+				// not after == before and equal
 				task.addToTaskDateTimes(deadlineDateTime);
 				deadlineDateTime = setNextDeadlineTime(interval, deadlineDateTime);
 			}
@@ -182,7 +186,6 @@ public class Recurring {
 	}
 
 	public static LocalDateTimePair setNextDeadlineTime(Interval interval, LocalDateTimePair deadlineDateTime) {
-		LocalDateTime startDateTime = deadlineDateTime.getStartDateTime();
 		LocalDateTimePair newPair = new LocalDateTimePair();
 
 		if (interval.getByDay().equals("")) {
@@ -218,12 +221,19 @@ public class Recurring {
 		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
 		String taskName = task.getTitle();
 
-		if (LocalDateTime.now().isAfter(deadlineDateTime)) {
-			if (task.getTaskDateTimes().size() > 1) {
-				// only split if more than one timing left
-				splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList);
-			}
+		// Continually splits tasks until recurring task is no longer overdue
+		// number of recurring times must also be more than 1
+		while (LocalDateTime.now().isAfter(deadlineDateTime) && task.getTaskDateTimes().size() > 1) {
+			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList);
 			renewDeadline(task);
+			deadlineDateTime = task.getStartDateTime();
+		}
+
+		// Special case for only 1 timing left
+		if (task.getTaskDateTimes().size() == 1) {
+			if (LocalDateTime.now().isAfter(deadlineDateTime)) {
+				markAsOverdue(task);
+			}
 		}
 	}
 
@@ -231,14 +241,10 @@ public class Recurring {
 		LocalDateTime newStartDateTime;
 		LocalDateTimePair nextDeadline;
 
-		if (!task.getTaskDateTimes().isEmpty()) {
-			task.removeFromTaskDateTimes(0);
-			nextDeadline = task.getTaskDateTimes().get(0);
-			newStartDateTime = nextDeadline.getStartDateTime();
-			task.setStartDateTime(newStartDateTime);
-		} else {
-			markAsDone(task);
-		}
+		task.removeFromTaskDateTimes(0);
+		nextDeadline = task.getTaskDateTimes().get(0);
+		newStartDateTime = nextDeadline.getStartDateTime();
+		task.setStartDateTime(newStartDateTime);
 	}
 
 	private static void splitTaskFromRecurringDeadline(LocalDateTime deadline, String title,
@@ -247,18 +253,17 @@ public class Recurring {
 		TaskObject splitDeadline = createOverdueDeadlineTaskObject(deadline, title, taskId);
 		Add add = new Add(splitDeadline, -1, taskList);
 		add.run();
+		// adds the split deadline into the taskList
 	}
 
-	// returns a negative number as taskID to prevent clashing with normal task
-	// IDs
+	// returns a negative number as taskID to prevent clashing with normal IDs
 	private static int generateTaskId(ArrayList<TaskObject> taskList) {
-		int id = 0;
+		int id = -1;
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() > id) {
-				id = taskList.get(i).getTaskId();
+			if (taskList.get(i).getTaskId() < 0) {
+				id--; // so that no 2 split tasks have the same ID
 			}
 		}
-		id = -1 * id;
 		return id;
 	}
 
@@ -268,5 +273,9 @@ public class Recurring {
 		splitDeadline.addToTaskDateTimes(new LocalDateTimePair(deadline));
 		TimeOutput.setDeadlineTimeOutput(splitDeadline);
 		return splitDeadline;
+	}
+
+	private static void markAsOverdue(TaskObject task) {
+		task.setStatus("overdue");
 	}
 }
