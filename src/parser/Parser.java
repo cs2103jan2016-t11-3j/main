@@ -211,6 +211,7 @@ public class Parser {
 		if (command.contains("edit all")) {
 			command = command.replaceFirst("edit all", "").trim();
 			TO.setIsRecurring(true);
+			TO.setIsEditAll(true);
 		} else {
 			command = command.replaceFirst("edit", "").trim();
 		}
@@ -332,6 +333,7 @@ public class Parser {
  	public int extractDeleteIndex(String command) throws Exception {		
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
+ 			TO.setIsEditAll(true);
  			return -1;
  		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) {
  			return 0;
