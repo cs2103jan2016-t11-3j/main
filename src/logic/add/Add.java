@@ -337,12 +337,15 @@ public class Add {
 		
 		TaskObject taskToBeModified = taskList.get(index-1);
 		LocalDateTimePair occurrenceDetails = dateTimePair.get(0);
+		occurrenceDetails.print();
 		ArrayList<LocalDateTimePair> allOccurrencesDetails = taskToBeModified.getTaskDateTimes();
 		
 		// adds it back to the front of the recurrence list
 		allOccurrencesDetails.add(0, occurrenceDetails); 
-		// updates the startDateTime to that of the occurrence that has been added back
+		// updates the startDateTime and endDateTime to that of the occurrence that has been added back
 		taskToBeModified.setStartDateTime(occurrenceDetails.getStartDateTime()); 
+		taskToBeModified.setEndDateTime(occurrenceDetails.getEndDateTime()); 
+		
 		
 	}
 	
