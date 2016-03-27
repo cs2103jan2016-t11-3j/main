@@ -225,7 +225,8 @@ public class Parser {
 	/**
 	 * method sets command type and creates task object with details keyed in by user
 	 * 
-	 * @param command   user's input as a string
+	 * @param command   
+	 * 				user's input as a string
 	 * @throws Exception 
 	 */
 	public void parseAdd(String command) throws Exception {
@@ -244,7 +245,8 @@ public class Parser {
 	 * method sets command type and creates task object with details entered by user 
 	 * for search purpose
 	 * 
-	 * @param command   user's input as a string
+	 * @param command   
+	 * 				user's input as a string
 	 * @throws Exception 
 	 */
 	public void parseSearch(String command) throws Exception {
@@ -311,7 +313,8 @@ public class Parser {
  	/**
  	 * method sets command type for delete commands 
  	 * 
- 	 * @param command user's input as a string
+ 	 * @param command 
+ 	 * 				user's input as a string for deleting
  	 * @throws Exception 
  	 */
  	public void parseDelete(String command) throws Exception {
@@ -351,7 +354,8 @@ public class Parser {
  	/**
  	 * method sets command type for command object and returns file path
  	 * 
- 	 * @param command user's input as a string 
+ 	 * @param command 
+ 	 * 				user's input as a string 
  	 * @throws Exception 
  	 */
  	public void parseSave(String command) throws Exception {

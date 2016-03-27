@@ -151,7 +151,6 @@ public class DateParser {
 				dateObject = dateObject.plusWeeks(1);
 			} else {
 				while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-					//
 					dateObject = dateObject.plusDays(1);
 				}	
 			}
