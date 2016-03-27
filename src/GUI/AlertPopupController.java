@@ -24,13 +24,19 @@ public class AlertPopupController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	    setAlertOutput();
+	    setListViewStyle();
+		setAlertOutput();
 	    if (output.isEmpty()) {
 	    	alertPane.setVisible(false);
 	    } else {
 	    	populateAlertList();
 			setFocusToAlert();	
 	    }
+	}
+
+	private void setListViewStyle() {
+		alertTasks.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB';");
+		
 	}
 
 	private void setAlertOutput() {
