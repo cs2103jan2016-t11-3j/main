@@ -43,16 +43,26 @@ public class HelpPopupController implements Initializable {
 	private TextArea helpText;
 	@FXML
 	private Label topicLabel;
+	@FXML
+	private Label pageNumber;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		assert helpText != null : "fx:id=\"helpText\" was not injected: check your FXML file 'HelpPopup.fxml'.";
         assert helpBox != null : "fx:id=\"helpBox\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+		setDisplay();
+	}
 
+	private void setDisplay() {
 		setHelpContent();
+		setPageNumber();
 	}
 	
+	private void setPageNumber() {
+		pageNumber.setText(page + "/7");
+	}
+
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ESCAPE) {
@@ -69,7 +79,7 @@ public class HelpPopupController implements Initializable {
 			page--;		
 		}
 		displayList = MainController.getHelpList(page);	
-		setHelpContent();
+		setDisplay();
 	}
 	
 	private void setHelpContent() {
@@ -78,7 +88,6 @@ public class HelpPopupController implements Initializable {
 		for (int i = 1; i < displayList.size(); i++) {
 			helpText.appendText(displayList.get(i) + "\n");
 		}
-		
 	}
 
 	public void startHelp() throws IOException {		
