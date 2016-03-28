@@ -254,7 +254,7 @@ public class Parser {
 		CommandParser SP = new SearchParser();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
-		if (command.indexOf(" ") == -1 && isSearch(command)) {
+		if (command.indexOf(" ") == -1 && (isSearch(command) || command.contains("view"))) {
 			TO.setStartTime(-1);
 			TO.setEndTime(-1);
 			TO.setStartDate(-1);
@@ -262,7 +262,7 @@ public class Parser {
 		} else {
 			command = command.substring(command.indexOf(" ")+1);
 			TO = SP.process(command);
-			
+			//CO.setIndex(index);
 		}
 		CO.setTaskObject(TO);
 	}
