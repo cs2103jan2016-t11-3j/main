@@ -71,6 +71,7 @@ public class UIMain extends Application {
 	}
 
 	public ArrayList<TaskObject> getLastOutputTaskList() {
+		logic.sortOutputByDate();
 		taskList = logic.getLastOutputTaskList();
 		
 		assert taskList != null: "Output = null, check logic lastOutputTaskList";

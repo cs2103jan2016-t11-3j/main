@@ -133,7 +133,7 @@ public class MainController implements Initializable {
 
 	private void feedbackUser() {
 		if (isRecurringDateRequest()) {
-			fillSideBar();
+			fillSidebar();
 		} else {
 			displayMessage(); // print feedback message
 			display(); // refreshes table after every command
@@ -147,7 +147,7 @@ public class MainController implements Initializable {
 		return false;
 	}
 
-	private void fillSideBar() {
+	private void fillSidebar() {
 		System.out.println("barfilled");
 	}
 
