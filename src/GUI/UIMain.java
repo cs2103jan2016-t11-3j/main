@@ -71,7 +71,6 @@ public class UIMain extends Application {
 	}
 
 	public ArrayList<TaskObject> getLastOutputTaskList() {
-		logic.sortOutputByDate();
 		taskList = logic.getLastOutputTaskList();
 		
 		assert taskList != null: "Output = null, check logic lastOutputTaskList";
@@ -87,5 +86,12 @@ public class UIMain extends Application {
 		return logic.getAlertOutput();
 	}
 	
+	public void setSortByType() {
+		logic.sortOutputByType();
+	} 
+	
+	public void setSortByDate() {
+		logic.sortOutputByDate();
+	}
 
 }
