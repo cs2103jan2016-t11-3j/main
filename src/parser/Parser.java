@@ -216,6 +216,7 @@ public class Parser {
 		} else {
 			command = command.replaceFirst("edit", "").trim();
 		}
+		
 		CommandParser EP = new EditParser();
 		TO = EP.process(command);
 		CO.setTaskObject(TO);

@@ -42,8 +42,7 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by tomorrow 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals("2016-03-27"
-				+ "T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-29T09:00",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
@@ -123,8 +122,9 @@ public class ParserTest {
 		assertEquals("+999999999-12-31T19:55",tempParser.getStartDateTime().toString());
 		reset();
 		
-		tempParser.allocate("edit 2 every friday");
+		tempParser.allocate("edit 12 every friday");
 		assertEquals("", tempParser.getTask());
+		assertEquals(12,tempParser.CO.getIndex());
 		assertEquals("WEEKLY", tempParser.TO.getInterval().getFrequency());
 		assertEquals(1, tempParser.TO.getInterval().getTimeInterval());
 		reset();
@@ -162,6 +162,15 @@ public class ParserTest {
 		assertEquals(-1, tempParser.getStartDate());
 		assertEquals(-1, tempParser.getEndDate());
 		assertEquals(4, tempParser.CO.getIndex());
+		reset();
+		
+		tempParser.allocate("search 3");
+		assertEquals(2, tempParser.CO.getCommandType());
+		assertEquals(3, tempParser.CO.getIndex());
+		reset();
+		
+		tempParser.allocate("view");
+		assertEquals(2, tempParser.CO.getCommandType());
 		reset();
 	}
 
