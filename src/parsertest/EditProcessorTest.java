@@ -13,7 +13,8 @@ public class EditProcessorTest {
 	TaskObject Tempshit = new TaskObject();
 	@Test
 	public void testProcessEdit() throws Exception {
-		Tempshit = EP.process("4 9.13pm end");
+		Tempshit = EP.process("14 9.13pm end");
+		assertEquals("",Tempshit.getTitle());
 		assertEquals("+999999999-12-31T23:59:59.999999999", Tempshit.getStartDateTime().toString());
 		assertEquals("+999999999-12-31T21:13", Tempshit.getEndDateTime().toString());
 		reset();

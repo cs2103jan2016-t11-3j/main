@@ -11,6 +11,7 @@ public class Parser {
 	private static final int ADD_INDEX = 1;
 	
 	
+	private static final String SEARCH_COMMAND_1 = "view";
 	private static final String SEARCH_COMMAND_2 = "search";
 	private static final String SEARCH_COMMAND_3 = "sort";
 	private static final String SEARCH_COMMAND_4 = "find";
@@ -121,7 +122,7 @@ public class Parser {
 		} else if (isSearch(command)) {
 			parseSearch(command);
 		} else if (command.startsWith(VIEW_RECURRING_COMMAND_1)) {
-			parseView(command);
+			parseSearch(command);
 		} else {
 			parseSearch(command);
 		}
@@ -215,6 +216,7 @@ public class Parser {
 		} else {
 			command = command.replaceFirst("edit", "").trim();
 		}
+		
 		CommandParser EP = new EditParser();
 		TO = EP.process(command);
 		CO.setTaskObject(TO);
@@ -254,7 +256,7 @@ public class Parser {
 		CommandParser SP = new SearchParser();
 		
 		// if there is no search keyword, set TaskObject values to null/-1
-		if (command.indexOf(" ") == -1 && (isSearch(command) || command.contains("view"))) {
+		if (command.indexOf(" ") == -1 && isSearch(command)) {
 			TO.setStartTime(-1);
 			TO.setEndTime(-1);
 			TO.setStartDate(-1);
@@ -262,7 +264,7 @@ public class Parser {
 		} else {
 			command = command.substring(command.indexOf(" ")+1);
 			TO = SP.process(command);
-			//CO.setIndex(index);
+			CO.setIndex(SP.getIndex());
 		}
 		CO.setTaskObject(TO);
 	}
@@ -301,7 +303,7 @@ public class Parser {
 	 * method checks if the search keyword is present
 	 */
  	public boolean isSearch(String command) {
- 		if(command.startsWith(SEARCH_COMMAND_2) 
+ 		if(command.startsWith(SEARCH_COMMAND_2) || command.startsWith(SEARCH_COMMAND_1)
  			|| command.startsWith(SEARCH_COMMAND_3) || command.startsWith(SEARCH_COMMAND_4) 
  			|| command.startsWith(SEARCH_COMMAND_5) || command.startsWith(SEARCH_COMMAND_6)) {
  			return true;
