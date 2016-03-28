@@ -51,10 +51,12 @@ public class Search extends Display {
 	private String searchTitle = "";
 	private LocalDate searchDate = LocalDate.MAX;
 	private LocalTime searchTime = LocalTime.MAX;
+	private String searchCategory = "";
 	private int searchIndex = -1;
 	boolean isSearchTitle = false;
 	boolean isSearchDate = false;
 	boolean isSearchTime = false;
+	boolean isSearchCategory = false;
 	boolean isSearchIndex = false;
 	
 	/**
@@ -100,6 +102,10 @@ public class Search extends Display {
 			if (searchTime.compareTo(LocalTime.MAX) != 0) {
 				isSearchTime = true;
 			}
+			searchCategory = taskObj.getCategory();
+			if (!searchCategory.equals("")) {
+				isSearchCategory = true;
+			}
 			searchIndex = commandObj.getIndex();
 			if (searchIndex != -1) {
 				isSearchIndex = true;
@@ -122,6 +128,9 @@ public class Search extends Display {
 		}
 		if (isSearchTime) {
 			matchedTasks = searchByTime(matchedTasks);
+		}
+		if (isSearchCategory) {
+			matchedTasks = searchByCategory(matchedTasks);
 		}
 		if (isSearchIndex) {
 			searchByIndex();
@@ -211,6 +220,19 @@ public class Search extends Display {
 		return match;
 	}
 	
+	// Finds all tasks where the category is similar to the search category
+	private ArrayList<TaskObject> searchByCategory(ArrayList<TaskObject> list) {
+		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getCategory().equals(searchCategory)) {
+				match.add(list.get(i));
+			}
+		}
+		
+		return match;
+	}
+	
 	/**
 	 * Retrieves the task contained in the last output task list via an index, and proceeds
 	 * to output all the timings associated with the task
@@ -249,6 +271,7 @@ public class Search extends Display {
 	private void setOutput(TaskObject foundTask) {
 		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
+			output.add(MESSAGE_RECURRING_TASK);
 			try {
 				for (int i = 0; i < foundTask.getTaskDateTimes().size(); i++) {
 					LocalDateTime startDateTime = foundTask.getTaskDateTimes().get(i).getStartDateTime();
@@ -270,10 +293,12 @@ public class Search extends Display {
 		System.out.println("search title = " + searchTitle);
 		System.out.println("search date = " + searchDate);
 		System.out.println("search time = " + searchTime);
+		System.out.println("search category = " + searchCategory);
 		System.out.println("isSearchTitle = " + isSearchTitle);
 		System.out.println("isSearchDate = " + isSearchDate);
 		System.out.println("isSearchTime = " + isSearchTime);
 		System.out.println("isSearchIndex = " + isSearchIndex);
+		System.out.println("isSearchCategory = " + isSearchCategory);
 		System.out.println();
 	}
 
