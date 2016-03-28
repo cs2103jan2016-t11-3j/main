@@ -16,7 +16,6 @@ public class SearchParser extends CommandParser {
 		} else if (isSearchForRecurringDates(input)) {
 			setIndex(input);
 		} else {
-			
 			//read directly with matcher
 			Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
 			Matcher matcher = dateTimePattern.matcher(input);
