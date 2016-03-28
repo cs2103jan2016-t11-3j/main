@@ -200,7 +200,7 @@ public class Search extends Display {
 		}
 
 		return match;
-	}
+	} 
 
 	/*
 	 * Search-by-time is only valid if there is a search-by-date as well. Finds
