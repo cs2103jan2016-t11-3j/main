@@ -778,57 +778,57 @@ public class Edit {
 	}
 	
 	private void outputDateAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_DATE_ADD, editStartDate));
+		tempOutput.add(String.format(MESSAGE_DATE_ADD, editStartDate, editTask.getTitle()));
 	}
 	private void outputDateEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_DATE_EDIT, originalStartDate, editStartDate));
+		tempOutput.add(String.format(MESSAGE_DATE_EDIT, originalStartDate, editStartDate, editTask.getTitle()));
 	}
 	
 	private void outputStartDateAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_DATE_ADD, editStartDate));
+		tempOutput.add(String.format(MESSAGE_START_DATE_ADD, editStartDate, editTask.getTitle()));
 	}
 	private void outputStartDateEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_DATE_EDIT, originalStartDate, editStartDate));
+		tempOutput.add(String.format(MESSAGE_START_DATE_EDIT, originalStartDate, editStartDate, editTask.getTitle()));
 	}
 	
 	private void outputTimeEditedForAllOccurrencesMessage() {
-		tempOutput.add(String.format(MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
+		tempOutput.add(String.format(MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime, editTask.getTitle()));
 	}
 	
 	private void outputStartTimeEditedForAllOccurrencesMessage() {
-		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
+		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime, editTask.getTitle()));
 	}
 
 	private void outputTimeAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_TIME_ADD, editStartTime));
+		tempOutput.add(String.format(MESSAGE_TIME_ADD, editStartTime, editTask.getTitle()));
 	}
 	private void outputTimeEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime));
+		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime, editTask.getTitle()));
 	}
 	
 	private void outputStartTimeAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_TIME_ADD, editStartTime));
+		tempOutput.add(String.format(MESSAGE_START_TIME_ADD, editStartTime, editTask.getTitle()));
 	}
 	private void outputStartTimeEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_TIME_EDIT, originalStartTime, editStartTime));
+		tempOutput.add(String.format(MESSAGE_START_TIME_EDIT, originalStartTime, editStartTime, editTask.getTitle()));
 	}
 	
 	private void outputEndTimeEditedForAllOccurrencesMessage() {
-		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT, editEndTime));
+		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT, editEndTime, editTask.getTitle()));
 	}
 
 	private void outputEndDateAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_DATE_ADD, editEndDate));
+		tempOutput.add(String.format(MESSAGE_END_DATE_ADD, editEndDate, editTask.getTitle()));
 	}
 	private void outputEndDateEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_DATE_EDIT, originalEndDate, editEndDate));
+		tempOutput.add(String.format(MESSAGE_END_DATE_EDIT, originalEndDate, editEndDate, editTask.getTitle()));
 	}
 
 	private void outputEndTimeAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_TIME_ADD, editEndTime));
+		tempOutput.add(String.format(MESSAGE_END_TIME_ADD, editEndTime, editTask.getTitle()));
 	}
 	private void outputEndTimeEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_TIME_EDIT, originalEndTime, editEndTime));
+		tempOutput.add(String.format(MESSAGE_END_TIME_EDIT, originalEndTime, editEndTime, editTask.getTitle()));
 	}
 	
 	private void outputIntervalEditedMessage() {
