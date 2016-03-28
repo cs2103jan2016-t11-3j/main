@@ -31,7 +31,7 @@ public class UIMain extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
-		Scene scene = new Scene(root, 620, 500);
+		Scene scene = new Scene(root, 720, 500);
 		
 		window.setTitle("Adult TaskFinder");
 		window.setScene(scene);
@@ -71,6 +71,7 @@ public class UIMain extends Application {
 	}
 
 	public ArrayList<TaskObject> getLastOutputTaskList() {
+		logic.sortOutputByDate();
 		taskList = logic.getLastOutputTaskList();
 		
 		assert taskList != null: "Output = null, check logic lastOutputTaskList";
@@ -78,7 +79,7 @@ public class UIMain extends Application {
 		return taskList;
 	}
 
-	public ArrayList<String> getHelpOutput() {
+	public ArrayList<String> getOutput() {
 		return logic.getOutput();
 	}
 	
