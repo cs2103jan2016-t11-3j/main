@@ -254,7 +254,7 @@ public class Parser {
 	public void parseSearch(String command) throws Exception {
 		CO.setCommandType(SEARCH_INDEX);
 		CommandParser SP = new SearchParser();
-		
+
 		// if there is no search keyword, set TaskObject values to null/-1
 		if (command.indexOf(" ") == -1 && isSearch(command)) {
 			TO.setStartTime(-1);

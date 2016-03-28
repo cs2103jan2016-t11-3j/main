@@ -42,7 +42,7 @@ public class SearchParser extends CommandParser {
 	}
 	
 	private boolean isSearchForRecurringDates(String input) {
-		if (input.matches("\\d+")) {
+		if (input.matches("[\\d]+")) {
 			return true;
 		} else {
 			return false;
