@@ -200,7 +200,7 @@ public class Search extends Display {
 		}
 
 		return match;
-	} 
+	}
 
 	/*
 	 * Search-by-time is only valid if there is a search-by-date as well. Finds
@@ -294,7 +294,6 @@ public class Search extends Display {
 
 		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
-			output.add(MESSAGE_RECURRING_TASK);
 			try {
 				if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
 					for (int i = 0; i < foundTask.getTaskDateTimes().size(); i++) {

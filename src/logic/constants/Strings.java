@@ -87,7 +87,6 @@ public class Strings {
 	public static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	public static final String MESSAGE_TIMINGS_FOUND = "Timings for %1s:";
 	public static final String MESSAGE_TIMINGS_NOT_FOUND = "Task not found";
-	public static final String MESSAGE_RECURRING_TASK = "Information for recurring task: ";
 	
 	//TimeOutput Constants
 	public static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
