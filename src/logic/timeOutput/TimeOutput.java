@@ -160,6 +160,19 @@ public class TimeOutput {
 			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
 		}
 	}
+	
+	public static String setDeadlineTimeOutput(LocalDateTime startDateTime) {
+		String line = "";
+		try {
+			String[] start = createDateTimeArray(startDateTime, false);
+			line = formatDeadlineTimeOutput(start);
+		} catch (DateTimeException e) {
+			System.out.println(MESSAGE_DATE_TIME_CONVERSION_ERROR);
+		} catch (NullPointerException e) {
+			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
+		}
+		return line;
+	}
 
 	private static String formatDeadlineTimeOutput(String[] start) throws NullPointerException {
 		String formattedString = "";
