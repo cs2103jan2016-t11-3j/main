@@ -150,9 +150,9 @@ public class Edit {
 				isEditEndTime = true;
 			}
 			editInterval = commandObj.getTaskObject().getInterval();
-			//if (editInterval != null) {		// MIGHT NEED TO CHANGE THIS CHECK
-			//	isEditInterval = true;
-			//}
+			if (!editInterval.isNull()) {
+				isEditInterval = true;
+			}
 			isEditAll = commandObj.getTaskObject().getIsEditAll(); // checks if all recurring tasks are to be edited
 			
 		} catch (NullPointerException e) {
@@ -250,9 +250,6 @@ public class Edit {
 		String currentTaskCategory = task.getCategory();
 		String editTaskCategory = commandObj.getTaskObject().getCategory();
 
-		System.out.println("currentTaskCategory = " + currentTaskCategory);
-		System.out.println("editTaskCategory = " + editTaskCategory);
-		
 		// if this edit is an undo 
 		if (!editTaskCategory.equals("")) {
 			if (currentTaskCategory.equals(CATEGORY_DEADLINE) && editTaskCategory.equals(CATEGORY_FLOATING)) {
