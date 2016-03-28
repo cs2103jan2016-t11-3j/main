@@ -31,6 +31,8 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import static logic.constants.Strings.*;
+
 /**
  * Controls the TaskWindow to allow interaction with the program
  * Inputs keyed in textfield read with enter key pressed
@@ -130,10 +132,26 @@ public class MainController implements Initializable {
 	}
 
 	private void feedbackUser() {
-		displayMessage(); // print feedback message
-		display(); // refreshes table after every command
+		if (isRecurringDateRequest()) {
+			fillSideBar();
+		} else {
+			displayMessage(); // print feedback message
+			display(); // refreshes table after every command
+		}
 	}
 	
+	private boolean isRecurringDateRequest() {
+		if (_UI.getOutput().get(0) == MESSAGE_RECURRING_TASK) {
+			return true;
+		}
+		return false;
+	}
+
+	private void fillSideBar() {
+		System.out.println("barfilled");
+	}
+
+
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
@@ -171,6 +189,7 @@ public class MainController implements Initializable {
 			_UI.passInput("help Edit");
 			break;
 		case 4:
+			
 			_UI.passInput("help Delete");
 			break;
 		case 5:
@@ -183,7 +202,7 @@ public class MainController implements Initializable {
 			_UI.passInput("help Exit");
 			break;
 		}
-		return _UI.getHelpOutput();
+		return _UI.getOutput();
 	}
 
 	public static ArrayList<String> getAlertOutput() {
