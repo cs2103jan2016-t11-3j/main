@@ -26,6 +26,7 @@ public class EditTest {
 	private static ArrayList<String> actualOutput = new ArrayList<String>();
 	private static ArrayList<String> correctOutput = new ArrayList<String>();
 	private ArrayList<LocalDateTimePair> testTimings = new ArrayList<LocalDateTimePair>();
+	private ArrayList<LocalDateTimePair> testTimingsTwo = new ArrayList<LocalDateTimePair>();
 	
 	
 	private CommandObject testCommandObject;
@@ -65,18 +66,27 @@ public class EditTest {
 		LocalDateTime endThree = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("18:00"));
 		LocalDateTime startFour = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("16:00"));
 		LocalDateTime endFour = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("18:00"));
-		LocalDateTimePair pairOne = new LocalDateTimePair(startOne, endOne);
-		LocalDateTimePair pairTwo = new LocalDateTimePair(startTwo, endTwo);		
-		LocalDateTimePair pairThree = new LocalDateTimePair(startThree, endThree);		
-		LocalDateTimePair pairFour = new LocalDateTimePair(startFour, endFour);
-		testTimings.add(pairOne);
-		testTimings.add(pairTwo);
-		testTimings.add(pairThree);
-		testTimings.add(pairFour);
+		testTimings.add(new LocalDateTimePair(startOne, endOne));
+		testTimings.add(new LocalDateTimePair(startTwo, endTwo));
+		testTimings.add(new LocalDateTimePair(startThree, endThree));
+		testTimings.add(new LocalDateTimePair(startFour, endFour));
 		
 		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 13, true, testTimings));
 		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 14, true, testTimings));
 		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 15, true, testTimings));
+
+		LocalDateTime startFive = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("21:00"));
+		LocalDateTime endFive = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("23:00"));
+		LocalDateTime startSix = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("21:00"));
+		LocalDateTime endSix = LocalDateTime.of(LocalDate.parse("2016-04-15"), LocalTime.parse("23:00"));
+		LocalDateTime startSeven = LocalDateTime.of(LocalDate.parse("2016-04-22"), LocalTime.parse("21:00"));
+		LocalDateTime endSeven = LocalDateTime.of(LocalDate.parse("2016-04-22"), LocalTime.parse("23:00"));
+		testTimingsTwo.clear();
+		testTimingsTwo.add(new LocalDateTimePair(startFive, endFive));
+		testTimingsTwo.add(new LocalDateTimePair(startSix, endSix));
+		testTimingsTwo.add(new LocalDateTimePair(startSeven, endSeven));
+		
+		testList.add(new TaskObject("Soccer match", startFive, endSeven, "event", "incomplete", 16, true, testTimingsTwo));
 		
 	}
 	
@@ -393,6 +403,7 @@ public class EditTest {
 		correctOutput.add("All end times edited to '23:59'.");
 		
 		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
 		
 		// 2nd assert - check timings
 		TaskObject editedTask = testEdit.getEditTask();
@@ -410,6 +421,35 @@ public class EditTest {
 		assertEquals(actualSecondTiming, correctSecondTiming);
 		assertEquals(actualThirdTiming, correctThirdTiming);
 		assertEquals(actualFourthTiming, correctFourthTiming);
+		
+	}
+	
+	@Test // // Test edit for recurrence event - edit start date and time for all occurrences
+	public void testQ() {
+		// 1st assert - check output
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2016-03-31"), LocalTime.parse("08:00"));
+		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1, true, new ArrayList<>()); // BOOLEAN FLAG SET TO TRUE
+		testTaskObject.setIsEditAll(true);
+		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 16);
+		
+		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		actualOutput = testEdit.run();
+		correctOutput.add("All start dates edited to '2016-03-31'. All start times edited to '08:00'.");
+		
+		assertEquals(actualOutput, correctOutput);
+		correctOutput.clear();
+		
+		// 2nd assert - check timings
+		TaskObject editedTask = testEdit.getEditTask();
+		ArrayList<LocalDateTimePair> actualTimings = editedTask.getTaskDateTimes();
+		LocalDateTime actualFirstTiming = actualTimings.get(0).getStartDateTime();
+		LocalDateTime actualSecondTiming = actualTimings.get(1).getStartDateTime();
+		LocalDateTime actualThirdTiming = actualTimings.get(2).getStartDateTime();
+		LocalDateTime correctTiming = LocalDateTime.of(LocalDate.parse("2016-03-31"), LocalTime.parse("08:00"));
+		
+		assertEquals(actualFirstTiming, correctTiming);
+		assertEquals(actualSecondTiming, correctTiming);
+		assertEquals(actualThirdTiming, correctTiming);
 		
 	}
 		

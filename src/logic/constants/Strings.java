@@ -55,19 +55,22 @@ public class Strings {
 	public static final String MESSAGE_TITLE_EDIT = "Title edited from '%1s' to '%2s'. ";
 	public static final String MESSAGE_DATE_ADD = "Added date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_DATE_EDIT = "Date edited from '%1s' to '%2s'. ";
+	public static final String MESSAGE_DATE_FOR_ALL_OCCURRENCES_EDIT = "ALl dates edited to '%1s'. ";
 	public static final String MESSAGE_START_DATE_ADD = "Added start date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_START_DATE_EDIT = "Start date edited from '%1s' to '%2s'. ";
-	public static final String MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT = "All times edited to '%1$s'. ";
-	public static final String MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT = "All start times edited to '%1$s'. ";
+	public static final String MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_EDIT = "All start dates edited to '%1s'. ";
 	public static final String MESSAGE_TIME_ADD = "Added time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_TIME_EDIT = "Time edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT = "All times edited to '%1$s'. ";
 	public static final String MESSAGE_START_TIME_ADD = "Added start time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_START_TIME_EDIT = "Start time edited from '%1$s' to '%2$s'. ";
-	public static final String MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT = "All end times edited to '%1$s'. ";
+	public static final String MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT = "All start times edited to '%1$s'. ";
 	public static final String MESSAGE_END_DATE_ADD = "Added end date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_END_DATE_EDIT = "End date edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_END_DATE_FOR_ALL_OCCURRENCES_EDIT = "All end dates edited to '%1$s'. ";
 	public static final String MESSAGE_END_TIME_ADD = "Added end time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_END_TIME_EDIT = "End time edited from '%1$s' to '%2$s'. ";
+	public static final String MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT = "All end times edited to '%1$s'. ";
 	public static final String MESSAGE_INTERVAL_EDIT = "Interval edited. ";
 	public static final String MESSAGE_NO_EDIT = "No edits have been made.";
 
