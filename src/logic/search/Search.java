@@ -79,8 +79,11 @@ public class Search extends Display {
 	 * Then proceeds to process the search.
 	 */
 	public ArrayList<String> run() {
+		System.out.println("commandObj index = " + commandObj.getIndex());
+		System.out.println();
+		
 		setSearchInformation();
-		//printSearchInformation();
+		printSearchInformation();
 		processSearch();
 		setOutput();
 
@@ -294,6 +297,7 @@ public class Search extends Display {
 		System.out.println("search date = " + searchDate);
 		System.out.println("search time = " + searchTime);
 		System.out.println("search category = " + searchCategory);
+		System.out.println("search index = " + searchIndex);
 		System.out.println("isSearchTitle = " + isSearchTitle);
 		System.out.println("isSearchDate = " + isSearchDate);
 		System.out.println("isSearchTime = " + isSearchTime);

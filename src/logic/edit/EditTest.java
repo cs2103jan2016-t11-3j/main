@@ -244,7 +244,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();
-		correctOutput.add("Added date '2016-04-18'. Added time '09:00'.");
+		correctOutput.add("Added date '2016-04-18' to task 'CS2107 presentation'. "
+				+ "Added time '09:00' to task 'CS2107 presentation'.");
 		
 		String actualCategory = testEdit.getEditTask().getCategory();
 		String correctCategory = "deadline";
@@ -263,7 +264,10 @@ public class EditTest {
 				
 		Edit testEdit = new Edit(testCommandObject, testList, testList);
 		actualOutput = testEdit.run();
-		correctOutput.add("Added start date '2016-06-18'. Added start time '10:00'. Added end date '2016-08-08'. Added end time '20:00'.");
+		correctOutput.add("Added start date '2016-06-18' to task 'Europe trip'. "
+				+ "Added start time '10:00' to task 'Europe trip'. "
+				+ "Added end date '2016-08-08' to task 'Europe trip'. "
+				+ "Added end time '20:00' to task 'Europe trip'.");
 		
 		String actualCategory = testEdit.getEditTask().getCategory();
 		String correctCategory = CATEGORY_EVENT;
