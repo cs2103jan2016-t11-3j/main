@@ -10,27 +10,50 @@ public class SearchParser extends CommandParser {
 	
 	public TaskObject process(String input) throws Exception {
 		input = removeSearchKeyword(input);
-		//read directly with matcher
-		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
-		Matcher matcher = dateTimePattern.matcher(input);
-		
-		String identifier = null;
-		
-		if (matcher.find()) {
-			identifier = getTrimmedString(input ,matcher.start(), input.length());
-			input = getTrimmedString(input, 0, matcher.start());
-		}
-		
-		if (identifier != null) {
-			DateTimeParser dtp = new DateTimeParser();
-			TO = dtp.parse(identifier, false);
-			setDateTime(dtp);
-        }
-		
-		_task = input;
+		if (isSearchByCategory(input)) {
+			setCategory(input);
+		} else {
+			
+			//read directly with matcher
+			Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
+			Matcher matcher = dateTimePattern.matcher(input);
+			
+			String identifier = null;
+			
+			if (matcher.find()) {
+				identifier = getTrimmedString(input ,matcher.start(), input.length());
+				input = getTrimmedString(input, 0, matcher.start());
+			}
+			
+			if (identifier != null) {
+				DateTimeParser dtp = new DateTimeParser();
+				TO = dtp.parse(identifier, false);
+				setDateTime(dtp);
+	        }
+			
+			_task = input;
 
-		setTaskObject();
+			setTaskObject();
+		}
 		return TO;
+	}
+	
+	private boolean isSearchByCategory(String input) {
+		if (input.matches("(floating|deadline|event)")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void setCategory(String input) {
+		if (input.matches("floating")) {
+			TO.setCategory("floating");
+		} else if (input.matches("deadline")) {
+			TO.setCategory("deadline");
+		} else if (input.matches("event")) {
+			TO.setCategory("event");	
+		}
 	}
 	
 	private void setDateTime(DateTimeParser dtp) {
@@ -63,7 +86,7 @@ public class SearchParser extends CommandParser {
 	} 
 	
 	public String removeSearchKeyword(String input) {
-		return input.replaceFirst("search ", "");
+		return input.replaceFirst("search ", "").trim();
 	}
 	
 	public String getTask() {

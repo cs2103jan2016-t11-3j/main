@@ -323,6 +323,7 @@ public class Parser {
  		index = extractDeleteIndex(command);
  		CO.setIndex(index);
  		if (index > 0 && command.contains("all")) {
+ 			TO.setIsEditAll(true);
  			TO.setTitle("all");
  			CO.setTaskObject(TO);
  		}
@@ -336,11 +337,11 @@ public class Parser {
  	public int extractDeleteIndex(String command) throws Exception {		
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
- 			TO.setIsEditAll(true);
- 			return -1;
- 		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) {
+ 			return -1; //quick delete
+ 		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) { //delete all
+ 			TO.setIsEditAll(true); 
  			return 0;
- 		} else {
+ 		} else { //delete with index
 	 		int index = command.indexOf(" ") + 1;
 	 		newString = command.substring(index).replaceAll("[a-zA-Z]+", "").trim();
  		}
