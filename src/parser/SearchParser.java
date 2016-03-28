@@ -7,11 +7,14 @@ import common.TaskObject;
 
 public class SearchParser extends CommandParser {
 	private TaskObject TO = new TaskObject();
+	private int index=-1;
 	
 	public TaskObject process(String input) throws Exception {
 		input = removeSearchKeyword(input);
 		if (isSearchByCategory(input)) {
 			setCategory(input);
+		} else if (isSearchForRecurringDates(input)) {
+			setIndex(input);
 		} else {
 			
 			//read directly with matcher
@@ -36,6 +39,18 @@ public class SearchParser extends CommandParser {
 			setTaskObject();
 		}
 		return TO;
+	}
+	
+	private boolean isSearchForRecurringDates(String input) {
+		if (input.matches("\\d+")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void setIndex(String input) {
+		index = Integer.parseInt(input);
 	}
 	
 	private boolean isSearchByCategory(String input) {
@@ -125,8 +140,7 @@ public class SearchParser extends CommandParser {
 
 	@Override
 	public int getIndex() {
-		// TODO Auto-generated method stub
-		return 0;
+		return index;
 	}
 	
 }
