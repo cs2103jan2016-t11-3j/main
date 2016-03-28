@@ -55,6 +55,8 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private TextField userInput;
+	@FXML
+	private ListView<String> taskDateList;
 	@FXML 
 	private static BorderPane layout;
 	@FXML
@@ -75,7 +77,38 @@ public class MainController implements Initializable {
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;	
+	
+	@FXML
+	//reads input on enter
+	public void handleEnterPressed(KeyEvent event) throws IOException {
+		if (event.getCode() == KeyCode.ENTER) {
+			System.out.println(userInput.getText()); //to be removed
+			readInput();
+			passInput();
+			clearTextField();
+			feedbackUser();
+		}
+	}
 
+	@FXML
+	public void handleKeyPressed(KeyEvent event) throws IOException {
+		if (event.getCode() == KeyCode.F1) {
+			popupController.startHelp();
+		}
+		if (event.getCode() == KeyCode.F3) {
+			if (sortStatus == 0) {
+				_UI.setSortByType();
+				sortStatus = 1;
+			} else {
+				_UI.setSortByDate();
+				sortStatus = 0;
+			}
+			display();
+		}
+		if (event.getCode() == KeyCode.ESCAPE) {
+			System.exit(0);
+		}
+	}
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -105,18 +138,6 @@ public class MainController implements Initializable {
 		timeColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
 	}	
 	
-	@FXML
-	//reads input on enter
-	public void handleEnterPressed(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.ENTER) {
-			System.out.println(userInput.getText()); //to be removed
-			readInput();
-			passInput();
-			clearTextField();
-			feedbackUser();
-		}
-	}
-	
 	private void readInput() {
 		_input = userInput.getText();
 	}
@@ -143,7 +164,7 @@ public class MainController implements Initializable {
 	}
 	
 	private boolean isRecurringDateRequest() {
-		if (_UI.getOutput().get(0) == MESSAGE_RECURRING_TASK) {
+		if (_UI.getOutput().get(1) == MESSAGE_RECURRING_TASK) {
 			return true;
 		}
 		return false;
@@ -151,6 +172,9 @@ public class MainController implements Initializable {
 
 	private void fillSidebar() {
 		System.out.println("barfilled");
+		ObservableList<String> recurringTime = FXCollections.observableArrayList(_UI.getOutput());
+		taskDateList.setItems(recurringTime);
+		
 	}
 
 
@@ -165,29 +189,6 @@ public class MainController implements Initializable {
 		fillTable(taskData);
 	}
 	
-	@FXML
-	public void handleKeyPressed(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.F1) {
-			popupController.startHelp();
-		}
-		if (event.getCode() == KeyCode.F3) {
-			if (sortStatus == 0) {
-				_UI.setSortByType();
-				sortStatus = 1;
-			} else {
-				_UI.setSortByDate();
-				sortStatus = 0;
-			}
-			display();
-		}
-	}
-	
-	@FXML
-	public void handleEscReleased(KeyEvent event) {
-		if (event.getCode() == KeyCode.ESCAPE) {
-			System.exit(0);
-		}
-	}
 	
 	public static ArrayList<String> getHelpList(int i) {
 		switch(i) {
