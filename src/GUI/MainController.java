@@ -51,6 +51,7 @@ public class MainController implements Initializable {
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 	HelpPopupController popupController = new HelpPopupController();
+	static int sortStatus = 0;
 	
 	@FXML
 	private TextField userInput;
@@ -92,6 +93,7 @@ public class MainController implements Initializable {
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
 		
 		setColumnStyle();
+		_UI.setSortByDate();
 		display(); //start program with all tasks in table
 		
 	}
@@ -164,9 +166,19 @@ public class MainController implements Initializable {
 	}
 	
 	@FXML
-	public void handleHelpPressed(KeyEvent event) throws IOException {
+	public void handleKeyPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
 			popupController.startHelp();
+		}
+		if (event.getCode() == KeyCode.F3) {
+			if (sortStatus == 0) {
+				_UI.setSortByType();
+				sortStatus = 1;
+			} else {
+				_UI.setSortByDate();
+				sortStatus = 0;
+			}
+			display();
 		}
 	}
 	

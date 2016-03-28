@@ -195,7 +195,7 @@ public class Logic {
 	
 	//sorts lastOutputTaskList by Date
 	public void sortOutputByDate() {
-		Comparator<TaskObject> comparator = new Comparator<TaskObject>() {
+		Comparator<TaskObject> dateComparator = new Comparator<TaskObject>() {
             @Override
             public int compare(final TaskObject o1, final TaskObject o2) {
             	if (o1.getStartDateTime() == o2.getStartDateTime()) {
@@ -207,8 +207,19 @@ public class Logic {
                  return o1.getStartDateTime().compareTo(o2.getStartDateTime());
             }
         };
-        Collections.sort(lastOutputTaskList, comparator);
+        Collections.sort(lastOutputTaskList, dateComparator);
 	}
+	
+	public void sortOutputByType() {
+		Comparator<TaskObject> typeComparator = new Comparator<TaskObject>() {
+			@Override
+			public int compare(final TaskObject o1, final TaskObject o2) {
+				return o1.getCategory().compareTo(o2.getCategory());
+			}
+		};
+		Collections.sort(lastOutputTaskList, typeComparator);
+	}
+	
 	
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
