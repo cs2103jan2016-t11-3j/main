@@ -86,11 +86,8 @@ public class Search extends Display {
 	 * called. Then proceeds to process the search.
 	 */
 	public ArrayList<String> run() {
-		System.out.println("commandObj index = " + commandObj.getIndex());
-		System.out.println();
-
 		setSearchInformation();
-		printSearchInformation();
+		//printSearchInformation();
 		processSearch();
 		setOutput();
 

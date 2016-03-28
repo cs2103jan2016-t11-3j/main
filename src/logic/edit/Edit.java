@@ -178,6 +178,7 @@ public class Edit {
 			if (task.getTaskId() == editTaskId) { 
 				originalTask.setTaskObject(task);
 				isRecurringTask = task.getIsRecurring();
+				compareOldAndNewCategory(task);
 
 				if (isEditTitle) {
 					editTitle(task);
@@ -234,12 +235,47 @@ public class Edit {
 			}
 		}
 	}
+	
+	/**
+	 * Compares the categories of the task to be edited and the edit data.
+	 * If the edit data category is not empty, then this edit is an undo function.
+	 * If it is an undo function, the date and times should be edited depending if the previous 
+	 * event (i.e. editTask) is a floating task or a deadline. 
+	 * This special check has to be implemented because by default, the boolean checks would be set
+	 * to false if the edit value is MAX, which is the case if the previous event is a floating/deadline.
+	 * 
+	 * @param task	current task
+	 */
+	private void compareOldAndNewCategory(TaskObject task) {
+		String currentTaskCategory = task.getCategory();
+		String editTaskCategory = commandObj.getTaskObject().getCategory();
+
+		System.out.println("currentTaskCategory = " + currentTaskCategory);
+		System.out.println("editTaskCategory = " + editTaskCategory);
+		
+		// if this edit is an undo 
+		if (!editTaskCategory.equals("")) {
+			if (currentTaskCategory.equals(CATEGORY_DEADLINE) && editTaskCategory.equals(CATEGORY_FLOATING)) {
+				isEditStartDate = true;
+				isEditStartTime = true;
+			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && editTaskCategory.equals(CATEGORY_FLOATING)) {
+				isEditStartDate = true;
+				isEditStartTime = true;
+				isEditEndDate = true;
+				isEditEndTime = true;
+			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && editTaskCategory.equals(CATEGORY_DEADLINE)) {
+				isEditEndDate = true;
+				isEditEndTime = true;
+			}
+		}
+		
+	}
 
 	private void editTitle(TaskObject task) {
 		originalTitle = task.getTitle();
 		
 		if (!originalTitle.equals(editTitle)) {
-			task.setTitle(editTitle);
+			task.setTitle(editTitle.trim());
 			LOGGER.log(Level.INFO, "Title edited");
 		} else {
 			isEditTitle = false;
@@ -665,6 +701,8 @@ public class Edit {
 	
 	// FOR DEBUGGING
 	private void checkEditInformation() {
+		
+		
 		System.out.println("isEditTitle = " + isEditTitle);
 		System.out.println("isEditStartDate = " + isEditStartDate);
 		System.out.println("isEditStartTime = " + isEditStartTime);
