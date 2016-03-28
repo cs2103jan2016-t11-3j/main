@@ -280,7 +280,10 @@ public class Search extends Display {
 		if (matchedTasks.isEmpty()) {
 			output.add(String.format(MESSAGE_NO_RESULTS_FOUND));
 		} else {
-			output.addAll(super.runSpecificList(matchedTasks));
+			// if output is not empty, the overloaded setOutput(TaskObject foundTask) method has already been called
+			if (output.isEmpty()) {
+				output.addAll(super.runSpecificList(matchedTasks));
+			}
 		}
 	}
 

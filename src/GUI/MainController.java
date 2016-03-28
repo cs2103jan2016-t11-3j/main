@@ -164,9 +164,14 @@ public class MainController implements Initializable {
 	}
 	
 	private boolean isRecurringDateRequest() {
-		if (_UI.getOutput().get(1) == MESSAGE_RECURRING_TASK) {
-			return true;
+		
+		if (_UI.getOutput().size() > 2) {
+			if (_UI.getOutput().get(1) == MESSAGE_RECURRING_TASK) {
+				return true;
+			}
+			
 		}
+		
 		return false;
 	}
 
