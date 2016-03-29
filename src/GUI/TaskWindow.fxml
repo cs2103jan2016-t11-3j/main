@@ -49,7 +49,7 @@
                         <Insets left="1.0" right="1.0" top="5.0" />
                      </VBox.margin>
                   </TextFlow>
-                  <TextField fx:id="userInput" onKeyPressed="#handleKeyPressed" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help"/>
+                  <TextField fx:id="userInput" onKeyPressed="#handleKeyPressed" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help" />
                </children>
             </VBox>
          </bottom>
@@ -67,7 +67,7 @@
             </Label>
          </top>
          <right>
-            <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="200.0" translateX="100.0" visible="false" BorderPane.alignment="CENTER">
                <children>
                   <ListView fx:id="taskDateList" prefHeight="314.0" prefWidth="89.0">
                      <padding>
@@ -77,7 +77,10 @@
                         <Insets left="10.0" />
                      </VBox.margin>
                   </ListView>
-               </children></VBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin></VBox>
          </right>
       </BorderPane>
       <fx:include source="AlertPopup.fxml" />

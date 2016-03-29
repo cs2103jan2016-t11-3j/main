@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import common.TaskObject;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 import static logic.constants.Strings.*;
 
@@ -78,6 +80,8 @@ public class MainController implements Initializable {
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;	
+	@FXML
+	private VBox sidePanel;
 	
 	@FXML
 	//reads input on enter
@@ -87,14 +91,13 @@ public class MainController implements Initializable {
 			readInput();
 			passInput();
 			clearTextField();
-			clearSideBar();
+			hideSidePanel();
 			feedbackUser();
 		}
 	}
 
-	private void clearSideBar() {
-		taskDateList.setItems(null);
-		
+	private void hideSidePanel() {
+		sidePanel.setVisible(false);
 	}
 
 	@FXML
@@ -133,8 +136,23 @@ public class MainController implements Initializable {
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
 		
 		_UI.setSortByDate();
+		manageSidePanel();
 		display(); //start program with all tasks in table
 		
+	}
+
+	private void manageSidePanel() {
+		sidePanel.managedProperty().bind(sidePanel.visibleProperty());
+	}
+
+	private void prepareSlideMenuAnimation() {
+		TranslateTransition openNav = new TranslateTransition(new Duration(350), sidePanel);
+		openNav.setToX(0);
+		
+		if (sidePanel.getTranslateX() != 0) {
+			openNav.play();
+		}
+
 	}
 
 	private void readInput() {
@@ -173,9 +191,11 @@ public class MainController implements Initializable {
 	}
 
 	private void fillSidebar() {
-		System.out.println("barfilled");
+		sidePanel.setVisible(true);
 		ObservableList<String> recurringTime = FXCollections.observableArrayList(_UI.getOutput());
 		taskDateList.setItems(recurringTime);	
+		prepareSlideMenuAnimation();
+		
 	}
 
 
@@ -203,7 +223,6 @@ public class MainController implements Initializable {
 			_UI.passInput("help Edit");
 			break;
 		case 4:
-			
 			_UI.passInput("help Delete");
 			break;
 		case 5:
