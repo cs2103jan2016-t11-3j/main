@@ -350,6 +350,8 @@ public class TaskObject implements Comparable<TaskObject> {
 		setEndDate(-1);
 		setStartTime(-1);
 		setEndTime(-1);
+		setStartDateTime(LocalDateTime.MAX);
+		setEndDateTime(LocalDateTime.MAX);
 	}
 
     @Override
