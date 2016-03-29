@@ -77,6 +77,14 @@ public class ParserTest {
 		assertEquals("event", tempParser.getCategory());
 		reset();
 		
+		tempParser.allocate("add prep 5pm lecture from this thursday 9am to 8pm");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("2016-03-31T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-31T20:00",tempParser.getEndDateTime().toString());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("event", tempParser.getCategory());
+		reset();
+		
 		/*case 5: adding recurring task with relative start date*/
 		tempParser.allocate("add 5pm lecture every friday at 4pm until 9june");
 		assertEquals(1, tempParser.getCommandType());
@@ -97,7 +105,8 @@ public class ParserTest {
 		assertEquals("2016-03-30T09:00",tempParser.getEndDateTime().toString());
 		assertEquals("WEEKLY",tempParser.TO.getInterval().getFrequency());
 		assertEquals(1,tempParser.TO.getInterval().getTimeInterval());
-		assertEquals("2016-06-09T23:59:59.999999999",tempParser.TO.getInterval().getUntil().toString());
+		assertEquals("2016-06-09T"
+				+ "23:59:59.999999999",tempParser.TO.getInterval().getUntil().toString());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("event", tempParser.getCategory());
 		reset();

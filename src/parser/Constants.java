@@ -98,7 +98,7 @@ public class Constants {
             + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
             + "|" + REGEX_RELATIVE_DATE_3 +")";
     public static final String REGEX_RELATIVE_DATETIME = "(" + "(" + REGEX_TIME_FORMAT + " )?" + REGEX_RELATIVE_DATE_ALL 
-    		+ "( " + REGEX_TIME_FORMAT + ")?" + ")$";
+    		+ "( " + REGEX_TIME_FORMAT + ")?" + ")";//REMOVED DOLLAR SIGN HERE
     
     public static final String REGEX_RELATIVE_TIME_1 = "("
             + REGEX_TIME_ATTRIBUTES + " (?i)(later|before|after|from now))";
@@ -107,14 +107,16 @@ public class Constants {
     public static final String REGEX_DEADLINE_IDENTIFIER = "(?i)(by|before) " + "("
             + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME + ")";
     
-    //EVENT has a start and end 
+    //EVENT has a start and end
+    public static final String REGEX_EVENT_COMPONENT = "(" + REGEX_DATETIME_FORMAT + "|" +  REGEX_RELATIVE_DATETIME + ")";
+    public static final String REGEX_EVENT_IDENTIFIER_1 = "(?i)(from) " +  REGEX_EVENT_COMPONENT + " to " + REGEX_EVENT_COMPONENT;
     public static final String REGEX_EVENT_IDENTIFIER = "(?i)(from) "
-            + REGEX_DATETIME_FORMAT 
-            + " to " + REGEX_DATETIME_FORMAT;
+            + "(" + REGEX_DATETIME_FORMAT + "|" +  REGEX_RELATIVE_DATETIME + ")"
+            + " to " + "(" + REGEX_DATETIME_FORMAT + "|" +  REGEX_RELATIVE_DATETIME + ")";
     
     //point task has an at or on keyword
-    public static final String REGEX_POINT_TASK_IDENTIFIER = "(?i)(on|at) "
-            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME;
+    public static final String REGEX_POINT_TASK_IDENTIFIER = "(?i)(on|at) " + "("
+            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME + ")";
     
     //RECURRING task has an "every" keyword
     public static final String REGEX_RECURRING_INTERVAL = "(?i)(every)[ 0-9]* ("
