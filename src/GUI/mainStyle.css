@@ -31,7 +31,9 @@
 
 #timeColumn {
 	-fx-font-size: 17; 
-	-fx-font-family: 'Agency FB';	
+	-fx-font-family: 'Agency FB';
+	-word-break: break-all;
+	-fx-text-break: true;	
 }
 
 #feedbackBox {
@@ -41,4 +43,11 @@
 
 #userInput {
 	-fx-background-radius: 0.5em;
+}
+
+#taskDateList {
+	-fx-background-color: white; 
+	-fx-background-radius: 10px; 
+	-fx-border-color: #78C0A8; 
+	-fx-border-radius: 10px;
 }

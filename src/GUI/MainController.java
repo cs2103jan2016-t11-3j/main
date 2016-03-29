@@ -265,7 +265,7 @@ public class MainController implements Initializable {
 						super.updateItem(item, empty);
 						if (!isEmpty()) {
 							text = new Text(item.toString());
-							text.setWrappingWidth(taskColumn.getWidth()); // Setting the wrapping width to the Text
+							text.wrappingWidthProperty().bind(taskColumn.widthProperty());
 							setGraphic(text);
 						}
 					}
@@ -284,7 +284,7 @@ public class MainController implements Initializable {
 						super.updateItem(item, empty);
 						if (!isEmpty()) {
 							text = new Text(item.toString());
-							text.setWrappingWidth(timeColumn.getWidth()); // Setting the wrapping width to the Text
+							text.wrappingWidthProperty().bind(timeColumn.widthProperty());
 							setGraphic(text);
 						}
 					}

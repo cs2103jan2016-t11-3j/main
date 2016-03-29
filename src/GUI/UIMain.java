@@ -33,6 +33,14 @@ public class UIMain extends Application {
 		window = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 720, 500);
+		setStyle(scene);
+
+		window.setTitle("Adult TaskFinder");
+		window.setScene(scene);
+		window.show();
+	}
+
+	private void setStyle(Scene scene) {
 		URL url = this.getClass().getResource("mainStyle.css");
 		if (url == null) {
 			System.out.println("Resource not found. Aborting.");       
@@ -40,10 +48,6 @@ public class UIMain extends Application {
 		 }
 		String css = url.toExternalForm(); 
 		scene.getStylesheets().add(css);
-
-		window.setTitle("Adult TaskFinder");
-		window.setScene(scene);
-		window.show();
 	}
 	
 	public static void main(String[] args) {

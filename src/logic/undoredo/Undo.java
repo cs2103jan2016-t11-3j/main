@@ -14,6 +14,8 @@ import static logic.constants.Strings.*;
 
 public class Undo extends UndoRedo {
 
+	private Logic secondaryLogic;
+	
 	public Undo(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		super(taskList, undoList, redoList);
 	}
@@ -25,7 +27,7 @@ public class Undo extends UndoRedo {
 			try {
 				CommandObject commandObj = undoList.pop();
 				
-				Logic secondaryLogic = new Logic(taskList, undoList, redoList);
+				secondaryLogic = new Logic(taskList, undoList, redoList);
 				secondaryLogic.parseCommandObject(commandObj, true, false);
 				LOGGER.log(Level.INFO, "Undo CommandObject processed in secondary Logic class");
 				
@@ -56,4 +58,7 @@ public class Undo extends UndoRedo {
 		}
 	}
 	
+	public Logic getLogic() {
+		return secondaryLogic;
+	}
 }

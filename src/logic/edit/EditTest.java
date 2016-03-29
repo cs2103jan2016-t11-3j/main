@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
-// Can consider test cases for situations where a time is added, i.e. from MAX to a specified time - how to display that?
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class EditTest {
