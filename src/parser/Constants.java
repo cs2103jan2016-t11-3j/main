@@ -83,13 +83,14 @@ public class Constants {
             + REGEX_TIME_FORMAT + "(,?[ ]" + REGEX_DATE_FORMAT + ")?))";
     
     //RELATIVE
-    public static final String REGEX_RELATIVE_DATE_1 = "(?i)(today|tmr|tomorrow)";
+    public static final String REGEX_RELATIVE_DATE_0 = "(?i)(today|now)";
+    public static final String REGEX_RELATIVE_DATE_1 = "(?i)(tmrw|tmr|tomorrow)";
     public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next) ("
             + REGEX_DATE_ATTRIBUTES + "|" + REGEX_DAYS_TEXT + "))";
     public static final String REGEX_RELATIVE_DATE_3 = "(\\d+ "
             + REGEX_DATE_ATTRIBUTES + " (?i)(later|before|after|from now))";
-    public static final String REGEX_RELATIVE_DATE_ALL = "(" 
-            + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
+    public static final String REGEX_RELATIVE_DATE_ALL = "(" + REGEX_RELATIVE_DATE_0 
+            + "|" + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
             + "|" + REGEX_RELATIVE_DATE_3 +")";
     public static final String REGEX_RELATIVE_DATETIME = "(" + REGEX_RELATIVE_DATE_ALL + " "
     		+ "(" + REGEX_TIME_FORMAT + ")?" + ")$";

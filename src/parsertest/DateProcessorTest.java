@@ -74,6 +74,11 @@ public class DateProcessorTest {
 		reset();
 	}
 
+	@Test(expected = Exception.class)
+    public void testProcessInvalidDate() throws Exception {
+	    DP.processDate("31 feb 2012");
+	}
+	
 	
 	@Test
 	public void testHasMonth() {
@@ -116,11 +121,11 @@ public class DateProcessorTest {
 		reset();
 		
 		DP.processRelativeDate("tmr");
-		assertEquals("2016-03-25",DP.getDateObject().toString());
+		assertEquals("2016-03-29",DP.getDateObject().toString());
 		reset();
 		
 		DP.processRelativeDate("next week");
-		assertEquals("2016-03-31",DP.getDateObject().toString());
+		assertEquals("2016-04-04",DP.getDateObject().toString());
 		reset();
 	}
 

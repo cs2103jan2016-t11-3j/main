@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import parser.exceptions.InvalidDateFormatException;
+
 /**
  * This class focuses on breaking down a string for date into the relevant components
  * 
@@ -73,21 +75,22 @@ public class DateParser {
 	
 	private String dateString;
 	private LocalDate dateObject = LocalDate.MAX;
-	
-	/**
+
+    /**
 	 * This method takes in a string input returns LocalDate to the datetimeparser
 	 * 
 	 * @param input    date string that is in the format
 	 * @throws Exception 
 	 */
 	public void processDate(String input) throws Exception {
-		if (!input.isEmpty()) {
-			furtherProcessDate(input);
-			if (start_month == -1) {
-				start_month = end_month;
-			}
-			setDates();
+		if (input.isEmpty()) {
+		    return;
 		}
+		furtherProcessDate(input);
+		if (start_month == -1) {
+			start_month = end_month;
+		}
+		setDates();
 	}
 	
 	
@@ -101,7 +104,8 @@ public class DateParser {
 	 * @throws Exception 
 	 */
 	public void furtherProcessDate(String input) throws Exception {
-		if (hasMonth(input)) {
+	    input = preprocess(input);
+	    if (hasMonth(input)) {
 			setMonth(input);
 			input = removeMonth(input);
 			splitStringAndProcess(input);
@@ -110,9 +114,16 @@ public class DateParser {
 		} else if (isRelative(input)) { 
 			processRelativeDate(input);
 		} else {
-			throw new Exception("Invalid Date Format");
+			throw new InvalidDateFormatException(input);
 		}
 	}
+
+
+    private String preprocess(String input) {
+        input = input.trim();
+        input = input.toLowerCase();
+        return input;
+    }
 	
 	
 	/**
@@ -128,7 +139,6 @@ public class DateParser {
 		} else {
 			return false;
 		}
-		
 	}
 	
 	/**
@@ -137,14 +147,14 @@ public class DateParser {
 	 * @param input
 	 */
 	public void processRelativeDate(String input) {
-		input = input.trim();
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
-			if (input.matches("today")) {
-				dateObject = LocalDate.now();
-			} else {
-				dateObject = LocalDate.now().plusDays(1);
-			}
-		} else if (input.matches("("+"(next )?"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
+		input = preprocess(input);
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_0)) {
+			dateObject = LocalDate.now();
+		} 
+		else if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
+		    dateObject = LocalDate.now().plusDays(1);
+		}
+		else if (input.matches("("+"(next )?"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
 			input = input.replaceAll("next ", "").trim();
 			dateObject = LocalDate.now();
 			if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
@@ -154,7 +164,8 @@ public class DateParser {
 					dateObject = dateObject.plusDays(1);
 				}	
 			}
-		} else if (input.matches("next " + "(week|wk)(s)?")) {
+		} 
+		else if (input.matches("next " + "(week|wk)(s)?")) {
 			dateObject = LocalDate.now().plusWeeks(1);
 		}
 	}
@@ -242,7 +253,7 @@ public class DateParser {
 				start_year = list.get(2);
 			}	
 		} else {
-			throw new Exception("Invalid Date");
+			throw new InvalidDateFormatException(input);
 		}
 		
 	}
@@ -284,7 +295,7 @@ public class DateParser {
 	 * this method will return the corresponding month's integer value
 	 */
 	public int setMonthInDataProcessor(String month) {
-		month = month.toLowerCase();
+		month = preprocess(month);
 		if (month == MONTH_1_1 || month.contains(MONTH_1_2)) {
 			return VALUE_JAN;
 		} else if (month == MONTH_2_1 || month.contains(MONTH_2_2)) {
