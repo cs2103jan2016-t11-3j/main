@@ -42,7 +42,7 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by tomorrow 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals("2016-03-30T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-31T09:00",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
@@ -51,7 +51,7 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by tomorrow");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals("2016-03-30T23:59:59.999999999",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-31T23:59:59.999999999",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
@@ -62,6 +62,24 @@ public class ParserTest {
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("prep 5pm lecture", tempParser.getTask());
 		assertEquals("2016-02-29T09:00",tempParser.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("deadline", tempParser.getCategory());
+		reset();
+		
+		tempParser.allocate("add prep 5pm lecture by 9am");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("prep 5pm lecture", tempParser.getTask());
+		assertEquals("2016-03-30T09:00",tempParser.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("deadline", tempParser.getCategory());
+		reset();
+		
+		tempParser.allocate("add prep lecture on this fri 4.10am");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("prep lecture", tempParser.getTask());
+		assertEquals("2016-04-01T04:10",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
@@ -93,8 +111,8 @@ public class ParserTest {
 		tempParser.allocate("add 5pm lecture every wednesday from 8am to 9am until 9june");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("5pm lecture", tempParser.getTask());
-		assertEquals("2016-03-30T08:00",tempParser.getStartDateTime().toString());
-		assertEquals("2016-03-30T09:00",tempParser.getEndDateTime().toString());
+		assertEquals("2016-04-06T08:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-04-06T09:00",tempParser.getEndDateTime().toString());
 		assertEquals("WEEKLY",tempParser.TO.getInterval().getFrequency());
 		assertEquals(1,tempParser.TO.getInterval().getTimeInterval());
 		assertEquals("2016-06-09T23:59:59.999999999",tempParser.TO.getInterval().getUntil().toString());
@@ -122,7 +140,7 @@ public class ParserTest {
 		
 		tempParser.allocate("search today");
 		assertEquals("", tempParser.getTask());
-		assertEquals("2016-03-29T23:59:59.999999999",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-30T23:59:59.999999999",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX,tempParser.getEndDateTime());
 		reset();
 		

@@ -20,7 +20,7 @@ public class AddParserTest {
 		
 		TO = AP.process("be nice to merrel by today 9pm");
 		assertEquals("be nice to merrel", AP.getTask());
-		assertEquals("2016-03-29T21:00",TO.getStartDateTime().toString());
+		assertEquals("2016-03-30T21:00",TO.getStartDateTime().toString());
 		assertEquals(-1, AP.getEndTime());
 		assertEquals(-1, AP.getEndDate());
 		
@@ -35,7 +35,7 @@ public class AddParserTest {
 		
 		TO = AP.process("ie2100 hw by today");
 		assertEquals("ie2100 hw", AP.getTask());
-		assertEquals("2016-03-31T08:00",TO.getStartDateTime().toString());
+		assertEquals("2016-03-30T23:59:59.999999999",TO.getStartDateTime().toString());
 		
 	}
 /*

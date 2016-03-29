@@ -117,8 +117,8 @@ public class Constants {
 
     
     //point task has an at or on keyword
-    public static final String REGEX_POINT_TASK_IDENTIFIER = "(?i)(on|at) "
-            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME;
+    public static final String REGEX_POINT_TASK_IDENTIFIER = "(?i)(on|at) " + "("
+            + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME + ")";
     
     //RECURRING task has an "every" keyword
     public static final String REGEX_RECURRING_INTERVAL = "(?i)(every)[ 0-9]* ("
