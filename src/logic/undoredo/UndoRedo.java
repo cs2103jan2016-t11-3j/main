@@ -27,6 +27,9 @@ public class UndoRedo {
 
 	protected static final Logger LOGGER = Logger.getLogger(UndoRedo.class.getName());
 	
+	private Undo undo;
+	private Redo redo;
+	
 	protected ArrayList<TaskObject> taskList;
 	protected Deque<CommandObject> undoList;
 	protected Deque<CommandObject> redoList;
@@ -54,14 +57,21 @@ public class UndoRedo {
 		assert (commandType == INDEX_UNDO || commandType == INDEX_REDO);
 
 		if (commandType == INDEX_UNDO) {
-			Undo undo = new Undo(taskList, undoList, redoList);
+			undo = new Undo(taskList, undoList, redoList);
 			output = undo.run();
 		} else if (commandType == INDEX_REDO) {
-			Redo redo = new Redo(taskList, undoList, redoList);
+			redo = new Redo(taskList, undoList, redoList);
 			output = redo.run();
 		}
 		
 		return output;
 	}
 	
+	public Undo getUndo() {
+		return undo;
+	}
+	
+	public Redo getRedo() {
+		return redo;
+	}
 }
