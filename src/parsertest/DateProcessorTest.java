@@ -32,7 +32,7 @@ public class DateProcessorTest {
 		
 		/*case 4: test ability to read relative dates*/
 		DP.parseDate("next friday");
-		assertEquals("2016-03-25", DP.getDateObject().toString());
+		assertEquals("2016-04-08", DP.getDateObject().toString());
 		reset();
 		
 		/*case 5: boundary value for positive-value partition (31)*/

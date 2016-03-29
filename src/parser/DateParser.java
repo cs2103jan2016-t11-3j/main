@@ -1,7 +1,9 @@
 package parser;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,8 +109,7 @@ public class DateParser {
 		boolean hasAlphabets = input.matches(".*[a-zA-Z]+.*");
 	    if(hasAlphabets) {
 	        processWithAlphabets(input);
-	    }
-	    else {
+	    } else {
 	        processWithoutAlphabets(input);
 	    }
 	}
@@ -117,8 +118,7 @@ public class DateParser {
 	private void processWithoutAlphabets(String input) throws Exception {
 	    if (hasSlash(input)) {
             setMonthWithSlash(input);
-        }  
-	    else {
+        } else {
             throw new InvalidDateFormatException(input);
         }
     }
@@ -150,7 +150,6 @@ public class DateParser {
 		} else {
 			return false;
 		}
-		
 	}
 	
 	/**
@@ -160,13 +159,11 @@ public class DateParser {
 	 * @throws Exception 
 	 */
 	public void processRelativeDate(String input) throws Exception {
-		input = input.trim();
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
-			if (input.matches("today")) {
+		input = preprocess(input);
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_0)) {
 				dateObject = LocalDate.now();
-			} else {
+		} else if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
 				dateObject = LocalDate.now().plusDays(1);
-			}
 		} else if (input.matches("("+"(next )"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
 			setDateNextWeek(input);
 		} else if (input.matches("("+"(this )"+ Constants.REGEX_DAYS_TEXT+")")) {
@@ -178,41 +175,58 @@ public class DateParser {
 		}
 	}
 
-	private void setDateToComingDayOfWeek(String input) {
-	    dateObject = LocalDate.now(); 
-		while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-			dateObject = dateObject.plusDays(1);
-		}
+	private void setDateToComingDayOfWeek(String input) throws InvalidDateFormatException {
+	    input = processDayOfWeek(input);
+	    dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input))); 
+		//while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+		//	dateObject = dateObject.plusDays(1);
+		//}
 	}
 	
-	public void setDateNextWeek(String input) {
-		input = input.replaceAll("next ", "").trim();
-		dateObject = LocalDate.now();
-		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
-			dateObject = dateObject.plusWeeks(1);
-		} else {
-			dateObject = setStartofNextWeek();
-			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-				dateObject = dateObject.plusDays(1);
-			}	
-		}
+	public void setDateNextWeek(String input) throws InvalidDateFormatException {
+		input = input.replaceAll("next", "").trim();
+        input = processDayOfWeek(input);
+        dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input)));
+        int set = dateObject.getDayOfWeek().getValue();
+        int now = LocalDate.now().getDayOfWeek().getValue();
+        if(set > now ) {
+            dateObject = dateObject.plusWeeks(1);
+        }
+        
+	//	dateObject = LocalDate.now();
+	//	if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+	//		dateObject = dateObject.plusWeeks(1);
+	//	} else {
+	//		dateObject = setStartofNextWeek();
+	//		while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+	//			dateObject = dateObject.plusDays(1);
+	//		}	
+	//	}
 	}
 	
-	private LocalDate setStartofNextWeek() {
-		LocalDate temp = LocalDate.now();
-		while (!temp.getDayOfWeek().toString().toLowerCase().contains("monday")) {
-			temp = temp.plusDays(1);
-			}
-		return temp;
+	@SuppressWarnings("unused")
+    private LocalDate setStartofNextWeek() {
+		LocalDate date = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+		return date;
 	}
 	
 	private void setDateThisWeek(String input) throws Exception {
 		input = input.replaceAll("this", "").trim();
-		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+		input = processDayOfWeek(input);
+		int set = DayOfWeek.valueOf(input).getValue();
+        int now = LocalDate.now().getDayOfWeek().getValue();
+        if(set < now ) {
+            throw new Exception(input + " is over this week. Did you mean next " + input + "?");
+        }
+        else {
+            dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input)));
+        }
+        /**
+        if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
 			dateObject = LocalDate.now();
 		} else {
 			dateObject = LocalDate.now(); 
-			/*set the date first*/
+			//set the date first
 			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
 				dateObject = dateObject.plusDays(1);
 			}
@@ -221,6 +235,7 @@ public class DateParser {
 				throw new Exception(input + " is over this week. Did you mean next " + input + "?");
 			}
 		}
+	    */
 	}
 	
 	/**
@@ -263,9 +278,7 @@ public class DateParser {
 	public void splitStringAndProcess(String input) {
 		ArrayList<String> templist = new ArrayList<String>();
 		int _day = -1, _year = -1;
-		if (input.startsWith(" ")) {
-			input = input.replaceFirst(" ", "");
-		}
+		input = preprocess(input);
 		for (String temp : input.split("\\s+")) {
 			temp = temp.replaceAll("[a-zA-Z]+", "");
 			templist.add(temp);
@@ -377,6 +390,27 @@ public class DateParser {
 			return -1;
 		}
 	}
+	
+	public String processDayOfWeek(String dayOfWeek) throws InvalidDateFormatException {
+        dayOfWeek = preprocess(dayOfWeek);
+        if ("monday".contains(dayOfWeek)) {
+            return "MONDAY" ;
+        } else if ("tuesday".contains(dayOfWeek)) {
+            return "TUESDAY" ;
+        } else if ("wednesday".contains(dayOfWeek)) {
+            return "WEDNESDAY" ;
+        } else if ("thursday".contains(dayOfWeek)) {
+            return "THURSDAY" ;
+        } else if ("friday".contains(dayOfWeek)) {
+            return "FRIDAY" ;
+        } else if ("saturday".contains(dayOfWeek)) {
+            return "SATURDAY" ;
+        } else if ("sunday".contains(dayOfWeek)) {
+            return "SUNDAY" ;
+        } else {
+            throw new InvalidDateFormatException(dayOfWeek);
+        }
+    }
 	
 	/**
 	 * method sets the LocalDate for the object by cleaning up minor format differences
