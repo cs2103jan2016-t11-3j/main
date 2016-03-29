@@ -64,20 +64,20 @@ public class TimeParser {
 		input = input.replaceAll(" ", "");
 		int temp = 0;
 		temp = Integer.parseInt(input);
-		if (temp < 100) {
+		if (temp < 100) { //converts time to 4 digit format
 			temp = temp * 100;
 		}
 		
-		if (isPM) {
+		if (isPM) { //converts timing to correct value
 			temp = temp + 1200;
+		} else if (!isPM && temp > 1159) {
+			temp = temp - 1200;
 		}
 		
-		if (temp == 2400) {
-			temp = 0000;
-		}
+		
 		
 		if (temp > 2359) {
-			return;
+			temp = temp - 1200; // how ah here
 		}
 		time = temp;
 	}
@@ -91,8 +91,12 @@ public class TimeParser {
 		String minute, hour;
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		
-		if (time < 1000) {
+		if (time < 1000 && time > 99) {
 			minute = "0" + Integer.toString(time);
+		} else if (time < 1000 && time > 9) {
+			minute = "00" + Integer.toString(time);
+		} else if (time < 1000 && time < 100) {
+			minute = "000" + Integer.toString(time);
 		} else {
 			minute = Integer.toString(time);
 		}
