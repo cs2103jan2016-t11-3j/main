@@ -1,0 +1,44 @@
+#layout {
+	-fx-background-image: url('background4.jpg');	
+	-fx-background-repeat: no-repeat; 
+	-fx-background-size: 100% 100%; 
+	-fx-border-radius: 20px;
+}
+
+#taskTable {
+	-fx-border-color: #78C0A8; 
+	-fx-border-width: 3px; 
+	-fx-background-radius: 1.2em; 
+	-fx-border-radius: 1.2em;
+}
+
+#indexColumn {
+	-fx-alignment: CENTER; 
+	-fx-font-size: 17; 
+	-fx-font-family: 'Agency FB';	
+}
+
+#statusColumn {
+	-fx-alignment: CENTER; 
+	-fx-font-size: 17; 
+	-fx-font-family: 'Agency FB';	
+}
+		
+#taskColumn {
+	-fx-font-size: 17; 
+	-fx-font-family: 'Agency FB';	
+}
+
+#timeColumn {
+	-fx-font-size: 17; 
+	-fx-font-family: 'Agency FB';	
+}
+
+#feedbackBox {
+	-fx-background-color: white; 
+	-fx-background-radius: 8 8 0 0;
+}
+
+#userInput {
+	-fx-background-radius: 0.5em;
+}

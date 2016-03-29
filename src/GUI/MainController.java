@@ -1,5 +1,6 @@
 package GUI;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -131,19 +132,11 @@ public class MainController implements Initializable {
 		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
 		
-		setColumnStyle();
 		_UI.setSortByDate();
 		display(); //start program with all tasks in table
 		
 	}
 
-	private void setColumnStyle() {
-		indexColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 17; -fx-font-family: 'Agency FB'");
-		statusColumn.setStyle("-fx-alignment: CENTER; -fx-font-size: 17; -fx-font-family: 'Agency FB'");
-		taskColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
-		timeColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
-	}	
-	
 	private void readInput() {
 		_input = userInput.getText();
 	}
@@ -272,7 +265,7 @@ public class MainController implements Initializable {
 						super.updateItem(item, empty);
 						if (!isEmpty()) {
 							text = new Text(item.toString());
-							text.setWrappingWidth(taskColumn.getPrefWidth()); // Setting the wrapping width to the Text
+							text.setWrappingWidth(taskColumn.getWidth()); // Setting the wrapping width to the Text
 							setGraphic(text);
 						}
 					}
@@ -291,7 +284,7 @@ public class MainController implements Initializable {
 						super.updateItem(item, empty);
 						if (!isEmpty()) {
 							text = new Text(item.toString());
-							text.setWrappingWidth(timeColumn.getPrefWidth()); // Setting the wrapping width to the Text
+							text.setWrappingWidth(timeColumn.getWidth()); // Setting the wrapping width to the Text
 							setGraphic(text);
 						}
 					}

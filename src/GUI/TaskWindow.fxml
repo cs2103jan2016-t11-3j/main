@@ -11,9 +11,9 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainController">
    <children>
-      <BorderPane fx:id="layout" prefHeight="600" prefWidth="370.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: 100% 100%; -fx-border-radius: 20px;">
+      <BorderPane fx:id="layout" prefHeight="600" prefWidth="370.0">
          <center>
-            <TableView fx:id="taskTable" onKeyPressed="#handleKeyPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
+            <TableView fx:id="taskTable" onKeyPressed="#handleKeyPressed" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <columns>
                   <TableColumn fx:id="indexColumn" editable="false" maxWidth="80.0" minWidth="80.0" prefWidth="-1.0" sortable="false" text="No." />
                   <TableColumn fx:id="taskColumn" editable="false" prefWidth="280.0" sortable="false" text="Task Name" />
@@ -34,7 +34,7 @@
          <bottom>
             <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextFlow fx:id="feedbackBox" opacity="0.5" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 8 8 0 0;">
+                  <TextFlow fx:id="feedbackBox" opacity="0.5" prefHeight="40.0" prefWidth="200.0">
                      <children>
                         <Text fx:id="feedbackMessage" fill="#5e412f" strokeType="OUTSIDE" strokeWidth="0.0">
                            <font>
@@ -49,7 +49,7 @@
                         <Insets left="1.0" right="1.0" top="5.0" />
                      </VBox.margin>
                   </TextFlow>
-                  <TextField fx:id="userInput" onKeyPressed="#handleKeyPressed" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help" style="-fx-background-radius: 0.5em;" />
+                  <TextField fx:id="userInput" onKeyPressed="#handleKeyPressed" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help"/>
                </children>
             </VBox>
          </bottom>
