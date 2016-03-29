@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import parser.exceptions.InvalidDateFormatException;
+
 /**
  * This class focuses on breaking down a string for date into the relevant components
  * 
@@ -80,18 +82,19 @@ public class DateParser {
 	 * @param input    date string that is in the format
 	 * @throws Exception 
 	 */
-	public void processDate(String input) throws Exception {
-		if (!input.isEmpty()) {
-			furtherProcessDate(input);
-			if (start_month == -1) {
-				start_month = end_month;
-			}
-			setDates();
+	public void parseDate(String input) throws Exception {
+		if (input.isEmpty()) {
+		    return; // Throw Exception
 		}
+		input = preprocess(input);
+		processDate(input);
+		if (start_month == -1) {
+			start_month = end_month;
+		}
+		setDates();
 	}
-	
-	
-	/**
+
+    /**
 	 * this method further processes the input from date-time-parser
 	 * 
 	 * format types include
@@ -100,22 +103,41 @@ public class DateParser {
 	 * 3. incomplete format:  3 - 6 june 2015
 	 * @throws Exception 
 	 */
-	public void furtherProcessDate(String input) throws Exception {
-		if (hasMonth(input)) {
-			setMonth(input);
-			input = removeMonth(input);
-			splitStringAndProcess(input);
-		} else if (hasSlash(input)) {
-			setMonthWithSlash(input);
-		} else if (isRelative(input)) { 
-			processRelativeDate(input);
-		} else {
-			throw new Exception("Invalid Date Format");
-		}
+	public void processDate(String input) throws Exception {
+		boolean hasAlphabets = input.matches(".*[a-zA-Z]+.*");
+	    if(hasAlphabets) {
+	        processWithAlphabets(input);
+	    }
+	    else {
+	        processWithoutAlphabets(input);
+	    }
 	}
 	
 	
-	/**
+	private void processWithoutAlphabets(String input) throws Exception {
+	    if (hasSlash(input)) {
+            setMonthWithSlash(input);
+        }  
+	    else {
+            throw new InvalidDateFormatException(input);
+        }
+    }
+
+    private void processWithAlphabets(String input) throws Exception {
+	    if (hasMonth(input)) {
+            setMonth(input);
+            input = removeMonth(input);
+            splitStringAndProcess(input);
+        }
+	    else if (isRelative(input)) { 
+            processRelativeDate(input);
+        }
+	    else {
+	        throw new InvalidDateFormatException(input);
+	    }
+    }
+
+    /**
 	 * method checks if the input string is a relative date
 	 * @param input   date string 
 	 * 			e.g. tmr (relative date)
@@ -152,19 +174,14 @@ public class DateParser {
 		} else if (input.matches("next " + "(week|wk)(s)?")) {
 			dateObject = LocalDate.now().plusWeeks(1);
 		} else if (input.matches(Constants.REGEX_DAYS_TEXT)) {
-			setDateToNearest(input);
+			setDateToComingDayOfWeek(input);
 		}
 	}
 
-
-	private void setDateToNearest(String input) {
-		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
-			dateObject = LocalDate.now();
-		} else {
-			dateObject = LocalDate.now(); 
-			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-				dateObject = dateObject.plusDays(1);
-			}
+	private void setDateToComingDayOfWeek(String input) {
+	    dateObject = LocalDate.now(); 
+		while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = dateObject.plusDays(1);
 		}
 	}
 	
@@ -407,6 +424,13 @@ public class DateParser {
 		}
 	}
 	
+	
+	   
+    private String preprocess(String input) {
+        input.trim();
+        input.toLowerCase();
+        return input;
+    }
 	
 	
 	//if already set due to relative date, the method will not set the date again

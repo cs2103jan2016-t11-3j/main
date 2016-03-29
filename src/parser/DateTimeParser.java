@@ -208,7 +208,7 @@ public class DateTimeParser {
 		DateParser DP = new DateParser();
 		
 		if (_freq.matches(Constants.REGEX_DAYS_TEXT)) {
-			DP.processDate(_freq);
+			DP.parseDate(_freq);
 		}
 		
 		startDate = DP.getDateObject();
@@ -304,7 +304,7 @@ public class DateTimeParser {
 			String _time) throws Exception {
 		_time = cleanString(_time);
 		_date = cleanString(_date);
-		DP.processDate(_date);
+		DP.parseDate(_date);
 		TP.processTime(_time);
 	}
 	

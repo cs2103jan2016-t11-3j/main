@@ -16,39 +16,39 @@ public class DateProcessorTest {
 	public void testProcessDate() throws Exception {
 		/*POSITIVE VALUE PARTITION CASES*/
 		/*case 1: test ability to read ddmm formats*/
-		DP.processDate("7/6");
+		DP.parseDate("7/6");
 		assertEquals("2016-06-07", DP.getDateObject().toString());
 		reset();
 		
 		/*case 2: test ability to read ddmonthyyyy formats*/
-		DP.processDate("6 june 2014");
+		DP.parseDate("6 june 2014");
 		assertEquals("2014-06-06", DP.getDateObject().toString());
 		reset();
 		
 		/*case 3: test ability to read ddmmyyyy formats*/
-		DP.processDate("5/6/16");
+		DP.parseDate("5/6/16");
 		assertEquals("2016-06-05", DP.getDateObject().toString());
 		reset();
 		
 		/*case 4: test ability to read relative dates*/
-		DP.processDate("next friday");
+		DP.parseDate("next friday");
 		assertEquals("2016-03-25", DP.getDateObject().toString());
 		reset();
 		
 		/*case 5: boundary value for positive-value partition (31)*/
-		DP.processDate("31 july 2000");
+		DP.parseDate("31 july 2000");
 		assertEquals("2000-07-31", DP.getDateObject().toString());
 		reset();
 		
 		/*case 6: boundary value for positive-value partition (31)*/
-		DP.processDate("31/12/2000");
+		DP.parseDate("31/12/2000");
 		assertEquals("2000-12-31", DP.getDateObject().toString());
 		reset();
 		
 		/*NEGATIVE VALUE TEST CASES*/
 		/*case 5: test ability to reject non-slash separated numbers*/
 		try {
-			DP.processDate("7.6");
+			DP.parseDate("7.6");
 			assert false;
 		} catch (Exception e) {
 			assert true;
@@ -57,7 +57,7 @@ public class DateProcessorTest {
 		
 		/*case 6: test if exception is thrown when date is not valid*/
 		try {
-			DP.processDate("51 july 1030");
+			DP.parseDate("51 july 1030");
 			assert false;
 		} catch (Exception e) {
 			assert true;
@@ -66,7 +66,7 @@ public class DateProcessorTest {
 		
 		/*case 7: test if exception is thrown when date is at boundary*/
 		try {
-			DP.processDate("32 july 1030");
+			DP.parseDate("32 july 1030");
 			assert false;
 		} catch (Exception e) {
 			assert true;
@@ -76,7 +76,7 @@ public class DateProcessorTest {
 
 	@Test(expected = Exception.class)
     public void testProcessInvalidDate() throws Exception {
-	    DP.processDate("31 feb 2012");
+	    DP.parseDate("31 feb 2012");
 	}
 	
 	
@@ -114,18 +114,18 @@ public class DateProcessorTest {
 	}
 	
 	@Test
-	public void testProcessRelativeDate() {
+	public void testProcessRelativeDate() throws Exception {
 		
 		DP.processRelativeDate("next tue");
-		assertEquals("2016-03-29",DP.getDateObject().toString());
+		assertEquals("2016-04-05",DP.getDateObject().toString());
 		reset();
 		
 		DP.processRelativeDate("tmr");
-		assertEquals("2016-03-29",DP.getDateObject().toString());
+		assertEquals(LocalDate.now().plusDays(1), DP.getDateObject());
 		reset();
 		
 		DP.processRelativeDate("next week");
-		assertEquals("2016-04-04",DP.getDateObject().toString());
+		assertEquals(LocalDate.now().plusWeeks(1) ,DP.getDateObject());
 		reset();
 	}
 
