@@ -84,7 +84,7 @@ public class Constants {
     
     //RELATIVE
     public static final String REGEX_RELATIVE_DATE_1 = "(?i)(today|tmr|tomorrow)";
-    public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next) ("
+    public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next )?("
             + REGEX_DATE_ATTRIBUTES + "|" + REGEX_DAYS_TEXT + "))";
     public static final String REGEX_RELATIVE_DATE_3 = "(\\d+ "
             + REGEX_DATE_ATTRIBUTES + " (?i)(later|before|after|from now))";
