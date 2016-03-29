@@ -349,8 +349,6 @@ public class RecurringTest {
 		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
 			String line = TimeOutput.setDeadlineTimeOutput(task.getTaskDateTimes().get(i).getStartDateTime());
 			System.out.println(line);
-		}
-
-		
+		}		
 	}
 }

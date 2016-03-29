@@ -84,11 +84,19 @@ public class Done extends Mark {
 	private void changeStatusForRecurringTask(TaskObject task) {
 		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
 			changeStatusForRecurringDeadline(task);
+		} else {
+			if (task.getCategory().equals(CATEGORY_EVENT)) {
+				changeStatusForRecurringEvent(task);
+			}
 		}
 	}
 
 	private void changeStatusForRecurringDeadline(TaskObject task) {
 		Recurring.updateDeadline(task, taskList, "completed");
+	}
+	
+	private void changeStatusForRecurringEvent(TaskObject task) {
+		Recurring.forceUpdateEvent(task);
 	}
 
 }

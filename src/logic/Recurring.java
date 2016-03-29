@@ -83,14 +83,6 @@ public class Recurring {
 		}
 	}
 
-	private static boolean checkIfInfiniteRecurrence(Interval interval) {
-		if (interval.getCount() == -1 && interval.getUntil().isEqual(LocalDateTime.MAX)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private static void markAsDone(TaskObject task) {
 		task.setStatus("completed");
 	}
@@ -340,5 +332,23 @@ public class Recurring {
 		}
 
 		return new LocalDateTimePair(startDateTime, endDateTime);
+	}
+	
+	private static boolean checkIfInfiniteRecurrence(Interval interval) {
+		if (interval.getCount() == -1 && interval.getUntil().isEqual(LocalDateTime.MAX)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/*****************************************************************************/
+	public static void forceUpdateEvent(TaskObject task) {
+		
+		if (task.getTaskDateTimes().size() == 1) {
+			task.setStatus("completed");
+		} else {
+			renewEvent(task);
+		}
 	}
 }
