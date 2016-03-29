@@ -147,14 +147,27 @@ public class DateParser {
 			}
 		} else if (input.matches("("+"(next )"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
 			setDateNextWeek(input);
-		} else if (input.matches("("+"(this )?"+ Constants.REGEX_DAYS_TEXT+")")) {
+		} else if (input.matches("("+"(this )"+ Constants.REGEX_DAYS_TEXT+")")) {
 			setDateThisWeek(input);
 		} else if (input.matches("next " + "(week|wk)(s)?")) {
 			dateObject = LocalDate.now().plusWeeks(1);
+		} else if (input.matches(Constants.REGEX_DAYS_TEXT)) {
+			setDateToNearest(input);
 		}
 	}
 
 
+	private void setDateToNearest(String input) {
+		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = LocalDate.now();
+		} else {
+			dateObject = LocalDate.now(); 
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusDays(1);
+			}
+		}
+	}
+	
 	public void setDateNextWeek(String input) {
 		input = input.replaceAll("next ", "").trim();
 		dateObject = LocalDate.now();
