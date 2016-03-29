@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test.storage;
+package Test.storage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,8 +23,8 @@ import common.TaskObject;
 import storage.Constants;
 import storage.FileStorage;
 import storage.IStorage;
-import test.AssertHelper;
-import test.TaskGenerator;
+import Test.AssertHelper;
+import Test.TaskGenerator;
 
 /**
  * @author Hang

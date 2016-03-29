@@ -73,8 +73,10 @@ public class DateTimeParser {
 	 * method will take in string containing date and time, then splitting it into the date and time
 	 * separately for parsing through dateparser and timeparser
 	 * 
-	 * @param input      user input in string format
-	 * @param isForAdd   boolean to indicate if command is for the add parser
+	 * @param input      
+	 * 			user input in string format
+	 * @param isForAdd   
+	 * 			boolean to indicate if command is for the add parser
 	 * @throws Exception 
 	 */
 	public void parseDateTime(String input, boolean isForAdd) throws Exception {
@@ -88,7 +90,8 @@ public class DateTimeParser {
 	/**
 	 * method will parse date time string according to its task type
 	 * 
-	 * @param input   user's input in a string format
+	 * @param input   
+	 * 			user's input in a string format
 	 * @throws Exception 
 	 */
 	public void parseDateTimeOthers(String input) throws Exception {
@@ -120,7 +123,8 @@ public class DateTimeParser {
 	/**
 	 * method will parse date time string according to its task type
 	 * 
-	 * @param input   user's input in a string format
+	 * @param input   
+	 * 			user's input in a string format
 	 * @throws Exception 
 	 */
 	private void parseDateTimeForAdd(String input) throws Exception {
@@ -204,10 +208,11 @@ public class DateTimeParser {
 		DateParser DP = new DateParser();
 		
 		if (_freq.matches(Constants.REGEX_DAYS_TEXT)) {
-			DP.processDate(_freq);	
+			DP.processDate(_freq);
 		}
 		
 		startDate = DP.getDateObject();
+		
 		if (tasktype.equals(TaskType.event)) {
 			endDate = DP.getDateObject();	
 		}
@@ -228,7 +233,7 @@ public class DateTimeParser {
 		input = input.replaceFirst("every","").trim();
 		String _freq;
 		int _interval = 1;
-		if (input.contains(" ")) {
+		if (input.contains(" ")) { //assuming interval then frequency 
 			String[] interval = input.split(" ");
 			_interval = Integer.parseInt(interval[0]);
 			_freq = interval[1];
@@ -314,6 +319,9 @@ public class DateTimeParser {
 	 */
 	public void setLocalDateTime(boolean isForAdd, TaskType task) {
 		if (isForAdd) {
+			if (startDate.equals(LocalDate.MAX) && task.toString().equals("deadline")) {
+				startDate = LocalDate.now();
+			}
 			if (task.toString() == "event" && endDate.equals(LocalDate.MAX)) { 
 				if(startDate.equals(LocalDate.MAX)) {
 					startDate = LocalDate.now();
@@ -384,6 +392,10 @@ public class DateTimeParser {
 	private String cleanString(String input) {
 		if (input.contains("today") || input.contains("tomorrow")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim(); //trim specially
+		} else if (input.contains("saturday") || input.contains("sat")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_3, "").trim();
+		} else if (input.contains("mon") || input.contains("monday")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_4, "").trim();
 		} else {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();	
 		}
@@ -421,8 +433,15 @@ public class DateTimeParser {
 	}
 	
 	public void reset() {
+		startDate = LocalDate.MAX;
+		endDate = LocalDate.MAX;
+		startTime = LocalTime.MAX;
+		endTime = LocalTime.MAX;
+		untilDate = LocalDate.MAX;
+		untilTime = LocalTime.MAX;
 		startDateTime = LocalDateTime.MAX;
 		endDateTime = LocalDateTime.MAX;
+		untilDateTime = LocalDateTime.MAX;
 	}
 	
 }

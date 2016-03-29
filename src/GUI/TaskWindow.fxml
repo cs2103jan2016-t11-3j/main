@@ -13,7 +13,7 @@
    <children>
       <BorderPane fx:id="layout" prefHeight="600" prefWidth="370.0" style="-fx-background-image: url('http://data.whicdn.com/images/59877823/large.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: 100% 100%; -fx-border-radius: 20px;">
          <center>
-            <TableView fx:id="taskTable" onKeyPressed="#handleEscReleased" onKeyReleased="#handleHelpPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
+            <TableView fx:id="taskTable" onKeyPressed="#handleKeyPressed" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #78C0A8; -fx-border-width: 3px; -fx-background-radius: 1.2em; -fx-border-radius: 1.2em;" BorderPane.alignment="CENTER">
                <columns>
                   <TableColumn fx:id="indexColumn" editable="false" maxWidth="80.0" minWidth="80.0" prefWidth="-1.0" sortable="false" text="No." />
                   <TableColumn fx:id="taskColumn" editable="false" prefWidth="280.0" sortable="false" text="Task Name" />
@@ -49,7 +49,7 @@
                         <Insets left="1.0" right="1.0" top="5.0" />
                      </VBox.margin>
                   </TextFlow>
-                  <TextField fx:id="userInput" onKeyPressed="#handleEscReleased" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help" style="-fx-background-radius: 0.5em;" />
+                  <TextField fx:id="userInput" onKeyPressed="#handleKeyPressed" onKeyReleased="#handleEnterPressed" prefHeight="40.0" prefWidth="180.0" promptText="Press &lt;Tab&gt; to enter command, &lt;F1&gt; for help" style="-fx-background-radius: 0.5em;" />
                </children>
             </VBox>
          </bottom>
@@ -66,6 +66,19 @@
                </BorderPane.margin>
             </Label>
          </top>
+         <right>
+            <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ListView fx:id="taskDateList" prefHeight="314.0" prefWidth="89.0" style="-fx-background-color: white; -fx-background-radius: 10px; -fx-border-color: #78C0A8; -fx-border-radius: 10px;">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </ListView>
+               </children></VBox>
+         </right>
       </BorderPane>
       <fx:include source="AlertPopup.fxml" />
    </children>

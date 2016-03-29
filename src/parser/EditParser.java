@@ -62,7 +62,6 @@ public class EditParser extends CommandParser {
 		for (String temp : input.split(" ")) {
 			list.add(temp);
 		}
-		
 		//remove "edit" and "number"
 		//list.remove(0);
 		String index = list.get(0);
@@ -75,7 +74,7 @@ public class EditParser extends CommandParser {
 	 * without "edit" and the index number
 	 */
 	public String cleanString(String input) {
-		input = input.replaceFirst("[\\d+]", "").trim();
+		input = input.replaceFirst("[\\d]+ ", "").trim();
 		return input;
 	}
 	

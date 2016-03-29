@@ -13,10 +13,10 @@ public class Interval implements Comparator<Interval> {
 	
 	private final String MESSAGE_INVALID_FREQUENCY = "Invalid frequency";
 	
-	private String freq;
-	private int interval;
-	private int count;
-	private LocalDateTime until;
+	private String freq = "";
+	private int interval = -1;
+	private int count = -1;
+	private LocalDateTime until = LocalDateTime.MAX;
 	private String byDay = "";	// for multiple occurrences within the same frequency -- TO BE DONE
 	
 	public Interval() {
@@ -109,5 +109,10 @@ public class Interval implements Comparator<Interval> {
 	public int compare(Interval arg0, Interval arg1) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	// Returns true if all the values are the default values
+	public boolean isNull() {
+		return (freq.equals("") && interval == -1 && count == -1 && until.equals(LocalDateTime.MAX));
 	}
 }

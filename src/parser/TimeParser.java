@@ -97,7 +97,7 @@ public class TimeParser {
 			minute = Integer.toString(time);
 		}
 		
-		if (minute.length() == 4 && time < 2400) {
+		if ((minute.length() == 4 && time < 2400) || minute.matches("0000")) {
 			hour = minute.substring(0, 2);
 			minute = minute.substring(2);
 			timeString = hour + ":" + minute;

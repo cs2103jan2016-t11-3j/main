@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import parser.exceptions.InvalidDateFormatException;
-
 /**
  * This class focuses on breaking down a string for date into the relevant components
  * 
@@ -75,22 +73,21 @@ public class DateParser {
 	
 	private String dateString;
 	private LocalDate dateObject = LocalDate.MAX;
-
-    /**
+	
+	/**
 	 * This method takes in a string input returns LocalDate to the datetimeparser
 	 * 
 	 * @param input    date string that is in the format
 	 * @throws Exception 
 	 */
 	public void processDate(String input) throws Exception {
-		if (input.isEmpty()) {
-		    return;
+		if (!input.isEmpty()) {
+			furtherProcessDate(input);
+			if (start_month == -1) {
+				start_month = end_month;
+			}
+			setDates();
 		}
-		furtherProcessDate(input);
-		if (start_month == -1) {
-			start_month = end_month;
-		}
-		setDates();
 	}
 	
 	
@@ -104,8 +101,7 @@ public class DateParser {
 	 * @throws Exception 
 	 */
 	public void furtherProcessDate(String input) throws Exception {
-	    input = preprocess(input);
-	    if (hasMonth(input)) {
+		if (hasMonth(input)) {
 			setMonth(input);
 			input = removeMonth(input);
 			splitStringAndProcess(input);
@@ -114,16 +110,9 @@ public class DateParser {
 		} else if (isRelative(input)) { 
 			processRelativeDate(input);
 		} else {
-			throw new InvalidDateFormatException(input);
+			throw new Exception("Invalid Date Format");
 		}
 	}
-
-
-    private String preprocess(String input) {
-        input = input.trim();
-        input = input.toLowerCase();
-        return input;
-    }
 	
 	
 	/**
@@ -139,34 +128,81 @@ public class DateParser {
 		} else {
 			return false;
 		}
+		
 	}
 	
 	/**
 	 * method will set date object for relative date inputs such as today, tmr, next week
 	 * 
 	 * @param input
+	 * @throws Exception 
 	 */
-	public void processRelativeDate(String input) {
-		input = preprocess(input);
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_0)) {
-			dateObject = LocalDate.now();
-		} 
-		else if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
-		    dateObject = LocalDate.now().plusDays(1);
-		}
-		else if (input.matches("("+"(next )?"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
-			input = input.replaceAll("next ", "").trim();
-			dateObject = LocalDate.now();
-			if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
-				dateObject = dateObject.plusWeeks(1);
+	public void processRelativeDate(String input) throws Exception {
+		input = input.trim();
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
+			if (input.matches("today")) {
+				dateObject = LocalDate.now();
 			} else {
-				while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-					dateObject = dateObject.plusDays(1);
-				}	
+				dateObject = LocalDate.now().plusDays(1);
 			}
-		} 
-		else if (input.matches("next " + "(week|wk)(s)?")) {
+		} else if (input.matches("("+"(next )"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
+			setDateNextWeek(input);
+		} else if (input.matches("("+"(this )"+ Constants.REGEX_DAYS_TEXT+")")) {
+			setDateThisWeek(input);
+		} else if (input.matches("next " + "(week|wk)(s)?")) {
 			dateObject = LocalDate.now().plusWeeks(1);
+		} else if (input.matches(Constants.REGEX_DAYS_TEXT)) {
+			setDateToNearest(input);
+		}
+	}
+
+
+	private void setDateToNearest(String input) {
+		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = LocalDate.now();
+		} else {
+			dateObject = LocalDate.now(); 
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusDays(1);
+			}
+		}
+	}
+	
+	public void setDateNextWeek(String input) {
+		input = input.replaceAll("next ", "").trim();
+		dateObject = LocalDate.now();
+		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = dateObject.plusWeeks(1);
+		} else {
+			dateObject = setStartofNextWeek();
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusDays(1);
+			}	
+		}
+	}
+	
+	private LocalDate setStartofNextWeek() {
+		LocalDate temp = LocalDate.now();
+		while (!temp.getDayOfWeek().toString().toLowerCase().contains("monday")) {
+			temp = temp.plusDays(1);
+			}
+		return temp;
+	}
+	
+	private void setDateThisWeek(String input) throws Exception {
+		input = input.replaceAll("this", "").trim();
+		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = LocalDate.now();
+		} else {
+			dateObject = LocalDate.now(); 
+			/*set the date first*/
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusDays(1);
+			}
+			
+			if (dateObject.getDayOfWeek().getValue() < LocalDate.now().getDayOfWeek().getValue()) {
+				throw new Exception(input + " is over this week. Did you mean next " + input + "?");
+			}
 		}
 	}
 	
@@ -253,7 +289,7 @@ public class DateParser {
 				start_year = list.get(2);
 			}	
 		} else {
-			throw new InvalidDateFormatException(input);
+			throw new Exception("Invalid Date");
 		}
 		
 	}
@@ -295,7 +331,7 @@ public class DateParser {
 	 * this method will return the corresponding month's integer value
 	 */
 	public int setMonthInDataProcessor(String month) {
-		month = preprocess(month);
+		month = month.toLowerCase();
 		if (month == MONTH_1_1 || month.contains(MONTH_1_2)) {
 			return VALUE_JAN;
 		} else if (month == MONTH_2_1 || month.contains(MONTH_2_2)) {

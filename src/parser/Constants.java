@@ -43,11 +43,17 @@ public class Constants {
         floating, deadline, event, recurring;
     }
 	
+	/*
+	 * public static final String REGEX_DAYS_TEXT = "((?i)(mon)(day)?|"
+            + "(tue)(sday)?|" + "(wed)(nesday)?|" + "(thu)(rsday)?|" //edit this shit
+            + "(fri)(day)?|" + "(sat)(urday)?|" + "(sun)(day)?)";
+	 */
+	
 	//regular expressions for date
 	public static final String REGEX_DAY_NUMBER = "((?i)0?[1-9]|[12][\\d]|3[01])(st|th|nd|rd)?";
 	public static final String REGEX_DAY_ONLYNUMBER = "((?i)0?[1-9]|[12][\\d]|3[01])";
 	public static final String REGEX_DAYS_TEXT = "((?i)(mon)(day)?|"
-            + "(tue)(sday)?|" + "(wed)(nesday)?|" + "(thu)(rsday)?|" //edit this shit
+            + "(tue)(s)?(day)?|" + "(wed)(nesday)?|" + "(thu)(r)?(s)?(day)?|" //edit this shit
             + "(fri)(day)?|" + "(sat)(urday)?|" + "(sun)(day)?)";
 	public static final String REGEX_MONTHS_NUMBER = "(0?[1-9]|1[0-2])";
 	public static final String REGEX_MONTHS_TEXT = "((?i)(jan)(uary)?|"
@@ -83,17 +89,16 @@ public class Constants {
             + REGEX_TIME_FORMAT + "(,?[ ]" + REGEX_DATE_FORMAT + ")?))";
     
     //RELATIVE
-    public static final String REGEX_RELATIVE_DATE_0 = "(?i)(today|now)";
-    public static final String REGEX_RELATIVE_DATE_1 = "(?i)(tmrw|tmr|tomorrow)";
-    public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next) ("
+    public static final String REGEX_RELATIVE_DATE_1 = "(?i)(today|tmr|tomorrow)";
+    public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next|this) (" // HOW AH?? -> implement, this or next fri
             + REGEX_DATE_ATTRIBUTES + "|" + REGEX_DAYS_TEXT + "))";
     public static final String REGEX_RELATIVE_DATE_3 = "(\\d+ "
             + REGEX_DATE_ATTRIBUTES + " (?i)(later|before|after|from now))";
-    public static final String REGEX_RELATIVE_DATE_ALL = "(" + REGEX_RELATIVE_DATE_0 
-            + "|" + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
+    public static final String REGEX_RELATIVE_DATE_ALL = "(" 
+            + REGEX_RELATIVE_DATE_1 + "|" + REGEX_RELATIVE_DATE_2 
             + "|" + REGEX_RELATIVE_DATE_3 +")";
-    public static final String REGEX_RELATIVE_DATETIME = "(" + REGEX_RELATIVE_DATE_ALL + " "
-    		+ "(" + REGEX_TIME_FORMAT + ")?" + ")$";
+    public static final String REGEX_RELATIVE_DATETIME = "(" + "(" + REGEX_TIME_FORMAT + " )?" + REGEX_RELATIVE_DATE_ALL 
+    		+ "( " + REGEX_TIME_FORMAT + ")?" + ")$";
     
     public static final String REGEX_RELATIVE_TIME_1 = "("
             + REGEX_TIME_ATTRIBUTES + " (?i)(later|before|after|from now))";
@@ -131,7 +136,9 @@ public class Constants {
     
     
     public static final String REGEX_TASK_IDENTIFIER = "(?i)(by|before|every|on|at|from|to)";
-    public static final String REGEX_TASK_IDENTIFIER_2 = "(?i)(by|before|every|on|at|from)";
+    public static final String REGEX_TASK_IDENTIFIER_2 = "(?i)(by|before|every|on|at|from)"; //today tomorrow
+    public static final String REGEX_TASK_IDENTIFIER_3 = "(?i)(by|before|every|on|from|to)"; //saturday
+    public static final String REGEX_TASK_IDENTIFIER_4 = "(?i)(by|before|every|from|to)"; //monday
     
     //if any of the 4 types matches, the input by user will need to read date time
     public static final String REGEX_DATE_TIME_IDENTIFIER = "("
@@ -152,6 +159,6 @@ public class Constants {
     public static final String REGEX_EDIT_STARTEND = "(?i)(start|end)";
     public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
     		+ REGEX_DATETIME_FORMAT + ")$";
-    public static final String REGEX_SEARCH2 = "(" +REGEX_RECURRING_INTERVAL + "|"+ REGEX_FINAL + "|"
+    public static final String REGEX_SEARCH2 = "(" + REGEX_RECURRING_INTERVAL + "|"+ REGEX_FINAL + "|"
     		+ "(" + REGEX_DATETIME_FORMAT  + "( " + REGEX_EDIT_STARTEND + ")?)"+ ")$";
 }

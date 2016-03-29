@@ -31,7 +31,7 @@ public class UIMain extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
-		Scene scene = new Scene(root, 620, 500);
+		Scene scene = new Scene(root, 720, 500);
 		
 		window.setTitle("Adult TaskFinder");
 		window.setScene(scene);
@@ -78,7 +78,7 @@ public class UIMain extends Application {
 		return taskList;
 	}
 
-	public ArrayList<String> getHelpOutput() {
+	public ArrayList<String> getOutput() {
 		return logic.getOutput();
 	}
 	
@@ -86,5 +86,12 @@ public class UIMain extends Application {
 		return logic.getAlertOutput();
 	}
 	
+	public void setSortByType() {
+		logic.sortOutputByType();
+	} 
+	
+	public void setSortByDate() {
+		logic.sortOutputByDate();
+	}
 
 }

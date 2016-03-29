@@ -1,4 +1,4 @@
-package test.storage;
+package Test.storage;
 
 import static org.junit.Assert.*;
 
@@ -16,7 +16,7 @@ import common.TaskObject;
 import storage.FileStorage;
 import storage.IStorage;
 import storage.IStorage;
-import test.AssertHelper;
+import Test.AssertHelper;
 
 public class LoadTest {
 

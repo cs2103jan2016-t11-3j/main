@@ -119,6 +119,11 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.endDateTime = endDateTime;
 	}
 	
+	// Constructor for SearchTest - search-by-category
+	public TaskObject(String category, String random) {
+		this.category = category;
+	}
+	
 	// Constructor for undoing the deletion of one occurrence of a recurring task
 	public TaskObject(ArrayList<LocalDateTimePair> taskDateTimes) {
 		this.taskDateTimes = taskDateTimes;
@@ -345,6 +350,8 @@ public class TaskObject implements Comparable<TaskObject> {
 		setEndDate(-1);
 		setStartTime(-1);
 		setEndTime(-1);
+		setStartDateTime(LocalDateTime.MAX);
+		setEndDateTime(LocalDateTime.MAX);
 	}
 
     @Override

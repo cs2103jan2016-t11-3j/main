@@ -31,6 +31,8 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import static logic.constants.Strings.*;
+
 /**
  * Controls the TaskWindow to allow interaction with the program
  * Inputs keyed in textfield read with enter key pressed
@@ -49,9 +51,12 @@ public class MainController implements Initializable {
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 	HelpPopupController popupController = new HelpPopupController();
+	static int sortStatus = 0;
 	
 	@FXML
 	private TextField userInput;
+	@FXML
+	private ListView<String> taskDateList;
 	@FXML 
 	private static BorderPane layout;
 	@FXML
@@ -72,7 +77,44 @@ public class MainController implements Initializable {
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;	
+	
+	@FXML
+	//reads input on enter
+	public void handleEnterPressed(KeyEvent event) throws IOException {
+		if (event.getCode() == KeyCode.ENTER) {
+			System.out.println(userInput.getText()); //to be removed
+			readInput();
+			passInput();
+			clearTextField();
+			clearSideBar();
+			feedbackUser();
+		}
+	}
 
+	private void clearSideBar() {
+		taskDateList.setItems(null);
+		
+	}
+
+	@FXML
+	public void handleKeyPressed(KeyEvent event) throws IOException {
+		if (event.getCode() == KeyCode.F1) {
+			popupController.startHelp();
+		}
+		if (event.getCode() == KeyCode.F3) {
+			if (sortStatus == 0) {
+				_UI.setSortByType();
+				sortStatus = 1;
+			} else {
+				_UI.setSortByDate();
+				sortStatus = 0;
+			}
+			display();
+		}
+		if (event.getCode() == KeyCode.ESCAPE) {
+			System.exit(0);
+		}
+	}
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -90,6 +132,7 @@ public class MainController implements Initializable {
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
 		
 		setColumnStyle();
+		_UI.setSortByDate();
 		display(); //start program with all tasks in table
 		
 	}
@@ -100,18 +143,6 @@ public class MainController implements Initializable {
 		taskColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
 		timeColumn.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB'");
 	}	
-	
-	@FXML
-	//reads input on enter
-	public void handleEnterPressed(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.ENTER) {
-			System.out.println(userInput.getText()); //to be removed
-			readInput();
-			passInput();
-			clearTextField();
-			feedbackUser();
-		}
-	}
 	
 	private void readInput() {
 		_input = userInput.getText();
@@ -130,10 +161,31 @@ public class MainController implements Initializable {
 	}
 
 	private void feedbackUser() {
-		displayMessage(); // print feedback message
-		display(); // refreshes table after every command
+		if (isRecurringDateRequest()) {
+			fillSidebar();
+		} else {
+			displayMessage(); // print feedback message
+			display(); // refreshes table after every command
+		}
 	}
 	
+	private boolean isRecurringDateRequest() {
+
+		if (_UI.getOutput().size() > 0) {
+			if (_UI.getOutput().get(0).startsWith("Timings for")) {
+				return true;
+			}		
+		}
+		return false;
+	}
+
+	private void fillSidebar() {
+		System.out.println("barfilled");
+		ObservableList<String> recurringTime = FXCollections.observableArrayList(_UI.getOutput());
+		taskDateList.setItems(recurringTime);	
+	}
+
+
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
@@ -145,19 +197,6 @@ public class MainController implements Initializable {
 		fillTable(taskData);
 	}
 	
-	@FXML
-	public void handleHelpPressed(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.F1) {
-			popupController.startHelp();
-		}
-	}
-	
-	@FXML
-	public void handleEscReleased(KeyEvent event) {
-		if (event.getCode() == KeyCode.ESCAPE) {
-			System.exit(0);
-		}
-	}
 	
 	public static ArrayList<String> getHelpList(int i) {
 		switch(i) {
@@ -171,6 +210,7 @@ public class MainController implements Initializable {
 			_UI.passInput("help Edit");
 			break;
 		case 4:
+			
 			_UI.passInput("help Delete");
 			break;
 		case 5:
@@ -183,7 +223,7 @@ public class MainController implements Initializable {
 			_UI.passInput("help Exit");
 			break;
 		}
-		return _UI.getHelpOutput();
+		return _UI.getOutput();
 	}
 
 	public static ArrayList<String> getAlertOutput() {
@@ -260,11 +300,5 @@ public class MainController implements Initializable {
 			}
 		});
 	}
-	@FXML
-	public void handleTabPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.TAB) {
-			taskTable.setFocusTraversable(true);
-			userInput.setFocusTraversable(true);
-		}
-	}
+	
 } 

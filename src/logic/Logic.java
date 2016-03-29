@@ -13,6 +13,8 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 
 import static logic.constants.Index.*;
@@ -190,7 +192,35 @@ public class Logic {
 		timeString = startTime + endTime + endDate;
 		return timeString;
 	}
-
+	
+	//sorts lastOutputTaskList by Date
+	public void sortOutputByDate() {
+		Comparator<TaskObject> dateComparator = new Comparator<TaskObject>() {
+            @Override
+            public int compare(final TaskObject o1, final TaskObject o2) {
+            	if (o1.getStartDateTime() == o2.getStartDateTime()) {
+            		if (o1.getEndDateTime() == o2.getEndDateTime()) {
+            			return o1.getTitle().compareTo(o2.getTitle());
+            		}
+            		return o1.getEndDateTime().compareTo(o2.getEndDateTime());
+            	}
+                 return o1.getStartDateTime().compareTo(o2.getStartDateTime());
+            }
+        };
+        Collections.sort(lastOutputTaskList, dateComparator);
+	}
+	
+	public void sortOutputByType() {
+		Comparator<TaskObject> typeComparator = new Comparator<TaskObject>() {
+			@Override
+			public int compare(final TaskObject o1, final TaskObject o2) {
+				return o1.getCategory().compareTo(o2.getCategory());
+			}
+		};
+		Collections.sort(lastOutputTaskList, typeComparator);
+	}
+	
+	
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
 		try {
