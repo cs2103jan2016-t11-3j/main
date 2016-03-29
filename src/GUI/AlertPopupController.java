@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -24,7 +25,7 @@ public class AlertPopupController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	    setListViewStyle();
+	    setStyle();
 		setAlertOutput();
 	    if (output.isEmpty()) {
 	    	alertPane.setVisible(false);
@@ -34,9 +35,13 @@ public class AlertPopupController implements Initializable {
 	    }
 	}
 
-	private void setListViewStyle() {
-		alertTasks.setStyle("-fx-font-size: 17; -fx-font-family: 'Agency FB';");
-		
+	private void setStyle() {
+		URL url = this.getClass().getResource("AlertStyle.css");
+		if (url == null) {
+			System.out.println("Error: AlertStyle.css stylesheet not found.");       
+		}
+		String css = url.toExternalForm(); 
+		alertPane.getStylesheets().add(css);
 	}
 
 	private void setAlertOutput() {
