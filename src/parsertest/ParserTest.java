@@ -42,7 +42,16 @@ public class ParserTest {
 		tempParser.allocate("add homework IE2100 by tomorrow 9am");
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", tempParser.getTask());
-		assertEquals("2016-03-29T09:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-03-30T09:00",tempParser.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("deadline", tempParser.getCategory());
+		reset();
+		
+		tempParser.allocate("add homework IE2100 by tomorrow");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("homework IE2100", tempParser.getTask());
+		assertEquals("2016-03-30T23:59:59.999999999",tempParser.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		assertEquals("deadline", tempParser.getCategory());
@@ -100,6 +109,13 @@ public class ParserTest {
 		assertEquals(LocalDateTime.MAX,tempParser.getEndDateTime());
 		reset();
 		
+		tempParser.allocate("search today");
+		assertEquals("", tempParser.getTask());
+		assertEquals("2016-03-29T23:59:59.999999999",tempParser.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX,tempParser.getEndDateTime());
+		reset();
+		
+		
 		/*case 7: search for input without "search" keyword*/
 		tempParser.allocate("aagadfgad");
 		assertEquals("aagadfgad", tempParser.getTask());
@@ -120,6 +136,12 @@ public class ParserTest {
 		tempParser.allocate("edit 2 755pm");
 		assertEquals("", tempParser.getTask());
 		assertEquals("+999999999-12-31T19:55",tempParser.getStartDateTime().toString());
+		reset();
+		
+		tempParser.allocate("edit 2 from 8 june 755pm to 9june 9pm");
+		assertEquals("", tempParser.getTask());
+		assertEquals("2016-06-08T19:55",tempParser.getStartDateTime().toString());
+		assertEquals("2016-06-09T21:00",tempParser.getEndDateTime().toString());
 		reset();
 		
 		tempParser.allocate("edit 12 every friday");
@@ -167,6 +189,11 @@ public class ParserTest {
 		tempParser.allocate("search 3");
 		assertEquals(2, tempParser.CO.getCommandType());
 		assertEquals(3, tempParser.CO.getIndex());
+		reset();
+		
+		tempParser.allocate("search 30");
+		assertEquals(2, tempParser.CO.getCommandType());
+		assertEquals(30, tempParser.CO.getIndex());
 		reset();
 		
 		tempParser.allocate("view");

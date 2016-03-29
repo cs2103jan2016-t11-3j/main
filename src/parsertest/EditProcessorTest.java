@@ -29,8 +29,13 @@ public class EditProcessorTest {
 		reset();
 		
 		Tempshit = EP.process("4 from 8june to 7july");
-		//assertEquals(20160608, Tempshit.getStartDate());
-		//assertEquals(20160707, Tempshit.getEndDate());
+		assertEquals("2016-06-08T23:59:59.999999999", Tempshit.getStartDateTime().toString());
+		assertEquals("2016-07-07T23:59:59.999999999", Tempshit.getEndDateTime().toString());
+		reset();
+		
+		Tempshit = EP.process("4 from 8june 8.15am to 7/7 7pm");
+		assertEquals("2016-06-08T08:15", Tempshit.getStartDateTime().toString());
+		assertEquals("2016-07-07T19:00", Tempshit.getEndDateTime().toString());
 		reset();
 		
 		Tempshit = EP.process("4 9.13pm");
@@ -41,6 +46,10 @@ public class EditProcessorTest {
 		Tempshit = EP.process("4 every friday");
 		assertEquals(1, Tempshit.getInterval().getTimeInterval());
 		assertEquals("WEEKLY", Tempshit.getInterval().getFrequency());
+		reset();
+		
+		Tempshit = EP.process("14");
+		assertEquals("", Tempshit.getTitle());
 		reset();
 	}
 	

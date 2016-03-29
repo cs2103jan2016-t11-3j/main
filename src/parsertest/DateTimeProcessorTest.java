@@ -21,12 +21,21 @@ public class DateTimeProcessorTest {
 	
 		
 		
-		TO = DTP.parse("every day", true);
+		
+		TO = DTP.parse("by monday", false);
+		assertEquals("2016-04-02T23:59:59.999999999", TO.getStartDateTime().toString());
+		DTP.reset();
+		TO.resetAttributes();
+		
+	}
+	/*
+	 * TO = DTP.parse("every day", true);
 		assertTrue(TO.getIsRecurring());
 		assertEquals("DAILY",TO.getInterval().getFrequency());
 		assertEquals(1,TO.getInterval().getTimeInterval());
-		assertEquals("2016-04-01T23:59:59.999999999",TO.getStartDateTime().toString());
+		//assertEquals("2016-04-01T23:59:59.999999999",TO.getStartDateTime().toString());
 		//assertEquals("",TO.getEndDateTime().toString());
+		
 		
 		TO = DTP.parse("every day from 28 june 8am to 9am until 9june", true);
 		assertTrue(TO.getIsRecurring());
@@ -36,29 +45,30 @@ public class DateTimeProcessorTest {
 		assertEquals("2016-06-28T09:00",TO.getEndDateTime().toString());
 		assertEquals("2016-06-09T23:59:59.999999999",TO.getInterval().getUntil().toString());
 		TO.resetAttributes();
-		
-		
-		
-		
-	}
-	/*
-	 * DTP.parseDateTime("from 8 june to 7 july", false);
-		assertEquals(20160608, DTP.getStartDate());
-		assertEquals(20160707, DTP.getEndDate());
 		DTP.reset();
 		
-		DTP.parseDateTime("at 7pm", false);
-		assertEquals(1900, DTP.getStartTime());
+		TO = DTP.parse("from 8 june to 7 july", false);
+		assertEquals("2016-06-08T23:59:59.999999999", TO.getStartDateTime().toString());
+		assertEquals("2016-07-07T23:59:59.999999999", TO.getEndDateTime().toString());
 		DTP.reset();
+		TO.resetAttributes();
 		
-		DTP.parseDateTime("by 9.13pm", false);
-		assertEquals(2113, DTP.getStartTime());
+		TO = DTP.parse("at 7pm", false);
+		assertEquals("+999999999-12-31T19:00", TO.getStartDateTime().toString());
 		DTP.reset();
-	  TO = DTP.parse("every monday 8pm until 9 jan 2017", true);
+		TO.resetAttributes();
+		
+		TO = DTP.parse("by 9.13pm", false);
+		assertEquals("+999999999-12-31T19:13", TO.getStartDateTime().toString());
+		DTP.reset();
+		TO.resetAttributes();
+		
+	    TO = DTP.parse("every monday 8pm until 9 jan 2017", true);
 		assertTrue(TO.getIsRecurring());
 		assertEquals("WEEKLY",TO.getInterval().getFrequency());
 		assertEquals(1,TO.getInterval().getTimeInterval());
-		DTP.reset();*/
+		DTP.reset();
+	 * */
 
 	@Test
 	public void testSeparateDateTime() {

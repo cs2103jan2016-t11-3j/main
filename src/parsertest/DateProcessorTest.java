@@ -109,7 +109,7 @@ public class DateProcessorTest {
 	}
 	
 	@Test
-	public void testProcessRelativeDate() {
+	public void testProcessRelativeDate() throws Exception {
 		
 		DP.processRelativeDate("next tue");
 		assertEquals("2016-03-29",DP.getDateObject().toString());
