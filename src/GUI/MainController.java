@@ -86,8 +86,14 @@ public class MainController implements Initializable {
 			readInput();
 			passInput();
 			clearTextField();
+			clearSideBar();
 			feedbackUser();
 		}
+	}
+
+	private void clearSideBar() {
+		taskDateList.setItems(null);
+		
 	}
 
 	@FXML
@@ -168,18 +174,15 @@ public class MainController implements Initializable {
 		if (_UI.getOutput().size() > 0) {
 			if (_UI.getOutput().get(0).startsWith("Timings for")) {
 				return true;
-			}
-			
+			}		
 		}
-		
 		return false;
 	}
 
 	private void fillSidebar() {
 		System.out.println("barfilled");
 		ObservableList<String> recurringTime = FXCollections.observableArrayList(_UI.getOutput());
-		taskDateList.setItems(recurringTime);
-		
+		taskDateList.setItems(recurringTime);	
 	}
 
 
@@ -297,11 +300,5 @@ public class MainController implements Initializable {
 			}
 		});
 	}
-	@FXML
-	public void handleTabPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.TAB) {
-			taskTable.setFocusTraversable(true);
-			userInput.setFocusTraversable(true);
-		}
-	}
+	
 } 
