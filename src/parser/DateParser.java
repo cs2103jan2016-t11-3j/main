@@ -135,8 +135,9 @@ public class DateParser {
 	 * method will set date object for relative date inputs such as today, tmr, next week
 	 * 
 	 * @param input
+	 * @throws Exception 
 	 */
-	public void processRelativeDate(String input) {
+	public void processRelativeDate(String input) throws Exception {
 		input = input.trim();
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
 			if (input.matches("today")) {
@@ -144,18 +145,51 @@ public class DateParser {
 			} else {
 				dateObject = LocalDate.now().plusDays(1);
 			}
-		} else if (input.matches("("+"(next )?"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
-			input = input.replaceAll("next ", "").trim();
-			dateObject = LocalDate.now();
-			if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
-				dateObject = dateObject.plusWeeks(1);
-			} else {
-				while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-					dateObject = dateObject.plusDays(1);
-				}	
-			}
+		} else if (input.matches("("+"(next )"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
+			setDateNextWeek(input);
+		} else if (input.matches("("+"(this )?"+ Constants.REGEX_DAYS_TEXT+")")) {
+			setDateThisWeek(input);
 		} else if (input.matches("next " + "(week|wk)(s)?")) {
 			dateObject = LocalDate.now().plusWeeks(1);
+		}
+	}
+
+
+	public void setDateNextWeek(String input) {
+		input = input.replaceAll("next ", "").trim();
+		dateObject = LocalDate.now();
+		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = dateObject.plusWeeks(1);
+		} else {
+			dateObject = setStartofNextWeek();
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusDays(1);
+			}	
+		}
+	}
+	
+	private LocalDate setStartofNextWeek() {
+		LocalDate temp = LocalDate.now();
+		while (!temp.getDayOfWeek().toString().toLowerCase().contains("monday")) {
+			temp = temp.plusDays(1);
+			}
+		return temp;
+	}
+	
+	private void setDateThisWeek(String input) throws Exception {
+		input = input.replaceAll("this", "").trim();
+		if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
+			dateObject = LocalDate.now();
+		} else {
+			dateObject = LocalDate.now(); 
+			/*set the date first*/
+			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
+				dateObject = dateObject.plusDays(1);
+			}
+			
+			if (dateObject.getDayOfWeek().getValue() < LocalDate.now().getDayOfWeek().getValue()) {
+				throw new Exception(input + " is over this week. Did you mean next " + input + "?");
+			}
 		}
 	}
 	

@@ -319,6 +319,9 @@ public class DateTimeParser {
 	 */
 	public void setLocalDateTime(boolean isForAdd, TaskType task) {
 		if (isForAdd) {
+			if (startDate.equals(LocalDate.MAX) && task.toString().equals("deadline")) {
+				startDate = LocalDate.now();
+			}
 			if (task.toString() == "event" && endDate.equals(LocalDate.MAX)) { 
 				if(startDate.equals(LocalDate.MAX)) {
 					startDate = LocalDate.now();
@@ -389,6 +392,10 @@ public class DateTimeParser {
 	private String cleanString(String input) {
 		if (input.contains("today") || input.contains("tomorrow")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim(); //trim specially
+		} else if (input.contains("saturday") || input.contains("sat")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_3, "").trim();
+		} else if (input.contains("mon") || input.contains("monday")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_4, "").trim();
 		} else {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();	
 		}
@@ -426,8 +433,15 @@ public class DateTimeParser {
 	}
 	
 	public void reset() {
+		startDate = LocalDate.MAX;
+		endDate = LocalDate.MAX;
+		startTime = LocalTime.MAX;
+		endTime = LocalTime.MAX;
+		untilDate = LocalDate.MAX;
+		untilTime = LocalTime.MAX;
 		startDateTime = LocalDateTime.MAX;
 		endDateTime = LocalDateTime.MAX;
+		untilDateTime = LocalDateTime.MAX;
 	}
 	
 }
