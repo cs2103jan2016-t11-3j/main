@@ -1,5 +1,6 @@
 package GUI;
 	
+import java.net.URL;
 import java.util.ArrayList;
 
 import common.TaskObject;
@@ -32,7 +33,14 @@ public class UIMain extends Application {
 		window = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 720, 500);
-		
+		URL url = this.getClass().getResource("mainStyle.css");
+		if (url == null) {
+			System.out.println("Resource not found. Aborting.");       
+		    System.exit(0);
+		 }
+		String css = url.toExternalForm(); 
+		scene.getStylesheets().add(css);
+
 		window.setTitle("Adult TaskFinder");
 		window.setScene(scene);
 		window.show();

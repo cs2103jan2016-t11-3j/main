@@ -269,7 +269,7 @@ public class CommandFacade {
 	// Checks that removedTask is not null, then adds the corresponding CommandObject to the
 	// undo list or the redo list
 	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
-		assert removedTask != null;	// MODIFY THIS CHECK
+		assert (!removedTask.isNull());
 
 		if (isUndoAction) {
 			addToList(removedTask, removedOccurrenceDetails, redoList);
