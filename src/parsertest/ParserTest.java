@@ -111,6 +111,17 @@ public class ParserTest {
 		assertEquals("event", tempParser.getCategory());
 		reset();
 		
+		
+		tempParser.allocate("add 5pm lecture every friday at 4pm");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("5pm lecture", tempParser.getTask());
+		assertEquals("2016-04-01T16:00",tempParser.getStartDateTime().toString());
+		assertEquals("WEEKLY",tempParser.TO.getInterval().getFrequency());
+		assertEquals(1,tempParser.TO.getInterval().getTimeInterval());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("deadline", tempParser.getCategory());
+		reset();
+		
 		/*case 6: searches for normal user input*/
 		tempParser.allocate("search hi 7/9/2016 7pm");
 		assertEquals("hi", tempParser.getTask());
