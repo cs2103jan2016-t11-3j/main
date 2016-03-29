@@ -73,7 +73,10 @@ public class EditParser extends CommandParser {
 	 * this method will re-form the command that the user input
 	 * without "edit" and the index number
 	 */
-	public String cleanString(String input) {
+	public String cleanString(String input) { //remove the number
+		if (input.matches("[\\d]+")) {
+			return "";
+		}
 		input = input.replaceFirst("[\\d]+ ", "").trim();
 		return input;
 	}
