@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import common.TaskObject;
-
 import parser.AddParser;
+import parser.Constants;
 
 public class AddParserTest {
 	
@@ -14,6 +14,8 @@ public class AddParserTest {
 	TaskObject TO = new TaskObject();
 	@Test
 	public void testProcess() throws Exception {
+		String temp = "from 6.10am next thursday to 7am";
+		assertTrue(temp.matches(Constants.REGEX_EVENT_IDENTIFIER_1));
 		
 		AP.process("buy homework");
 		assertEquals("buy homework", AP.getTask());
@@ -26,7 +28,7 @@ public class AddParserTest {
 		
 		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
 		assertEquals("5pm lecture", AP.getTask());
-		assertEquals("2016-04-05T16:00",TO.getStartDateTime().toString());
+		assertEquals("2016-03-29T16:00",TO.getStartDateTime().toString());
 		assertTrue(TO.getIsRecurring());
 		
 		TO = AP.process("5pm lecture every thursday from 8am to 9am until 9june");
@@ -35,7 +37,7 @@ public class AddParserTest {
 		
 		TO = AP.process("ie2100 hw by today");
 		assertEquals("ie2100 hw", AP.getTask());
-		assertEquals("2016-03-31T08:00",TO.getStartDateTime().toString());
+		assertEquals("2016-03-29T23:59:59.999999999",TO.getStartDateTime().toString());
 		
 	}
 /*
