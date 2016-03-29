@@ -11,7 +11,7 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected LocalDateTime endDateTime = LocalDateTime.MAX; //newly added
 	protected String category = ""; // deadline, event, or floating
 	protected String status = ""; //completed, overdue or incomplete
-	protected int taskId;
+	protected int taskId = -1;
 	protected String timeOutputString = ""; // stores date time in the desired output for GUI
 	protected boolean isRecurring;
 	protected Interval interval = new Interval();
@@ -352,6 +352,11 @@ public class TaskObject implements Comparable<TaskObject> {
 		setEndTime(-1);
 		setStartDateTime(LocalDateTime.MAX);
 		setEndDateTime(LocalDateTime.MAX);
+	}
+	
+	public boolean isNull() {
+		return (title.equals("") && startDateTime.equals(LocalDateTime.MAX) && endDateTime.equals(LocalDateTime.MAX) &&
+				category.equals("") && status.equals("") && taskId == -1 && timeOutputString.equals(""));
 	}
 
     @Override
