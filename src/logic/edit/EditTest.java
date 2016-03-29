@@ -450,13 +450,6 @@ public class EditTest {
 		LocalDateTime actualThirdTiming = actualTimings.get(2).getStartDateTime();
 		LocalDateTime correctTiming = LocalDateTime.of(LocalDate.parse("2016-03-31"), LocalTime.parse("08:00"));
 		
-		System.out.println(actualFirstTiming);
-		System.out.println(actualTimings.get(0).getEndDateTime());
-		System.out.println(actualSecondTiming);
-		System.out.println(actualTimings.get(1).getEndDateTime());
-		System.out.println(actualThirdTiming);
-		System.out.println(actualTimings.get(2).getEndDateTime());
-		
 		assertEquals(actualFirstTiming, correctTiming);
 		assertEquals(actualSecondTiming, correctTiming);
 		assertEquals(actualThirdTiming, correctTiming);
@@ -485,13 +478,6 @@ public class EditTest {
 		LocalDateTime actualSecondTiming = actualTimings.get(1).getEndDateTime();
 		LocalDateTime actualThirdTiming = actualTimings.get(2).getEndDateTime();
 		LocalDateTime correctTiming = LocalDateTime.of(LocalDate.parse("2016-12-31"), LocalTime.parse("22:22"));
-		
-		System.out.println(actualTimings.get(0).getStartDateTime());
-		System.out.println(actualFirstTiming);
-		System.out.println(actualTimings.get(1).getStartDateTime());
-		System.out.println(actualSecondTiming);
-		System.out.println(actualTimings.get(2).getStartDateTime());
-		System.out.println(actualThirdTiming);
 		
 		assertEquals(actualFirstTiming, correctTiming);
 		assertEquals(actualSecondTiming, correctTiming);
@@ -526,14 +512,7 @@ public class EditTest {
 		LocalDateTime actualThirdTimingEnd = actualTimings.get(2).getEndDateTime();
 		LocalDateTime correctTimingStart = LocalDateTime.of(LocalDate.parse("2011-11-11"), LocalTime.parse("08:00"));
 		LocalDateTime correctTimingEnd = LocalDateTime.of(LocalDate.parse("2011-11-11"), LocalTime.parse("22:22"));
-		
-		System.out.println(actualFirstTimingStart);
-		System.out.println(actualFirstTimingEnd);
-		System.out.println(actualSecondTimingStart);
-		System.out.println(actualSecondTimingEnd);
-		System.out.println(actualThirdTimingStart);
-		System.out.println(actualThirdTimingEnd);
-		
+
 		assertEquals(actualFirstTimingStart, correctTimingStart);
 		assertEquals(actualFirstTimingEnd, correctTimingEnd);
 		assertEquals(actualSecondTimingStart, correctTimingStart);
@@ -541,7 +520,7 @@ public class EditTest {
 		assertEquals(actualThirdTimingStart, correctTimingStart);
 		assertEquals(actualThirdTimingEnd, correctTimingEnd);
 		
-		
+		testList.clear();
 	}
 	
 }
