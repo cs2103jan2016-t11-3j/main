@@ -59,7 +59,7 @@ public class MainController implements Initializable {
 	@FXML
 	private TextField userInput;
 	@FXML
-	private ListView<String> taskDateList;
+	private TextFlow taskDateList;
 	@FXML 
 	private static BorderPane layout;
 	@FXML
@@ -80,8 +80,6 @@ public class MainController implements Initializable {
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;	
-	@FXML
-	private VBox sidePanel;
 	
 	@FXML
 	//reads input on enter
@@ -97,7 +95,7 @@ public class MainController implements Initializable {
 	}
 
 	private void hideSidePanel() {
-		sidePanel.setVisible(false);
+		taskDateList.setVisible(false);
 	}
 
 	@FXML
@@ -142,14 +140,14 @@ public class MainController implements Initializable {
 	}
 
 	private void manageSidePanel() {
-		sidePanel.managedProperty().bind(sidePanel.visibleProperty());
+		taskDateList.managedProperty().bind(taskDateList.visibleProperty());
 	}
 
-	private void prepareSlideMenuAnimation() {
-		TranslateTransition openNav = new TranslateTransition(new Duration(350), sidePanel);
+	private void sidePanelAnimation() {
+		TranslateTransition openNav = new TranslateTransition(new Duration(300), taskDateList);
 		openNav.setToX(0);
 		
-		if (sidePanel.getTranslateX() != 0) {
+		if (taskDateList.getTranslateX() != 0) {
 			openNav.play();
 		}
 
@@ -191,13 +189,15 @@ public class MainController implements Initializable {
 	}
 
 	private void fillSidebar() {
-		sidePanel.setVisible(true);
-		ObservableList<String> recurringTime = FXCollections.observableArrayList(_UI.getOutput());
-		taskDateList.setItems(recurringTime);	
-		prepareSlideMenuAnimation();
+		taskDateList.getChildren().clear();
+		taskDateList.setVisible(true);
+		ArrayList<String> recurringTimes = _UI.getOutput();
+		for (int i = 0; i < recurringTimes.size(); i++) {
+			taskDateList.getChildren().add(new Text(recurringTimes.get(i) + "\n"));
+		}
+		sidePanelAnimation();
 		
 	}
-
 
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
