@@ -12,6 +12,17 @@
 	-fx-border-radius: 1.2em;
 }
 
+#taskTable .column-header .label {
+	-fx-text-fill: white;
+}
+
+#taskTable .column-header {
+	-fx-background-color: #3B8686;
+	-fx-border-width: 0.1;
+	-fx-border-color: white;
+    -fx-effect: innershadow( gaussian, #3B8686, 5, 0, 5, 5 );
+}
+
 #indexColumn {
 	-fx-alignment: CENTER; 
 	-fx-font-size: 17; 
