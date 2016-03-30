@@ -95,7 +95,6 @@ public class AlertPopupController implements Initializable {
 	public void handleEnterPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
 			alertPane.setVisible(false);
-			System.out.println("hidden");
 		}
 	}
 

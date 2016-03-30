@@ -85,7 +85,6 @@ public class MainController implements Initializable {
 	//reads input on enter
 	public void handleEnterPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.ENTER) {
-			System.out.println(userInput.getText()); //to be removed
 			readInput();
 			passInput();
 			clearTextField();
