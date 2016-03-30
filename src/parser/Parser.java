@@ -97,7 +97,7 @@ public class Parser {
 	 */
 	public void allocate(String command) throws Exception {
 		assert(!command.isEmpty()); //ensure command is a proper string
-		
+		command = command.trim();
 		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
 			CO.setCommandType(EXIT_INDEX);
 		} else if (command.startsWith(HELP_COMMAND)) {

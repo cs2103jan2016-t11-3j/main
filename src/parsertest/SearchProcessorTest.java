@@ -19,23 +19,14 @@ public class SearchProcessorTest {
 		SP.process("7.13pm");
 		reset();
 		
-		SP.process("9june");
-		assertEquals(-1, SP.getStartTime());
-		assertEquals(20160609, SP.getStartDate());
-		assertEquals(-1, SP.getEndTime());
-		assertEquals(-1, SP.getEndDate());
-		assertEquals("", SP.getTask());
-		reset();
 		
-		SP.process("buy food for everyone at 7pm");
-		assertEquals(1900, SP.getStartTime());
-		assertEquals(-1, SP.getStartDate());
-		assertEquals(-1, SP.getEndTime());
-		assertEquals(-1, SP.getEndDate());
-		assertEquals("buy food for everyone", SP.getTask());
-		reset();
 		
 		TO = SP.process("search deadline");
+		assertEquals("deadline", TO.getCategory());
+		reset();
+		
+		TO = SP.process("search 151646");
+		assertEquals("151646", SP.getIndex());
 		assertEquals("deadline", TO.getCategory());
 		reset();
 	}
