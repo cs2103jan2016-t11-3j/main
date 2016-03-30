@@ -70,14 +70,15 @@ public class Done extends Mark {
 			if (task.getTaskId() == taskIdToMark) {
 				originalTask.setTaskObject(task);
 				originalTimings.addAll(task.getTaskDateTimes());
+		
+				taskName = task.getTitle();
+				statusBeforeChange = task.getStatus();
+				markedTask = task;
 				
 				try {
 					task.setTaskObject(markTaskObj);	// this is an undo function - simply set the taskObj to the old version
 					LOGGER.log(Level.INFO, "Undo-done processed");
 				}  catch (NullPointerException e) {
-					taskName = task.getTitle();
-					statusBeforeChange = task.getStatus();
-					markedTask = task;
 					if (task.getIsRecurring()) {
 						changeStatusForRecurringTask(task);
 					} else {

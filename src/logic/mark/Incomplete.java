@@ -39,12 +39,13 @@ public class Incomplete extends Mark {
 				originalTask.setTaskObject(task);
 				originalTimings.addAll(task.getTaskDateTimes());
 				
+				taskName = task.getTitle();
+				statusBeforeChange = task.getStatus();
+
 				if (!markTaskObj.isNull()) { // this is an undo function
 					task.setTaskObject(markTaskObj);
 					LOGGER.log(Level.INFO, "Undo-incomplete processed");
 				} else {
-					taskName = task.getTitle();
-					statusBeforeChange = task.getStatus();
 					task.setStatus("incomplete");
 	
 					LOGGER.log(Level.INFO, "Status changed to \'incomplete\'");

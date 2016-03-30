@@ -484,10 +484,10 @@ public class CommandFacade {
 		if (commandIndex != 0) {
 			newCommandObj.setCommandType(commandIndex);
 			newCommandObj.setTaskObject(originalTask);
-			newCommandObj.setIndex(mark.getMarkIndex());
+			newCommandObj.setIndex(index);
 		}
 
-		
+		System.out.println("commandIndex = " + commandIndex);
 		list.push(newCommandObj);
 	}
 
