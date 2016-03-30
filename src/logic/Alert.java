@@ -1,20 +1,19 @@
 package logic;
 
-import static logic.constants.Strings.CATEGORY_DEADLINE;
-import static logic.constants.Strings.CATEGORY_EVENT;
-import static logic.constants.Strings.MESSAGE_ALERT_DEADLINE;
-import static logic.constants.Strings.MESSAGE_ALERT_EVENT;
-import static logic.constants.Strings.MESSAGE_INFORMATION_DEADLINE;
-import static logic.constants.Strings.MESSAGE_INFORMATION_EVENT;
+import static logic.constants.Strings.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import common.TaskObject;
 
 public class Alert {
+	
+	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
+	static DateTimeFormatter shortFormatter = DateTimeFormatter.ofPattern("dd/MM");
 	
 	public static ArrayList<String> createAlertOutput(ArrayList<TaskObject> taskList) {
 		ArrayList<String> alertOutput = new ArrayList<String> ();
@@ -60,7 +59,7 @@ public class Alert {
 	private static String createDeadlineAlertTime(LocalDateTime deadline) {
 		String endTime;
 		if (deadline.toLocalTime().equals(LocalTime.MAX)) {
-			endTime = "today";
+			endTime = MESSAGE_BY_TODAY;
 		} else {
 			endTime = deadline.toLocalTime().toString();
 		}
@@ -95,7 +94,7 @@ public class Alert {
 				}
 			}
 		} else {
-			endDate = task.getEndDateTime().toLocalDate().toString() + " ";
+			endDate = task.getEndDateTime().toLocalDate().format(shortFormatter) + " ";
 			// with end time
 			if (!task.getEndDateTime().toLocalTime().equals(LocalTime.MAX)) {
 				endTime = "to " + task.getEndDateTime().toLocalTime().toString() + " ";
