@@ -76,7 +76,7 @@ public class Done extends Mark {
 				markedTask = task;
 				
 				try {
-					task.setTaskObject(markTaskObj);	// this is an undo function - simply set the taskObj to the old version
+					task.setTaskObject(markTaskObj);	// if markTaskObj is not null, this is an undo function
 					LOGGER.log(Level.INFO, "Undo-done processed");
 				}  catch (NullPointerException e) {
 					if (task.getIsRecurring()) {

@@ -29,7 +29,7 @@ public class Incomplete extends Mark {
 			createErrorOutput();
 		}
 		return output;
-	}
+	}	
 
 	@Override
 	protected boolean changeStatus() {
@@ -42,15 +42,13 @@ public class Incomplete extends Mark {
 				taskName = task.getTitle();
 				statusBeforeChange = task.getStatus();
 
-				if (!markTaskObj.isNull()) { // this is an undo function
-					task.setTaskObject(markTaskObj);
+				try {
+					task.setTaskObject(markTaskObj);	// if markTaskObj is not null, this is an undo function
 					LOGGER.log(Level.INFO, "Undo-incomplete processed");
-				} else {
+				} catch (NullPointerException e) {
 					task.setStatus("incomplete");
-	
 					LOGGER.log(Level.INFO, "Status changed to \'incomplete\'");
 				}
-				
 				
 				return true;
 			}

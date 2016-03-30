@@ -110,7 +110,6 @@ public class CommandFacade {
 			clearRedoList();
 		}
 
-		System.out.println("commandType = " + commandType);
 		switch (commandType) {
 			case INDEX_ADD :
 				addFunction();
@@ -487,7 +486,6 @@ public class CommandFacade {
 			newCommandObj.setIndex(index);
 		}
 
-		System.out.println("commandIndex = " + commandIndex);
 		list.push(newCommandObj);
 	}
 
