@@ -60,26 +60,32 @@ public class TimeParser {
 	 * this method cleans the string and converts to the integer form. It will be manipulated into HHMM format
 	 */
 	public void setTime(String input, boolean isPM) {
-		input = input.replaceAll("[:!-/a-zA-Z]+", "");
-		input = input.replaceAll(" ", "");
-		int temp = 0;
-		temp = Integer.parseInt(input);
-		if (temp < 100) { //converts time to 4 digit format
-			temp = temp * 100;
+		if (input.matches(Constants.REGEX_TIME_HHMM)) {
+			input = input.replaceAll("[:!-/a-zA-Z]+", "").trim();
+			time = Integer.parseInt(input);
+		} else {
+			input = input.replaceAll("[:!-/a-zA-Z]+", "");
+			input = input.replaceAll(" ", "");
+			int temp = 0;
+			temp = Integer.parseInt(input);
+			if (temp < 100) { //converts time to 4 digit format
+				temp = temp * 100;
+			}
+			
+			if (isPM) { //converts timing to correct value
+				temp = temp + 1200;
+			} else if (!isPM && temp > 1159) {
+				temp = temp - 1200;
+			}
+			
+			
+			
+			if (temp > 2359) {
+				temp = temp - 1200; // how ah here
+			}
+			time = temp;	
 		}
 		
-		if (isPM) { //converts timing to correct value
-			temp = temp + 1200;
-		} else if (!isPM && temp > 1159) {
-			temp = temp - 1200;
-		}
-		
-		
-		
-		if (temp > 2359) {
-			temp = temp - 1200; // how ah here
-		}
-		time = temp;
 	}
 	
 	/**
