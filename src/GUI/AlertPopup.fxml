@@ -11,7 +11,7 @@
 
 <VBox fx:id="alertPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleEnterPressed" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.AlertPopupController">
    <children>
-      <ListView fx:id="alertTasks" onKeyReleased="#handleEnterPressed" prefHeight="343.0" prefWidth="600.0">
+      <ListView fx:id="alertTasks" onKeyReleased="#handleEnterPressed" prefHeight="300.0" prefWidth="300.0">
          <VBox.margin>
             <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
          </VBox.margin>

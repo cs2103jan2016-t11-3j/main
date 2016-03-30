@@ -110,13 +110,16 @@ public class Logic {
 		Comparator<TaskObject> dateComparator = new Comparator<TaskObject>() {
             @Override
             public int compare(final TaskObject o1, final TaskObject o2) {
-            	if (o1.getStartDateTime() == o2.getStartDateTime()) {
-            		if (o1.getEndDateTime() == o2.getEndDateTime()) {
-            			return o1.getTitle().compareTo(o2.getTitle());
-            		}
-            		return o1.getEndDateTime().compareTo(o2.getEndDateTime());
-            	}
-                 return o1.getStartDateTime().compareTo(o2.getStartDateTime());
+            	if (o1.getStatus() == o2.getStatus()) {
+            		if (o1.getStartDateTime() == o2.getStartDateTime()) {
+                		if (o1.getEndDateTime() == o2.getEndDateTime()) {
+                			return o1.getTitle().compareTo(o2.getTitle());
+                		}
+                		return o1.getEndDateTime().compareTo(o2.getEndDateTime());
+                	}
+                     return o1.getStartDateTime().compareTo(o2.getStartDateTime());
+                }	
+            	return o2.getStatus().compareTo(o1.getStatus());
             }
         };
         Collections.sort(lastOutputTaskList, dateComparator);
