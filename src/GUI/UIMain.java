@@ -41,11 +41,10 @@ public class UIMain extends Application {
 	}
 
 	private void setStyle(Scene scene) {
-		URL url = this.getClass().getResource("mainStyle.css");
+		URL url = this.getClass().getResource("MainStyle.css");
 		if (url == null) {
-			System.out.println("Resource not found. Aborting.");       
-		    System.exit(0);
-		 }
+			System.out.println("Error: MainStyle.css stylesheet not found.");       
+		}
 		String css = url.toExternalForm(); 
 		scene.getStylesheets().add(css);
 	}

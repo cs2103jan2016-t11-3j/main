@@ -34,11 +34,11 @@ public class Strings {
 	public static final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
 
 	//Delete Constants
-	public static final String MESSAGE_DELETE = "Task deleted from AdultTaskFinder: %1s";
-	public static final String MESSAGE_DELETE_ERROR = "Error deleting task from TaskFinder. ";
+	public static final String MESSAGE_DELETE = "Task deleted: %1s";
+	public static final String MESSAGE_DELETE_ERROR = "Error deleting task. ";
 	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
-	public static final String MESSAGE_DELETED_ALL = "All tasks deleted from AdultTaskFinder.";
+	public static final String MESSAGE_DELETED_ALL = "All tasks deleted.";
 	public static final String MESSAGE_RECURRENCE_DELETE = "Most recent occurrence deleted.";
 	public static final String MESSAGE_RECURRENCE_DELETE_ALL = "All occurrences deleted.";
 	public static final String MESSAGE_RECURRENCE_DELETE_ERROR = "Error deleting most recent occurrence.";
@@ -55,7 +55,7 @@ public class Strings {
 	public static final String MESSAGE_TITLE_EDIT = "Title edited from '%1s' to '%2s'. ";
 	public static final String MESSAGE_DATE_ADD = "Added date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_DATE_EDIT = "Date edited from '%1s' to '%2s'. ";
-	public static final String MESSAGE_DATE_FOR_ALL_OCCURRENCES_EDIT = "ALl dates edited to '%1s'. ";
+	public static final String MESSAGE_DATE_FOR_ALL_OCCURRENCES_EDIT = "All dates edited to '%1s'. ";
 	public static final String MESSAGE_START_DATE_ADD = "Added start date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_START_DATE_EDIT = "Start date edited from '%1s' to '%2s'. ";
 	public static final String MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_EDIT = "All start dates edited to '%1s'. ";

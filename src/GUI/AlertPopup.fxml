@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<VBox fx:id="alertPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleEnterPressed" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: brown; -fx-background-radius: 0.5em;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.AlertPopupController">
+<VBox fx:id="alertPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleEnterPressed" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.AlertPopupController">
    <children>
       <ListView fx:id="alertTasks" onKeyReleased="#handleEnterPressed" prefHeight="343.0" prefWidth="600.0">
          <VBox.margin>
