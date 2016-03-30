@@ -158,7 +158,7 @@ public class DateTimeParser {
 	 */
 	public void recur(String input) throws Exception {
 		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
-		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL);
+		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL2);
 		String intervalString = null;
 		
 		Matcher untilMatcher = until.matcher(input);
@@ -194,20 +194,26 @@ public class DateTimeParser {
 	 * @throws Exception 
 	 */
 	public void getStartDateFromInterval(String input) throws Exception {
-		input = input.replaceFirst("every","").trim();
 		String _freq = "";
 		int _interval = 1;
-		if (input.contains(" ")) {
-			String[] interval = input.split(" ");
-			_interval = Integer.parseInt(interval[0]);
-			_freq = interval[1];
+		if (!input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
+			input = input.replaceFirst("every","").trim();
+			
+			if (input.contains(" ")) {
+				String[] interval = input.split(" ");
+				_interval = Integer.parseInt(interval[0]);
+				_freq = interval[1];
+			} else {
+				_freq = input;
+			}	
 		} else {
 			_freq = input;
 		}
 		
+		
 		DateParser DP = new DateParser();
 		
-		if (_freq.matches(Constants.REGEX_DAYS_TEXT)) {
+		if (_freq.matches(Constants.REGEX_DAYS_TEXT) || _freq.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			DP.parseDate(_freq);
 		}
 		
@@ -396,6 +402,8 @@ public class DateTimeParser {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_3, "").trim();
 		} else if (input.contains("mon") || input.contains("monday")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_4, "").trim();
+		} else if (input.contains("everyday")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_5,"").trim();
 		} else {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER, "").trim();	
 		}

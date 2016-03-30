@@ -121,15 +121,18 @@ public class Constants {
             + REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATETIME + ")";
     
     //RECURRING task has an "every" keyword
+    public static final String REGEX_RECURRING_INTERVAL_EVERYDAY = "(?i)(everyday)";
     public static final String REGEX_RECURRING_INTERVAL = "(?i)(every)[ 0-9]* ("
     		+ REGEX_DATE_ATTRIBUTES + "|" + REGEX_TIME_ATTRIBUTES + "|" 
     		+ REGEX_DAYS_TEXT + ")";
+    public static final String REGEX_RECURRING_INTERVAL2 = "(" + REGEX_RECURRING_INTERVAL + "|" + REGEX_RECURRING_INTERVAL_EVERYDAY + ")";
     public static final String REGEX_RECURRING_START = "(" + REGEX_DATETIME_FORMAT + "|"
     		+ REGEX_DEADLINE_IDENTIFIER + "|" + REGEX_EVENT_IDENTIFIER + "|" 
     		+ REGEX_POINT_TASK_IDENTIFIER + ")?";
     public static final String REGEX_RECURRING_UNTIL = "(?i)(until) (" 
     		+ REGEX_DATETIME_FORMAT + "|" + REGEX_RELATIVE_DATE_ALL + ")";
-    public static final String REGEX_RECURRING_TASK_IDENTIFIER = "(" + REGEX_RECURRING_INTERVAL
+    public static final String REGEX_RECURRING_TASK_IDENTIFIER = "((" + REGEX_RECURRING_INTERVAL + "|" 
+    		+ REGEX_RECURRING_INTERVAL_EVERYDAY + ")"
     		+ "( " + REGEX_RECURRING_START + ")?" +"( " + REGEX_RECURRING_UNTIL + ")?" +")";
     /*"(?i)([0-9]+ )?"
      * examples of recurring tasks 
@@ -143,6 +146,7 @@ public class Constants {
     public static final String REGEX_TASK_IDENTIFIER_2 = "(?i)(by|before|every|on|at|from)"; //today tomorrow
     public static final String REGEX_TASK_IDENTIFIER_3 = "(?i)(by|before|every|on|from|to)"; //saturday
     public static final String REGEX_TASK_IDENTIFIER_4 = "(?i)(by|before|every|from|to)"; //monday
+    public static final String REGEX_TASK_IDENTIFIER_5 = "(?i)(by|before|on|at|from|to)";
     
     //if any of the 4 types matches, the input by user will need to read date time
     public static final String REGEX_DATE_TIME_IDENTIFIER = "("

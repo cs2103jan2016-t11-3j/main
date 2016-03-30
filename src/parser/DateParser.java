@@ -145,7 +145,8 @@ public class DateParser {
 	 * @return boolean   true,if the date string is a relative date
 	 */
 	public boolean isRelative(String input) {
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT)) {
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT) 
+				|| input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			return true;
 		} else {
 			return false;
@@ -160,7 +161,7 @@ public class DateParser {
 	 */
 	public void processRelativeDate(String input) throws Exception {
 		input = preprocess(input);
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_0)) {
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_0) || input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 				dateObject = LocalDate.now();
 		} else if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
 				dateObject = LocalDate.now().plusDays(1);
