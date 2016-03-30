@@ -1,3 +1,4 @@
+
 package parsertest;
 
 import static org.junit.Assert.*;
@@ -45,6 +46,10 @@ public class DateProcessorTest {
 		assertEquals("2000-12-31", DP.getDateObject().toString());
 		reset();
 		
+		DP.parseDate("everyday");
+		assertEquals("2016-03-30", DP.getDateObject().toString());
+		reset();
+
 		/*NEGATIVE VALUE TEST CASES*/
 		/*case 5: test ability to reject non-slash separated numbers*/
 		try {
@@ -76,7 +81,7 @@ public class DateProcessorTest {
 
 	@Test(expected = Exception.class)
     public void testProcessInvalidDate() throws Exception {
-	    DP.parseDate("31 feb 2012");
+	    DP.parseDate("323 feb 2012");
 	}
 	
 	
