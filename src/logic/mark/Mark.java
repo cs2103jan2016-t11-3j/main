@@ -1,7 +1,11 @@
 package logic.mark;
 
 import logic.*;
+import storage.FileStorage;
+import storage.IStorage;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.logging.*;
 
@@ -73,6 +77,19 @@ public abstract class Mark {
 			taskIdToMark = lastOutputTaskList.get(index).getTaskId();
 		} else {
 			createErrorOutput();
+		}
+	}
+	
+	protected void saveToFile() {
+		IStorage storage = FileStorage.getInstance();
+		try {
+			storage.save(taskList);
+		} catch (NoSuchFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

@@ -87,7 +87,7 @@ public class Search extends Display {
 	 */
 	public ArrayList<String> run() {
 		setSearchInformation();
-		//printSearchInformation();
+		// printSearchInformation();
 		processSearch();
 		setOutput();
 
@@ -280,7 +280,8 @@ public class Search extends Display {
 		if (matchedTasks.isEmpty()) {
 			output.add(String.format(MESSAGE_NO_RESULTS_FOUND));
 		} else {
-			// if output is not empty, the overloaded setOutput(TaskObject foundTask) method has already been called
+			// if output is not empty, the overloaded setOutput(TaskObject
+			// foundTask) method has already been called
 			if (output.isEmpty()) {
 				output.addAll(super.runSpecificList(matchedTasks));
 			}
@@ -315,7 +316,13 @@ public class Search extends Display {
 				output.add(MESSAGE_INVALID_RECURRENCE);
 			}
 		} else {
-			TimeOutput.setEventTimeOutput(foundTask);
+			if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
+				TimeOutput.setEventTimeOutput(foundTask);
+			} else {
+				if (foundTask.getCategory().equals(CATEGORY_DEADLINE)) {
+					TimeOutput.setDeadlineTimeOutput(foundTask);
+				}
+			}
 			output.add(foundTask.getTimeOutputString());
 		}
 	}
@@ -346,14 +353,14 @@ public class Search extends Display {
 	}
 
 	/*
-	 * Branch here because search-by-index will not call the superclass Display and the
-	 * lastOutputTaskList will not be updated
+	 * Branch here because search-by-index will not call the superclass Display
+	 * and the lastOutputTaskList will not be updated
 	 */
 	public ArrayList<TaskObject> getLastOutputTaskList() {
 		if (!super.getLastOutputTaskList().isEmpty()) {
 			return super.getLastOutputTaskList();
 		}
-		
+
 		return lastOutputTaskList;
 	}
 }

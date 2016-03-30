@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static logic.constants.Strings.*;
@@ -19,6 +20,7 @@ import common.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AlertTest {
 
+	static DateTimeFormatter shortFormatter = DateTimeFormatter.ofPattern("dd/MM");
 	private static ArrayList<TaskObject> taskList = new ArrayList<TaskObject> ();
 	private static ArrayList<String> expectedOutput = new ArrayList<String> ();
 	private ArrayList<String> alertOutput = new ArrayList<String> ();
@@ -34,7 +36,7 @@ public class AlertTest {
 		
 		actualOutput = Alert.createAlertOutput(taskList);
 		expectedOutput.add("Events today:");
-		expectedOutput.add("Task: event 1; Time: 00:00 to 23:59 ");
+		expectedOutput.add("Task: event 1\nTime: 00:00 to 23:59 \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -48,7 +50,7 @@ public class AlertTest {
 		taskList.add(task);
 		
 		actualOutput = Alert.createAlertOutput(taskList);
-		expectedOutput.add("Task: event 2; Time: to 23:59 ");
+		expectedOutput.add("Task: event 2\nTime: to 23:59 \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -63,7 +65,7 @@ public class AlertTest {
 		
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: event 3; Time: not specified ");
+		expectedOutput.add("Task: event 3\nTime: not specified \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -77,7 +79,7 @@ public class AlertTest {
 		taskList.add(task);
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: event 4; Time: from 00:00 today ");
+		expectedOutput.add("Task: event 4\nTime: from 00:00 today \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -91,9 +93,9 @@ public class AlertTest {
 		taskList.add(task);
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().format(shortFormatter);
 		
-		expectedOutput.add("Task: event 5; Time: 00:00 to 23:59 on " + date + " ");
+		expectedOutput.add("Task: event 5\nTime: 00:00 to 23:59 on " + date + " \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -107,9 +109,9 @@ public class AlertTest {
 		taskList.add(task);
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().format(shortFormatter);
 		
-		expectedOutput.add("Task: event 6; Time: 00:00 to " + date + " ");
+		expectedOutput.add("Task: event 6\nTime: 00:00 to " + date + " \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -123,9 +125,9 @@ public class AlertTest {
 		taskList.add(task);
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().format(shortFormatter);
 		
-		expectedOutput.add("Task: event 7; Time: to " + date + " ");
+		expectedOutput.add("Task: event 7\nTime: to " + date + " \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -139,9 +141,9 @@ public class AlertTest {
 		taskList.add(task);
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		String date = LocalDateTime.now().plusDays(1).toLocalDate().toString();
+		String date = LocalDateTime.now().plusDays(1).toLocalDate().format(shortFormatter);
 		
-		expectedOutput.add("Task: event 8; Time: to 23:59 on " + date + " ");
+		expectedOutput.add("Task: event 8\nTime: to 23:59 on " + date + " \n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -156,7 +158,7 @@ public class AlertTest {
 		actualOutput = Alert.createAlertOutput(taskList);
 		
 		expectedOutput.add("Deadlines today:");
-		expectedOutput.add("Task: deadline 9; Due: 23:59");
+		expectedOutput.add("Task: deadline 9\nDue: 23:59\n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -170,7 +172,7 @@ public class AlertTest {
 		taskList.add(task);
 		actualOutput = Alert.createAlertOutput(taskList);
 		
-		expectedOutput.add("Task: deadline 10; Due: today");
+		expectedOutput.add("Task: deadline 10\nDue: by end of today\n");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}

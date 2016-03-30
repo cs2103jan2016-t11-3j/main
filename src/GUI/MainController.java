@@ -85,7 +85,6 @@ public class MainController implements Initializable {
 	//reads input on enter
 	public void handleEnterPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.ENTER) {
-			System.out.println(userInput.getText()); //to be removed
 			readInput();
 			passInput();
 			clearTextField();
@@ -304,6 +303,29 @@ public class MainController implements Initializable {
 						if (!isEmpty()) {
 							text = new Text(item.toString());
 							text.wrappingWidthProperty().bind(timeColumn.widthProperty());
+							setGraphic(text);
+						}
+					}
+				};
+				return cell;
+			}
+		});
+		
+		statusColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
+			@Override
+			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
+				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
+					private Text text;
+					@Override
+					public void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!isEmpty()) {
+							text = new Text(item.toString());
+							if (item.startsWith("incomplete")) {
+								this.getTableRow().getStyleClass().add("undoneTasks");	
+							} else if (item.startsWith("complete")){
+								this.getTableRow().getStyleClass().add("doneTasks");
+							}
 							setGraphic(text);
 						}
 					}

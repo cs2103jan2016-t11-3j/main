@@ -34,7 +34,7 @@
          <bottom>
             <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextFlow fx:id="feedbackBox" opacity="0.5" prefHeight="40.0" prefWidth="200.0">
+                  <TextFlow fx:id="feedbackBox" opacity="0.7" prefHeight="40.0" prefWidth="200.0">
                      <children>
                         <Text fx:id="feedbackMessage" fill="#5e412f" strokeType="OUTSIDE" strokeWidth="0.0">
                            <font>

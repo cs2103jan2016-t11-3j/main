@@ -53,3 +53,11 @@
 	-fx-border-color: #78C0A8; 
 	-fx-border-radius: 10px;
 }
+
+.doneTasks {
+	-fx-background-color: lightblue;
+}
+
+.undoneTasks {
+	-fx-background-color: lightyellow;
+}

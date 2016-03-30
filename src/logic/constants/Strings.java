@@ -3,6 +3,7 @@ package logic.constants;
 import common.TaskObject;
 
 public class Strings {
+	
 	//common Constants
 	public static final String CATEGORY_EVENT = "event";
 	public static final String CATEGORY_DEADLINE = "deadline";
@@ -14,8 +15,9 @@ public class Strings {
 	// Logic Constants
 	public static final String MESSAGE_ALERT_EVENT = "Events today:";
 	public static final String MESSAGE_ALERT_DEADLINE = "Deadlines today:";
-	public static final String MESSAGE_INFORMATION_EVENT = "Task: %1s; Time: %2s";
-	public static final String MESSAGE_INFORMATION_DEADLINE = "Task: %1s; Due: %2s";
+	public static final String MESSAGE_INFORMATION_EVENT = "Task: %1s\nTime: %2s\n";
+	public static final String MESSAGE_INFORMATION_DEADLINE = "Task: %1s\nDue: %2s\n";
+	public static final String MESSAGE_BY_TODAY = "by end of today";
 	
 	// Recurring/Interval Constants
 	public static final String FREQ_HOURLY = "HOURLY";

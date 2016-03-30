@@ -61,16 +61,8 @@ public class UIMain extends Application {
 
 	public void passInput(String input) {
 		logic.run(input);
-		printOutput();
 	}
 	
-	private static void printOutput() {
-		ArrayList<String> output = logic.getOutput();
-		for (int i = 0; i < output.size(); i++) {
-			System.out.println(output.get(i));		
-		}
-	}
-
 	public String getMessage() {	
 		ArrayList<String> output = logic.getOutput();
 		assert output != null: "Output = null, check logic output message";
