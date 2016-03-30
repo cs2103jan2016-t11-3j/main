@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import common.TaskObject;
 
 public class Alert {
-	
+
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
 	static DateTimeFormatter shortFormatter = DateTimeFormatter.ofPattern("dd/MM");
-	
+
 	public static ArrayList<String> createAlertOutput(ArrayList<TaskObject> taskList) {
-		ArrayList<String> alertOutput = new ArrayList<String> ();
-		
+		ArrayList<String> alertOutput = new ArrayList<String>();
+
 		String taskInformation = "";
 		boolean hasEvent = false;
 		boolean hasDeadline = false;
@@ -25,10 +25,12 @@ public class Alert {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 				if (taskList.get(i).getStartDateTime().toLocalDate().isEqual(LocalDate.now())) {
-					String time = createEventAlertTime(taskList.get(i));
-					taskInformation = String.format(MESSAGE_INFORMATION_EVENT, taskList.get(i).getTitle(), time);
-					alertOutput.add(taskInformation);
-					hasEvent = true;
+					if (!taskList.get(i).getStatus().equals("completed")) {
+						String time = createEventAlertTime(taskList.get(i));
+						taskInformation = String.format(MESSAGE_INFORMATION_EVENT, taskList.get(i).getTitle(), time);
+						alertOutput.add(taskInformation);
+						hasEvent = true;
+					}
 				}
 			}
 		}
@@ -41,10 +43,12 @@ public class Alert {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
 				if (taskList.get(i).getStartDateTime().toLocalDate().isEqual(LocalDate.now())) {
-					String time = createDeadlineAlertTime(taskList.get(i).getStartDateTime());
-					taskInformation = String.format(MESSAGE_INFORMATION_DEADLINE, taskList.get(i).getTitle(), time);
-					alertOutput.add(taskInformation);
-					hasDeadline = true;
+					if (!taskList.get(i).getStatus().equals("completed")) {
+						String time = createDeadlineAlertTime(taskList.get(i).getStartDateTime());
+						taskInformation = String.format(MESSAGE_INFORMATION_DEADLINE, taskList.get(i).getTitle(), time);
+						alertOutput.add(taskInformation);
+						hasDeadline = true;
+					}
 				}
 			}
 		}
@@ -52,7 +56,7 @@ public class Alert {
 		if (!hasDeadline) {
 			alertOutput.remove(alertOutput.size() - 1);
 		}
-		
+
 		return alertOutput;
 	}
 

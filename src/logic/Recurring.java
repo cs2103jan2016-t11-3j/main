@@ -242,7 +242,7 @@ public class Recurring {
 
 	private static TaskObject createOverdueDeadlineTaskObject(LocalDateTime deadline, String title, int taskId,
 			String status) {
-		TaskObject splitDeadline = new TaskObject(title, deadline, CATEGORY_EVENT, status, taskId);
+		TaskObject splitDeadline = new TaskObject(title, deadline, CATEGORY_DEADLINE, status, taskId);
 		splitDeadline.setIsRecurring(false);
 		splitDeadline.addToTaskDateTimes(new LocalDateTimePair(deadline));
 		TimeOutput.setDeadlineTimeOutput(splitDeadline);
