@@ -24,6 +24,7 @@ public class Overdue extends Mark {
 		boolean isChanged = false;
 		isChanged = changeStatus();
 		if(isChanged) {
+			saveToFile();
 			createOutput();
 		} else {
 			createErrorOutput();
