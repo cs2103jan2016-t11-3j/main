@@ -135,8 +135,8 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 03, 29, 15, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 03, 29, 16, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 01, 15, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 01, 16, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
@@ -318,7 +318,7 @@ public class RecurringTest {
 		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
 		task.addToTaskDateTimes(pair);
 		Recurring.setAllRecurringEventTimes(task);
-		
+
 		assertTrue(task.getTaskDateTimes().size() == 10);
 
 		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
@@ -327,28 +327,80 @@ public class RecurringTest {
 			System.out.println(line);
 		}
 	}
-	
+
 	@Test
 	// Addition of infinite deadline
 	public void testL() throws Exception {
-		TaskObject task = new TaskObject("cs lecture", LocalDateTime.of(2016, 04, 01, 16, 00),
-				"deadline", "incomplete", 12);
+		TaskObject task = new TaskObject("cs lecture", LocalDateTime.of(2016, 04, 01, 16, 00), "deadline", "incomplete",
+				12);
 		task.setIsRecurring(true);
 		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.MAX, "");
 		task.setInterval(interval);
-		
+
 		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime());
 		task.addToTaskDateTimes(pair);
 		Recurring.setAllRecurringDeadlineTimes(task);
 
 		testArray.add(task);
 		Recurring.updateRecurringDeadlines(testArray);
-		
+
 		assertTrue(task.getTaskDateTimes().size() == 10);
-		
+
 		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
 			String line = TimeOutput.setDeadlineTimeOutput(task.getTaskDateTimes().get(i).getStartDateTime());
 			System.out.println(line);
-		}		
+		}
+	}
+
+	/*****************************************************************************/
+	/**
+	 * Tests for the implementation of byDay
+	 */
+
+	@Test
+	// event, byDay = Monday, Thursday, Sunday. Interval = 1 week
+	public void testM() throws Exception {
+		TaskObject task = new TaskObject("IE2130 Lecture", LocalDateTime.of(2016, 05, 15, 14, 00),
+				LocalDateTime.of(2016, 05, 15, 16, 00), "event", "incomplete", 13);
+		task.setIsRecurring(true);
+		Interval interval = new Interval("WEEKLY", 1, LocalDateTime.of(2016, 06, 19, 14, 00), "");
+		interval.setByDay(1);
+		interval.setByDay(4);
+		interval.setByDay(7);
+		task.setInterval(interval);
+
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+
+		assertTrue(task.getTaskDateTimes().size() == 16);
+
+		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
+			String line = TimeOutput.setEventTimeOutput(task.getTaskDateTimes().get(i).getStartDateTime(),
+					task.getTaskDateTimes().get(i).getEndDateTime());
+			System.out.println(line);
+		}
+	}
+
+	@Test
+	// deadline, byDay = Tuesday, Saturday. Interval = 3 weeks
+	public void testN() throws Exception {
+		TaskObject task = new TaskObject("IE2130 Lecture", LocalDateTime.of(2016, 05, 17, 14, 00),
+				LocalDateTime.of(2016, 05, 17, 16, 00), "event", "incomplete", 14);
+		task.setIsRecurring(true);
+		Interval interval = new Interval("WEEKLY", 3, LocalDateTime.of(2016, 07, 19, 14, 00), "");
+		interval.setByDay(2);
+		interval.setByDay(6);
+		task.setInterval(interval);
+
+		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		task.addToTaskDateTimes(pair);
+		Recurring.setAllRecurringEventTimes(task);
+
+		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
+			String line = TimeOutput.setEventTimeOutput(task.getTaskDateTimes().get(i).getStartDateTime(),
+					task.getTaskDateTimes().get(i).getEndDateTime());
+			System.out.println(line);
+		}
 	}
 }

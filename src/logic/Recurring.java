@@ -5,9 +5,14 @@ import logic.add.Add;
 import logic.timeOutput.TimeOutput;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -19,6 +24,7 @@ public class Recurring {
 	/******************************************************************************/
 	/**
 	 * Methods used for recurring events
+	 * 
 	 * @param taskList
 	 */
 	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) {
@@ -111,6 +117,7 @@ public class Recurring {
 	/*******************************************************************************/
 	/**
 	 * Methods used for recurring deadlines
+	 * 
 	 * @param task
 	 */
 
@@ -245,12 +252,13 @@ public class Recurring {
 	/************************************************************************************/
 	/**
 	 * Common methods shared by both deadline and events
+	 * 
 	 * @param task
 	 */
 	private static void updateInfiniteRecurrence(TaskObject task) {
 		int index = task.getTaskDateTimes().size() - 1;
 		LocalDateTimePair lastTimingInList = task.getTaskDateTimes().get(index);
-		
+
 		lastTimingInList = setNextTimePair(task.getInterval(), lastTimingInList);
 		task.addToTaskDateTimes(lastTimingInList);
 		logger.log(Level.INFO, "Inserted a new timing for infinite recurrence");
@@ -265,11 +273,37 @@ public class Recurring {
 		logger.log(Level.INFO, "Added recurring times till specified end date");
 	}
 
+	private static int retrieveMultiplier(int[] byDayArray) {
+		int countMultiplier = 0;
+		for (int i = 1; i <= 7; i++) {
+			if (byDayArray[i] == 1) {
+				countMultiplier++;
+			}
+		}
+		return countMultiplier;
+	}
+
 	private static void setTimingsBasedOnCounts(TaskObject task, LocalDateTimePair timePair, Interval interval,
 			int count) {
-		for (int i = 0; i < count; i++) {
-			task.addToTaskDateTimes(timePair);
-			timePair = setNextTimePair(interval, timePair);
+		int[] byDayArray = interval.getByDayArray();
+
+		if (byDayArray[0] == 0) {
+			for (int i = 0; i < count; i++) {
+				task.addToTaskDateTimes(timePair);
+				timePair = setNextTimePair(interval, timePair);
+			}
+		} else {
+			if (count != -1) {
+				// Updates the number of counts to reflect effects of byDay
+				int countMultiplier = retrieveMultiplier(byDayArray);
+				count = count * countMultiplier;
+				interval.setCount(count);
+				task.setInterval(interval);
+			}
+			for (int i = 0; i < count; i++) {
+				task.addToTaskDateTimes(timePair);
+				timePair = setNextTimePair(interval, timePair);
+			}
 		}
 		logger.log(Level.INFO, "Added recurring times for specified number of counts");
 	}
@@ -279,10 +313,14 @@ public class Recurring {
 		LocalDateTime endDateTime = timePair.getEndDateTime();
 		LocalDateTimePair nextTimePair = new LocalDateTimePair();
 
-		if (interval.getByDay().equals("")) {
+		int[] byDayArray = interval.getByDayArray();
+
+		if (byDayArray[0] == 0) {
 			nextTimePair = obtainNextTime(interval, startDateTime, endDateTime);
 		} else {
 			// implementation with byDay
+			nextTimePair = obtainNextTimeByDay(interval, startDateTime, endDateTime);
+			System.out.println(nextTimePair.getStartDateTime().toString());
 		}
 
 		return nextTimePair;
@@ -333,7 +371,103 @@ public class Recurring {
 
 		return new LocalDateTimePair(startDateTime, endDateTime);
 	}
-	
+
+	private static LocalDateTimePair obtainNextTimeByDay(Interval interval, LocalDateTime startDateTime,
+			LocalDateTime endDateTime) {
+
+		Duration duration = Duration.ZERO;
+		if (!endDateTime.equals(LocalDateTime.MAX)) {
+			duration = Duration.between(startDateTime, endDateTime);
+		}
+
+		ArrayList<LocalDateTime> comparisonList = generateComparisonList(interval, startDateTime);
+		assert (comparisonList.size() > 0);
+
+		startDateTime = generateNextStartDateTime(interval, startDateTime, comparisonList);
+		if (!endDateTime.equals(LocalDateTime.MAX)) {
+			endDateTime = startDateTime.plus(duration);
+		}
+
+		return new LocalDateTimePair(startDateTime, endDateTime);
+	}
+
+	private static ArrayList<LocalDateTime> generateComparisonList(Interval interval, LocalDateTime startDateTime) {
+		ArrayList<LocalDateTime> comparisonList = new ArrayList<LocalDateTime>();
+		int[] byDayArray = interval.getByDayArray();
+		for (int i = 1; i <= 7; i++) {
+			if (byDayArray[i] == 1) {
+				DayOfWeek dayOfWeek = DayOfWeek.of(i);
+				LocalDateTime dateTimeForComparing = startDateTime.with(TemporalAdjusters.next(dayOfWeek));
+				comparisonList.add(dateTimeForComparing);
+			}
+		}
+		return comparisonList;
+	}
+
+	private static LocalDateTime generateNextStartDateTime(Interval interval, LocalDateTime startDateTime,
+			ArrayList<LocalDateTime> comparisonList) {
+		Collections.sort(comparisonList);
+		// Takes the first timing as it is the earliest
+		LocalDateTime newStartDateTime = comparisonList.get(0);
+		System.out.println(" " + newStartDateTime.toString());
+
+		// If in the same week, no need to consider the task interval
+		boolean isInTheSameWeek = checkIfInTheSameWeek(startDateTime, newStartDateTime);
+		System.out.println(isInTheSameWeek);
+		if (!isInTheSameWeek) {
+			newStartDateTime = modifyStartDateTime(interval, newStartDateTime);
+		}
+		return newStartDateTime;
+	}
+
+	private static boolean checkIfInTheSameWeek(LocalDateTime startDateTime, LocalDateTime newStartDateTime) {
+		LocalDate startDate = startDateTime.toLocalDate();
+		LocalDate newStartDate = newStartDateTime.toLocalDate();
+		startDate = startDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+		newStartDate = newStartDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+		System.out.println("check: " + startDate.toString());
+		System.out.println("check: " + newStartDate.toString());
+
+		// Checks if their upcoming Sundays are equal
+		if (newStartDate.isEqual(startDate)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private static LocalDateTime modifyStartDateTime(Interval interval, LocalDateTime newStartDateTime) {
+		String frequency = interval.getFrequency();
+		int timeInterval = interval.getTimeInterval();
+
+		// To negate the effects of obtaining the date in the next week earlier
+		newStartDateTime = newStartDateTime.minusWeeks(1);
+
+		switch (frequency) {
+		case FREQ_HOURLY:
+			newStartDateTime = newStartDateTime.plusHours(timeInterval);
+			break;
+
+		case FREQ_DAILY:
+			newStartDateTime = newStartDateTime.plusDays(timeInterval);
+			break;
+
+		case FREQ_WEEKLY:
+			newStartDateTime = newStartDateTime.plusWeeks(timeInterval);
+			break;
+
+		case FREQ_MONTHLY:
+			newStartDateTime = newStartDateTime.plusMonths(timeInterval);
+			break;
+
+		case FREQ_YEARLY:
+			newStartDateTime = newStartDateTime.plusYears(timeInterval);
+			break;
+		}
+
+		return newStartDateTime;
+	}
+
 	private static boolean checkIfInfiniteRecurrence(Interval interval) {
 		if (interval.getCount() == -1 && interval.getUntil().isEqual(LocalDateTime.MAX)) {
 			return true;
@@ -341,10 +475,10 @@ public class Recurring {
 			return false;
 		}
 	}
-	
+
 	/*****************************************************************************/
 	public static void forceUpdateEvent(TaskObject task) {
-		
+
 		if (task.getTaskDateTimes().size() == 1) {
 			task.setStatus("completed");
 		} else {
