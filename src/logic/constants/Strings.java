@@ -94,8 +94,11 @@ public class Strings {
 	//TimeOutput Constants
 	public static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
 	public static final String MESSAGE_NULL_POINTER_EXCEPTION = "Not enough arguments within target object";
-	public static final String DISPLAY_TIME_EVENT_1 = "on %1s, from %2s to %3s";
+	public static final String DISPLAY_TIME_EVENT_1 = "from %1s on %2s \nto %3s on %4s";
 	public static final String DISPLAY_TIME_EVENT_2 = "from %1s to %2s";
+	public static final String DISPLAY_TIME_EVENT_3 = "from %1s to %2s \non %3s";
+	public static final String DISPLAY_TIME_EVENT_4 = "from %1s on %2s \nto %3s";
+	public static final String DISPLAY_TIME_EVENT_5 = "from %1s \nto %2s on %3s";
 	public static final String DISPLAY_TIME_DEADLINE = "by %1s";
 
 	//Redo Constants

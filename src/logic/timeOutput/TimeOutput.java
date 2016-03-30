@@ -22,6 +22,7 @@ import static logic.constants.Strings.*;
 public class TimeOutput {
 
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
+	static DateTimeFormatter shortFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
 	/**
 	 * Formats a time output for GUI to display, for the entire list of tasks.
@@ -117,25 +118,23 @@ public class TimeOutput {
 	private static String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException {
 		String formattedString = "";
 		if (end[0].equals(start[0])) { // If start date == end date
-			formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], end[1]);
+			formattedString = String.format(DISPLAY_TIME_EVENT_3, start[1], end[1], end[0]);
 			// End Date will not be printed
 		} else {
 			if (!end[1].equals("") && !start[1].equals("")) { 
 				// if both start and end time exist
-				String endDateTime = end[1].concat(" on ").concat(end[0]);
-				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], endDateTime);
+				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[1], start[0], end[1], end[0]);
 				// End Date will be printed
 			} else {
 				if (end[1].equals("")) { // if end time does not exist
 					if (start[1].equals("")) { // if start time does not exist
 						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
 					} else { // if start time exists
-						formattedString = String.format(DISPLAY_TIME_EVENT_1, start[0], start[1], end[0]);
+						formattedString = String.format(DISPLAY_TIME_EVENT_4, start[1], start[0], end[0]);
 					}
 				} else { // if end time exists
 					if (start[1].equals("")) { // if start time does not exist
-						String endDateTime = end[1].concat(" on ").concat(end[0]);
-						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], endDateTime);
+						formattedString = String.format(DISPLAY_TIME_EVENT_5, start[0], end[1], end[0]);
 					}
 				}
 			}
@@ -186,13 +185,13 @@ public class TimeOutput {
 		return formattedString;
 	}
 
-	private static String[] createDateTimeArray(LocalDateTime time, boolean isEndDate) throws DateTimeException {
+	private static String[] createDateTimeArray(LocalDateTime dateTime, boolean isEndDate) throws DateTimeException {
 		String[] timeArray = new String[2];
 
-		timeArray[0] = processRelativeDate(time.toLocalDate(), isEndDate);
+		timeArray[0] = processRelativeDate(dateTime.toLocalDate(), isEndDate);
 
-		if (!time.toLocalTime().equals(LocalTime.MAX)) {
-			timeArray[1] = time.toLocalTime().toString();
+		if (!dateTime.toLocalTime().equals(LocalTime.MAX)) {
+			timeArray[1] = dateTime.toLocalTime().toString();
 		} else {
 			timeArray[1] = "";
 		}
@@ -203,21 +202,21 @@ public class TimeOutput {
 		String dateString = "";
 		String dayOfWeek = "";
 		boolean isInTheSameWeek = checkIfInTheSameWeek(date);
-		// event in this week: e.g Thursday 24/03/16, applies to both start end
+		// event in this week: e.g Thursday 24/03, applies to both start end
 		if (isInTheSameWeek) {
 			dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-			dateString = dayOfWeek + " " + date.format(formatter);
+			dateString = dayOfWeek + " " + date.format(shortFormatter);
 		} else {
 			// only applies for ending date of events
 			if (isEndDate) {
 				boolean isInTheNextWeek = checkIfInTheNextWeek(date);
 				if (isInTheNextWeek) {
-					// event end date in next week: e.g. next Monday 28/03/16
+					// event end date in next week: e.g. next Monday 28/03
 					dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-					dateString = "next " + dayOfWeek + " " + date.format(formatter);
+					dateString = "next " + dayOfWeek + " " + date.format(shortFormatter);
 				} else {
-					// event end date not in next week: e.g. 19/04/16
-					dateString = date.format(formatter);
+					// event end date not in next week: e.g. 19/04
+					dateString = date.format(shortFormatter);
 				}
 			} else {
 				// event start date, deadline date: e.g. 19/04/16

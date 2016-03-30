@@ -25,6 +25,7 @@ public class TimeOutputTest {
 	private ArrayList<String> actualTimeOutput = new ArrayList<String>();
 	private static ArrayList<String> expectedTimeOutput = new ArrayList<String>();
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");
+	static DateTimeFormatter shortFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
 	/**********************************************************************************/
 	/**
@@ -56,7 +57,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 12/03/16, from 15:00 to 16:00 on 15/03/16");
+		expectedTimeOutput.add("from 15:00 on 12/03/16 \nto 16:00 on 15/03/16");
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -72,7 +73,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 15/03/16, from 15:00 to 16:00");
+		expectedTimeOutput.add("from 15:00 to 16:00 \non 15/03/16");
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -118,7 +119,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("on 15/03/16, from 13:00 to 16/03/16");
+		expectedTimeOutput.add("from 13:00 on 15/03/16 \nto 16/03/16");
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -134,7 +135,7 @@ public class TimeOutputTest {
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
-		expectedTimeOutput.add("from 15/03/16 to 14:00 on 16/03/16");
+		expectedTimeOutput.add("from 15/03/16 \nto 14:00 on 16/03/16");
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -152,7 +153,7 @@ public class TimeOutputTest {
 		LocalDateTime endDateTime = LocalDateTime.of(LocalDate.of(2016, 11, 19), LocalTime.of(3, 20));
 
 		String actualOutput = TimeOutput.setEventTimeOutput(startDateTime, endDateTime);
-		String expectedOutput = "on 16/11/16, from 09:30 to 03:20 on 19/11/16";
+		String expectedOutput = "from 09:30 on 16/11/16 \nto 03:20 on 19/11/16";
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -176,9 +177,9 @@ public class TimeOutputTest {
 		}
 
 		String dayOfWeek = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-		String dateString = LocalDate.now().format(formatter);
+		String dateString = LocalDate.now().format(shortFormatter);
 
-		expectedTimeOutput.add("on " + dayOfWeek + " " + dateString + ", from 12:00 to 14:00");
+		expectedTimeOutput.add("from 12:00 to 14:00 \non " + dayOfWeek + " " + dateString);
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -205,14 +206,14 @@ public class TimeOutputTest {
 		testArray.add(task);
 		TimeOutput.setTimeOutputForGui(testArray);
 
-		String startDateString = thisThursday.format(formatter);
-		String endDateString = thisFriday.format(formatter);
+		String startDateString = thisThursday.format(shortFormatter);
+		String endDateString = thisFriday.format(shortFormatter);
 
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
 
-		expectedTimeOutput.add("on Thursday " + startDateString + ", from 00:00 to 23:59 on Friday " + endDateString);
+		expectedTimeOutput.add("from 00:00 on Thursday " + startDateString + " \nto 23:59 on Friday " + endDateString);
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -233,7 +234,7 @@ public class TimeOutputTest {
 		testArray.add(task);
 		TimeOutput.setTimeOutputForGui(testArray);
 
-		String dateString = thisTuesday.format(formatter);
+		String dateString = thisTuesday.format(shortFormatter);
 
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
@@ -260,7 +261,7 @@ public class TimeOutputTest {
 		testArray.add(task);
 		TimeOutput.setTimeOutputForGui(testArray);
 
-		String dateString = thisMonday.format(formatter);
+		String dateString = thisMonday.format(shortFormatter);
 
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
@@ -284,14 +285,14 @@ public class TimeOutputTest {
 		testArray.add(task);
 		TimeOutput.setTimeOutputForGui(testArray);
 
-		String startDateString = thisSunday.format(formatter);
-		String endDateString = nextMonday.format(formatter);
+		String startDateString = thisSunday.format(shortFormatter);
+		String endDateString = nextMonday.format(shortFormatter);
 
 		for (int i = 0; i < testArray.size(); i++) {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
 
-		expectedTimeOutput.add("on Sunday " + startDateString + ", from 00:00 to 23:59 on next Monday " + endDateString);
+		expectedTimeOutput.add("from 00:00 on Sunday " + startDateString + " \nto 23:59 on next Monday " + endDateString);
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
@@ -320,7 +321,7 @@ public class TimeOutputTest {
 			actualTimeOutput.add(testArray.get(i).getTimeOutputString());
 		}
 
-		expectedTimeOutput.add("on " + startDateString + ", from 00:00 to 23:59 on " + endDateString);
+		expectedTimeOutput.add("from 00:00 on " + startDateString + " \nto 23:59 on " + endDateString);
 
 		assertEquals(expectedTimeOutput, actualTimeOutput);
 	}
