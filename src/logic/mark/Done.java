@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.logging.*;
 
 import common.CommandObject;
+import common.LocalDateTimePair;
 import common.TaskObject;
 import logic.Recurring;
 
@@ -32,6 +33,7 @@ public class Done extends Mark {
 	 */
 	public Done(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.index = commandObj.getIndex();
+		this.markTaskObj = commandObj.getTaskObject();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
@@ -64,17 +66,27 @@ public class Done extends Mark {
 
 	protected boolean changeStatus() {
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() == taskIdToMark) {
-				taskName = taskList.get(i).getTitle();
-				statusBeforeChange = taskList.get(i).getStatus();
-				markedTask = taskList.get(i);
-				if (taskList.get(i).getIsRecurring()) {
-					changeStatusForRecurringTask(taskList.get(i));
-				} else {
-					taskList.get(i).setStatus("completed");
+			TaskObject task = taskList.get(i);
+			if (task.getTaskId() == taskIdToMark) {
+				originalTask.setTaskObject(task);
+				originalTimings.addAll(task.getTaskDateTimes());
+				
+				try {
+					task.setTaskObject(markTaskObj);	// this is an undo function - simply set the taskObj to the old version
+					LOGGER.log(Level.INFO, "Undo-done processed");
+				}  catch (NullPointerException e) {
+					taskName = task.getTitle();
+					statusBeforeChange = task.getStatus();
+					markedTask = task;
+					if (task.getIsRecurring()) {
+						changeStatusForRecurringTask(task);
+					} else {
+						task.setStatus("completed");
+					}
+					LOGGER.log(Level.INFO, "Status changed to \'completed\'");
 				}
 
-				LOGGER.log(Level.INFO, "Status changed to \'completed\'");
+				originalTask.setTaskDateTimes(originalTimings);
 				return true;
 			}
 		}

@@ -42,8 +42,8 @@ public class LocalDateTimePair {
 		this.endDateTime = endDateTime;
 	}
 	
-	public void print() {
-		System.out.println("Start date/time = " + startDateTime.toString() + ", End date/time = " + endDateTime.toString());
+	public String print() {
+		return "Start date/time = " + startDateTime.toString() + ", End date/time = " + endDateTime.toString();
 	}
 	
 }

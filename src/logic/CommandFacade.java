@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Deque;
 
+import com.sun.media.jfxmedia.logging.Logger;
+
 /**
  * This class represents a facade pattern to parse the CommandObject that has
  * been returned by the parser. A new CommandFacade class is initialised with
@@ -108,6 +110,7 @@ public class CommandFacade {
 			clearRedoList();
 		}
 
+		System.out.println("commandType = " + commandType);
 		switch (commandType) {
 			case INDEX_ADD :
 				addFunction();
@@ -476,14 +479,15 @@ public class CommandFacade {
 	private void addToList(Mark mark, Deque<CommandObject> list) {
 		CommandObject newCommandObj = new CommandObject();
 
-		String prevStatus = mark.getStatusToChange();
-		int commandIndex = getCommandIndex(prevStatus);
+		TaskObject originalTask = mark.getOriginalTask();
+		int commandIndex = getCommandIndex(mark.getStatusToChange());
 		if (commandIndex != 0) {
 			newCommandObj.setCommandType(commandIndex);
-			newCommandObj.setTaskObject(new TaskObject());
-			newCommandObj.setIndex(this.index);
+			newCommandObj.setTaskObject(originalTask);
+			newCommandObj.setIndex(mark.getMarkIndex());
 		}
 
+		
 		list.push(newCommandObj);
 	}
 

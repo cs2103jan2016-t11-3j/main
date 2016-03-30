@@ -13,6 +13,7 @@ public class Incomplete extends Mark {
 
 	public Incomplete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
 		this.index = commandObj.getIndex();
+		this.markTaskObj = commandObj.getTaskObject();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 	}
@@ -33,12 +34,23 @@ public class Incomplete extends Mark {
 	@Override
 	protected boolean changeStatus() {
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() == taskIdToMark) {
-				taskName = taskList.get(i).getTitle();
-				statusBeforeChange = taskList.get(i).getStatus();
-				taskList.get(i).setStatus("incomplete");
-
-				LOGGER.log(Level.INFO, "Status changed to \'incomplete\'");
+			TaskObject task = taskList.get(i);
+			if (task.getTaskId() == taskIdToMark) {
+				originalTask.setTaskObject(task);
+				originalTimings.addAll(task.getTaskDateTimes());
+				
+				if (!markTaskObj.isNull()) { // this is an undo function
+					task.setTaskObject(markTaskObj);
+					LOGGER.log(Level.INFO, "Undo-incomplete processed");
+				} else {
+					taskName = task.getTitle();
+					statusBeforeChange = task.getStatus();
+					task.setStatus("incomplete");
+	
+					LOGGER.log(Level.INFO, "Status changed to \'incomplete\'");
+				}
+				
+				
 				return true;
 			}
 		}

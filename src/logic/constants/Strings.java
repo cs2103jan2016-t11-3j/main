@@ -122,6 +122,7 @@ public class Strings {
 		System.out.println("status = " + taskObj.getStatus());
 		System.out.println("task id = " + taskObj.getTaskId());
 		System.out.println("isRecurring = " + taskObj.getIsRecurring());
+		System.out.println("taskDateTimes size = " + taskObj.getTaskDateTimes().size());
 	}
 
 }

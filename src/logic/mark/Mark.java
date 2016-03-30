@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.*;
 
 import common.CommandObject;
+import common.LocalDateTimePair;
 import common.TaskObject;
 
 import static logic.constants.Index.*;
@@ -29,7 +30,6 @@ import static logic.constants.Strings.*;
  */
 public abstract class Mark {
 
-	private final String MESSAGE_ERROR = "Error marking task as complete";
 	protected static final Logger LOGGER = Logger.getLogger(Mark.class.getName());
 
 	/**
@@ -43,6 +43,10 @@ public abstract class Mark {
 	 * was toggled by Mark.run()
 	 * @param taskIdToMark - Contains the task ID of the task whose status will be toggled
 	 */
+	
+	protected TaskObject originalTask = new TaskObject(); // original task info; for undo purposes
+	protected ArrayList<LocalDateTimePair> originalTimings = new ArrayList<LocalDateTimePair>();
+	
 	protected TaskObject markedTask;
 	protected String taskName = "";
 	protected String statusBeforeChange = "";
@@ -50,6 +54,8 @@ public abstract class Mark {
 	protected ArrayList<TaskObject> lastOutputTaskList;
 	protected ArrayList<String> output = new ArrayList<String>();
 	protected int taskIdToMark = -1; // The intended task ID user wants to mark
+	
+	protected TaskObject markTaskObj = new TaskObject();
 	protected int index = -1;
 
 	public Mark() {
@@ -110,5 +116,13 @@ public abstract class Mark {
 
 	public TaskObject getMarkedTask() {
 		return markedTask;
+	}
+	
+	public TaskObject getOriginalTask() {
+		return originalTask;
+	}
+	
+	public int getMarkIndex() {
+		return index;
 	}
 }
