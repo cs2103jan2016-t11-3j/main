@@ -297,7 +297,6 @@ public class Recurring {
 				// Updates the number of counts to reflect effects of byDay
 				int countMultiplier = retrieveMultiplier(byDayArray);
 				count = count * countMultiplier;
-				interval.setCount(count);
 				task.setInterval(interval);
 			}
 			for (int i = 0; i < count; i++) {
@@ -320,7 +319,6 @@ public class Recurring {
 		} else {
 			// implementation with byDay
 			nextTimePair = obtainNextTimeByDay(interval, startDateTime, endDateTime);
-			System.out.println(nextTimePair.getStartDateTime().toString());
 		}
 
 		return nextTimePair;
@@ -409,11 +407,9 @@ public class Recurring {
 		Collections.sort(comparisonList);
 		// Takes the first timing as it is the earliest
 		LocalDateTime newStartDateTime = comparisonList.get(0);
-		System.out.println(" " + newStartDateTime.toString());
 
 		// If in the same week, no need to consider the task interval
 		boolean isInTheSameWeek = checkIfInTheSameWeek(startDateTime, newStartDateTime);
-		System.out.println(isInTheSameWeek);
 		if (!isInTheSameWeek) {
 			newStartDateTime = modifyStartDateTime(interval, newStartDateTime);
 		}
@@ -425,8 +421,6 @@ public class Recurring {
 		LocalDate newStartDate = newStartDateTime.toLocalDate();
 		startDate = startDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 		newStartDate = newStartDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-		System.out.println("check: " + startDate.toString());
-		System.out.println("check: " + newStartDate.toString());
 
 		// Checks if their upcoming Sundays are equal
 		if (newStartDate.isEqual(startDate)) {
