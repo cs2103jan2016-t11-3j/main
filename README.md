@@ -8,4 +8,4 @@ CS2103 Project of Team T11-3J
 - Parser Package
 - UI Package (do it last)
 
-## [User Guide](https://docs.google.com/document/d/1sePTYhHLleZEQtSsiWOS84UTluSACMedn2iL8dQGd5I/pub)
+## [User Guide](https://docs.google.com/document/d/1PBVn3QnK8I3igFqyhH6PpXXUm5S1LoFb3tPjSZDnfbs/pub)
