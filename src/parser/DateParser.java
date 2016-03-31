@@ -218,8 +218,7 @@ public class DateParser {
         int now = LocalDate.now().getDayOfWeek().getValue();
         if(set < now ) {
             throw new Exception(input + " is over this week. Did you mean next " + input + "?");
-        }
-        else {
+        } else if (set > now) {
             dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input)));
         }
         /**
