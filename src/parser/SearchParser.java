@@ -15,6 +15,8 @@ public class SearchParser extends CommandParser {
 			setCategory(input);
 		} else if (isSearchForRecurringDates(input)) {
 			setIndex(input);
+		} else if (isSearchByStatus(input)) {
+			setStatus(input);
 		} else {
 			//read directly with matcher
 			Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
@@ -38,6 +40,18 @@ public class SearchParser extends CommandParser {
 			setTaskObject();
 		}
 		return TO;
+	}
+	
+	private boolean isSearchByStatus(String input) {
+		if (input.matches("(?i)(done|completed)")) {
+			return true;	
+		} else {
+			return false;
+		}
+	}
+	
+	private void setStatus(String input){
+		TO.setStatus("completed");
 	}
 	
 	private boolean isSearchForRecurringDates(String input) {
