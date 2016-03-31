@@ -24,7 +24,7 @@ public class FilePath {
      * @throws IOException Error saving new directory
      */
     protected static void changePreferedDirectory(String directory) throws IOException {
-        Logger logger = AtfLogger.getLogger(FilePath.class.getName());
+        Logger logger = AtfLogger.getLogger();
         mkdirIfNotExist(directory);
         checkDirectory(directory);
         writePreferredDirectory(directory);
@@ -91,7 +91,7 @@ public class FilePath {
     }
     
     private static void mkdirIfNotExist(String directory) {
-        Logger logger = AtfLogger.getLogger(FilePath.class.getName());
+        Logger logger = AtfLogger.getLogger();
         File file = new File(directory);
         if (!file.exists()) {
             file.mkdirs();

@@ -15,8 +15,7 @@ import org.junit.Test;
 import common.TaskObject;
 import storage.FileStorage;
 import storage.IStorage;
-import storage.IStorage;
-import Test.AssertHelper;
+import test.AssertHelper;
 
 public class LoadTest {
 
