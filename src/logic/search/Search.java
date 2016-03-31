@@ -29,7 +29,10 @@ import static logic.constants.Strings.*;
  * times (for events); i.e. for an event "overseas camp 5jan-9jan 12pm-8pm", a
  * search of '7jan 4pm' will return this event but a search of '1jan 4pm' will
  * not. <br>
- * 4) Search by index - searches for a specific index and returns all tasks that
+ * 4) Search by category - searches for tasks where the category matches the specific category <br>
+ * 5) Search by status - searches for tasks where the status matches the specific status; mainly 
+ * used to view all completed tasks
+ * 6) Search by index - searches for a specific index and returns all tasks that
  * are linked to this index if it is a recurring task It stores all search
  * results in an arraylist and calls the superclass Display, where the search
  * results would be displayed.
@@ -56,11 +59,13 @@ public class Search extends Display {
 	private LocalDate searchDate = LocalDate.MAX;
 	private LocalTime searchTime = LocalTime.MAX;
 	private String searchCategory = "";
+	private String searchStatus = "";
 	private int searchIndex = -1;
 	boolean isSearchTitle = false;
 	boolean isSearchDate = false;
 	boolean isSearchTime = false;
 	boolean isSearchCategory = false;
+	boolean isSearchStatus = false;
 	boolean isSearchIndex = false;
 
 	/**
@@ -114,6 +119,10 @@ public class Search extends Display {
 			if (!searchCategory.equals("")) {
 				isSearchCategory = true;
 			}
+			searchStatus = taskObj.getStatus();
+			if (!searchStatus.equals("")) {
+				isSearchStatus= true;
+			}
 			searchIndex = commandObj.getIndex();
 			if (searchIndex != -1) {
 				isSearchIndex = true;
@@ -139,6 +148,9 @@ public class Search extends Display {
 		}
 		if (isSearchCategory) {
 			matchedTasks = searchByCategory(matchedTasks);
+		}
+		if (isSearchStatus) {
+			matchedTasks = searchByStatus(matchedTasks);
 		}
 		if (isSearchIndex) {
 			searchByIndex();
@@ -248,6 +260,20 @@ public class Search extends Display {
 
 		return match;
 	}
+	
+	// Finds all tasks where the status matches the search status
+	private ArrayList<TaskObject> searchByStatus(ArrayList<TaskObject> list) {
+		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
+
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getStatus().equals(searchStatus)) {
+				match.add(list.get(i));
+			}
+		}
+
+		return match;
+		
+	}
 
 	/**
 	 * Retrieves the task contained in the last output task list via an index,
@@ -333,12 +359,14 @@ public class Search extends Display {
 		System.out.println("search date = " + searchDate);
 		System.out.println("search time = " + searchTime);
 		System.out.println("search category = " + searchCategory);
+		System.out.println("search status = " + searchStatus);
 		System.out.println("search index = " + searchIndex);
 		System.out.println("isSearchTitle = " + isSearchTitle);
 		System.out.println("isSearchDate = " + isSearchDate);
 		System.out.println("isSearchTime = " + isSearchTime);
-		System.out.println("isSearchIndex = " + isSearchIndex);
 		System.out.println("isSearchCategory = " + isSearchCategory);
+		System.out.println("isSearchStatus = " + isSearchStatus);
+		System.out.println("isSearchIndex = " + isSearchIndex);
 		System.out.println();
 	}
 
