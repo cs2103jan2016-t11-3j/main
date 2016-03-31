@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import static logic.constants.Index.*;
@@ -103,7 +104,7 @@ public class Search extends Display {
 	// information
 	private void setSearchInformation() {
 		try {
-			searchTitle = taskObj.getTitle();
+			searchTitle = taskObj.getTitle().toLowerCase();
 			if (!searchTitle.equals("")) {
 				isSearchTitle = true;
 			}
@@ -158,33 +159,86 @@ public class Search extends Display {
 
 	}
 
-	// Finds all tasks where the title contains a semblance of the search
-	// keyword
 	private ArrayList<TaskObject> searchByTitle(ArrayList<TaskObject> list) {
 		ArrayList<TaskObject> match = new ArrayList<TaskObject>();
-
+		String[] splitSearchKeyword = searchTitle.split(" ");
+		assert (splitSearchKeyword.length > 0);
+		
+		if (splitSearchKeyword.length == 1) {
+			searchKeywordIsOneWord(list, match);
+		} else {
+			searchKeywordIsMoreThanOneWord(list, match);
+		}
+		
+		return match;
+	}
+		
+	/*
+	 * If search keyword contains only one word, check for the titles of the tasks where there are 
+	 * any words in the title that starts with the sequence of search characters.
+	 */
+	private void searchKeywordIsOneWord(ArrayList<TaskObject> list, ArrayList<TaskObject> match) {
 		for (int i = 0; i < list.size(); i++) {
-			// Gets the title of one task and splits it up into the individual
-			// words
-			String taskName = list.get(i).getTitle().toLowerCase();
-			String[] splitTaskName = taskName.split(" ");
+			// Gets the title of one task and splits it up into the individual words
+			String taskTitle = list.get(i).getTitle().toLowerCase();
+			assert (taskTitle.length() > 0);
+			String[] splitTaskTitle = taskTitle.split(" ");
 			boolean isMatch = false;
-
-			// Checks if any of the individual words contain the search keyword
-			// If yes, add the task to the arraylist and stop scanning the other
-			// words for this task
+			
 			int j = 0;
-			while (j < splitTaskName.length && !isMatch) {
-				String str = splitTaskName[j];
-				if (str.trim().contains(searchTitle.toLowerCase())) {
+			while (j < splitTaskTitle.length && !isMatch) {
+				String word = splitTaskTitle[j].trim();	// removes any potential whitespaces
+				if (word.startsWith(searchTitle)) {
 					match.add(list.get(i));
 					isMatch = true;
 				}
 				j++;
 			}
 		}
-
-		return match;
+	}
+	
+	/*
+	 * First checks if the title contains the entire keyword. If not, it then breaks down the 
+	 * search keyword into individual words and checks if the title contains all of these
+	 * individual words.
+	 */
+	private void searchKeywordIsMoreThanOneWord(ArrayList<TaskObject> list, ArrayList<TaskObject> match) {
+		for (int i = 0; i < list.size(); i++) {
+			String taskTitle = list.get(i).getTitle().toLowerCase();
+			assert (taskTitle.length() > 0);
+			String[] splitTaskTitle = taskTitle.split(" ");
+			
+			if (taskTitle.contains(searchTitle)) {
+				match.add(list.get(i));
+			} else {
+				String[] splitSearchKeyword = searchTitle.split(" ");
+				boolean[] splitSearchKeywordCheck = new boolean[splitSearchKeyword.length];
+				Arrays.fill(splitSearchKeywordCheck, false);
+				
+				// Checks if each individual word in the search keyword is present in the task title
+				for (int j = 0; j < splitSearchKeyword.length; j++) {
+					// Checks through all individual words in the title of this task
+					for (int k = 0; k < splitTaskTitle.length; k++) {
+						if (splitSearchKeyword[j].equals(splitTaskTitle[k])) {
+							splitSearchKeywordCheck[j] = true;
+						}
+					}
+				}
+				
+				if (isBooleanArrayAllTrue(splitSearchKeywordCheck)) {
+					match.add(list.get(i));
+				}
+			}
+		}
+	}
+		
+	private boolean isBooleanArrayAllTrue(boolean[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] == false) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// Finds all tasks that have the same start/end date as the search date, or
