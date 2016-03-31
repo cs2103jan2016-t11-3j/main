@@ -110,7 +110,7 @@ public class Done extends Mark {
 	}
 	
 	private void changeStatusForRecurringEvent(TaskObject task) {
-		Recurring.forceUpdateEvent(task);
+		Recurring.updateEvent(task, taskList, "completed");
 	}
 
 }

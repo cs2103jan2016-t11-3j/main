@@ -32,37 +32,71 @@ public class Recurring {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
-					updateEvent(taskList.get(i));
+					updateEvent(taskList.get(i), taskList, "overdue");
 					logger.log(Level.INFO, "about to update recurring event:" + taskList.get(i).getTitle());
 				}
 			}
 		}
 	}
 
-	public static void updateEvent(TaskObject task) {
-		LocalDateTime eventEndTime = task.getEndDateTime();
-		assert (!eventEndTime.equals(LocalDateTime.MAX));
-
-		try {
-			while (LocalDateTime.now().isAfter(eventEndTime) && task.getTaskDateTimes().size() > 1) {
-				renewEvent(task);
-				eventEndTime = task.getEndDateTime();
+	public static void updateEvent(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+		if (status.equals("overdue")) {
+			updateEventToOverdue(task, taskList, status);
+		} else {
+			if (status.equals("completed")) {
+				updateEventToCompleted(task, taskList, status);
 			}
-
-			if (task.getTaskDateTimes().size() <= 1) {
-				if (LocalDateTime.now().isAfter(eventEndTime)) {
-					markAsDone(task);
-					logger.log(Level.INFO, "Recurring event has come to an end");
-				}
-			}
-		} catch (IndexOutOfBoundsException e) {
-			// Adds a fake date time pair to task and sends it into updateEvent
-			// again
-			LocalDateTimePair fakePair = new LocalDateTimePair(LocalDateTime.MAX, LocalDateTime.MAX);
-			task.addToTaskDateTimes(fakePair);
-			updateEvent(task);
-			logger.log(Level.WARNING, "No timings available in the task");
 		}
+	}
+
+	private static void updateEventToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+		LocalDateTime eventEndTime = task.getEndDateTime();
+		LocalDateTimePair eventTimePair = task.getTaskDateTimes().get(0);
+		String taskName = task.getTitle();
+		
+		assert (!eventEndTime.equals(LocalDateTime.MAX));
+		while (LocalDateTime.now().isAfter(eventEndTime) && task.getTaskDateTimes().size() > 1) {
+			splitTaskFromRecurringEvent(taskName, eventTimePair, taskList, status);
+			renewEvent(task);
+			eventEndTime = task.getEndDateTime();
+		}
+
+		if (task.getTaskDateTimes().size() <= 1) {
+			if (LocalDateTime.now().isAfter(eventEndTime)) {
+				task.setStatus(status);
+				logger.log(Level.INFO, "Recurring event has come to an end");
+			}
+		}
+	}
+	
+	private static void updateEventToCompleted(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+		LocalDateTimePair eventTimePair = task.getTaskDateTimes().get(0);
+		String taskName = task.getTitle();
+		
+		if (task.getTaskDateTimes().size() == 1) {
+			task.setStatus(status);
+		} else {
+			splitTaskFromRecurringEvent(taskName, eventTimePair, taskList, status);
+			renewEvent(task);
+		}
+	}
+	
+	private static void splitTaskFromRecurringEvent(String taskName, LocalDateTimePair eventTimePair, ArrayList<TaskObject> taskList, String status) {
+		LocalDateTime startDateTime = eventTimePair.getStartDateTime();
+		LocalDateTime endDateTime = eventTimePair.getEndDateTime();
+		
+		int taskId = generateTaskId(taskList);
+		TaskObject splitEvent = createSplitEventTaskObject(taskName, startDateTime, endDateTime, status, taskId);
+		Add add = new Add(splitEvent, -1, taskList);
+		add.run();
+	}
+	
+	private static TaskObject createSplitEventTaskObject(String taskName, LocalDateTime startDateTime, LocalDateTime endDateTime, String status, int taskId) {
+		TaskObject splitEvent = new TaskObject(taskName, startDateTime, endDateTime, CATEGORY_EVENT, status, taskId);
+		splitEvent.setIsRecurring(false);
+		splitEvent.addToTaskDateTimes(new LocalDateTimePair(startDateTime, endDateTime));
+		TimeOutput.setEventTimeOutput(splitEvent);
+		return splitEvent;
 	}
 
 	public static void renewEvent(TaskObject task) throws IndexOutOfBoundsException {
@@ -87,10 +121,6 @@ public class Recurring {
 		if (isInfiniteRecurrence) {
 			updateInfiniteRecurrence(task);
 		}
-	}
-
-	private static void markAsDone(TaskObject task) {
-		task.setStatus("completed");
 	}
 
 	public static void setAllRecurringEventTimes(TaskObject task) {
@@ -223,7 +253,7 @@ public class Recurring {
 	private static void splitTaskFromRecurringDeadline(LocalDateTime deadline, String title,
 			ArrayList<TaskObject> taskList, String status) {
 		int taskId = generateTaskId(taskList);
-		TaskObject splitDeadline = createOverdueDeadlineTaskObject(deadline, title, taskId, status);
+		TaskObject splitDeadline = createSplitDeadlineTaskObject(deadline, title, taskId, status);
 		Add add = new Add(splitDeadline, -1, taskList);
 		add.run();
 		// adds the split deadline into the taskList
@@ -233,14 +263,14 @@ public class Recurring {
 	private static int generateTaskId(ArrayList<TaskObject> taskList) {
 		int id = -1;
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() < 0) {
-				id--; // so that no 2 split tasks have the same ID
+			if (taskList.get(i).getTaskId() < id) {
+				id = taskList.get(i).getTaskId() - 1; // so that no 2 split tasks have the same ID
 			}
 		}
 		return id;
 	}
 
-	private static TaskObject createOverdueDeadlineTaskObject(LocalDateTime deadline, String title, int taskId,
+	private static TaskObject createSplitDeadlineTaskObject(LocalDateTime deadline, String title, int taskId,
 			String status) {
 		TaskObject splitDeadline = new TaskObject(title, deadline, CATEGORY_DEADLINE, status, taskId);
 		splitDeadline.setIsRecurring(false);
