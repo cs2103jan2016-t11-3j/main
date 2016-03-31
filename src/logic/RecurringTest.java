@@ -33,11 +33,19 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 03, 31, 14, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 03, 31, 16, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 07, 14, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 07, 16, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
+		
+		for (int i = 0; i < testArray.size(); i++) {
+			if (testArray.get(i).getTaskId() < 0) {
+				System.out.println(testArray.get(i).getTimeOutputString());
+				System.out.println(testArray.get(i).getStatus());
+				System.out.println(testArray.get(i).getTaskId());
+			}
+		}
 	}
 
 	@Test
@@ -91,7 +99,7 @@ public class RecurringTest {
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
 
-		assertEquals("completed", testArray.get(0).getStatus());
+		assertEquals("overdue", testArray.get(0).getStatus());
 	}
 
 	@Test
@@ -116,7 +124,7 @@ public class RecurringTest {
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
 
-		assertEquals("completed", testArray.get(0).getStatus());
+		assertEquals("overdue", testArray.get(0).getStatus());
 	}
 
 	@Test
