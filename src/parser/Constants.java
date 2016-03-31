@@ -124,7 +124,9 @@ public class Constants {
     public static final String REGEX_RECURRING_INTERVAL_EVERYDAY = "(?i)(everyday)";
     public static final String REGEX_RECURRING_INTERVAL = "(?i)(every)[ 0-9]* ("
     		+ REGEX_DATE_ATTRIBUTES + "|" + REGEX_TIME_ATTRIBUTES + "|" 
-    		+ REGEX_DAYS_TEXT + ")";
+    		+ REGEX_DAYS_TEXT 
+    		+ "(" + "( and | & | n )?(, )?( , )?(,)?" + REGEX_DAYS_TEXT + ")*" 
+    		+ ")";
     public static final String REGEX_RECURRING_INTERVAL2 = "(" + REGEX_RECURRING_INTERVAL + "|" + REGEX_RECURRING_INTERVAL_EVERYDAY + ")";
     public static final String REGEX_RECURRING_START = "(" + REGEX_DATETIME_FORMAT + "|"
     		+ REGEX_DEADLINE_IDENTIFIER + "|" + REGEX_EVENT_IDENTIFIER + "|" 

@@ -209,31 +209,39 @@ public class DateTimeParser {
 		if (!input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			input = input.replaceFirst("every","").trim();
 			
-			if (input.contains(" ")) {
+			if (input.contains(" ") && hasNumber(input)) { // starts with a number?
 				String[] interval = input.split(" ");
 				_interval = Integer.parseInt(interval[0]);
 				_freq = interval[1];
+			} else if (input.contains(" ")) {
+				String[] interval = input.split(" ");
+				_freq = interval[0];
 			} else {
 				_freq = input;
-			}	
+			}
 		} else {
 			_freq = input;
 		}
 		
-		
 		DateParser DP = new DateParser();
-		
-		if (_freq.matches(Constants.REGEX_DAYS_TEXT) || _freq.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
+		if (_freq.matches(Constants.REGEX_DAYS_TEXT) 
+				|| _freq.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			DP.parseDate(_freq);
 		}
-		
 		startDate = DP.getDateObject();
-		
+	
 		if (tasktype.equals(TaskType.event)) {
 			endDate = DP.getDateObject();	
+		}	
+	}
+	
+	private boolean hasNumber(String input) {
+		String[] interval = input.split(" ");
+		if (interval[0].matches("[\\d]+")) {
+			return true;
+		} else {
+			return false;
 		}
-		
-		setLocalDateTime(false, TaskType.event);
 	}
 	
 	/**
@@ -247,9 +255,12 @@ public class DateTimeParser {
 	 */
 	public void parseInterval(String input) throws Exception {
 		input = input.replaceFirst("every","").trim();
-		String _freq;
+		String _freq = "";
 		int _interval = 1;
-		if (input.contains(" ")) { //assuming interval then frequency 
+		if (input.contains("and") || input.contains("&") || input.contains(",")) {
+			setDaysInWeek(input);
+			_freq = "week";
+		} else if (input.contains(" ")) { //assuming interval then frequency 
 			String[] interval = input.split(" ");
 			_interval = Integer.parseInt(interval[0]);
 			_freq = interval[1];
@@ -257,6 +268,54 @@ public class DateTimeParser {
 			_freq = input;
 		}
 		setInterval(_interval, _freq);
+	}
+	
+	public void setDaysInWeek(String input) { //monday and tuesday ??
+		//wanna read using comma?
+		input = input.toLowerCase();
+		if (input.contains("mon") || input.contains("monday")) {
+			TO.getInterval().setByDay(1);
+		}
+		if (input.contains("tue") || input.contains("tues") 
+				|| input.contains("tuesday")) {
+			TO.getInterval().setByDay(2);
+		}
+		if (input.contains("wed") || input.contains("wednesday")) {
+			TO.getInterval().setByDay(3);
+		} 
+		if (input.contains("thur") || input.contains("thurs") 
+				|| input.contains("thursday")) {
+			TO.getInterval().setByDay(4);
+		} 
+		if (input.contains("fri") || input.contains("friday")) {
+			TO.getInterval().setByDay(5);
+		}
+		if (input.contains("sat") || input.contains("saturday")) {
+			TO.getInterval().setByDay(6);
+		}
+		if (input.contains("sun") || input.contains("sunday")) {
+			TO.getInterval().setByDay(7);
+		}
+	}
+	
+	private void setInterval(int interval, String frequency) throws Exception {
+		if (frequency.matches(Constants.REGEX_DAYS_TEXT)
+				|| frequency.matches("(week|wk)(s)?")) {
+			frequency = "WEEKLY";
+		} else if (frequency.matches("(year|yr)(s)?")) {
+			frequency = "YEARLY";
+		} else if (frequency.matches("(hour|hr)(s)?")) {
+			frequency = "HOURLY";
+		} else if (frequency.matches(Constants.REGEX_MONTHS_TEXT) 
+				|| frequency.matches("(month|mth)(s)?")) {
+			frequency = "MONTHLY";
+		} else if (frequency.matches("(day)(s)?")) {
+			frequency = "DAILY";
+		}
+		
+		TO.getInterval().setTimeInterval(interval);
+		TO.getInterval().setFrequency(frequency);
+		TO.getInterval().setUntil(untilDateTime);
 	}
 	
 	/**
@@ -274,7 +333,6 @@ public class DateTimeParser {
 	 * @throws Exception 
 	 */
 	public void separateDateTime(String input, String type) throws Exception {
-		System.out.println(input);
 		input = input.replaceFirst("until", "").trim();
 		input = input.replaceFirst("from", "").trim();
 		
@@ -357,25 +415,7 @@ public class DateTimeParser {
 		TO.setEndDateTime(endDateTime);
 	}
 	
-	private void setInterval(int interval, String frequency) throws Exception {
-		if (frequency.matches(Constants.REGEX_DAYS_TEXT)
-				|| frequency.matches("(week|wk)(s)?")) {
-			frequency = "WEEKLY";
-		} else if (frequency.matches("(year|yr)(s)?")) {
-			frequency = "YEARLY";
-		} else if (frequency.matches("(hour|hr)(s)?")) {
-			frequency = "HOURLY";
-		} else if (frequency.matches(Constants.REGEX_MONTHS_TEXT) 
-				|| frequency.matches("(month|mth)(s)?")) {
-			frequency = "MONTHLY";
-		} else if (frequency.matches("(day)(s)?")) {
-			frequency = "DAILY";
-		}
-		
-		TO.getInterval().setTimeInterval(interval);
-		TO.getInterval().setFrequency(frequency);
-		TO.getInterval().setUntil(untilDateTime);
-	}
+	
 	
 	/**
 	 * method checks string to identify the task type

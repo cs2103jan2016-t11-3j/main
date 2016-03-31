@@ -18,9 +18,15 @@ public class DateTimeProcessorTest {
 		//assertEquals(2113, DTP.getStartTime());
 		String temp = "every 2 hour by 7pm";
 		assertTrue(temp.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
-	
 		
 		
+		String temp2 = "every monday and tuesday and wednesday at 8am until 9 may";
+		assertTrue(temp2.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
+		
+		String temp3 = "every monday, wednesday and friday at 8am until 9 may";
+		assertTrue(temp3.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
+		
+		DTP.setDaysInWeek("monday, tues and thurs");
 		
 		TO = DTP.parse("by monday", false);
 		assertEquals("2016-04-04T23:59:59.999999999", TO.getStartDateTime().toString());
@@ -34,6 +40,12 @@ public class DateTimeProcessorTest {
 		
 		TO = DTP.parse("from today to tmr", true);
 		assertEquals("2016-03-31T23:59:59.999999999", TO.getStartDateTime().toString());
+		assertEquals("2016-04-01T23:59:59.999999999", TO.getEndDateTime().toString());
+		DTP.reset();
+		TO.resetAttributes();
+		
+		TO = DTP.parse("every monday, wednesday and friday at 8am until 9 may", true);
+		assertEquals("2016-03-31T08:00", TO.getStartDateTime().toString());
 		DTP.reset();
 		TO.resetAttributes();
 		
