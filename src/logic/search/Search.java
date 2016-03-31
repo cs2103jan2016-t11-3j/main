@@ -381,6 +381,7 @@ public class Search extends Display {
 						startDateTime = foundTask.getTaskDateTimes().get(i).getStartDateTime();
 						endDateTime = foundTask.getTaskDateTimes().get(i).getEndDateTime();
 						timeOutput = TimeOutput.setEventTimeOutput(startDateTime, endDateTime);
+						timeOutput = Integer.toString(i+1) + ". " + timeOutput;
 						output.add(timeOutput);
 					}
 				} else {
@@ -388,6 +389,7 @@ public class Search extends Display {
 						for (int i = 0; i < foundTask.getTaskDateTimes().size(); i++) {
 							startDateTime = foundTask.getTaskDateTimes().get(i).getStartDateTime();
 							timeOutput = TimeOutput.setDeadlineTimeOutput(startDateTime);
+							timeOutput = Integer.toString(i+1) + ". " + timeOutput;
 							output.add(timeOutput);
 						}
 					}
