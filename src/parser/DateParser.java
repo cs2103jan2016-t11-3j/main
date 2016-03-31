@@ -178,7 +178,7 @@ public class DateParser {
 
 	private void setDateToComingDayOfWeek(String input) throws InvalidDateFormatException {
 	    input = processDayOfWeek(input);
-	    dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input))); 
+	    dateObject = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.valueOf(input))); 
 		//while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
 		//	dateObject = dateObject.plusDays(1);
 		//}
