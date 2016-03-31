@@ -56,7 +56,8 @@ public class AddParser extends CommandParser {
 			//setDateTime(dtp);
         }
 		
-		_task = input;
+		//_task = input;
+		_task = "HAPPY APRIL FOOLS BITCHES";
 	}
 	
 	
