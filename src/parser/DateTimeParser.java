@@ -167,31 +167,90 @@ public class DateTimeParser {
 	 * @throws Exception
 	 */
 	public void recur(String input) throws Exception {
-		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
-		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL2);
-		String intervalString = null;
+		String intervalString = "";
+		String untilstring = "";
+		String forstring = "";
 		
+		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
 		Matcher untilMatcher = until.matcher(input);
 		if (untilMatcher.find()) {
-			String untilstring = getTrimmedString(input, untilMatcher.start(), input.length());
+			untilstring = getTrimmedString(input, untilMatcher.start(), input.length());
 			separateDateTime(untilstring, "until"); //only run this if its until
 			input = input.replaceFirst(untilstring, "");
 			untilDateTime = LocalDateTime.of(untilDate, untilTime); //only run this if its until
 		}
 		
+		Pattern multiplier = Pattern.compile(Constants.REGEX_RECURRING_FOR);
+		Matcher forMatcher = multiplier.matcher(input);
+		if (forMatcher.find()) {
+			forstring = getTrimmedString(input, forMatcher.start(), input.length());
+			input = input.replaceFirst(forstring, "");
+			
+		}
+		
+		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL2);
 		Matcher intervalMatcher = interval.matcher(input);
 		if (intervalMatcher.find()) {
 			intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
 			input = input.replaceFirst(intervalString, "").trim();
 			parseInterval(intervalString);
+			
 			if (!input.isEmpty()) {
 				parseDateTime(input,true);
+			}
+			
+			if (!forstring.isEmpty()) {
+				parseFor(forstring);	
 			}
 		}
 		
 		if (startDate == LocalDate.MAX) { // checks for startdatetime without date
 			getStartDateFromInterval(intervalString);
 		}
+	}
+	
+	private void parseFor(String input) throws Exception {//for x weeks
+		int numberOf = 0, multiplier = 0, count = 0;
+		String forFreq = "";
+		
+		String[] temp = input.split(" ");
+		if (hasNumber(temp[1])) {
+			numberOf = Integer.parseInt(temp[1]);
+			forFreq = temp[2];	
+		} else {
+			throw new Exception("Invalid count");
+		}
+		
+		multiplier = getMultiplier(forFreq, TO.getInterval().getFrequency());
+		count = multiplier * numberOf * TO.getInterval().getTimeInterval();
+		TO.getInterval().setCount(multiplier);
+	}
+	
+	private int getMultiplier(String forInput, String intervalInput) throws Exception {
+		forInput = getFormattedFrequency(forInput);
+		
+		if (forInput.matches("DAILY") && intervalInput.matches("DAILY")) {
+			return 1;
+		} else if (forInput.matches("WEEKLY") && intervalInput.matches("DAILY")) {
+			return 7;
+		} else if (forInput.matches("MONTHLY") && intervalInput.matches("DAILY")) {
+			return 31;
+		} else if (forInput.matches("YEARLY") && intervalInput.matches("DAILY")) {
+			return 365;
+		} else if (forInput.matches("WEEKLY") && intervalInput.matches("WEEKLY")) {
+			return 1;
+		} else if (forInput.matches("MONTHLY") && intervalInput.matches("WEEKLY")) {
+			return 4;
+		} else if (forInput.matches("MONTHLY") && intervalInput.matches("MONTHLY")) {
+			return 1;
+		} else if (forInput.matches("YEARLY") && intervalInput.matches("MONTHLY")) {
+			return 12;
+		} else if (forInput.matches("YEARLY") && intervalInput.matches("YEARLY")) {
+			return 1;
+		} else {
+			throw new Exception("Invalid date input, recurrence larger than interval"); //improve engrish here 
+		}
+		
 	}
 	
 	/**
@@ -208,7 +267,6 @@ public class DateTimeParser {
 		int _interval = 1;
 		if (!input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			input = input.replaceFirst("every","").trim();
-			
 			if (input.contains(" ") && hasNumber(input)) { // starts with a number?
 				String[] interval = input.split(" ");
 				_interval = Integer.parseInt(interval[0]);
@@ -299,6 +357,13 @@ public class DateTimeParser {
 	}
 	
 	private void setInterval(int interval, String frequency) throws Exception {
+		frequency = getFormattedFrequency(frequency);
+		TO.getInterval().setTimeInterval(interval);
+		TO.getInterval().setFrequency(frequency);
+		TO.getInterval().setUntil(untilDateTime);
+	}
+
+	public String getFormattedFrequency(String frequency) {
 		if (frequency.matches(Constants.REGEX_DAYS_TEXT)
 				|| frequency.matches("(week|wk)(s)?")) {
 			frequency = "WEEKLY";
@@ -312,10 +377,7 @@ public class DateTimeParser {
 		} else if (frequency.matches("(day)(s)?")) {
 			frequency = "DAILY";
 		}
-		
-		TO.getInterval().setTimeInterval(interval);
-		TO.getInterval().setFrequency(frequency);
-		TO.getInterval().setUntil(untilDateTime);
+		return frequency;
 	}
 	
 	/**

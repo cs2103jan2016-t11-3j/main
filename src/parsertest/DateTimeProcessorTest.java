@@ -19,14 +19,17 @@ public class DateTimeProcessorTest {
 		String temp = "every 2 hour by 7pm";
 		assertTrue(temp.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
 		
-		
-		String temp2 = "every monday and tuesday and wednesday at 8am until 9 may";
-		assertTrue(temp2.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
+		String temp2 = "every monday and tuesday and wednesday at 8am until 9/6/16";
+		//assertTrue(temp2.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
 		
 		String temp3 = "every monday, wednesday and friday at 8am until 9 may";
-		assertTrue(temp3.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
+		//assertTrue(temp3.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
 		
-		DTP.setDaysInWeek("monday, tues and thurs");
+		String temp4 = "for 8 weeks";
+		//assertTrue(temp4.matches(Constants.REGEX_RECURRING_FOR));
+		
+		String temp5 = "every monday, wednesday and friday at 8am for 10 weeks";
+		assertTrue(temp5.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER));
 		
 		TO = DTP.parse("by monday", false);
 		assertEquals("2016-04-04T23:59:59.999999999", TO.getStartDateTime().toString());
