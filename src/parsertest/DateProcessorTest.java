@@ -1,4 +1,3 @@
-
 package parsertest;
 
 import static org.junit.Assert.*;
@@ -47,7 +46,11 @@ public class DateProcessorTest {
 		reset();
 		
 		DP.parseDate("everyday");
-		assertEquals("2016-03-30", DP.getDateObject().toString());
+		assertEquals("2016-03-31", DP.getDateObject().toString());
+		reset();
+		
+		DP.parseDate("today");
+		assertEquals("2016-03-31", DP.getDateObject().toString());
 		reset();
 
 		/*NEGATIVE VALUE TEST CASES*/

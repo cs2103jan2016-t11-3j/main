@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 
+import parser.Parser;
+
 import com.sun.javafx.tk.Toolkit.Task;
 
 import common.TaskObject;
@@ -24,6 +26,23 @@ public class AddTest {
 	private static ArrayList<TaskObject> testArray = new ArrayList<TaskObject>();
 
 	/*********************************************************************************/
+	
+	@Test
+	// Add floating task. No partitions
+	public void testZ() throws Exception {
+		Parser parser = new Parser("add dinner by tmr 7pm", 1);
+		ArrayList<String> actualOutput = new ArrayList<String>();
+		//TaskObject task = new TaskObject("Dinner tonight", 1);
+		TaskObject temp = parser.run().getTaskObject();
+		Add add = new Add(temp, -1, testArray);
+		actualOutput = add.run();
+
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Task added: dinner");
+
+		assertEquals(expectedOutput, actualOutput);
+	}
+	
 	@Test
 	// Add floating task. No partitions
 	public void testA() {
@@ -480,5 +499,8 @@ public class AddTest {
 		assertEquals(editedRecurrenceDetails.get(0).getEndDateTime(), endOne);
 		
 	}
+	
+	
+
 }
 

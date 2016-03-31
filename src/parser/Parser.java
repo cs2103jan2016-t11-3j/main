@@ -55,6 +55,9 @@ public class Parser {
 	private static final String VIEW_RECURRING_COMMAND_1 = "view";
 	private static final int VIEW_RECURRING_INDEX = 12;
 	
+	private static final String CHANGE_COMMAND = "change";
+	private static final int CHANGE_INDEX = 13;
+	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
 //command object. setType, setIndex, setTask, setDate, setTime, setPath
@@ -123,10 +126,29 @@ public class Parser {
 			parseSearch(command);
 		} else if (command.startsWith(VIEW_RECURRING_COMMAND_1)) {
 			parseSearch(command);
+		} else if (command.startsWith(CHANGE_COMMAND)) {
+			parseChange(command);
 		} else {
 			parseSearch(command);
 		}
   	}
+	
+	private void parseChange(String command) throws Exception {
+		CO.setCommandType(CHANGE_INDEX);
+		
+		command = command.replaceFirst("change", "").trim();
+		//not done
+		CommandParser EP = new EditParser();
+		TO = EP.process(command);
+		if (TO.getTitle().isEmpty()) {
+			CO.setTaskObject(TO);
+			CO.setIndex(EP.getIndex());
+			EP.reset();	
+		} else {
+			throw new Exception("Did you mean edit \"" + command + "\"?");
+		}
+		
+	}
 	
 	public void parseHelp(String command) {
 		CO.setCommandType(HELP_INDEX);

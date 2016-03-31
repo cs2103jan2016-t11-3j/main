@@ -99,11 +99,16 @@ public class DateTimeParser {
 		//separate stuff for different task types
 		switch(tasktype) {
 		case event:
-			for (String temp : input.split("to")) {
-				dtlist.add(temp);
+			String temp1 = "", temp2 = "";
+			Pattern split = Pattern.compile(" to ");
+			Matcher matcher = split.matcher(input);
+			if (matcher.find()) {
+				temp1 = getTrimmedString(input, 0, matcher.start());
+				temp2 = getTrimmedString(input, matcher.end(), input.length());
 			}
-			separateDateTime(dtlist.get(0), "start");
-			separateDateTime(dtlist.get(1), "end");
+			
+			separateDateTime(temp1, "start");
+			separateDateTime(temp2, "end");
 			break;
 		case recurring:
 			TO.setIsRecurring(true);
@@ -132,11 +137,16 @@ public class DateTimeParser {
 		//separate stuff for different task types
 		switch(tasktype) {
 		case event:
-			for (String temp : input.split("to")) {
-				dtlist.add(temp);
+			String temp1 = "", temp2 = "";
+			Pattern split = Pattern.compile(" to ");
+			Matcher matcher = split.matcher(input);
+			if (matcher.find()) {
+				temp1 = getTrimmedString(input, 0, matcher.start());
+				temp2 = getTrimmedString(input, matcher.end(), input.length());
 			}
-			separateDateTime(dtlist.get(0), "start");
-			separateDateTime(dtlist.get(1), "end");
+			
+			separateDateTime(temp1, "start");
+			separateDateTime(temp2, "end");
 			break;
 		case deadline:
 			separateDateTime(input, "start");
@@ -164,9 +174,9 @@ public class DateTimeParser {
 		Matcher untilMatcher = until.matcher(input);
 		if (untilMatcher.find()) {
 			String untilstring = getTrimmedString(input, untilMatcher.start(), input.length());
-			separateDateTime(untilstring, "until");
+			separateDateTime(untilstring, "until"); //only run this if its until
 			input = input.replaceFirst(untilstring, "");
-			untilDateTime = LocalDateTime.of(untilDate, untilTime);
+			untilDateTime = LocalDateTime.of(untilDate, untilTime); //only run this if its until
 		}
 		
 		Matcher intervalMatcher = interval.matcher(input);
@@ -264,6 +274,7 @@ public class DateTimeParser {
 	 * @throws Exception 
 	 */
 	public void separateDateTime(String input, String type) throws Exception {
+		System.out.println(input);
 		input = input.replaceFirst("until", "").trim();
 		input = input.replaceFirst("from", "").trim();
 		
