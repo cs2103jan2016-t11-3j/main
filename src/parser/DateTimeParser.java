@@ -225,12 +225,11 @@ public class DateTimeParser {
 		
 		multiplier = getMultiplier(forFreq, TO.getInterval().getFrequency());
 		count = multiplier * numberOf * TO.getInterval().getTimeInterval();
-		TO.getInterval().setCount(multiplier);
+		TO.getInterval().setCount(count);
 	}
 	
 	private int getMultiplier(String forInput, String intervalInput) throws Exception {
 		forInput = getFormattedFrequency(forInput);
-		
 		if (forInput.matches("DAILY") && intervalInput.matches("DAILY")) {
 			return 1;
 		} else if (forInput.matches("WEEKLY") && intervalInput.matches("DAILY")) {
@@ -283,11 +282,13 @@ public class DateTimeParser {
 			_freq = input;
 		}
 		
+		_freq = cleanString(_freq);
 		DateParser DP = new DateParser();
 		if (_freq.matches(Constants.REGEX_DAYS_TEXT) 
 				|| _freq.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			DP.parseDate(_freq);
 		}
+
 		startDate = DP.getDateObject();
 	
 		if (tasktype.equals(TaskType.event)) {
@@ -511,8 +512,11 @@ public class DateTimeParser {
 	
 	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
 	private String cleanString(String input) {
+		input = input.replaceAll("[,]+", "").trim();
 		if (input.contains("today") || input.contains("tomorrow")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_2, "").trim(); //trim specially
+		} else if (input.contains("tonight")) {
+			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_6, "").trim(); //trim specially
 		} else if (input.contains("saturday") || input.contains("sat")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_3, "").trim();
 		} else if (input.contains("mon") || input.contains("monday")) {

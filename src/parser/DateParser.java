@@ -107,7 +107,7 @@ public class DateParser {
 	 */
 	public void processDate(String input) throws Exception {
 		boolean hasAlphabets = input.matches(".*[a-zA-Z]+.*");
-	    if(hasAlphabets) {
+	    if (hasAlphabets) {
 	        processWithAlphabets(input);
 	    } else {
 	        processWithoutAlphabets(input);

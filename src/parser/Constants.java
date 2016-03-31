@@ -152,6 +152,7 @@ public class Constants {
     public static final String REGEX_TASK_IDENTIFIER_3 = "(?i)(by|before|every|on|from|to)"; //saturday
     public static final String REGEX_TASK_IDENTIFIER_4 = "(?i)(by|before|every|from|to)"; //monday
     public static final String REGEX_TASK_IDENTIFIER_5 = "(?i)(by|before|on|at|from|to)";
+    public static final String REGEX_TASK_IDENTIFIER_6 = "(?i)(by|before|every|at|from)"; //tonight 
     
     //if any of the 4 types matches, the input by user will need to read date time
     public static final String REGEX_DATE_TIME_IDENTIFIER = "("

@@ -120,6 +120,25 @@ public class ParserTest {
 		assertEquals("event", tempParser.getCategory());
 		reset();
 		
+		tempParser.allocate("add go gym every mon, wed and fri from 8am to 9am for 12 weeks");
+		assertEquals(1, tempParser.getCommandType());
+		assertEquals("go gym", tempParser.getTask());
+		assertEquals("2016-04-04T08:00",tempParser.getStartDateTime().toString());
+		assertEquals("2016-04-04T09:00",tempParser.getEndDateTime().toString());
+		assertEquals("WEEKLY",tempParser.TO.getInterval().getFrequency());
+		assertEquals(1,tempParser.TO.getInterval().getTimeInterval());
+		assertEquals(LocalDateTime.MAX,tempParser.TO.getInterval().getUntil());
+		assertEquals(12 ,tempParser.TO.getInterval().getCount());
+		assertEquals("incomplete", tempParser.getStatus());
+		assertEquals("event", tempParser.getCategory());
+		assertEquals(1 ,tempParser.TO.getInterval().getByDayArray()[1]);
+        assertEquals(0 ,tempParser.TO.getInterval().getByDayArray()[2]);
+        assertEquals(1 ,tempParser.TO.getInterval().getByDayArray()[3]);
+        assertEquals(0 ,tempParser.TO.getInterval().getByDayArray()[4]);
+        assertEquals(1 ,tempParser.TO.getInterval().getByDayArray()[5]);
+        assertEquals(0 ,tempParser.TO.getInterval().getByDayArray()[6]);
+        assertEquals(0 ,tempParser.TO.getInterval().getByDayArray()[7]);
+		reset();
 		
 		tempParser.allocate("add 5pm lecture every friday at 4pm");
 		assertEquals(1, tempParser.getCommandType());
