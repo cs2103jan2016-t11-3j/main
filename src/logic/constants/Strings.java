@@ -73,8 +73,13 @@ public class Strings {
 	public static final String MESSAGE_END_TIME_ADD = "Added end time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_END_TIME_EDIT = "End time edited from '%1$s' to '%2$s'. ";
 	public static final String MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT = "All end times edited to '%1$s'. ";
+	public static final String MESSAGE_START_DATE_FOR_OCCURRENCE_EDITED = "Start date of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_START_TIME_FOR_OCCURRENCE_EDITED = "Start time of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_END_DATE_FOR_OCCURRENCE_EDITED = "End date of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_END_TIME_FOR_OCCURRENCE_EDITED = "End time of occurrence %1s edited from '%2s' to '%3s'. ";
 	public static final String MESSAGE_INTERVAL_EDIT = "Interval edited. ";
 	public static final String MESSAGE_NO_EDIT = "No edits have been made.";
+	public static final String MESSAGE_NO_SUCH_OCCURRENCE_EXISTS = "No such occurrence exists. ";
 
 	//Mark Constants
 	public static final String MESSAGE_DONE = "Task: '%1s' marked as completed";

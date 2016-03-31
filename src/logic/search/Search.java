@@ -434,6 +434,10 @@ public class Search extends Display {
 		return output;
 	}
 
+	public int getSearchIndex() {
+		return searchIndex;
+	}
+	
 	/*
 	 * Branch here because search-by-index will not call the superclass Display
 	 * and the lastOutputTaskList will not be updated

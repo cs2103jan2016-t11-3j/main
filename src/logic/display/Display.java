@@ -24,16 +24,12 @@ import static logic.constants.Strings.*;
 
 public class Display {
 	
-	private static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
-	private static final String MESSAGE_SEARCH_RESULTS = "Search results:";
-	//private static final String DISPLAY_RESULT_DEADLINE = "%1$s. %2$s, %3$s, %4$shrs, %5$s";
-	//private static final String DISPLAY_RESULT_EVENT = "%1$s. %2$s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
-	//private static final String DISPLAY_RESULT_FLOATING = "%1$s. %2$s, %3$s";
 	protected static final Logger LOGGER = Logger.getLogger(Display.class.getName());
 	
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> outputTaskList = new ArrayList<TaskObject>();
 	private ArrayList<String> output = new ArrayList<String>();
+	protected int lastSearchedIndex;
 	
 	public Display() {
 		
@@ -47,11 +43,7 @@ public class Display {
 	public Display(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;
 	}
-	
-	public ArrayList<TaskObject> getLastOutputTaskList() {
-		return outputTaskList;
-	}
-	
+
 	// For search function
 	public ArrayList<String> runSpecificList(ArrayList<TaskObject> newTaskList) {
 		this.taskList = newTaskList;
@@ -128,8 +120,6 @@ public class Display {
 	private void outputEmptyMessage() {
 		output.add(MESSAGE_EMPTY_LIST);
 	}
-
-
 	
 	private void outputDeadlineTask(int num, String taskTitle, String taskEndDate, int taskEndTime, String taskStatus) {
 		output.add(String.format(DISPLAY_RESULT_DEADLINE, num, taskTitle, taskEndDate, taskEndTime, taskStatus));
@@ -143,4 +133,13 @@ public class Display {
 	private void outputFloatingTask(int num, String taskTitle, String taskStatus) {
 		output.add(String.format(DISPLAY_RESULT_FLOATING, num, taskTitle, taskStatus));
 	}
+	
+	public ArrayList<TaskObject> getLastOutputTaskList() {
+		return outputTaskList;
+	}
+	
+	public int getLastSearchedIndex() {
+		return lastSearchedIndex;
+	}
+	
 }

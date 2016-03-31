@@ -44,7 +44,8 @@ public class CommandFacade {
 	private int commandType;
 	private TaskObject taskObj;
 	private int index;
-
+	private int lastSearchedIndex; // stores the index of the last recurring task searched	
+	
 	boolean isUndoAction;
 	boolean isRedoAction;
 
@@ -69,13 +70,14 @@ public class CommandFacade {
 	 *            Tracks if this call is an undo action
 	 */
 	public CommandFacade(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList,
-			ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj, boolean isUndoAction,
-			boolean isRedoAction) {
+			ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj, int lastSearchedIndex,
+			boolean isUndoAction, boolean isRedoAction) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
 		this.lastOutputTaskList = lastOutputTaskList;
 		this.commandObj = commandObj;
+		this.lastSearchedIndex = lastSearchedIndex;
 		this.isUndoAction = isUndoAction;
 		this.isRedoAction = isRedoAction;
 		setCommandObjectValues();
@@ -139,12 +141,14 @@ public class CommandFacade {
 			case INDEX_COMPLETE :
 				doneFunction();
 				break;
-			case INDEX_OVERDUE :
-				overdueFunction();
-				break;
 			case INDEX_INCOMPLETE :
 				incompleteFunction();
 				break;
+			case INDEX_OVERDUE :
+				overdueFunction();
+				break;
+			case INDEX_CHANGE :
+				
 			default :
 				printInvalidCommandMessage();
 				break;
@@ -188,6 +192,7 @@ public class CommandFacade {
 		Search search = new Search(commandObj, taskList, lastOutputTaskList);
 		setOutput(search.run());
 		setLastOutputTaskList(search.getLastOutputTaskList());
+		setLastSearchedIndex(search.getSearchIndex());	
 	}
 
 	// Calls Display function which outputs the entire task list.
@@ -195,6 +200,7 @@ public class CommandFacade {
 		Display display = new Display(taskList);
 		setOutput(display.run());
 		setLastOutputTaskList(display.getLastOutputTaskList());
+		setLastSearchedIndex(-1);	
 	}
 
 	/**
@@ -202,7 +208,7 @@ public class CommandFacade {
 	 * adds the reverse CommandObject to the undo list or the redo list.
 	 */
 	private void editFunction() {
-		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList);
+		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList, lastSearchedIndex);
 		setOutput(edit.run());
 		setLastOutputTaskList(taskList);
 
@@ -228,7 +234,7 @@ public class CommandFacade {
 		if (index == -1) { // no task specified
 			pair = quickDelete(removedTask, removedOccurrenceDetails);
 		} else {
-			pair = normalDelete(removedTask, removedOccurrenceDetails );
+			pair = normalDelete(removedTask, removedOccurrenceDetails);
 		}
 
 		boolean isDeleteAll = checkIfCommandIsDeleteAll();
@@ -250,7 +256,7 @@ public class CommandFacade {
 	}
 
 	private Pair<TaskObject, LocalDateTimePair> normalDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
-		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList);
+		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList, lastSearchedIndex);
 		setOutput(delete.run());
 		setTaskList(delete.getTaskList());
 		setLastOutputTaskList(this.taskList);
@@ -529,6 +535,10 @@ public class CommandFacade {
 	}
 
 	// ------------------------- GETTERS AND SETTERS -------------------------
+	
+	public int getCommandType() {
+		return commandType;
+	}
 
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
@@ -553,6 +563,10 @@ public class CommandFacade {
 	public CommandObject getCommandObject() {
 		return commandObj;
 	}
+	
+	public int getLastSearchedIndex() {
+		return lastSearchedIndex;
+	}
 
 	public void setTaskList(ArrayList<TaskObject> newTaskList) {
 		this.taskList = newTaskList;
@@ -568,6 +582,10 @@ public class CommandFacade {
 
 	public void setLastOutputTaskList(ArrayList<TaskObject> newLastOutputTaskList) {
 		this.lastOutputTaskList = newLastOutputTaskList;
+	}
+	
+	public void setLastSearchedIndex(int lastSearchedIndex) {
+		this.lastSearchedIndex = lastSearchedIndex;
 	}
 
 	public void setOutput(ArrayList<String> newOutput) {
