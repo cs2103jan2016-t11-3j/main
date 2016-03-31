@@ -45,7 +45,7 @@ public class Add {
 	private boolean isDeadline = false;
 	private boolean isFloating = false;
 
-	private static Logger logger = Logger.getLogger(Add.class.getName());
+	private static Logger logger = AtfLogger.getLogger();
 
 	public Add() {
 
@@ -99,7 +99,7 @@ public class Add {
 			addSingleOccurrence(task.getTaskDateTimes());
 		} else {
 			assert (!task.getTitle().equals(""));
-			setUpLogger();
+			//setUpLogger();
 			try {
 				determineTaskCategory();
 				processTaskInformation();

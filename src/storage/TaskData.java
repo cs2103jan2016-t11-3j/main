@@ -42,7 +42,7 @@ public class TaskData {
         if(filePath == null) {
             throw new InvalidPathException("Saving to invalid Path", filePath);
         }
-        Logger logger = AtfLogger.getLogger(TaskData.class.getName());
+        Logger logger = AtfLogger.getLogger();
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -68,7 +68,7 @@ public class TaskData {
         if(filePath == null) {
             throw new FileNotFoundException("No file to read from");
         }
-        Logger logger = AtfLogger.getLogger(TaskData.class.getName());
+        Logger logger = AtfLogger.getLogger();
         ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
         BufferedReader fileReader = new BufferedReader (new FileReader(filePath));
         Type typeOfTaskList = new TypeToken<ArrayList<TaskObject>>(){}.getType();

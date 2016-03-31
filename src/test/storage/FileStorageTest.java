@@ -23,8 +23,8 @@ import common.TaskObject;
 import storage.Constants;
 import storage.FileStorage;
 import storage.IStorage;
-import Test.AssertHelper;
-import Test.TaskGenerator;
+import test.AssertHelper;
+import test.TaskGenerator;
 
 /**
  * @author Hang
