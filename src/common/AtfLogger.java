@@ -22,7 +22,7 @@ public class AtfLogger {
             try {
                 File dir = new File(storage.Constants.FILEPATH_LOGDIR.toString());
                 dir.mkdirs();
-                fileHandler = new FileHandler(storage.Constants.FILEPATH_LOGFILE.toString());
+                fileHandler = new FileHandler(storage.Constants.FILEPATH_LOGFILE.toString() , true);
             } catch (SecurityException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

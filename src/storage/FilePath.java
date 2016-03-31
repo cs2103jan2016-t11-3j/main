@@ -39,7 +39,7 @@ public class FilePath {
      * @throws FileNotFound No existing preferred directory specified.
      * @throws IOException Error reading file containing default path
      */
-    protected static String getPath() throws FileNotFoundException , IOException {
+    public static String getPath() throws FileNotFoundException , IOException {
         String directory = readPreferedDirectory();
         checkDirectory(directory);
         Path path = Paths.get(directory, Constants.DATA_FILENAME);

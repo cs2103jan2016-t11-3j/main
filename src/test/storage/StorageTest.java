@@ -1,8 +1,10 @@
-package Test.storage;
+package test.storage;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import test.storage.FileStorageTest;
 
 /**
  * Runs all tests case written for the storage component.

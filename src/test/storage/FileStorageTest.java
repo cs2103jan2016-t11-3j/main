@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Test.storage;
+package test.storage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

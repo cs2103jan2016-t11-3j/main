@@ -1,4 +1,4 @@
-package Test.storage;
+package test.storage;
 
 import static org.junit.Assert.*;
 
