@@ -19,7 +19,7 @@ import static logic.constants.Strings.*;
 
 public class Recurring {
 
-	private static Logger logger = AtfLogger.getLogger(Recurring.class.getName());
+	private static Logger logger = AtfLogger.getLogger();
 
 	/******************************************************************************/
 	/**

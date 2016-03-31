@@ -72,7 +72,7 @@ public class UndoRedoTest {
 		Logic logic = undoRedo.getUndo().getLogic();
 		ArrayList<String> actualOutput = logic.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task deleted from AdultTaskFinder: CS2106 Assignment 1");
+		expectedOutput.add("Task deleted: CS2106 Assignment 1");
 		
 		assertEquals(expectedOutput, actualOutput);
 		assertEquals(1, logic.getTaskList().size());
@@ -136,7 +136,7 @@ public class UndoRedoTest {
 		Logic logic = undoRedo.getRedo().getLogic();
 		ArrayList<String> actualOutput = logic.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task deleted from AdultTaskFinder: CS2106 Assignment 1");
+		expectedOutput.add("Task deleted: CS2106 Assignment 1");
 		
 		assertEquals(expectedOutput, actualOutput);
 		assertEquals(1, logic.getTaskList().size());

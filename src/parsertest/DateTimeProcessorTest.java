@@ -52,6 +52,11 @@ public class DateTimeProcessorTest {
 		DTP.reset();
 		TO.resetAttributes();
 		
+		TO = DTP.parse("by tonight", true);
+        assertEquals("2016-03-31T23:59:59.999999999", TO.getStartDateTime().toString());
+        DTP.reset();
+        TO.resetAttributes();
+		
 	}
 	/*
 	 * TO = DTP.parse("every day", true);

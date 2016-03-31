@@ -32,12 +32,14 @@ public class Help {
 
 	// Constructors
 	public Help() {
-		importManual();
+		//importManual();
+	    //to fix
 	}
 
 	public Help(String line) {
 		searchKey = line;
-		importManual();
+		//importManual();
+		//to fix
 	}
 
 	// Getters and Setters;

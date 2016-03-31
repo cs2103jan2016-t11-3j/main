@@ -50,8 +50,12 @@ public class DateProcessorTest {
 		reset();
 		
 		DP.parseDate("today");
-		assertEquals("2016-03-31", DP.getDateObject().toString());
+		assertEquals(LocalDate.now(), DP.getDateObject());
 		reset();
+		
+		DP.parseDate("tonight");
+        assertEquals(LocalDate.now(), DP.getDateObject());
+        reset();
 
 		/*NEGATIVE VALUE TEST CASES*/
 		/*case 5: test ability to reject non-slash separated numbers*/

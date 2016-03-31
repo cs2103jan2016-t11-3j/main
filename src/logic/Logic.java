@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.logging.Logger;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
+import common.AtfLogger;
 import common.CommandObject;
 import common.TaskObject;
 
@@ -72,6 +74,7 @@ public class Logic {
 	 * statuses.
 	 */
 	public Logic() {
+	    Logger logger = AtfLogger.getLogger();
 		taskList = new ArrayList<TaskObject>();
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
@@ -85,6 +88,7 @@ public class Logic {
 			e.printStackTrace();
 		}
 		alertOutput = Alert.createAlertOutput(taskList);
+		logger.info("Start logic");
 	}
 
 	/**

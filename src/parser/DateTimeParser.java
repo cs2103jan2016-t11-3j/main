@@ -4,6 +4,7 @@ package parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import common.AtfLogger;
 import common.TaskObject;
 import parser.Constants.TaskType;
 
@@ -61,7 +63,7 @@ public class DateTimeParser {
 	List<String> dtlist = new ArrayList<String>();
 	TaskType tasktype;
 	
-	private static Logger logger = Logger.getLogger("DateTimeParser");
+	private static Logger logger = AtfLogger.getLogger();
 	
 	public TaskObject parse(String input, boolean isForAdd) throws Exception {
 		parseDateTime(input, isForAdd);
@@ -490,19 +492,19 @@ public class DateTimeParser {
 	 */
 	public TaskType getTaskType(String input) {
 		if (input.matches(Constants.REGEX_DEADLINE_IDENTIFIER)) {
-			//logger.log(Level.INFO, "Deadline recognised");
+			logger.log(Level.INFO, "Deadline recognised");
 			return TaskType.deadline;
 		} else if (input.matches(Constants.REGEX_EVENT_IDENTIFIER)) {
-			//logger.log(Level.INFO, "Event recognised");
+			logger.log(Level.INFO, "Event recognised");
 			return TaskType.event;
 		} else if (input.matches(Constants.REGEX_POINT_TASK_IDENTIFIER)) {
-			//logger.log(Level.INFO, "Event recognised");
+			logger.log(Level.INFO, "Event recognised");
 			return TaskType.deadline;
 		} else if (input.matches(Constants.REGEX_RECURRING_TASK_IDENTIFIER)) {
-			//logger.log(Level.INFO, "Recurring recognised");
+			logger.log(Level.INFO, "Recurring recognised");
 			return TaskType.recurring;
 		} else {
-			//logger.log(Level.INFO, "Floating recognised");
+			logger.log(Level.INFO, "Floating recognised");
 			return TaskType.floating;
 		}
 	}
