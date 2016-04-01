@@ -86,6 +86,7 @@ public class Logic {
 		checkOverdue();
 		try {
 			Recurring.updateRecurringEvents(taskList);
+			Recurring.updateRecurringDeadlines(taskList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
