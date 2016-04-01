@@ -1,16 +1,18 @@
 package common;
 
-public class Pair <S, T> {
+public class Triple <S, T, U> {
 
 	private S first;
 	private T second;
+	private U third;
 	
-	public Pair(S first, T second) {
+	public Triple(S first, T second, U third) {
 		this.first = first;
 		this.second = second;
+		this.third = third;
 	}
 	
-	public Pair() {
+	public Triple() {
 		
 	}
 	
@@ -20,5 +22,9 @@ public class Pair <S, T> {
 	
 	public T getSecond() {
 		return second;
+	}
+	
+	public U getThird() {
+		return third;
 	}
 }
