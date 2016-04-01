@@ -244,6 +244,8 @@ public class Edit {
 				originalTiming.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
 			}
 		}
+		
+		task.updateStartAndEndDateTimes();
 		editTask = task;
 	}
 	

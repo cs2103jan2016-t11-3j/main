@@ -160,8 +160,6 @@ public class CommandFacade {
 	 * redo list.
 	 */
 	private void addFunction() {
-		System.out.println("In add, index = " + index);
-		System.out.println("In add, lastSearchedIndex = " + lastSearchedIndex);
 		Add add = new Add(taskObj, index, lastSearchedIndex, taskList);
 		setOutput(add.run());
 		setLastOutputTaskList(taskList);
@@ -400,7 +398,6 @@ public class CommandFacade {
 		
 		CommandObject newCommandObj = new CommandObject();
 		
-		System.out.println("In addToList: lastSearchedIndex = " + lastSearchedIndex);
 		if (commandObj.getLastSearchedIndex() != -1) {	// it is addition of a single occurrence
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
 			
@@ -448,12 +445,14 @@ public class CommandFacade {
 		 * 2. delete occurrence in ArrayList<LocalDateTimePair>
 		 */
 		if (removedOccurrenceTiming.isEmpty()) {
-			newCommandObj = new CommandObject(INDEX_ADD, removedTask, lastSearchedIndex);
+			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
 		} else {
 			TaskObject taskObjWithRemovedOccurrenceTiming = new TaskObject(removedOccurrenceTiming);
-			//System.out.println("removedOccurrenceIndex = " + removedOccurrenceIndex);
-			//System.out.println("lastSearchedIndex = " + lastSearchedIndex);
-			newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, lastSearchedIndex);
+			if (lastSearchedIndex == -1) {	// if it is a deletion of the most recent occurrence
+				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, index);
+			} else {
+				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, lastSearchedIndex);
+			}
 		}
 		
 		list.push(newCommandObj);

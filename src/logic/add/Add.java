@@ -69,6 +69,12 @@ public class Add {
 		this.lastSearchedIndex = lastSearchedIndex;
 		this.taskList = taskList;
 	}
+	
+	public Add(TaskObject taskObj, int index, ArrayList<TaskObject> taskList) {
+		this.task = taskObj;
+		this.index = index;
+		this.taskList = taskList;
+	}
 
 	public void setUpLogger() {
 		try {
@@ -356,12 +362,13 @@ public class Add {
 	 * Group of functions for addition of task
 	 */
 	
-	// For processing undo of deletion of a single occurrence - replaces the ArrayList with the old version
+	// For processing undo of deletion of a single occurrence 
 	private void addSingleOccurrence() {
 		ArrayList<LocalDateTimePair> timings = task.getTaskDateTimes();
 		assert (timings.size() == 1); 	// it should only store 1 occurrence of timings
 		assert (lastSearchedIndex != -1);
 		
+		System.out.println("index in addSingleOccurrence = " + index);
 		LocalDateTimePair occurrenceToBeAdded = timings.get(0);
 		TaskObject taskToBeModified = taskList.get(lastSearchedIndex - 1);
 		taskToBeModified.getTaskDateTimes().add(index - 1, occurrenceToBeAdded);

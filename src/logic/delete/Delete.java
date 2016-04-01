@@ -60,7 +60,7 @@ public class Delete {
 
 	private TaskObject removedTask = new TaskObject();	// Task that is removed
 	private int removedTaskIndex = -1;	// Stores the position of the task to be removed in the taskList 
-	private int removedOccurrenceIndex = -1; // Stores the index of the timings to be removed (Only for recurrence and single occurrence delete)
+	private int removedOccurrenceIndex = 1; // Stores the index of the timings to be removed (Only for recurrence and single occurrence delete)
 	private ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>();	// stores the original timings
 	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair(); 	// Stores the details of the removed occurrence of the task
 	// Actual name of the task which is to be deleted
@@ -316,6 +316,7 @@ public class Delete {
 			if (taskList.get(i).getTaskId() == taskIdToBeDeleted) {
 				removedTask = taskList.get(i);
 				removedTaskIndex = i;
+				lastSearchedIndex = i+1;
 			}
 		}
 	}
@@ -388,6 +389,7 @@ public class Delete {
 	private void createSingleOccurrenceMissingErrorOutput() {
 		removedTask = null;
 		tempOutput.add(MESSAGE_SINGLE_OCCURENCE_MISSING_ERROR);
+		
 	}
 	
 	private void createOnlyOneOccurrenceRemainingOutput() {
