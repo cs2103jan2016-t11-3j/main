@@ -222,8 +222,12 @@ public class DateTimeParser {
 		} else {
 			throw new Exception("Invalid count");
 		}
+		if (forFreq.matches("times")) {
+			multiplier = 1;
+		} else {
+			multiplier = getMultiplier(forFreq, TO.getInterval().getFrequency());	
+		}
 		
-		multiplier = getMultiplier(forFreq, TO.getInterval().getFrequency());
 		count = multiplier * numberOf * TO.getInterval().getTimeInterval();
 		TO.getInterval().setCount(count);
 	}

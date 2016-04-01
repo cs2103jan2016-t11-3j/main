@@ -69,14 +69,14 @@ public class Logic {
 	protected ArrayList<String> alertOutput = new ArrayList<String>();
 	// stores the index of the last recurring task searched
 	private int lastSearchedIndex;
-	
+
 	/**
 	 * Constructor called by UI. Loads all existing tasks and checks each task
 	 * to see whether any of them are overdue, and updates their corresponding
 	 * statuses.
 	 */
 	public Logic() {
-	    Logger logger = AtfLogger.getLogger();
+		Logger logger = AtfLogger.getLogger();
 		taskList = new ArrayList<TaskObject>();
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
@@ -86,13 +86,44 @@ public class Logic {
 		checkOverdue();
 		try {
 			Recurring.updateRecurringEvents(taskList);
+			Recurring.updateRecurringDeadlines(taskList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		alertOutput = Alert.createAlertOutput(taskList);
+		createFirstOutputTaskList();
+		// alertOutput = Alert.createAlertOutput(taskList);
 		logger.info("Start logic");
 	}
 
+	// Creates the first task list containing overdue and due today
+	public void createFirstOutputTaskList() {
+		ArrayList<TaskObject> firstOutputTaskList = new ArrayList<TaskObject> ();
+	
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getStatus().equals("overdue")) {
+				firstOutputTaskList.add(taskList.get(i));
+			}
+		}
+
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getStartDateTime().toLocalDate().equals(LocalDate.now())) {
+				if (checkNotDuplicate(taskList.get(i), firstOutputTaskList)) {
+					firstOutputTaskList.add(taskList.get(i));
+				}
+			}
+		}
+		setLastOutputTaskList(firstOutputTaskList);
+	}
+
+	private boolean checkNotDuplicate(TaskObject task, ArrayList<TaskObject> firstOutputTaskList) {
+		for (int i = 0; i < firstOutputTaskList.size(); i++) {
+			if (task.getTaskId() == firstOutputTaskList.get(i).getTaskId()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Constructor called by Undo/Redo. This is a secondary logic class which
 	 * only performs one operation before being deactivated.
@@ -110,27 +141,27 @@ public class Logic {
 		this.redoList = redoList;
 		this.lastOutputTaskList = taskList;
 	}
-	
-	//sorts lastOutputTaskList by Date
+
+	// sorts lastOutputTaskList by Date
 	public void sortOutputByDate() {
 		Comparator<TaskObject> dateComparator = new Comparator<TaskObject>() {
-            @Override
-            public int compare(final TaskObject o1, final TaskObject o2) {
-            	if (o1.getStatus() == o2.getStatus()) {
-            		if (o1.getStartDateTime() == o2.getStartDateTime()) {
-                		if (o1.getEndDateTime() == o2.getEndDateTime()) {
-                			return o1.getTitle().compareTo(o2.getTitle());
-                		}
-                		return o1.getEndDateTime().compareTo(o2.getEndDateTime());
-                	}
-                     return o1.getStartDateTime().compareTo(o2.getStartDateTime());
-                }	
-            	return o2.getStatus().compareTo(o1.getStatus());
-            }
-        };
-        Collections.sort(lastOutputTaskList, dateComparator);
+			@Override
+			public int compare(final TaskObject o1, final TaskObject o2) {
+				if (o1.getStatus() == o2.getStatus()) {
+					if (o1.getStartDateTime() == o2.getStartDateTime()) {
+						if (o1.getEndDateTime() == o2.getEndDateTime()) {
+							return o1.getTitle().compareTo(o2.getTitle());
+						}
+						return o1.getEndDateTime().compareTo(o2.getEndDateTime());
+					}
+					return o1.getStartDateTime().compareTo(o2.getStartDateTime());
+				}
+				return o2.getStatus().compareTo(o1.getStatus());
+			}
+		};
+		Collections.sort(lastOutputTaskList, dateComparator);
 	}
-	
+
 	public void sortOutputByType() {
 		Comparator<TaskObject> typeComparator = new Comparator<TaskObject>() {
 			@Override
@@ -140,8 +171,7 @@ public class Logic {
 		};
 		Collections.sort(lastOutputTaskList, typeComparator);
 	}
-	
-	
+
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
 		try {
@@ -239,11 +269,13 @@ public class Logic {
 	 * updated with the values from the CommandFacade class.
 	 */
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
-		if (isUndoAction || isRedoAction) {	// so as to not mistake undo/redo of task as undo/redo of an occurrence
+		if (isUndoAction || isRedoAction) { // so as to not mistake undo/redo of
+											// task as undo/redo of an
+											// occurrence
 			setLastSearchedIndex(-1);
 		}
-		
-		CommandFacade commandFacade = new CommandFacade(taskList, undoList, redoList, lastOutputTaskList, commandObj, 
+
+		CommandFacade commandFacade = new CommandFacade(taskList, undoList, redoList, lastOutputTaskList, commandObj,
 				lastSearchedIndex, isUndoAction, isRedoAction);
 		commandFacade.run();
 		updateLists(commandFacade);
@@ -257,7 +289,7 @@ public class Logic {
 		setRedoList(commandFacade.getRedoList());
 		setLastOutputTaskList(commandFacade.getLastOutputTaskList());
 		setOutput(commandFacade.getOutput());
-		
+
 		if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
 			setLastSearchedIndex(commandFacade.getLastSearchedIndex());
 		} else {
@@ -310,7 +342,7 @@ public class Logic {
 	public void setOutput(ArrayList<String> newOutput) {
 		this.output = newOutput;
 	}
-	
+
 	public void setLastSearchedIndex(int lastSearchedIndex) {
 		this.lastSearchedIndex = lastSearchedIndex;
 	}
