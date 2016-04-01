@@ -68,7 +68,7 @@ public class Logic {
 	// Output list containing events and deadlines for alerting
 	protected ArrayList<String> alertOutput = new ArrayList<String>();
 	// stores the index of the last recurring task searched
-	private int lastSearchedIndex;
+	private int lastSearchedIndex = -1;
 
 	/**
 	 * Constructor called by UI. Loads all existing tasks and checks each task
@@ -269,16 +269,15 @@ public class Logic {
 	 * updated with the values from the CommandFacade class.
 	 */
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
-		if (isUndoAction || isRedoAction) { // so as to not mistake undo/redo of
-											// task as undo/redo of an
-											// occurrence
-			setLastSearchedIndex(-1);
+		if (!(isUndoAction || isRedoAction)) {
+			commandObj.setLastSearchedIndex(lastSearchedIndex);
 		}
-
 		CommandFacade commandFacade = new CommandFacade(taskList, undoList, redoList, lastOutputTaskList, commandObj,
-				lastSearchedIndex, isUndoAction, isRedoAction);
+				isUndoAction, isRedoAction);
 		commandFacade.run();
 		updateLists(commandFacade);
+
+		System.out.println("Last searched index = " + lastSearchedIndex);
 	}
 
 	// Retrieves the updated lists from the CommandFacade class and updates the

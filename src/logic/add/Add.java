@@ -34,6 +34,7 @@ public class Add {
 
 	private TaskObject task;
 	private int index;
+	private int lastSearchedIndex;
 	private boolean addedInternal = false;
 	private boolean addedExternal = false;
 	private boolean isClash = false;
@@ -62,9 +63,10 @@ public class Add {
 	 * @param taskList
 	 *            The list of tasks maintained internally by Adult TaskFinder
 	 */
-	public Add(TaskObject taskObj, int index, ArrayList<TaskObject> taskList) {
+	public Add(TaskObject taskObj, int index, int lastSearchedIndex, ArrayList<TaskObject> taskList) {
 		this.task = taskObj;
 		this.index = index;
+		this.lastSearchedIndex = lastSearchedIndex;
 		this.taskList = taskList;
 	}
 
@@ -96,7 +98,7 @@ public class Add {
 	public ArrayList<String> run() {
 		// Special processing to handle undoing the deletion of an occurrence of a recurring task
 		if (task.getIsContainingOnlyTaskDateTimes()) {
-			addSingleOccurrence(task.getTaskDateTimes());
+			addSingleOccurrence();
 		} else {
 			assert (!task.getTitle().equals(""));
 			//setUpLogger();
@@ -167,16 +169,12 @@ public class Add {
 	 * Also creates all dates and times for recurrent tasks
 	 */
 	private void processEventDetails() {
-		System.out.println("NUMBER OF RECURRENCE TIMINGS = " + task.getTaskDateTimes().size());
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 		if (task.getIsRecurring()) {
 			addRecurringEventTimes();
 			removeAnyDeletedOccurrences();
 		}
 		checkIfEventsClash();
-		
-		
-		System.out.println("NUMBER OF RECURRENCE TIMINGS = " + task.getTaskDateTimes().size());
 	}
 
 	/**
@@ -359,14 +357,17 @@ public class Add {
 	 */
 	
 	// For processing undo of deletion of a single occurrence - replaces the ArrayList with the old version
-	private void addSingleOccurrence(ArrayList<LocalDateTimePair> originalRecurrenceTimings) {
-		TaskObject taskToBeModified = taskList.get(index-1);
-		taskToBeModified.setTaskDateTimes(originalRecurrenceTimings);
+	private void addSingleOccurrence() {
+		ArrayList<LocalDateTimePair> timings = task.getTaskDateTimes();
+		assert (timings.size() == 1); 	// it should only store 1 occurrence of timings
+		assert (lastSearchedIndex != -1);
+		
+		LocalDateTimePair occurrenceToBeAdded = timings.get(0);
+		TaskObject taskToBeModified = taskList.get(lastSearchedIndex - 1);
+		taskToBeModified.getTaskDateTimes().add(index - 1, occurrenceToBeAdded);
 		
 		// updates the startDateTime and endDateTime to that of the occurrence that has been added back
-		taskToBeModified.setStartDateTime(originalRecurrenceTimings.get(0).getStartDateTime()); 
-		taskToBeModified.setEndDateTime(originalRecurrenceTimings.get(0).getEndDateTime()); 
-		
+		taskToBeModified.updateStartAndEndDateTimes();
 		
 	}
 	

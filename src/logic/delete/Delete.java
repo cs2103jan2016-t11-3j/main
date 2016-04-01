@@ -60,7 +60,7 @@ public class Delete {
 
 	private TaskObject removedTask = new TaskObject();	// Task that is removed
 	private int removedTaskIndex = -1;	// Stores the position of the task to be removed in the taskList 
-	private int removedOccurrenceIndex = 0; // Stores the index of the timings to be removed (Only for recurrence and single occurrence delete)
+	private int removedOccurrenceIndex = -1; // Stores the index of the timings to be removed (Only for recurrence and single occurrence delete)
 	private ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>();	// stores the original timings
 	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair(); 	// Stores the details of the removed occurrence of the task
 	// Actual name of the task which is to be deleted
@@ -130,13 +130,13 @@ public class Delete {
 	 *            Deque containing the list of redo tasks
 	 */
 	public Delete(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList,
-			Deque<CommandObject> undoList, Deque<CommandObject> redoList, int lastSearchedIndex) {
+			Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
 		this.commandObj = commandObj;
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
-		this.lastSearchedIndex = lastSearchedIndex;
+		this.lastSearchedIndex = commandObj.getLastSearchedIndex();
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class Delete {
 			assert (!taskList.isEmpty());
 			
 			setDeleteInformationForQuickDelete();
-			hasDeletedInternal = deleteInternal(taskList.size() - 1);
+			hasDeletedInternal = deleteInternal();
 			hasDeletedExternal = deleteExternal();
 			
 			if (hasDeletedInternal && hasDeletedExternal) {
@@ -257,7 +257,7 @@ public class Delete {
 			originalRecurrenceTimings.addAll(taskDateTimes);
 			assert (taskDateTimes.size() > 1);
 
-			removedTaskOccurrenceDetails = taskDateTimes.remove(removedOccurrenceIndex);
+			removedTaskOccurrenceDetails = taskDateTimes.remove(removedOccurrenceIndex - 1);
 			removedTask.addToDeletedTaskDateTimes(removedTaskOccurrenceDetails);
 			removedTask.setTaskDateTimes(taskDateTimes);
 			removedTask.updateStartAndEndDateTimes();
@@ -279,7 +279,7 @@ public class Delete {
 	private void checkIfDeleteSingleOccurrence() {
 		if (lastSearchedIndex != -1) {
 			isDeleteSingleOccurrence = true;
-			removedOccurrenceIndex = commandObj.getIndex() - 1;
+			removedOccurrenceIndex = commandObj.getIndex();
 		}
 	}
 	
@@ -336,16 +336,6 @@ public class Delete {
 			return false;
 		}
 	}
-	
-	// For quick delete
-	private boolean deleteInternal(int index) {
-		try {
-			taskList.remove(index);
-			return true;
-		} catch (NullPointerException e) {
-			return false;
-		}
-	}
 
 	private boolean deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();
@@ -388,10 +378,10 @@ public class Delete {
 	}
 	
 	private void createSingleOccurrenceOutput() {
-		if (removedOccurrenceIndex == 0 && isRecurringTask) {
+		if (removedOccurrenceIndex == 1 && isRecurringTask) {
 			tempOutput.add(String.format(MESSAGE_MOST_RECENT_OCCURRENCE_DELETE));
 		} else {
-			tempOutput.add(String.format(MESSAGE_SINGLE_OCCURRENCE_DELETE, removedOccurrenceIndex+1));
+			tempOutput.add(String.format(MESSAGE_SINGLE_OCCURRENCE_DELETE, removedOccurrenceIndex));
 		}
 	}
 	
@@ -425,8 +415,8 @@ public class Delete {
 		return removedTask;
 	}
 	
-	public int getRemovedTaskIndex() {
-		return removedTaskIndex;
+	public int getRemovedOccurrenceIndex() {
+		return removedOccurrenceIndex;
 	}
 
 	public ArrayList<String> getOutput() {

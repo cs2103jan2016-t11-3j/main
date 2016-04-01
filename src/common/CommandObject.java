@@ -5,6 +5,7 @@ public class CommandObject {
 	private int commandType;
 	private TaskObject taskObj;
 	private int index = -1;
+	private int lastSearchedIndex = -1;
 	
 	public CommandObject() {
 	}
@@ -18,6 +19,13 @@ public class CommandObject {
 		this.commandType = commandType;
 		this.taskObj = taskObj;
 		this.index = index;
+	}
+	
+	public CommandObject(int commandType, TaskObject taskObj, int index, int lastSearchedIndex) {
+		this.commandType = commandType;
+		this.taskObj = taskObj;
+		this.index = index;
+		this.lastSearchedIndex = lastSearchedIndex;
 	}
 	
 	public int getCommandType() {
@@ -42,6 +50,14 @@ public class CommandObject {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	public int getLastSearchedIndex() {
+		return lastSearchedIndex;
+	}
+	
+	public void setLastSearchedIndex(int lastSearchedIndex) {
+		this.lastSearchedIndex = lastSearchedIndex;
 	}
 
 }

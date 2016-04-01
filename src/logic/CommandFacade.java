@@ -70,14 +70,12 @@ public class CommandFacade {
 	 *            Tracks if this call is an undo action
 	 */
 	public CommandFacade(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList,
-			ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj, int lastSearchedIndex,
-			boolean isUndoAction, boolean isRedoAction) {
+			ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
 		this.lastOutputTaskList = lastOutputTaskList;
 		this.commandObj = commandObj;
-		this.lastSearchedIndex = lastSearchedIndex;
 		this.isUndoAction = isUndoAction;
 		this.isRedoAction = isRedoAction;
 		setCommandObjectValues();
@@ -162,7 +160,9 @@ public class CommandFacade {
 	 * redo list.
 	 */
 	private void addFunction() {
-		Add add = new Add(taskObj, index, taskList);
+		System.out.println("In add, index = " + index);
+		System.out.println("In add, lastSearchedIndex = " + lastSearchedIndex);
+		Add add = new Add(taskObj, index, lastSearchedIndex, taskList);
 		setOutput(add.run());
 		setLastOutputTaskList(taskList);
 
@@ -226,15 +226,14 @@ public class CommandFacade {
 	private void deleteFunction() {
 		// 3 things to track
 		TaskObject removedTask = new TaskObject();
-		ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>(); // will be filled if it is a recurrence-delete
-		Integer removedTaskIndex = Integer.valueOf(-1);
-		Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer> triple = 
-				new Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer>();
+		LocalDateTimePair removedOccurrenceTiming = new LocalDateTimePair(); // will be filled if it is a single-occurrence-delete
+		Integer removedOccurrenceIndex = Integer.valueOf(-1);
+		Triple<TaskObject, LocalDateTimePair, Integer> triple = new Triple<TaskObject, LocalDateTimePair, Integer>();
 		
 		if (index == -1) { // no task specified
-			triple = quickDelete(removedTask, originalRecurrenceTimings, removedTaskIndex);
+			triple = quickDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
 		} else {
-			triple = normalDelete(removedTask, originalRecurrenceTimings, removedTaskIndex);
+			triple = normalDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
 		}
 
 		boolean isDeleteAll = checkIfCommandIsDeleteAll();
@@ -243,22 +242,22 @@ public class CommandFacade {
 		}
 	}
 
-	private Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer> quickDelete(
-			TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, Integer removedTaskIndex) {
-		CommandObject cmd = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
-		Delete delete = new Delete(cmd, taskList, undoList);
+	private Triple<TaskObject, LocalDateTimePair, Integer> quickDelete(
+			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex) {
+		
+		CommandObject commandObjForQuickDelete = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
+		Delete delete = new Delete(commandObjForQuickDelete, taskList, undoList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
 
 		removedTask = delete.getRemovedTask();
-		removedTaskIndex = delete.getRemovedTaskIndex();
-		return new Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer>(removedTask, originalRecurrenceTimings, removedTaskIndex);
-		
+		return new Triple<TaskObject, LocalDateTimePair, Integer>(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
 	}
 
-	private Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer> normalDelete(
-			TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, Integer removedTaskIndex) {
-		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList, lastSearchedIndex);
+	private Triple<TaskObject, LocalDateTimePair, Integer> normalDelete(
+			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex) {
+		
+		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList);
 		setOutput(delete.run());
 		setTaskList(delete.getTaskList());
 		setLastOutputTaskList(this.taskList);
@@ -266,9 +265,9 @@ public class CommandFacade {
 		setRedoList(delete.getRedoList());
 
 		removedTask = delete.getRemovedTask();
-		originalRecurrenceTimings = delete.getOriginalRecurrenceTimings();
-		removedTaskIndex = delete.getRemovedTaskIndex();
-		return new Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer>(removedTask, originalRecurrenceTimings, removedTaskIndex);
+		removedOccurrenceTiming = delete.getRemovedTaskOccurrenceDetails();
+		removedOccurrenceIndex = delete.getRemovedOccurrenceIndex();
+		return new Triple<TaskObject, LocalDateTimePair, Integer>(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
 		
 	}
 
@@ -279,13 +278,13 @@ public class CommandFacade {
 
 	// Checks that removedTask is not null, then adds the corresponding CommandObject to the
 	// undo list or the redo list
-	private void processUndoForDelete(TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, Integer removedTaskIndex) {
+	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex) {
 		assert (!removedTask.isNull());
 
 		if (isUndoAction) {
-			addToList(removedTask, originalRecurrenceTimings, removedTaskIndex, redoList);
+			addToList(removedTask, removedOccurrenceTiming, removedOccurrenceIndex, redoList);
 		} else {
-			addToList(removedTask, originalRecurrenceTimings, removedTaskIndex, undoList);
+			addToList(removedTask, removedOccurrenceTiming, removedOccurrenceIndex, undoList);
 		}
 	}
 
@@ -401,17 +400,23 @@ public class CommandFacade {
 		
 		CommandObject newCommandObj = new CommandObject();
 		
-		if (index == -1) {	// if task was previously added to the end of the list
-			if (commandObj.getTaskObject().getIsRecurring()) {
-				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size()); // isEditAll set to 'true'
-			} else {
-			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
-			}
-		} else {	// if task was previously added to a pre-determined location in the list
-			if (commandObj.getTaskObject().getIsRecurring()) {
-				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index); // isEditAll set to 'true'
-			} else {
-				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
+		System.out.println("In addToList: lastSearchedIndex = " + lastSearchedIndex);
+		if (commandObj.getLastSearchedIndex() != -1) {	// it is addition of a single occurrence
+			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
+			
+		} else {
+			if (index == -1) {	// if task was previously added to the end of the list
+				if (commandObj.getTaskObject().getIsRecurring()) {
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size()); // isEditAll set to 'true'
+				} else {
+				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
+				}
+			} else {	// if task was previously added to a pre-determined location in the list
+				if (commandObj.getTaskObject().getIsRecurring()) {
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index); // isEditAll set to 'true'
+				} else {
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
+				}
 			}
 		}
 		
@@ -431,8 +436,8 @@ public class CommandFacade {
 	 * @param list
 	 *            Either a undoList or a redoList
 	 */
-	private void addToList(TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, 
-			Integer removedTaskIndex, Deque<CommandObject> list) {
+	private void addToList(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, 
+			Integer removedOccurrenceIndex, Deque<CommandObject> list) {
 		assert (commandType == INDEX_DELETE);
 		
 		CommandObject newCommandObj = new CommandObject();
@@ -442,11 +447,13 @@ public class CommandFacade {
 		 * 1. delete task
 		 * 2. delete occurrence in ArrayList<LocalDateTimePair>
 		 */
-		if (originalRecurrenceTimings.isEmpty()) {
-			newCommandObj = new CommandObject(INDEX_ADD, removedTask, removedTaskIndex+1);
+		if (removedOccurrenceTiming.isEmpty()) {
+			newCommandObj = new CommandObject(INDEX_ADD, removedTask, lastSearchedIndex);
 		} else {
-			TaskObject taskObjContainingOriginalRecurrenceTimings = new TaskObject(originalRecurrenceTimings);
-			newCommandObj = new CommandObject(INDEX_ADD, taskObjContainingOriginalRecurrenceTimings, removedTaskIndex+1);
+			TaskObject taskObjWithRemovedOccurrenceTiming = new TaskObject(removedOccurrenceTiming);
+			//System.out.println("removedOccurrenceIndex = " + removedOccurrenceIndex);
+			//System.out.println("lastSearchedIndex = " + lastSearchedIndex);
+			newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, lastSearchedIndex);
 		}
 		
 		list.push(newCommandObj);
@@ -583,10 +590,6 @@ public class CommandFacade {
 	public void setLastOutputTaskList(ArrayList<TaskObject> newLastOutputTaskList) {
 		this.lastOutputTaskList = newLastOutputTaskList;
 	}
-	
-	public void setLastSearchedIndex(int lastSearchedIndex) {
-		this.lastSearchedIndex = lastSearchedIndex;
-	}
 
 	public void setOutput(ArrayList<String> newOutput) {
 		this.output = newOutput;
@@ -600,6 +603,7 @@ public class CommandFacade {
 		setCommandType();
 		setTaskObject();
 		setIndex();
+		setLastSearchedIndex();
 	}
 
 	private void setCommandType() {
@@ -613,5 +617,14 @@ public class CommandFacade {
 	private void setIndex() {
 		this.index = commandObj.getIndex();
 	}
+	
+	public void setLastSearchedIndex() {
+		this.lastSearchedIndex = commandObj.getLastSearchedIndex();
+	}
 
+	// Called by Search/Display
+	public void setLastSearchedIndex(int lastSearchedIndex) {
+		this.lastSearchedIndex = lastSearchedIndex;
+		//commandObj.setLastSearchedIndex(lastSearchedIndex);
+	}
 }
