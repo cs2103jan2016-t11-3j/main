@@ -163,16 +163,41 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * Method will split string into the startdatetime, interval and until components of a recurring task identifier
+	 * Method will split string into the startdatetime, interval and limiter components of a recurring task identifier
+	 * Limiter refers to an "until" or "for" restriction to specify the expiry of the task
 	 * 
 	 * @param input
+	 * 				string input for recurring tasks with interval, startdatetime and a limiter
 	 * @throws Exception
 	 */
 	public void recur(String input) throws Exception {
 		String intervalString = "";
-		String untilstring = "";
 		String forstring = "";
 		
+		input = extractUntilLimiter(input);
+		
+		forstring = extractForLimiter(input);
+		input = input.replaceFirst(forstring, "");
+		
+		intervalString = extractInterval(input, forstring);
+		
+		if (startDate == LocalDate.MAX) { // checks for startdatetime without date
+			getStartDateFromInterval(intervalString);
+		}
+	}
+
+	/**
+	 * method searches for the regular expression representing end date for
+	 * recurring tasks that starts with "until"
+	 * 
+	 * @param input
+	 * 				string for recurring tasks input. not null.
+	 * @return
+	 * 				remaining string without until-string. not null.
+	 * @throws Exception
+	 */
+	public String extractUntilLimiter(String input) throws Exception {
+		String untilstring;
 		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
 		Matcher untilMatcher = until.matcher(input);
 		if (untilMatcher.find()) {
@@ -181,15 +206,46 @@ public class DateTimeParser {
 			input = input.replaceFirst(untilstring, "");
 			untilDateTime = LocalDateTime.of(untilDate, untilTime); //only run this if its until
 		}
-		
+		return input;
+	}
+
+	/**
+	 * method searches for the regular expression representing end date for 
+	 * recurring tasks that starts with "for"
+	 * 
+	 * @param input
+	 * 				 string for recurring tasks input. not null.
+	 * @param forstring
+	 * 				for-string, contains "for" keyword and regular expression for number of intervals. 
+	 * 				null value here returns unchanged input
+	 * @return
+	 * 				remaining string without for-string, not null
+	 */
+	public String extractForLimiter(String input) {
+		String forstring = "";
 		Pattern multiplier = Pattern.compile(Constants.REGEX_RECURRING_FOR);
 		Matcher forMatcher = multiplier.matcher(input);
 		if (forMatcher.find()) {
 			forstring = getTrimmedString(input, forMatcher.start(), input.length());
-			input = input.replaceFirst(forstring, "");
-			
 		}
-		
+		return forstring;
+	}
+	
+	/**
+	 * method extracts interval string from input. parses start date time string to process start date.
+	 * calls parseFor to process forstring's count and interval. 
+	 * 
+	 * @param input
+	 * 				non-null string containing interval and startdatetime
+	 * @param forstring
+	 * 				"for" limiter. null if original input has no "for" limit specified
+	 * @return
+	 * 				interval string containing number and frequency of task. not null
+	 * @throws Exception
+	 */
+	public String extractInterval(String input, 
+			String forstring) throws Exception {
+		String intervalString = "";
 		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL2);
 		Matcher intervalMatcher = interval.matcher(input);
 		if (intervalMatcher.find()) {
@@ -205,23 +261,29 @@ public class DateTimeParser {
 				parseFor(forstring);	
 			}
 		}
-		
-		if (startDate == LocalDate.MAX) { // checks for startdatetime without date
-			getStartDateFromInterval(intervalString);
-		}
+		return intervalString;
 	}
+
 	
+	/**
+	 * method calculates count for the recurring tasks to be repeated
+	 * 
+	 * @param input
+	 * 				contains number of repetition (integer, after parsing) and length of each occurrence (string)
+	 * @throws Exception
+	 */
 	private void parseFor(String input) throws Exception {//for x weeks
 		int numberOf = 0, multiplier = 0, count = 0;
 		String forFreq = "";
-		
 		String[] temp = input.split(" ");
+		
 		if (hasNumber(temp[1])) {
 			numberOf = Integer.parseInt(temp[1]);
 			forFreq = temp[2];	
 		} else {
 			throw new Exception("Invalid count");
 		}
+		
 		if (forFreq.matches("times")) {
 			multiplier = 1;
 		} else {
@@ -232,6 +294,18 @@ public class DateTimeParser {
 		TO.getInterval().setCount(count);
 	}
 	
+	/**
+	 * method returns multiplier for calculating the task's interval count
+	 * for example, every day for 1 month will return 30 as there are 30 days in a month on average
+	 * 
+	 * @param forInput
+	 * 				date frequency such as weeks or months. not null
+	 * @param intervalInput
+	 * 				date frequency such as weeks or months, not null
+	 * @return
+	 * 				multiplier (integer) based on the relationship between intervalinput and forinput
+	 * @throws Exception
+	 */
 	private int getMultiplier(String forInput, String intervalInput) throws Exception {
 		forInput = getFormattedFrequency(forInput);
 		if (forInput.matches("DAILY") && intervalInput.matches("DAILY")) {
@@ -335,6 +409,13 @@ public class DateTimeParser {
 		setInterval(_interval, _freq);
 	}
 	
+	/**
+	 * method sets byDay array in interval object according to the days that are present
+	 * 
+	 * @param input
+	 * 				string containing days which the task falls on. not null 
+	 * 
+	 */
 	public void setDaysInWeek(String input) { //monday and tuesday ??
 		//wanna read using comma?
 		input = input.toLowerCase();
