@@ -448,7 +448,7 @@ public class CommandFacade {
 			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
 		} else {
 			TaskObject taskObjWithRemovedOccurrenceTiming = new TaskObject(removedOccurrenceTiming);
-			if (lastSearchedIndex == -1) {	// if it is a deletion of the most recent occurrence
+			if (lastSearchedIndex == -1) {	// if it is a deletion of the most recent occurrence	
 				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, index);
 			} else {
 				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, lastSearchedIndex);
@@ -472,9 +472,15 @@ public class CommandFacade {
 		
 		TaskObject originalTask = editOriginal.getOriginalTask();
 		originalTask.setIsEditAll(editOriginal.getIsEditAll());
+		int editTaskIndex = editOriginal.getEditTaskIndex();
+		int editOccurrenceIndex = editOriginal.getEditOccurrenceIndex();
 		
 		CommandObject newCommandObj = new CommandObject();
-		newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editOriginal.getEditItemIndex());
+		if (editOccurrenceIndex == -1) {
+			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editTaskIndex);
+		} else {
+			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editOccurrenceIndex, editTaskIndex);
+		}
 		list.push(newCommandObj);
 	}
 
