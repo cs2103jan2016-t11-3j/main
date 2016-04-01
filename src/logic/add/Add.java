@@ -181,7 +181,11 @@ public class Add {
 	 */
 	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
-		task.addToTaskDateTimes(pair);
+		
+		if (task.getTaskDateTimes().isEmpty()) {	// MIGHT BE AN ERRONEOUS CHECK
+			task.addToTaskDateTimes(pair);
+		}
+
 	}
 
 	private void addRecurringEventTimes(TaskObject task) {
@@ -332,20 +336,14 @@ public class Add {
 	 * Group of functions for addition of task
 	 */
 	
-	// For processing undo of deletion of a single occurrence
-	private void addSingleOccurrence(ArrayList<LocalDateTimePair> dateTimePair) {
-		assert (dateTimePair.size() == 1);
-		
+	// For processing undo of deletion of a single occurrence - replaces the ArrayList with the old version
+	private void addSingleOccurrence(ArrayList<LocalDateTimePair> originalRecurrenceTimings) {
 		TaskObject taskToBeModified = taskList.get(index-1);
-		LocalDateTimePair occurrenceDetails = dateTimePair.get(0);
-		occurrenceDetails.print();
-		ArrayList<LocalDateTimePair> allOccurrencesDetails = taskToBeModified.getTaskDateTimes();
+		taskToBeModified.setTaskDateTimes(originalRecurrenceTimings);
 		
-		// adds it back to the front of the recurrence list
-		allOccurrencesDetails.add(0, occurrenceDetails); 
 		// updates the startDateTime and endDateTime to that of the occurrence that has been added back
-		taskToBeModified.setStartDateTime(occurrenceDetails.getStartDateTime()); 
-		taskToBeModified.setEndDateTime(occurrenceDetails.getEndDateTime()); 
+		taskToBeModified.setStartDateTime(originalRecurrenceTimings.get(0).getStartDateTime()); 
+		taskToBeModified.setEndDateTime(originalRecurrenceTimings.get(0).getEndDateTime()); 
 		
 		
 	}

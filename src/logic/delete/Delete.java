@@ -58,14 +58,11 @@ public class Delete {
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
 
-	// Task object before modification (for deletion of a single occurrence)
-	private TaskObject originalTask = new TaskObject();
-	// This is the task which is actually removed from TaskFinder
-	private TaskObject removedTask = new TaskObject();
-	// Stores the position of the task to be removed in the taskList 
-	private int removedTaskIndex = -1;
-	// Stores the details of the removed occurrence of the task
-	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair();
+	private TaskObject removedTask = new TaskObject();	// Task that is removed
+	private int removedTaskIndex = -1;	// Stores the position of the task to be removed in the taskList 
+	private int removedOccurrenceIndex = 0; // Stores the index of the timings to be removed (Only for recurrence and single occurrence delete)
+	private ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>();	// stores the original timings
+	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair(); 	// Stores the details of the removed occurrence of the task
 	// Actual name of the task which is to be deleted
 	private String removedTaskName = "";
 	// Actual task ID of the task requested to be deleted
@@ -156,33 +153,27 @@ public class Delete {
 		try {
 			if (commandObj.getIndex() == -1) {
 				runQuickDelete();
+			} else if (commandObj.getIndex() == 0) {
+				runDeleteAll();
 			} else {
-				if (commandObj.getIndex() == 0) {
-					runDeleteAll();
+				checkIfDeleteSingleOccurrence();	
+				
+				if (isDeleteSingleOccurrence) {
+					setDeleteInformationForSingleOccurrenceDelete();
+					processDeleteForSingleOccurrence(); // deletes a single occurrence of recurring task
 				} else {
-					checkIfDeleteSingleOccurrence();
+					setDeleteInformationForNormalDelete();
 					
-					if (isDeleteSingleOccurrence) {
-						runSingleOccurrenceDelete();
-					} else {
-						setDeleteInformation();
-						
-						if (isRecurringTask) {
-							try {
-								if (commandObj.getTaskObject().getIsEditAll()) {
-									runNormalDelete();
-								}
-							} catch (NullPointerException e) {
-								if (removedTask.getTaskDateTimes().size() > 1){
-									runRecurrenceDelete();
-								} else { // if there is only 1 occurrence left, delete the entire task
-									createOnlyOneOccurrenceRemainingOutput();
-									runNormalDelete();
-								}
+					if (isRecurringTask) {
+						try {
+							if (commandObj.getTaskObject().getIsEditAll()) {	
+								runNormalDelete();	// deletes entire task
 							}
-						} else {
-							runNormalDelete();
+						} catch (NullPointerException e) {	
+							processDeleteForSingleOccurrence(); // deletes most recent occurrence of task
 						}
+					} else {
+						runNormalDelete();
 					}
 				}
 			}
@@ -233,34 +224,21 @@ public class Delete {
 		createDeletedAllOutput();
 	}
 	
-	private void runSingleOccurrenceDelete() {
-		TaskObject task = taskList.get(lastSearchedIndex - 1);
-		originalTask.setTaskObject(task);
-		ArrayList<LocalDateTimePair> originalTimings = task.getTaskDateTimes();
-		
-		try {
-			originalTimings.remove(commandObj.getIndex() -  1);
-		} catch (IndexOutOfBoundsException e) {
-			createSingleOccurrenceErrorOutput();
+	private void processDeleteForSingleOccurrence() {
+		if (removedTask.getTaskDateTimes().size() > 1){
+			runSingleOccurrenceDelete();
+		} else { // if there is only 1 occurrence left, delete the entire task
+			createOnlyOneOccurrenceRemainingOutput();
+			runNormalDelete();
 		}
-
-		if (originalTimings.isEmpty()) {	// if timings list is empty, remove the entire task
-			removedTask = task;
-			removedTaskName = task.getTitle();
-			
-			deleteInternal(lastSearchedIndex - 1);
-			createLastOccurrenceDeletedOutput();
-		} else {
-			createSingleOccurrenceDeletedOutput();
-			LOGGER.log(Level.INFO, "Single occurrence delete executed");
-		}			
-		deleteExternal();
 	}
 	
 	// Delete is handled differently if it is a recurring task
 	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException {
 		assert (!taskList.isEmpty());
+		
 		hasDeletedInternal = deleteInternal();
+		
 		if (hasDeletedInternal) {
 			hasDeletedExternal = deleteExternal();
 			if (hasDeletedExternal) {
@@ -272,25 +250,24 @@ public class Delete {
 		}
 	}
 	
-	// Gets the array list of LocalDateTimePair from the task and removes the upcoming occurrence
-	private void runRecurrenceDelete() throws NullPointerException, IndexOutOfBoundsException {
+	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
+	private void runSingleOccurrenceDelete() throws NullPointerException, IndexOutOfBoundsException {
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
+			originalRecurrenceTimings.addAll(taskDateTimes);
 			assert (taskDateTimes.size() > 1);
 
-			removedTaskOccurrenceDetails = taskDateTimes.remove(0);
+			removedTaskOccurrenceDetails = taskDateTimes.remove(removedOccurrenceIndex);
 			removedTask.setTaskDateTimes(taskDateTimes);
-			// update startDateTime and endDateTime to the new first occurrence in the ArrayList of LocalDateTimePair
-			removedTask.setStartDateTime(taskDateTimes.get(0).getStartDateTime());
-			removedTask.setEndDateTime(taskDateTimes.get(0).getEndDateTime());
+			removedTask.updateStartAndEndDateTimes();
 			
 			if (deleteExternal()) {
 				TimeOutput.setTaskTimeOutput(removedTask); // to update the recurrence date in GUI
-				createRecurrenceOutput();
-				LOGGER.log(Level.INFO, "Recurrence delete executed");
+				createSingleOccurrenceOutput();
+				LOGGER.log(Level.INFO, "Single occurrence delete executed");
 			}
 		} catch (IndexOutOfBoundsException e) {
-			createErrorRecurrenceOutput();
+			createSingleOccurrenceMissingErrorOutput();
 		}
 		
 		// might need additional handling for deletion of indefinite recurring tasks
@@ -301,15 +278,23 @@ public class Delete {
 	private void checkIfDeleteSingleOccurrence() {
 		if (lastSearchedIndex != -1) {
 			isDeleteSingleOccurrence = true;
+			removedOccurrenceIndex = commandObj.getIndex() - 1;
 		}
 	}
 	
 	private void setDeleteInformationForQuickDelete() {
-		removedTask = taskList.get(taskList.size() - 1);
+		removedTaskIndex = taskList.size() - 1;
+		removedTask = taskList.get(removedTaskIndex);
 		removedTaskName = removedTask.getTitle();
 	}
 	
-	private void setDeleteInformation() {
+	private void setDeleteInformationForSingleOccurrenceDelete() {
+		removedTaskIndex = lastSearchedIndex - 1;
+		removedTask = taskList.get(removedTaskIndex);
+		removedTaskName = removedTask.getTitle();
+	}
+	
+	private void setDeleteInformationForNormalDelete() {
 		setTaskIdToBeDeleted();
 		setRemovedTask();
 		setRemovedTaskName();
@@ -379,21 +364,9 @@ public class Delete {
 	
 	// ----------------------- CREATING OUTPUT -----------------------
 	
-	private void createLastOccurrenceDeletedOutput() {
-		tempOutput.add(MESSAGE_LAST_OCCURRENCE_DELETE);
-	}
-	
-	private void createSingleOccurrenceDeletedOutput() {
-		tempOutput.add(String.format(MESSAGE_SINGLE_OCCURRENCE_DELETE, commandObj.getIndex()));
-	}
-	
-	private void createSingleOccurrenceErrorOutput() {
-		tempOutput.add(MESSAGE_SINGLE_OCCURRENCE_DELETE_ERROR);
-	}
-
 	private void createOutput() {
 		if (isRecurringTask) {
-			tempOutput.add(String.format(MESSAGE_RECURRENCE_DELETE_ALL));
+			tempOutput.add(String.format(MESSAGE_ALL_OCCURRENCES_DELETE));
 		} else {
 			tempOutput.add(String.format(MESSAGE_DELETE, removedTaskName));
 		}
@@ -413,13 +386,17 @@ public class Delete {
 		tempOutput.add(MESSAGE_DELETED_ALL);
 	}
 	
-	private void createRecurrenceOutput() {
-		tempOutput.add(MESSAGE_RECURRENCE_DELETE);
+	private void createSingleOccurrenceOutput() {
+		if (removedOccurrenceIndex == 0 && isRecurringTask) {
+			tempOutput.add(String.format(MESSAGE_MOST_RECENT_OCCURRENCE_DELETE));
+		} else {
+			tempOutput.add(String.format(MESSAGE_SINGLE_OCCURRENCE_DELETE, removedOccurrenceIndex+1));
+		}
 	}
 	
-	private void createErrorRecurrenceOutput() {
+	private void createSingleOccurrenceMissingErrorOutput() {
 		removedTask = null;
-		tempOutput.add(MESSAGE_RECURRENCE_DELETE_ERROR);
+		tempOutput.add(MESSAGE_SINGLE_OCCURENCE_MISSING_ERROR);
 	}
 	
 	private void createOnlyOneOccurrenceRemainingOutput() {
@@ -446,9 +423,17 @@ public class Delete {
 	public TaskObject getRemovedTask() {
 		return removedTask;
 	}
+	
+	public int getRemovedTaskIndex() {
+		return removedTaskIndex;
+	}
 
 	public ArrayList<String> getOutput() {
 		return output;
+	}
+	
+	public ArrayList<LocalDateTimePair> getOriginalRecurrenceTimings() {
+		return originalRecurrenceTimings;
 	}
 	
 	public LocalDateTimePair getRemovedTaskOccurrenceDetails() {

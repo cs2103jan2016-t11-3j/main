@@ -51,7 +51,7 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Task deleted from AdultTaskFinder: Hello");
+		expectedOutput.add("Task deleted: Hello");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -64,7 +64,7 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteFirst.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Error deleting task from TaskFinder. Requested index does not exist");
+		expectedOutput.add("Error deleting task. Requested index does not exist");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -80,7 +80,7 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteLast.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Quick delete unavailable");
+		expectedOutput.add("Quick delete unavailable.");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -95,7 +95,7 @@ public class DeleteTest {
 		ArrayList<String> actualOutput = deleteLast.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task deleted from AdultTaskFinder: Hello");
+		expectedOutput.add("Task deleted: Hello");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -118,10 +118,10 @@ public class DeleteTest {
 		
 		ArrayList<ArrayList<String> > expectedOutput = new ArrayList<ArrayList<String> > ();
 		ArrayList<String> firstExpectedOutput = new ArrayList<String> ();
-		firstExpectedOutput.add("Task deleted from AdultTaskFinder: Dinner tonight");
+		firstExpectedOutput.add("Task deleted: Dinner tonight");
 		expectedOutput.add(firstExpectedOutput);
 		ArrayList<String> secondExpectedOutput = new ArrayList<String> ();
-		secondExpectedOutput.add("Quick delete unavailable");
+		secondExpectedOutput.add("Quick delete unavailable.");
 		expectedOutput.add(secondExpectedOutput);
 		
 		assertEquals(expectedOutput, actualOutput);
@@ -139,7 +139,7 @@ public class DeleteTest {
 		actualOutput = deleteAll.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("All tasks deleted from AdultTaskFinder");
+		expectedOutput.add("All tasks deleted.");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -195,7 +195,7 @@ public class DeleteTest {
 		
 		ArrayList<String> actualOutput = delete.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Most recent occurrence deleted");
+		expectedOutput.add("Most recent occurrence deleted.");
 		
 		// check if it is the correct occurrence that has been removed
 		LocalDateTimePair removedTaskOccurrenceDetails = delete.getRemovedTaskOccurrenceDetails();
@@ -228,7 +228,7 @@ public class DeleteTest {
 		
 		ArrayList<String> actualOutput = delete.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("All occurrences deleted");
+		expectedOutput.add("All occurrences deleted.");
 		
 		assertEquals(expectedOutput, actualOutput);
 		assertEquals(1, delete.getTaskList().size());

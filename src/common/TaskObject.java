@@ -320,6 +320,11 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskDateTimes = newTaskDateTimes;
 	}
 	
+	public void updateStartAndEndDateTimes() {
+		this.startDateTime = taskDateTimes.get(0).getStartDateTime();
+		this.endDateTime = taskDateTimes.get(taskDateTimes.size() - 1).getEndDateTime();
+	}
+	
 	// Essentially creates a copy of the task object that is passed into this method
 	public void setTaskObject(TaskObject task) {
 		this.title = task.getTitle();
@@ -363,6 +368,11 @@ public class TaskObject implements Comparable<TaskObject> {
     public int compareTo(TaskObject task) {
         // TODO Auto-generated method stub
         return 0;
+    }
+    
+    public void printStartEndDateTimes() {
+    	System.out.println("start date time = " + this.startDateTime);
+    	System.out.println("end date time = " + this.endDateTime);
     }
 
 }

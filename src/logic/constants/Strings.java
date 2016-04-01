@@ -38,16 +38,14 @@ public class Strings {
 	//Delete Constants
 	public static final String MESSAGE_DELETE = "Task deleted: %1s";
 	public static final String MESSAGE_DELETE_ERROR = "Error deleting task. ";
-	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
-	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
 	public static final String MESSAGE_DELETED_ALL = "All tasks deleted.";
 	public static final String MESSAGE_SINGLE_OCCURRENCE_DELETE = "Occurrence %1s deleted.";
-	public static final String MESSAGE_SINGLE_OCCURRENCE_DELETE_ERROR = "No such occurrence exists.";
-	public static final String MESSAGE_LAST_OCCURRENCE_DELETE = "Last occurrence deleted. Entire task is deleted.";
-	public static final String MESSAGE_RECURRENCE_DELETE = "Most recent occurrence deleted.";
-	public static final String MESSAGE_RECURRENCE_DELETE_ALL = "All occurrences deleted.";
-	public static final String MESSAGE_RECURRENCE_DELETE_ERROR = "Error deleting most recent occurrence.";
+	public static final String MESSAGE_MOST_RECENT_OCCURRENCE_DELETE = "Most recent occurrence deleted.";
+	public static final String MESSAGE_ALL_OCCURRENCES_DELETE= "All occurrences deleted.";
 	public static final String MESSAGE_ONLY_ONE_OCCURRENCE_REMAINING = "Only one occurrence remaining. ";
+	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
+	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
+	public static final String MESSAGE_SINGLE_OCCURENCE_MISSING_ERROR = "Occurrence does not exist.";
 	
 	//Display Constants
 	public static final String MESSAGE_EMPTY_LIST = "Task list is empty.";

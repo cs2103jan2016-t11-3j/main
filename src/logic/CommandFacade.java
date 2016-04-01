@@ -226,36 +226,40 @@ public class CommandFacade {
 	 * to remove the specified task.
 	 */
 	private void deleteFunction() {
-		// 2 possible things that can be removed
+		// 3 things to track
 		TaskObject removedTask = new TaskObject();
-		LocalDateTimePair removedOccurrenceDetails = new LocalDateTimePair(); // will be filled if it is a recurrence-delete
-		Pair<TaskObject, LocalDateTimePair> pair = new Pair<TaskObject, LocalDateTimePair>();
+		ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>(); // will be filled if it is a recurrence-delete
+		Integer removedTaskIndex = Integer.valueOf(-1);
+		Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer> triple = 
+				new Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer>();
 		
 		if (index == -1) { // no task specified
-			pair = quickDelete(removedTask, removedOccurrenceDetails);
+			triple = quickDelete(removedTask, originalRecurrenceTimings, removedTaskIndex);
 		} else {
-			pair = normalDelete(removedTask, removedOccurrenceDetails);
+			triple = normalDelete(removedTask, originalRecurrenceTimings, removedTaskIndex);
 		}
 
 		boolean isDeleteAll = checkIfCommandIsDeleteAll();
 		if (!isDeleteAll) {
-			processUndoForDelete(pair.getFirst(), pair.getSecond());
+			processUndoForDelete(triple.getFirst(), triple.getSecond(), triple.getThird());
 		}
 	}
 
-	private Pair<TaskObject, LocalDateTimePair> quickDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
+	private Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer> quickDelete(
+			TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, Integer removedTaskIndex) {
 		CommandObject cmd = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
 		Delete delete = new Delete(cmd, taskList, undoList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
 
 		removedTask = delete.getRemovedTask();
-		removedOccurrenceDetails = delete.getRemovedTaskOccurrenceDetails();
-		return new Pair<TaskObject, LocalDateTimePair>(removedTask, removedOccurrenceDetails);
+		removedTaskIndex = delete.getRemovedTaskIndex();
+		return new Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer>(removedTask, originalRecurrenceTimings, removedTaskIndex);
 		
 	}
 
-	private Pair<TaskObject, LocalDateTimePair> normalDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
+	private Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer> normalDelete(
+			TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, Integer removedTaskIndex) {
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList, lastSearchedIndex);
 		setOutput(delete.run());
 		setTaskList(delete.getTaskList());
@@ -264,8 +268,9 @@ public class CommandFacade {
 		setRedoList(delete.getRedoList());
 
 		removedTask = delete.getRemovedTask();
-		removedOccurrenceDetails = delete.getRemovedTaskOccurrenceDetails();
-		return new Pair<TaskObject, LocalDateTimePair>(removedTask, removedOccurrenceDetails);
+		originalRecurrenceTimings = delete.getOriginalRecurrenceTimings();
+		removedTaskIndex = delete.getRemovedTaskIndex();
+		return new Triple<TaskObject, ArrayList<LocalDateTimePair>, Integer>(removedTask, originalRecurrenceTimings, removedTaskIndex);
 		
 	}
 
@@ -276,13 +281,13 @@ public class CommandFacade {
 
 	// Checks that removedTask is not null, then adds the corresponding CommandObject to the
 	// undo list or the redo list
-	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceDetails) {
+	private void processUndoForDelete(TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, Integer removedTaskIndex) {
 		assert (!removedTask.isNull());
 
 		if (isUndoAction) {
-			addToList(removedTask, removedOccurrenceDetails, redoList);
+			addToList(removedTask, originalRecurrenceTimings, removedTaskIndex, redoList);
 		} else {
-			addToList(removedTask, removedOccurrenceDetails, undoList);
+			addToList(removedTask, originalRecurrenceTimings, removedTaskIndex, undoList);
 		}
 	}
 
@@ -428,7 +433,8 @@ public class CommandFacade {
 	 * @param list
 	 *            Either a undoList or a redoList
 	 */
-	private void addToList(TaskObject removedTask, LocalDateTimePair dateTimePair, Deque<CommandObject> list) {
+	private void addToList(TaskObject removedTask, ArrayList<LocalDateTimePair> originalRecurrenceTimings, 
+			Integer removedTaskIndex, Deque<CommandObject> list) {
 		assert (commandType == INDEX_DELETE);
 		
 		CommandObject newCommandObj = new CommandObject();
@@ -436,17 +442,13 @@ public class CommandFacade {
 		/*
 		 * 2 types of delete:
 		 * 1. delete task
-		 * 2. delete first timing occurrence in ArrayList<LocalDateTimePair>
+		 * 2. delete occurrence in ArrayList<LocalDateTimePair>
 		 */
-		
-		if (dateTimePair.getStartDateTime().equals(LocalDateTime.MAX) &&
-				dateTimePair.getEndDateTime().equals(LocalDateTime.MAX)	) {
-			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
+		if (originalRecurrenceTimings.isEmpty()) {
+			newCommandObj = new CommandObject(INDEX_ADD, removedTask, removedTaskIndex+1);
 		} else {
-			ArrayList<LocalDateTimePair> removedOccurrenceDetails = new ArrayList<LocalDateTimePair>();
-			removedOccurrenceDetails.add(dateTimePair);
-			TaskObject taskObjContainingRemovedOccurrenceDetails = new TaskObject(removedOccurrenceDetails);
-			newCommandObj = new CommandObject(INDEX_ADD, taskObjContainingRemovedOccurrenceDetails, index);
+			TaskObject taskObjContainingOriginalRecurrenceTimings = new TaskObject(originalRecurrenceTimings);
+			newCommandObj = new CommandObject(INDEX_ADD, taskObjContainingOriginalRecurrenceTimings, removedTaskIndex+1);
 		}
 		
 		list.push(newCommandObj);
