@@ -181,10 +181,7 @@ public class Add {
 	 */
 	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
-		
-		if (task.getTaskDateTimes().isEmpty()) {	// MIGHT BE AN ERRONEOUS CHECK
-			task.addToTaskDateTimes(pair);
-		}
+		task.addToTaskDateTimes(pair);
 
 	}
 

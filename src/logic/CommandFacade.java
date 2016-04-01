@@ -147,8 +147,6 @@ public class CommandFacade {
 			case INDEX_OVERDUE :
 				overdueFunction();
 				break;
-			case INDEX_CHANGE :
-				
 			default :
 				printInvalidCommandMessage();
 				break;
@@ -156,7 +154,7 @@ public class CommandFacade {
 	}
 
 	
-	// ------------------------- FUNCTIONS -------------------------
+	// ----------------------- FUNCTIONS -------------------------
 	
 	/**
 	 * Calls Add function, which adds the task to the task list and writes it to

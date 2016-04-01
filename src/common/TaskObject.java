@@ -322,7 +322,7 @@ public class TaskObject implements Comparable<TaskObject> {
 	
 	public void updateStartAndEndDateTimes() {
 		this.startDateTime = taskDateTimes.get(0).getStartDateTime();
-		this.endDateTime = taskDateTimes.get(taskDateTimes.size() - 1).getEndDateTime();
+		this.endDateTime = taskDateTimes.get(0).getEndDateTime();
 	}
 	
 	// Essentially creates a copy of the task object that is passed into this method
