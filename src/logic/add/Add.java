@@ -167,11 +167,16 @@ public class Add {
 	 * Also creates all dates and times for recurrent tasks
 	 */
 	private void processEventDetails() {
+		System.out.println("NUMBER OF RECURRENCE TIMINGS = " + task.getTaskDateTimes().size());
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 		if (task.getIsRecurring()) {
-			addRecurringEventTimes(task);
+			addRecurringEventTimes();
+			removeAnyDeletedOccurrences();
 		}
 		checkIfEventsClash();
+		
+		
+		System.out.println("NUMBER OF RECURRENCE TIMINGS = " + task.getTaskDateTimes().size());
 	}
 
 	/**
@@ -182,11 +187,31 @@ public class Add {
 	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
 		task.addToTaskDateTimes(pair);
-
 	}
 
-	private void addRecurringEventTimes(TaskObject task) {
+	private void addRecurringEventTimes() {
 		Recurring.setAllRecurringEventTimes(task);
+	}
+	
+	private void removeAnyDeletedOccurrences() {
+		ArrayList<LocalDateTimePair> deletedOccurrences = task.getDeletedTaskDateTimes();
+		LocalDateTimePair taskCurrentStartEndDateTime = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
+		
+		try {
+			for (int i = 0; i < deletedOccurrences.size(); i++) {
+				logger.log(Level.INFO, "Removing occurrence that had been previously deleted");
+				LocalDateTimePair deletedOccurrence = deletedOccurrences.get(i);
+				
+				for (int j = 0; j < task.getTaskDateTimes().size(); j++) {
+					if (task.getTaskDateTimes().get(j).equals(deletedOccurrence) && 
+							!task.getTaskDateTimes().get(j).equals(taskCurrentStartEndDateTime)) {
+						task.getTaskDateTimes().remove(j);
+					}
+				}
+			}
+		} catch (IndexOutOfBoundsException e) {
+			
+		}
 	}
 	
 	/***********************************************************************************/

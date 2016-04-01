@@ -15,7 +15,8 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String timeOutputString = ""; // stores date time in the desired output for GUI
 	protected boolean isRecurring;
 	protected Interval interval = new Interval();
-	protected ArrayList<LocalDateTimePair> taskDateTimes = new ArrayList<LocalDateTimePair> (); // stores all dates and times related to a task
+	protected ArrayList<LocalDateTimePair> taskDateTimes = new ArrayList<LocalDateTimePair> (); // stores all occurrences of a task
+	protected ArrayList<LocalDateTimePair> deletedTaskDateTimes = new ArrayList<LocalDateTimePair> (); // stores all occurrences that has been deleted (if any)
 	
 	// Checks to facilitate undo processes
 	protected boolean isEditAll = false;
@@ -320,9 +321,17 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskDateTimes = newTaskDateTimes;
 	}
 	
+	public ArrayList<LocalDateTimePair> getDeletedTaskDateTimes() {
+		return deletedTaskDateTimes;
+	}
+	
 	public void updateStartAndEndDateTimes() {
 		this.startDateTime = taskDateTimes.get(0).getStartDateTime();
 		this.endDateTime = taskDateTimes.get(0).getEndDateTime();
+	}
+	
+	public void addToDeletedTaskDateTimes(LocalDateTimePair deletedOccurrence) {
+		this.deletedTaskDateTimes.add(deletedOccurrence);
 	}
 	
 	// Essentially creates a copy of the task object that is passed into this method

@@ -251,13 +251,14 @@ public class Delete {
 	}
 	
 	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
-	private void runSingleOccurrenceDelete() throws NullPointerException, IndexOutOfBoundsException {
+	private void runSingleOccurrenceDelete() throws NullPointerException {
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
 			originalRecurrenceTimings.addAll(taskDateTimes);
 			assert (taskDateTimes.size() > 1);
 
 			removedTaskOccurrenceDetails = taskDateTimes.remove(removedOccurrenceIndex);
+			removedTask.addToDeletedTaskDateTimes(removedTaskOccurrenceDetails);
 			removedTask.setTaskDateTimes(taskDateTimes);
 			removedTask.updateStartAndEndDateTimes();
 			
