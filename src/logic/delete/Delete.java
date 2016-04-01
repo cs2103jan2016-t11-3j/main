@@ -81,6 +81,7 @@ public class Delete {
 
 	// Internal checers
 	private boolean isDeleteSingleOccurrence = false;
+	private boolean isDeleteAll = false;
 	private boolean hasDeletedInternal = false;
 	private boolean hasDeletedExternal = false;
 
@@ -221,6 +222,7 @@ public class Delete {
 		deleteExternal();
 		LOGGER.log(Level.INFO, "Delete all executed");
 		
+		isDeleteAll = true;
 		createDeletedAllOutput();
 	}
 	
@@ -433,10 +435,6 @@ public class Delete {
 		return removedTaskOccurrenceDetails;
 	}
 
-	public void setOutput(ArrayList<String> output) {
-		this.output = output;
-	}
-
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
 	}
@@ -447,6 +445,10 @@ public class Delete {
 
 	public Deque<CommandObject> getRedoList() {
 		return redoList;
+	}
+	
+	public boolean getIsDeleteAll() {
+		return isDeleteAll;
 	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
@@ -463,6 +465,10 @@ public class Delete {
 
 	public void setRemovedTask(TaskObject removedTask) {
 		this.removedTask = removedTask;
+	}
+	
+	public void setOutput(ArrayList<String> output) {
+		this.output = output;
 	}
 	
 	

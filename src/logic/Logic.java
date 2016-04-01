@@ -277,7 +277,7 @@ public class Logic {
 		commandFacade.run();
 		updateLists(commandFacade);
 
-		System.out.println("Last searched index = " + lastSearchedIndex);
+		//System.out.println("Last searched index = " + lastSearchedIndex);
 	}
 
 	// Retrieves the updated lists from the CommandFacade class and updates the

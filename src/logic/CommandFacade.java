@@ -222,26 +222,28 @@ public class CommandFacade {
 	 * to remove the specified task.
 	 */
 	private void deleteFunction() {
-		// 3 things to track
+		// 4 things to track
 		TaskObject removedTask = new TaskObject();
 		LocalDateTimePair removedOccurrenceTiming = new LocalDateTimePair(); // will be filled if it is a single-occurrence-delete
 		Integer removedOccurrenceIndex = Integer.valueOf(-1);
-		Triple<TaskObject, LocalDateTimePair, Integer> triple = new Triple<TaskObject, LocalDateTimePair, Integer>();
+		Boolean isDeleteAll = false;
+		Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quadruple = 
+				new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>();
 		
 		if (index == -1) { // no task specified
-			triple = quickDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
+			quadruple = quickDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
 		} else {
-			triple = normalDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
+			quadruple = normalDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
 		}
-
-		boolean isDeleteAll = checkIfCommandIsDeleteAll();
+		
+		isDeleteAll = quadruple.getFourth();
 		if (!isDeleteAll) {
-			processUndoForDelete(triple.getFirst(), triple.getSecond(), triple.getThird());
+			processUndoForDelete(quadruple.getFirst(), quadruple.getSecond(), quadruple.getThird());
 		}
 	}
 
-	private Triple<TaskObject, LocalDateTimePair, Integer> quickDelete(
-			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex) {
+	private Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quickDelete(
+			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex, Boolean isDeleteAll) {
 		
 		CommandObject commandObjForQuickDelete = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
 		Delete delete = new Delete(commandObjForQuickDelete, taskList, undoList);
@@ -249,11 +251,12 @@ public class CommandFacade {
 		setLastOutputTaskList(taskList);
 
 		removedTask = delete.getRemovedTask();
-		return new Triple<TaskObject, LocalDateTimePair, Integer>(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
+		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
+				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
 	}
 
-	private Triple<TaskObject, LocalDateTimePair, Integer> normalDelete(
-			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex) {
+	private Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> normalDelete(
+			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex, Boolean isDeleteAll) {
 		
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList);
 		setOutput(delete.run());
@@ -265,7 +268,9 @@ public class CommandFacade {
 		removedTask = delete.getRemovedTask();
 		removedOccurrenceTiming = delete.getRemovedTaskOccurrenceDetails();
 		removedOccurrenceIndex = delete.getRemovedOccurrenceIndex();
-		return new Triple<TaskObject, LocalDateTimePair, Integer>(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
+		isDeleteAll = delete.getIsDeleteAll();
+		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
+				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
 		
 	}
 
