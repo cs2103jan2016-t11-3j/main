@@ -104,6 +104,21 @@ public abstract class Mark {
 	protected void createErrorOutput() {
 		output.add(MESSAGE_MARK_ERROR);
 	}
+	
+	protected void deleteSplitTaskFromTaskList() {
+		int smallestTaskId = 0;
+		int indexOfTaskToDelete = -1;
+		
+		for (int i = 0; i < taskList.size(); i++) {
+			int taskId = taskList.get(i).getTaskId();
+			if (taskId < 0 && taskId < smallestTaskId) {
+				smallestTaskId = taskId;
+				indexOfTaskToDelete = i;
+			}
+		}
+		
+		taskList.remove(indexOfTaskToDelete);
+	}
 
 	// Getter
 	public int getTaskIdToMark() {
@@ -124,5 +139,9 @@ public abstract class Mark {
 	
 	public int getMarkIndex() {
 		return index;
+	}
+	
+	public void setMarkIndex(int index) {
+		this.index = index;
 	}
 }
