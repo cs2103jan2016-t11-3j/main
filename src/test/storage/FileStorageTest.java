@@ -3,7 +3,11 @@
  */
 package test.storage;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -42,6 +46,7 @@ public class FileStorageTest {
         TaskGenerator taskGen = new TaskGenerator();
         taskList1 = taskGen.getTaskList(5);
         taskList2 = taskGen.getTaskList(5);
+        deleteInfo();
     }
 
     /**
@@ -49,6 +54,10 @@ public class FileStorageTest {
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
+        deleteInfo();
+    }
+
+    private static void deleteInfo() throws IOException {
         Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.DATA_FILENAME);
         Path path2 = Paths.get(moveDir , "test");
         Path path3 = Paths.get(moveDir , Constants.DATA_FILENAME);
@@ -70,6 +79,7 @@ public class FileStorageTest {
      */
     @After
     public void tearDown() throws Exception {
+        deleteInfo();
     }
 
     /**
@@ -132,17 +142,39 @@ public class FileStorageTest {
      * @throws JsonSyntaxException
      * @throws FileNotFoundException
      * @throws IOException
+     * @throws ExistingFileNotFoundException 
      */
     @Test
-    public void testChangeSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
+    public void testChangeSaveLocation() throws InvalidPathException, JsonSyntaxException, 
+            FileNotFoundException, IOException {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
         ArrayList<TaskObject> actualTaskListOldSave = storage.load();
         storage.changeSaveLocation(moveDir);
+        BufferedReader fileReader = new BufferedReader(
+                new FileReader (Constants.FILEPATH_SAVEINFO.toString()));
+        String actualDirectory = fileReader.readLine();
+        fileReader.close();
         storage.save(taskList2);
         ArrayList<TaskObject> actualTaskListNewSave = storage.load();
+        assertEquals("Save Dir", moveDir, actualDirectory);
         AssertHelper.assertTaskListEquals("CreateCopyLoadFromNew" , taskList2 , actualTaskListNewSave);
         AssertHelper.assertTaskListEquals("CreateCopyLoadFromOld" , taskList2 , actualTaskListOldSave);
+    }
+    
+    @Test
+    public void testChangeSaveLocationInitial() throws InvalidPathException, JsonSyntaxException, 
+            FileNotFoundException, IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.changeSaveLocation(moveDir);
+        BufferedReader fileReader = new BufferedReader(
+                new FileReader (Constants.FILEPATH_SAVEINFO.toString()));
+        String actualDirectory = fileReader.readLine();
+        fileReader.close();
+        storage.save(taskList1);
+        ArrayList<TaskObject> actualTaskListNewSave = storage.load();
+        assertEquals("Save Dir", moveDir, actualDirectory);
+        AssertHelper.assertTaskListEquals("CreateCopyLoadFromNew" , taskList1 , actualTaskListNewSave);
     }
     
     /**
@@ -152,9 +184,11 @@ public class FileStorageTest {
      * @throws JsonSyntaxException
      * @throws FileNotFoundException
      * @throws IOException
+     * @throws ExistingFileNotFoundException 
      */
     @Test (expected = InvalidPathException.class)
-    public void testChangeInvalidSaveLocation() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
+    public void testChangeInvalidSaveLocation() throws InvalidPathException, 
+            JsonSyntaxException, FileNotFoundException, IOException {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
         storage.changeSaveLocation("Invalid");

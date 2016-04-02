@@ -81,14 +81,18 @@ public class FileStorage implements IStorage {
 
     @Override
     public void changeSaveLocation (String directory) 
-            throws InvalidPathException , IOException {
+            throws InvalidPathException, IOException {
         if (!FilePath.checkPath(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
         ArrayList<TaskObject> taskList = load();
-        String filePath = FilePath.getPath();
-        Path path = Paths.get(filePath);
-        Files.deleteIfExists(path);
+        try {
+            String filePath = FilePath.getPath();
+            Path path = Paths.get(filePath);
+            Files.deleteIfExists(path);
+        } catch (FileNotFoundException e) {
+            //No existing File to delete
+        } 
         FilePath.changePreferedDirectory(directory);
         save(taskList);
     }

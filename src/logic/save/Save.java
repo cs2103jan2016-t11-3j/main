@@ -1,8 +1,6 @@
 package logic.save;
 
-import logic.*;
 import storage.*;
-
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
@@ -10,9 +8,6 @@ import java.util.ArrayList;
 import java.util.logging.*;
 
 import common.TaskObject;
-
-import static logic.constants.Index.*;
-import static logic.constants.Strings.*;
 
 /**
  * Creates a Save object to perform two main types of operations. <br>

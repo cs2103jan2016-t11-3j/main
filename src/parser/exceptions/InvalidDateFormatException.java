@@ -3,14 +3,11 @@ package parser.exceptions;
 @SuppressWarnings("serial")
 public class InvalidDateFormatException extends Exception {
 
-    String dateFormat = null;
+    static final String MESSAGE = "The date format %s is unrecognized";
     
     public InvalidDateFormatException(String input) {
-        dateFormat = input;
-    }
-    
-    public String getDateFormat() {
-        return dateFormat;
+        
+        super(String.format(MESSAGE, input));
     }
 
 }
