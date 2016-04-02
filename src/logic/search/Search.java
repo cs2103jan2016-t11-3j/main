@@ -405,7 +405,8 @@ public class Search extends Display {
 					TimeOutput.setDeadlineTimeOutput(foundTask);
 				}
 			}
-			output.add(foundTask.getTimeOutputString());
+			timeOutput = "1. " + foundTask.getTimeOutputString();
+			output.add(timeOutput);
 		}
 	}
 
