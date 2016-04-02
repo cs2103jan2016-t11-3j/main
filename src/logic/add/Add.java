@@ -76,6 +76,7 @@ public class Add {
 		this.taskList = taskList;
 	}
 
+	/**
 	public void setUpLogger() {
 		try {
 			File fakeFile = new File("");
@@ -93,6 +94,7 @@ public class Add {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 	/**
 	 * Called by logic to add the task initialised in the Add object to the task

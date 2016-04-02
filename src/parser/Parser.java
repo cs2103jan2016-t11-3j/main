@@ -387,7 +387,7 @@ public class Parser {
  		CO.setCommandType(SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
- 		if (command.length() > index && command.contains("C://")) {
+ 		if (command.length() > index) {
  			newString = command.substring(index);
  	 		TO.setTitle(newString);
  	 		CO.setTaskObject(TO);	

@@ -39,7 +39,7 @@ public class FilePath {
      * @throws FileNotFound No existing preferred directory specified.
      * @throws IOException Error reading file containing default path
      */
-    public static String getPath() throws FileNotFoundException , IOException {
+    protected static String getPath() throws FileNotFoundException , IOException {
         String directory = readPreferedDirectory();
         checkDirectory(directory);
         Path path = Paths.get(directory, Constants.DATA_FILENAME);
@@ -82,12 +82,11 @@ public class FilePath {
     }
 
     private static String readPreferedDirectory() throws FileNotFoundException, IOException  {
-        Path directory = null;
         BufferedReader fileReader = new BufferedReader(
                 new FileReader (Constants.FILEPATH_SAVEINFO.toString()));
-        directory = Paths.get(fileReader.readLine());
+        String directory = fileReader.readLine();
         fileReader.close();
-        return directory.toString();
+        return directory;
     }
     
     private static void mkdirIfNotExist(String directory) {
