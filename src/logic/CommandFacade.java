@@ -510,8 +510,6 @@ public class CommandFacade {
 			newCommandObj.setIndex(index);
 		}
 
-		System.out.println("CommandFacade:512 - commandType = " + commandIndex + ", index = " + index);
-		printTaskObjectFields(originalTask);
 		list.push(newCommandObj);
 	}
 

@@ -36,7 +36,6 @@ public class Incomplete extends Mark {
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
 			if (task.getTaskId() == taskIdToMark) {
-				System.out.println("Incomplete:39 - taskIdToMark = " + taskIdToMark);
 				
 				originalTask.setTaskObject(task);
 				originalTimings.addAll(task.getTaskDateTimes());
@@ -46,6 +45,7 @@ public class Incomplete extends Mark {
 
 				try {
 					task.setTaskObject(markTaskObj);	// if markTaskObj is not null, this is an undo function
+					statusBeforeChange = STATUS_COMPLETED;
 					
 					if (markTaskObj.getIsRecurring() && markTaskObj.getTaskDateTimes().size() > 1) {
 						deleteSplitTaskFromTaskList();	// deletes the split task that had been created upon mark as done

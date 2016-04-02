@@ -86,10 +86,7 @@ public class Recurring {
 	
 	private static void splitTaskFromRecurringEvent(String taskName, LocalDateTime startDateTime, LocalDateTime endDateTime, ArrayList<TaskObject> taskList, String status) {
 		int taskId = generateTaskId(taskList);
-		System.out.println("Recurring:89 - taskId generated = " + taskId);
 		TaskObject splitEvent = createSplitEventTaskObject(taskName, startDateTime, endDateTime, status, taskId);
-		printTaskObjectFields(splitEvent);
-		
 		Add add = new Add(splitEvent, -1, taskList);
 		add.run();
 	}

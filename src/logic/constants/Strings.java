@@ -4,13 +4,14 @@ import common.TaskObject;
 
 public class Strings {
 	
-	//common Constants
+	// common Constants
 	public static final String CATEGORY_EVENT = "event";
 	public static final String CATEGORY_DEADLINE = "deadline";
-
-	// CommandFacade Constants
 	public static final String CATEGORY_FLOATING = "floating";
 	public static final String MESSAGE_INVALID_COMMAND = "Invalid command";
+	public static final String STATUS_COMPLETED = "completed";
+	public static final String STATUS_INCOMPLETE = "incomplete";
+	public static final String STATUS_OVERDUE = "overdue";
 	
 	// Logic Constants
 	public static final String MESSAGE_ALERT_EVENT = "Events today:";
