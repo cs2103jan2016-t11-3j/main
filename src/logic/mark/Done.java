@@ -75,8 +75,13 @@ public class Done extends Mark {
 				statusBeforeChange = task.getStatus();
 				markedTask = task;
 				
+				System.out.println("Done:78 - task.isRecurring = " + task.getIsRecurring());
 				try {
 					task.setTaskObject(markTaskObj);	// if markTaskObj is not null, this is an undo function
+					
+					if (markTaskObj.getIsRecurring() && markTaskObj.getTaskDateTimes().size() > 1) {
+						deleteSplitTaskFromTaskList();	// deletes the split task that had been created upon mark as done
+					}
 					LOGGER.log(Level.INFO, "Undo-done processed");
 				}  catch (NullPointerException e) {
 					if (task.getIsRecurring()) {

@@ -368,7 +368,6 @@ public class Add {
 		assert (timings.size() == 1); 	// it should only store 1 occurrence of timings
 		assert (lastSearchedIndex != -1);
 		
-		System.out.println("index in addSingleOccurrence = " + index);
 		LocalDateTimePair occurrenceToBeAdded = timings.get(0);
 		TaskObject taskToBeModified = taskList.get(lastSearchedIndex - 1);
 		taskToBeModified.getTaskDateTimes().add(index - 1, occurrenceToBeAdded);

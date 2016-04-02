@@ -20,7 +20,7 @@ import static logic.constants.Strings.*;
 public class Recurring {
 
 	private static Logger logger = AtfLogger.getLogger();
-
+	
 	/******************************************************************************/
 	/**
 	 * Methods used for recurring events
@@ -86,7 +86,10 @@ public class Recurring {
 	
 	private static void splitTaskFromRecurringEvent(String taskName, LocalDateTime startDateTime, LocalDateTime endDateTime, ArrayList<TaskObject> taskList, String status) {
 		int taskId = generateTaskId(taskList);
+		System.out.println("Recurring:89 - taskId generated = " + taskId);
 		TaskObject splitEvent = createSplitEventTaskObject(taskName, startDateTime, endDateTime, status, taskId);
+		printTaskObjectFields(splitEvent);
+		
 		Add add = new Add(splitEvent, -1, taskList);
 		add.run();
 	}
@@ -271,7 +274,7 @@ public class Recurring {
 
 	// returns a negative number as taskID to prevent clashing with normal IDs
 	private static int generateTaskId(ArrayList<TaskObject> taskList) {
-		int id = -1;
+		int id = -2;	// -1 denotes error so set to -2 to prevent any unforeseen errors
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getTaskId() <= id) {
 				id = taskList.get(i).getTaskId() - 1; // so that no 2 split tasks have the same ID
@@ -519,4 +522,8 @@ public class Recurring {
 			renewEvent(task);
 		}
 	}
+	
+	
+	// ----------------------------- GETTERS ----------------------------- 
+	
 }

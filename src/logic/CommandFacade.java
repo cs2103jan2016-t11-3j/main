@@ -380,6 +380,7 @@ public class CommandFacade {
 
 		if (incomplete.getTaskIdToMark() != -1) {
 			if (isUndoAction) {
+				System.out.println("CommandFacade:383 - Adding to redoList");
 				addToList(incomplete, redoList);
 			} else {
 				addToList(incomplete, undoList);
@@ -509,11 +510,14 @@ public class CommandFacade {
 			newCommandObj.setIndex(index);
 		}
 
+		System.out.println("CommandFacade:512 - commandType = " + commandIndex + ", index = " + index);
+		printTaskObjectFields(originalTask);
 		list.push(newCommandObj);
 	}
 
 	// Returns the appropriate command index depending on the previous status
 	private int getCommandIndex(String prevStatus) {
+		System.out.println("prevStatus = " + prevStatus);
 		if (prevStatus.equals("overdue")) {
 			return INDEX_OVERDUE;
 		} else {
