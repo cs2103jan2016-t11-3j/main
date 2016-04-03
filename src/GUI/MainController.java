@@ -95,7 +95,11 @@ public class MainController implements Initializable {
 	}
 
 	private void hideSidePanel() {
-		taskDateList.setVisible(false);
+		if (!_input.startsWith("edit")) {
+			taskDateList.setVisible(false);
+		} else {
+			fillSidebar();
+		}
 	}
 
 	@FXML
@@ -120,7 +124,7 @@ public class MainController implements Initializable {
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	
+		
 		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert endDateColumn != null : "fx:id=\"endDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
@@ -172,7 +176,9 @@ public class MainController implements Initializable {
 	private void feedbackUser() {
 		setSelectionFocus();			
 		if (isRecurringDateRequest()) {
+			taskDateList.setVisible(true);
 			fillSidebar();
+			sidePanelAnimation();
 		} else {
 			displayMessage(); // print feedback message
 			display(); // refreshes table after every command
@@ -188,7 +194,7 @@ public class MainController implements Initializable {
 					taskTable.getSelectionModel().select(taskTable.getItems().size()-1); 
 				}
 			});
-		} else if (_input.startsWith("edit")) {
+		} else if (_input.startsWith("edit") && taskDateList.isVisible() == false) {
 			String[] input = _input.split(" ");
 			int index = Integer.parseInt(input[1]);
 			taskTable.scrollTo(index-1);
@@ -210,13 +216,10 @@ public class MainController implements Initializable {
 
 	private void fillSidebar() {
 		taskDateList.getChildren().clear();
-		taskDateList.setVisible(true);
 		ArrayList<String> recurringTimes = _UI.getOutput();
 		for (int i = 0; i < recurringTimes.size(); i++) {
 			taskDateList.getChildren().add(new Text(recurringTimes.get(i) + "\n"));
 		}
-		sidePanelAnimation();
-		
 	}
 
 	private void displayMessage() {
