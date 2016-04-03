@@ -98,6 +98,7 @@ public class Logic {
 	// Creates the first task list containing overdue and due today
 	public void createFirstOutputTaskList() {
 		ArrayList<TaskObject> firstOutputTaskList = new ArrayList<TaskObject> ();
+		ArrayList<String> firstOutput = new ArrayList<String> ();
 	
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getStatus().equals("overdue")) {
@@ -112,7 +113,15 @@ public class Logic {
 				}
 			}
 		}
+		
+		if (firstOutputTaskList.isEmpty()) {
+			firstOutput.add(MESSAGE_WELCOME_EMPTY);
+		} else {
+			firstOutput.add(MESSAGE_WELCOME_TASKS);
+		}
+		
 		setLastOutputTaskList(firstOutputTaskList);
+		setOutput(firstOutput);
 	}
 
 	private boolean checkNotDuplicate(TaskObject task, ArrayList<TaskObject> firstOutputTaskList) {

@@ -19,6 +19,8 @@ public class Strings {
 	public static final String MESSAGE_INFORMATION_EVENT = "Task: %1s\nTime: %2s\n";
 	public static final String MESSAGE_INFORMATION_DEADLINE = "Task: %1s\nDue: %2s\n";
 	public static final String MESSAGE_BY_TODAY = "by end of today";
+	public static final String MESSAGE_WELCOME_TASKS = "Tasks overdue and due today";
+	public static final String MESSAGE_WELCOME_EMPTY = "No tasks overdue and due today";
 	
 	// Recurring/Interval Constants
 	public static final String FREQ_HOURLY = "HOURLY";

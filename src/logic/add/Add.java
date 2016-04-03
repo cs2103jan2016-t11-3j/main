@@ -159,10 +159,18 @@ public class Add {
 	 * Also creates all dates and times for recurrent tasks
 	 */
 	private void processEventDetails() {
+		boolean isOverdue = checkIfOverdue();
 		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 		if (task.getIsRecurring()) {
 			addRecurringEventTimes();
 			removeAnyDeletedOccurrences();
+		}
+		if (isOverdue) {
+			if (task.getIsRecurring()) {
+				Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
+			} else {
+				setTaskStatus(isOverdue);
+			}
 		}
 		checkIfEventsClash();
 	}
