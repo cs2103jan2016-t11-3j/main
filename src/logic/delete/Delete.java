@@ -1,7 +1,7 @@
 package logic.delete;
 
 import storage.*;
-
+import common.AtfLogger;
 import common.CommandObject;
 import common.LocalDateTimePair;
 import common.TaskObject;
@@ -53,7 +53,7 @@ import static logic.constants.Strings.*;
 
 public class Delete {
 
-	private static final Logger LOGGER = Logger.getLogger(Delete.class.getName());
+	private static Logger logger = AtfLogger.getLogger();
 
 	// This command object contains the index number of the line to be deleted
 	private CommandObject commandObj;
@@ -205,7 +205,7 @@ public class Delete {
 			
 			if (hasDeletedInternal && hasDeletedExternal) {
 				createOutput();
-				LOGGER.log(Level.INFO, "Quick delete executed");
+				logger.log(Level.INFO, "Quick delete executed");
 			} else {
 				createErrorOutput();
 			}
@@ -220,7 +220,7 @@ public class Delete {
 		undoList.clear();
 		redoList.clear();
 		deleteExternal();
-		LOGGER.log(Level.INFO, "Delete all executed");
+		logger.log(Level.INFO, "Delete all executed");
 		
 		isDeleteAll = true;
 		createDeletedAllOutput();
@@ -245,7 +245,7 @@ public class Delete {
 			hasDeletedExternal = deleteExternal();
 			if (hasDeletedExternal) {
 				createOutput();
-				LOGGER.log(Level.INFO, "Normal delete executed");
+				logger.log(Level.INFO, "Normal delete executed");
 			}
 		} else {
 			createErrorOutput();
@@ -267,7 +267,7 @@ public class Delete {
 			if (deleteExternal()) {
 				TimeOutput.setTaskTimeOutput(removedTask); // to update the recurrence date in GUI
 				createSingleOccurrenceOutput();
-				LOGGER.log(Level.INFO, "Single occurrence delete executed");
+				logger.log(Level.INFO, "Single occurrence delete executed");
 			}
 		} catch (IndexOutOfBoundsException e) {
 			createSingleOccurrenceMissingErrorOutput();
@@ -344,7 +344,7 @@ public class Delete {
 		FileStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
-			LOGGER.log(Level.INFO, "Storage file replaced");
+			logger.log(Level.INFO, "Storage file replaced");
 		} catch (NoSuchFileException e) {
 			// TODO Auto-generated catch block
 			// Ask user to specify new location or use default location

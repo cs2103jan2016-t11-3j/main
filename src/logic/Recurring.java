@@ -32,7 +32,7 @@ public class Recurring {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
-					updateEvent(taskList.get(i), taskList, "overdue");
+					updateEvent(taskList.get(i), taskList, STATUS_OVERDUE);
 					logger.log(Level.INFO, "about to update recurring event:" + taskList.get(i).getTitle());
 				}
 			}
@@ -40,10 +40,10 @@ public class Recurring {
 	}
 
 	public static void updateEvent(TaskObject task, ArrayList<TaskObject> taskList, String status) {
-		if (status.equals("overdue")) {
+		if (status.equals(STATUS_OVERDUE)) {
 			updateEventToOverdue(task, taskList, status);
 		} else {
-			if (status.equals("completed")) {
+			if (status.equals(STATUS_OVERDUE)) {
 				updateEventToCompleted(task, taskList, status);
 			}
 		}
@@ -185,7 +185,7 @@ public class Recurring {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
-					updateDeadline(taskList.get(i), taskList, "overdue");
+					updateDeadline(taskList.get(i), taskList, STATUS_OVERDUE);
 				}
 			}
 		}
@@ -204,10 +204,10 @@ public class Recurring {
 	 * @param task
 	 */
 	public static void updateDeadline(TaskObject task, ArrayList<TaskObject> taskList, String status) {
-		if (status.equals("overdue")) {
+		if (status.equals(STATUS_OVERDUE)) {
 			updateDeadlineToOverdue(task, taskList, status);
 		} else {
-			if (status.equals("completed")) {
+			if (status.equals(STATUS_COMPLETED)) {
 				updateDeadlineToCompleted(task, taskList, status);
 			}
 		}
@@ -514,7 +514,7 @@ public class Recurring {
 	public static void forceUpdateEvent(TaskObject task) {
 
 		if (task.getTaskDateTimes().size() == 1) {
-			task.setStatus("completed");
+			task.setStatus(STATUS_COMPLETED);
 		} else {
 			renewEvent(task);
 		}

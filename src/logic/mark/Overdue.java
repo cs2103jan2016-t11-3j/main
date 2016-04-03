@@ -38,9 +38,9 @@ public class Overdue extends Mark {
 			if (taskList.get(i).getTaskId() == taskIdToMark) {
 				taskName = taskList.get(i).getTitle();
 				statusBeforeChange = taskList.get(i).getStatus();
-				taskList.get(i).setStatus("overdue");
+				taskList.get(i).setStatus(STATUS_OVERDUE);
 
-				LOGGER.log(Level.INFO, "Status changed to \'overdue\'");
+				logger.log(Level.INFO, "Status changed to \'overdue\'");
 				return true;
 			}
 		}

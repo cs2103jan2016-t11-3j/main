@@ -77,26 +77,6 @@ public class Add {
 	}
 
 	/**
-	public void setUpLogger() {
-		try {
-			File fakeFile = new File("");
-			String filePath = fakeFile.getAbsolutePath();
-			FileHandler fileHandler = new FileHandler(filePath + "/src/logic/add/" + "addLog.txt");
-			logger.addHandler(fileHandler);
-			SimpleFormatter formatter = new SimpleFormatter();
-			fileHandler.setFormatter(formatter);
-			logger.setUseParentHandlers(false);
-
-			logger.log(Level.INFO, "First log, going to start processing for adding");
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
-
-	/**
 	 * Called by logic to add the task initialised in the Add object to the task
 	 * list.
 	 * 
@@ -232,7 +212,7 @@ public class Add {
 		}
 		if (isOverdue) {
 			if (task.getIsRecurring()) {
-				Recurring.updateDeadline(task, taskList, "overdue");
+				Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
 			} else {
 				setTaskStatus(isOverdue);
 			}
@@ -253,7 +233,6 @@ public class Add {
 	 */
 	private boolean checkIfOverdue() throws DateTimeException {
 		boolean isOverdue = false;
-		// LocalDateTime deadline = task.getStartDateTime();
 
 		logger.log(Level.INFO, "going to check whether a deadline is overdue");
 
@@ -265,7 +244,7 @@ public class Add {
 
 	private void setTaskStatus(boolean isOverdue) {
 		if (isOverdue) {
-			task.setStatus("overdue");
+			task.setStatus(STATUS_OVERDUE);
 		}
 		logger.log(Level.INFO, "toggled a task's status if applicable");
 	}
@@ -281,7 +260,7 @@ public class Add {
 			throw e;
 		}
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getCategory().equals("event")) {
+			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 				checkAllExistingTimes(taskList.get(i));
 			}
 		}

@@ -50,10 +50,10 @@ public class Incomplete extends Mark {
 					if (markTaskObj.getIsRecurring() && markTaskObj.getTaskDateTimes().size() > 1) {
 						deleteSplitTaskFromTaskList();	// deletes the split task that had been created upon mark as done
 					}
-					LOGGER.log(Level.INFO, "Undo-incomplete processed");
+					logger.log(Level.INFO, "Undo-incomplete processed");
 				} catch (NullPointerException e) {
-					task.setStatus("incomplete");
-					LOGGER.log(Level.INFO, "Status changed to \'incomplete\'");
+					task.setStatus(STATUS_INCOMPLETE);
+					logger.log(Level.INFO, "Status changed to \'incomplete\'");
 				}
 				
 				return true;

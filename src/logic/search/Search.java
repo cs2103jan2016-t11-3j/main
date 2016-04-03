@@ -129,7 +129,7 @@ public class Search extends Display {
 				isSearchIndex = true;
 			}
 		} catch (NullPointerException e) {
-			LOGGER.log(Level.WARNING, "Error setting search information");
+			logger.log(Level.WARNING, "Error setting search information");
 		}
 
 		// printSearchInformation();

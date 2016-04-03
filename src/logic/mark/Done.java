@@ -78,7 +78,7 @@ public class Done extends Mark {
 				if (task.getIsRecurring()) {
 					changeStatusForRecurringTask(task);
 				} else {
-					task.setStatus("completed");
+					task.setStatus(STATUS_COMPLETED);
 				}
 
 				originalTask.setTaskDateTimes(originalTimings);
@@ -100,11 +100,11 @@ public class Done extends Mark {
 	}
 
 	private void changeStatusForRecurringDeadline(TaskObject task) {
-		Recurring.updateDeadline(task, taskList, "completed");
+		Recurring.updateDeadline(task, taskList, STATUS_COMPLETED);
 	}
 	
 	private void changeStatusForRecurringEvent(TaskObject task) {
-		Recurring.updateEvent(task, taskList, "completed");
+		Recurring.updateEvent(task, taskList, STATUS_COMPLETED);
 	}
 
 }

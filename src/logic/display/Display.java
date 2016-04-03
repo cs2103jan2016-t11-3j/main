@@ -2,6 +2,7 @@ package logic.display;
 import java.util.ArrayList;
 import java.util.logging.*;
 
+import common.AtfLogger;
 import common.TaskObject;
 import logic.timeOutput.TimeOutput;
 
@@ -23,8 +24,8 @@ import static logic.constants.Strings.*;
  */
 
 public class Display {
-	
-	protected static final Logger LOGGER = Logger.getLogger(Display.class.getName());
+
+	protected static Logger logger = AtfLogger.getLogger();
 	
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> outputTaskList = new ArrayList<TaskObject>();
@@ -68,7 +69,7 @@ public class Display {
 	 */
 	private ArrayList<String> display() {
 		if (taskList.isEmpty()) {
-			LOGGER.log(Level.INFO, "Task list is empty");
+			logger.log(Level.INFO, "Task list is empty");
 			outputEmptyMessage();
 		} else {
 			output.add(MESSAGE_SEARCH_RESULTS);

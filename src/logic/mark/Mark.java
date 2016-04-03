@@ -9,6 +9,7 @@ import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.logging.*;
 
+import common.AtfLogger;
 import common.CommandObject;
 import common.LocalDateTimePair;
 import common.TaskObject;
@@ -30,7 +31,7 @@ import static logic.constants.Strings.*;
  */
 public abstract class Mark {
 
-	protected static final Logger LOGGER = Logger.getLogger(Mark.class.getName());
+	protected static Logger logger = AtfLogger.getLogger();
 
 	/**
 	 * @param TaskObject instructionTask - This is the TaskObject which contains information 
