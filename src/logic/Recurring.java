@@ -509,17 +509,6 @@ public class Recurring {
 			return false;
 		}
 	}
-
-	/*****************************************************************************/
-	public static void forceUpdateEvent(TaskObject task) {
-
-		if (task.getTaskDateTimes().size() == 1) {
-			task.setStatus(STATUS_COMPLETED);
-		} else {
-			renewEvent(task);
-		}
-	}
-	
 	
 	// ----------------------------- GETTERS ----------------------------- 
 	
