@@ -16,17 +16,16 @@ public class SearchProcessorTest {
 	@Test
 	public void testProcessSearchTerm() throws Exception {
 		
-		SP.process("7.13pm");
+		TO = SP.process("7.13pm");
+		System.out.println(TO.getStartDateTime());
 		reset();
-		
-		
 		
 		TO = SP.process("search deadline");
 		assertEquals("deadline", TO.getCategory());
 		reset();
 		
 		TO = SP.process("search 151646");
-		assertEquals("151646", SP.getIndex());
+		assertEquals(151646, SP.getIndex());
 		assertEquals("deadline", TO.getCategory());
 		reset();
 	}

@@ -37,13 +37,13 @@ public class DateTimeProcessorTest {
 		TO.resetAttributes();
 		
 		TO = DTP.parse("everyday", true);
-		assertEquals("2016-03-31T23:59:59.999999999", TO.getStartDateTime().toString());
+		assertEquals("2016-04-03T23:59:59.999999999", TO.getStartDateTime().toString());
 		DTP.reset();
 		TO.resetAttributes();
 		
 		TO = DTP.parse("from today to tmr", true);
-		assertEquals("2016-03-31T23:59:59.999999999", TO.getStartDateTime().toString());
-		assertEquals("2016-04-01T23:59:59.999999999", TO.getEndDateTime().toString());
+		assertEquals("2016-04-03T23:59:59.999999999", TO.getStartDateTime().toString());
+		assertEquals("2016-04-04T23:59:59.999999999", TO.getEndDateTime().toString());
 		DTP.reset();
 		TO.resetAttributes();
 		
@@ -53,7 +53,7 @@ public class DateTimeProcessorTest {
 		TO.resetAttributes();
 		
 		TO = DTP.parse("by tonight", true);
-        assertEquals("2016-03-31T23:59:59.999999999", TO.getStartDateTime().toString());
+        assertEquals("2016-04-03T23:59:59.999999999", TO.getStartDateTime().toString());
         DTP.reset();
         TO.resetAttributes();
         
@@ -70,8 +70,11 @@ public class DateTimeProcessorTest {
         
         TO = DTP.parse("every day at 8am for 10 weeks", true);
         assertEquals(70 ,TO.getInterval().getCount());
-        assertEquals("2016-03-31T08:00", TO.getStartDateTime().toString());
+        assertEquals("2016-04-03T08:00", TO.getStartDateTime().toString());
 		
+        TO = DTP.parse("7pm", false);
+        assertEquals("+999999999-12-31T19:00", TO.getStartDateTime().toString());
+        
 	}
 	/*
 	 * TO = DTP.parse("every day", true);

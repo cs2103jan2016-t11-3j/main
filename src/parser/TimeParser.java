@@ -78,14 +78,11 @@ public class TimeParser {
 				temp = temp - 1200;
 			}
 			
-			
-			
 			if (temp > 2359) {
 				temp = temp - 1200; // how ah here
 			}
 			time = temp;	
 		}
-		
 	}
 	
 	/**

@@ -32,7 +32,6 @@ public class SearchParser extends CommandParser {
 			if (identifier != null) {
 				DateTimeParser dtp = new DateTimeParser();
 				TO = dtp.parse(identifier, false);
-				setDateTime(dtp);
 	        }
 			
 			_task = input;
@@ -84,28 +83,11 @@ public class SearchParser extends CommandParser {
 		}
 	}
 	
-	private void setDateTime(DateTimeParser dtp) {
-		_startDate = dtp.getStartDate();
-		_startTime = dtp.getStartTime();
-		_startDateTime = dtp.getStartDateTime();
-		
-		_endDate = dtp.getEndDate();
-		_endTime = dtp.getEndTime();
-		_endDateTime = dtp.getEndDateTime();
-	}
-	
 	private void setTaskObject() {
 		TO.setTitle(_task);
-		TO.setStartTime(_startTime);
-		TO.setEndTime(_endTime);
-		TO.setEndDate(_endDate);
-		TO.setStartDate(_startDate);
-		TO.setStartDateTime(_startDateTime);
-		TO.setEndDateTime(_endDateTime);
 	}
 	
 	public boolean isDateTime(String input) {
-		
 		if (input.matches(Constants.REGEX_EDIT_DATE_TIME_IDENTIFIER)) {
 			return true;
 		} else {
@@ -121,28 +103,10 @@ public class SearchParser extends CommandParser {
 		return _task;
 	}
 	
-	public int getStartDate() {
-		return _startDate;
-	}
 	
-	public int getEndDate() {
-		return _endDate;
-	}
-	
-	public int getStartTime() {
-		return _startTime;
-	}
-	
-	public int getEndTime() {
-		return _endTime;
-	}
  	
  	public void resetAll() {
  		_task = null;
- 		_startDate = -1;
- 		_endDate = -1;
- 		_startTime = -1;
- 		_endTime = -1;
  	}
 
 	@Override

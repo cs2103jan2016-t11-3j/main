@@ -196,7 +196,7 @@ public class ParserTest {
 		assertEquals("+999999999-12-31T19:55",tempParser.getStartDateTime().toString());
 		reset();
 		
-		tempParser.allocate("edit 2 from 8 june 755pm to 9june 9pm");
+		tempParser.allocate("EDIT 2 from 8 june 755pm to 9june 9pm");
 		assertEquals("", tempParser.getTask());
 		assertEquals("2016-06-08T19:55",tempParser.getStartDateTime().toString());
 		assertEquals("2016-06-09T21:00",tempParser.getEndDateTime().toString());
@@ -211,36 +211,28 @@ public class ParserTest {
 		
 		tempParser.allocate("save as C://mac/desktop");
 		assertEquals("as C://mac/desktop", tempParser.getTask());
-		assertEquals(-1, tempParser.getStartTime());
-		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(-1, tempParser.getStartDate());
-		assertEquals(-1, tempParser.getEndDate());
+		assertEquals(LocalDateTime.MAX, tempParser.getStartDateTime());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		reset();
 		
 		tempParser.allocate("done");
 		assertEquals("", tempParser.getTask());
-		assertEquals(-1, tempParser.getStartTime());
-		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(-1, tempParser.getStartDate());
-		assertEquals(-1, tempParser.getEndDate());
+		assertEquals(LocalDateTime.MAX, tempParser.getStartDateTime());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("completed", tempParser.getStatus());
 		reset();
 		
 		tempParser.allocate("incomplete");
 		assertEquals("", tempParser.getTask());
-		assertEquals(-1, tempParser.getStartTime());
-		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(-1, tempParser.getStartDate());
-		assertEquals(-1, tempParser.getEndDate());
+		assertEquals(LocalDateTime.MAX, tempParser.getStartDateTime());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals("incomplete", tempParser.getStatus());
 		reset();
 		
 		tempParser.allocate("delete 4 all");
 		assertEquals("all", tempParser.getTask());
-		assertEquals(-1, tempParser.getStartTime());
-		assertEquals(-1, tempParser.getEndTime());
-		assertEquals(-1, tempParser.getStartDate());
-		assertEquals(-1, tempParser.getEndDate());
+		assertEquals(LocalDateTime.MAX, tempParser.getStartDateTime());
+		assertEquals(LocalDateTime.MAX, tempParser.getEndDateTime());
 		assertEquals(4, tempParser.CO.getIndex());
 		reset();
 		
@@ -288,7 +280,6 @@ public class ParserTest {
 		//assertEquals("8pm", tempParser.getTask());
 		assertEquals("+999999999-12-31T20:00", tempParser.getStartDateTime().toString());
 		reset();
-		
 		
 		tempParser.parseSearch("search 7/9/1903");
 		//assertEquals("7/9/1403", tempParser.getTask());

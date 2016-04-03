@@ -10,9 +10,6 @@ import java.util.regex.Pattern;
 
 
 public class Parser {
-
-	
-	
 	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
@@ -170,7 +167,7 @@ public class Parser {
 			TO.setIsRecurring(true);
 			TO.setIsEditAll(true);
 		} else {
-			command = command.replaceFirst("edit", "").trim();
+			command = command.replaceFirst(Constants.REGEX_PARSER_EDIT, "").trim();
 		}
 		
 		CommandParser EP = new EditParser();

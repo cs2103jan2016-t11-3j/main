@@ -16,7 +16,7 @@ package parser;
 public class Constants {
 	public static final String REGEX_WS = "\\s";
 	
-	//commands
+	/*---------------------------------Command Keywords--------------------------------------------------------*/
 	public static final String REGEX_PARSER_ADD = "(?i)^(add)";
 	public static final String REGEX_PARSER_SEARCH = "(?i)^(view|search|sort|find|filter|display)";
     public static final String REGEX_PARSER_EDIT = "(?i)^(edit|update)";// edited to have number after edit  + " " + "[\\d]"
@@ -29,7 +29,7 @@ public class Constants {
     public static final String REGEX_PARSER_DONE = "(?i)^(done|(complete)(d)?|(finish)(ed)?)";
     public static final String REGEX_PARSER_NOTDONE = "(?i)^(undone|incomplete)";
     
-    //index for corresponding commands
+    /*---------------------------------Command Index-------------------------------------------------------------*/
 	public static final int ADD_INDEX = 1;
 	public static final int SEARCH_INDEX = 2;
 	public static final int EDIT_INDEX = 3;
@@ -46,13 +46,7 @@ public class Constants {
         floating, deadline, event, recurring;
     }
 	
-	/*
-	 * public static final String REGEX_DAYS_TEXT = "((?i)(mon)(day)?|"
-            + "(tue)(sday)?|" + "(wed)(nesday)?|" + "(thu)(rsday)?|" //edit this shit
-            + "(fri)(day)?|" + "(sat)(urday)?|" + "(sun)(day)?)";
-	 */
-	
-	//regular expressions for date
+	/*-------------------------------------Regular Expressions for Dates-------------------------------------*/
 	public static final String REGEX_DAY_NUMBER = "((?i)0?[1-9]|[12][\\d]|3[01])(st|th|nd|rd)?";
 	public static final String REGEX_DAY_ONLYNUMBER = "((?i)0?[1-9]|[12][\\d]|3[01])";
 	public static final String REGEX_DAYS_TEXT = "((?i)(mon)(day)?|"
@@ -67,7 +61,7 @@ public class Constants {
     public static final String REGEX_DATE_ATTRIBUTES = "(?i)((day)(s)?|"
             + "(week|wk)(s)?|" + "(month|mth)(s)?|" + "(year|yr))(s)?";
 
-    //Time Format
+    /*-------------------------------------Regular Expressions for Time-------------------------------------*/
 	public static final String REGEX_TIME_HHMM = "(?i)[0-2][0-9][-:]?[0-5][\\d]([h]([r][s]?))";
     public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
     	//has to have am or pm, dont care!
@@ -75,13 +69,13 @@ public class Constants {
     public static final String REGEX_TIME_ATTRIBUTES = "(?i)(sec|second)(s)?|" 
     		+ "(min|minutes)(s)?|" + "(hour|hr)(s)?";
     
-    //Date Formats
+    /*----------------------------------Regular Expressions for Date Formats-------------------------------------*/
 	public static final String REGEX_COMBINED_DATE_DDMMYYYY = REGEX_DAY_ONLYNUMBER
             + "[-./]" + REGEX_MONTHS_NUMBER + "[-./]?" + REGEX_YEAR + "?";
     public static final String REGEX_COMBINED_DATE_DDMONTHYYYY = REGEX_DAY_NUMBER
             + "[-./ ]?" + REGEX_MONTHS_TEXT + "[-./ ]?" + REGEX_YEAR + "?";
 	
-    //Date & Time Formats
+    /*-----------------------------Regular Expressions for Dates & Time formats---------------------------------*/
     public static final String REGEX_TIME_FORMAT = "(" + REGEX_TIME_HHMM
             + "|" + REGEX_TIME_AMPM + ")";
     public static final String REGEX_DATE_FORMAT = "("
@@ -91,7 +85,7 @@ public class Constants {
             + REGEX_DATE_FORMAT + "(,?[ ]" + REGEX_TIME_FORMAT + ")?)|("
             + REGEX_TIME_FORMAT + "(,?[ ]" + REGEX_DATE_FORMAT + ")?))";
     
-    //RELATIVE
+    /*------------------------------Regular Expressions for Relative Dates----------------------------------*/
     public static final String REGEX_RELATIVE_DATE_0 = "(?i)(today|tonight)";
     public static final String REGEX_RELATIVE_DATE_1 = "(?i)(tmr|tomorrow)";
     public static final String REGEX_RELATIVE_DATE_2 = "(?i)((next|this) (" // HOW AH?? -> implement, this or next fri

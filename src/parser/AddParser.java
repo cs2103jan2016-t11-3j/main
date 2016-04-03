@@ -1,29 +1,32 @@
 package parser;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 import common.TaskObject;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-
-//TODO -> set task type
+/**
+ * This class is a child class of the CommandParser. It takes in the string input from the user
+ * and splits it into "task" and "date-time". Task is set in the AddParser object while the 
+ * datetime is parsed into the DateTimeParser. Sets all newly created task as "incomplete"by 
+ * default.
+ * 
+ * @author sylvesterchin
+ *
+ */
 
 public class AddParser extends CommandParser {
-	
-	public ArrayList<String> list = new ArrayList<String>();
-	public ArrayList<Integer> dateList = new ArrayList<Integer>();
-	
 	private TimeParser TP = new TimeParser();
 	private DateParser DP = new DateParser();
 	
-	public TaskObject TO = new TaskObject();
+	private TaskObject TO = new TaskObject();
 	
 	/**
-	 * this method will take in the command and allocate the correct information
+	 * This method will take in the command and allocate the correct information
 	 * to task/date/time
 	 * 
-	 * @param input    string input from user
+	 * @param input    
+	 * 				string input from user
 	 * @throws Exception 
 	 */
 	public TaskObject process(String input) throws Exception {
@@ -33,10 +36,11 @@ public class AddParser extends CommandParser {
 	}
 	
 	/**
-	 * method will split string into task and date-time. Calls datetimeparser for
-	 * date-time string and sets task in AddParser class
+	 * This method will split string into task and date-time. Calls DateTimeParser 
+	 * for date-time string and sets task in AddParser class
 	 * 
 	 * @param input
+	 * 				same input as process() method. not null.
 	 * @throws Exception
 	 */
 	public void setTask(String input) throws Exception {
@@ -53,78 +57,29 @@ public class AddParser extends CommandParser {
 		if (identifier != null) {
 			DateTimeParser dtp = new DateTimeParser();
 			TO = dtp.parse(identifier, true);
-			//setDateTime(dtp);
         }
 		
 		_task = input;
 	}
-	
-	
-	private void setDateTime(DateTimeParser dtp) {
-		_startDate = dtp.getStartDate();
-		_endDate = dtp.getEndDate();
-		_startTime = dtp.getStartTime();
-		_endTime = dtp.getEndTime();
-		_startDateTime = dtp.getStartDateTime();
-		_endDateTime = dtp.getEndDateTime();
-	}
-	
+
 	
 	private void setTaskObject() {
 		TO.setTitle(_task);
-		//TO.setStartDateTime(_startDateTime);
-		//TO.setEndDateTime(_endDateTime);
-		TO.setStartTime(_startTime);
-		TO.setEndTime(_endTime);
-		TO.setEndDate(_endDate);
-		TO.setStartDate(_startDate);
 		TO.setStatus("incomplete");
 	}
  	
  	
- 	//Getters 
- 	
+	
+ 	//------------GETTERS---------------
+	//for testing purposes
  	public String getTask() {
  		return _task;
  	}
  	
- 	public int getStartDate() {
- 		return _startDate;
- 	}
- 	
- 	public int getEndDate() {
- 		return _endDate;
- 	}
- 	
- 	public int getStartTime() {
- 		return _startTime;
- 	}
- 	
- 	public int getEndTime() {
- 		return _endTime;
- 	}
- 	
- 	//method used to obtain the size of the list for testing 
-	public int getListSize() {
-		return list.size();
-	}
-	
-	//method used to get the ith element in the list for testing
-	public String getListElement(int i) {
-		return list.get(i);
-	}
-	
-	//method used to get the ith element in the list for testing
-	public void clearList() {
-		list.clear();
-	}
- 	
+ 
+ 	 	
  	public void reset() {
  		_task = null;
- 		_startDate = -1;
- 		_endDate = -1;
- 		_startTime = -1;
- 		_endTime = -1;
  	}
  	
  	public void clearDP() {

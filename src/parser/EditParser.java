@@ -89,15 +89,6 @@ public class EditParser extends CommandParser {
 		}
 	}
 	
-	public void setDateTime(DateTimeParser dtp) {
-		_startDateTime = dtp.getStartDateTime();
-		_endDateTime = dtp.getEndDateTime();
-		_startTime = dtp.getStartTime();
-		_startDate = dtp.getStartDate();
-		_endTime = dtp.getEndTime();
-		_endDate = dtp.getEndDate();
-	}
-	
 	public String getTask() {
 		return _task;
 	}
@@ -106,37 +97,7 @@ public class EditParser extends CommandParser {
 		_task = task;
 	}
 
-	public int getStartDate() {
-		return _startDate;
-	}
-
-	public void setStartDate(int startDate) {
-		_startDate = startDate;
-	}
-
-	public int getEndDate() {
-		return _endDate;
-	}
-
-	public void setEndDate(int endDate) {
-		_endDate = endDate;
-	}
-
-	public int getStartTime() {
-		return _startTime;
-	}
-
-	public void setStartTime(int startTime) {
-		_startTime = startTime;
-	}
-
-	public int getEndTime() {
-		return _endTime;
-	}
-
-	public void setEndTime(int endTime) {
-		_endTime = endTime;
-	}
+	
 	
 	public LocalDateTime getStartDateTime() {
 		return _startDateTime;
@@ -156,10 +117,6 @@ public class EditParser extends CommandParser {
 	
  	public void reset() {
  		setTask("");
- 		setStartDate(-1);
- 		setEndDate(-1);
- 		setStartTime(-1);
- 		setEndTime(-1);
  		_startDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
  		_endDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
  	}

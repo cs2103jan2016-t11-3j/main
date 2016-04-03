@@ -56,7 +56,7 @@ public class DateTimeParser {
 	private LocalDateTime endDateTime = LocalDateTime.MAX;
 	private LocalDateTime untilDateTime = LocalDateTime.MAX;
 	
-	TaskObject TO = new TaskObject();
+	private TaskObject TO = new TaskObject();
 	List<String> dtlist = new ArrayList<String>();
 	TaskType tasktype;
 	
