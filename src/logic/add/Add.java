@@ -1,6 +1,7 @@
 package logic.add;
 
 import logic.*;
+import logic.exceptions.RecurrenceException;
 import storage.*;
 import common.*;
 
@@ -167,7 +168,12 @@ public class Add {
 		}
 		if (isOverdue) {
 			if (task.getIsRecurring()) {
-				Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
+				try {
+					Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
+				} catch (RecurrenceException e) {
+					String exceptionMessage = e.getRecurrenceExceptionMessage();
+					output.add(exceptionMessage);
+				}
 			} else {
 				setTaskStatus(isOverdue);
 			}
