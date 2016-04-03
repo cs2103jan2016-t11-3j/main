@@ -17,15 +17,17 @@ public class Constants {
 	public static final String REGEX_WS = "\\s";
 	
 	//commands
-	public static final String REGEX_ADD = "(?i)^(add)";
-    public static final String REGEX_EDIT = "(?i)^(edit|update)" + " " + "[\\d]";// edited to have number after edit
-    public static final String REGEX_DELETE = "(?i)^(delete)";
-    public static final String REGEX_UNDO = "(?i)^(undo)";
-    public static final String REGEX_REDO = "(?i)^(redo)";
-    public static final String REGEX_HELP = "(?i)^(help)";
-    public static final String REGEX_SAVE = "(?i)^(save)";
-    public static final String REGEX_EXIT = "(?i)^(exit|quit)";
-    public static final String REGEX_DONE = "(?i)^(done|(complete)(d)|(finish)(ed))";
+	public static final String REGEX_PARSER_ADD = "(?i)^(add)";
+	public static final String REGEX_PARSER_SEARCH = "(?i)^(view|search|sort|find|filter|display)";
+    public static final String REGEX_PARSER_EDIT = "(?i)^(edit|update)";// edited to have number after edit  + " " + "[\\d]"
+    public static final String REGEX_PARSER_DELETE = "(?i)^(delete)";
+    public static final String REGEX_PARSER_UNDO = "(?i)^(undo)";
+    public static final String REGEX_PARSER_REDO = "(?i)^(redo)";
+    public static final String REGEX_PARSER_HELP = "(?i)^(help)";
+    public static final String REGEX_PARSER_SAVE = "(?i)^(save)";
+    public static final String REGEX_PARSER_EXIT = "(?i)^(exit|quit)";
+    public static final String REGEX_PARSER_DONE = "(?i)^(done|(complete)(d)?|(finish)(ed)?)";
+    public static final String REGEX_PARSER_NOTDONE = "(?i)^(undone|incomplete)";
     
     //index for corresponding commands
 	public static final int ADD_INDEX = 1;
@@ -38,6 +40,7 @@ public class Constants {
 	public static final int EXIT_INDEX = 8;
 	public static final int HELP_INDEX = 9;	
 	public static final int DONE_INDEX = 10;
+	public static final int NOTDONE_INDEX = 11;
 	
 	public enum TaskType {
         floating, deadline, event, recurring;

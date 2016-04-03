@@ -1,62 +1,18 @@
 package parser;
-import java.time.LocalDateTime;
 
 import common.CommandObject;
 import common.TaskObject;
 
+import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 public class Parser {
 
-	private static final String ADD_COMMAND = "add";
-	private static final int ADD_INDEX = 1;
 	
 	
-	private static final String SEARCH_COMMAND_1 = "view";
-	private static final String SEARCH_COMMAND_2 = "search";
-	private static final String SEARCH_COMMAND_3 = "sort";
-	private static final String SEARCH_COMMAND_4 = "find";
-	private static final String SEARCH_COMMAND_5 = "filter";
-	private static final String SEARCH_COMMAND_6 = "display";
-	private static final int SEARCH_INDEX = 2;
-
-	private static final String EDIT_COMMAND_1 = "edit";
-	private static final String EDIT_COMMAND_2 = "update";
-	private static final int EDIT_INDEX = 3;
-
-	private static final String DELETE_COMMAND = "delete";
-	private static final int DELETE_INDEX = 4;
-
-	private static final String UNDO_COMMAND = "undo";
-	private static final int UNDO_INDEX = 5;
-	
-	private static final String REDO_COMMAND = "redo";
-	private static final int REDO_INDEX = 6;
-
-	private static final String SAVE_COMMAND = "save";
-	private static final int SAVE_INDEX = 7;
-
-	private static final String EXIT_COMMAND_1 = "exit";
-	private static final String EXIT_COMMAND_2 = "quit";
-	private static final int EXIT_INDEX = 8;
-
-	private static final String HELP_COMMAND = "help";
-	private static final int HELP_INDEX = 9;	
-	
-	private static final String DONE_COMMAND_1 = "done";
-	private static final String DONE_COMMAND_2 = "finish";
-	private static final String DONE_COMMAND_3 = "complete";
-	private static final String DONE_COMMAND_4 = "completed";
-	private static final int DONE_INDEX = 10;
-	
-	private static final String NOTDONE_COMMAND_1 = "undone";
-	private static final String NOTDONE_COMMAND_2 = "incomplete";
-	private static final int NOTDONE_INDEX = 11;
-	
-	private static final String VIEW_RECURRING_COMMAND_1 = "view";
-	private static final int VIEW_RECURRING_INDEX = 12;
-	
-	private static final String CHANGE_COMMAND = "change";
-	private static final int CHANGE_INDEX = 13;
 	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
@@ -72,8 +28,10 @@ public class Parser {
 	 * Constructs the parser object that will take in the user input and a internally 
 	 * system generated taskID
 	 * 
-	 * @param command  user's input into the system of String type
-	 * @param taskId   system generated ID
+	 * @param command  
+	 * 				user's input into the system of String type
+	 * @param taskId   
+	 * 				system generated ID
 	 */
 	public Parser(String command, int taskId) {
 		_command = command;
@@ -84,7 +42,8 @@ public class Parser {
 	 * Runs the methods to process the command and returns command object
 	 * to Logic
 	 * 
-	 * @return CO command object that contains task description and task object
+	 * @return CO 
+	 * 				command object that contains task description and task object
 	 * @throws Exception 
 	 */
 	public CommandObject run() throws Exception {
@@ -95,63 +54,59 @@ public class Parser {
 	/**
 	 * method reads string and trigger the relevant method to process string's information
 	 * 
-	 * @param command  is the user's input to the program
+	 * @param command  
+	 * 				user's input to the program, not null
 	 * @throws Exception 
 	 */
 	public void allocate(String command) throws Exception {
 		assert(!command.isEmpty()); //ensure command is a proper string
+		
 		command = command.trim();
-		if (command.startsWith(EXIT_COMMAND_1) || command.startsWith(EXIT_COMMAND_2)) {
-			CO.setCommandType(EXIT_INDEX);
-		} else if (command.startsWith(HELP_COMMAND)) {
+		
+		if (isMatch(Constants.REGEX_PARSER_EXIT, command)) {
+			CO.setCommandType(Constants.EXIT_INDEX);
+		} else if (isMatch(Constants.REGEX_PARSER_HELP, command)) {
 			parseHelp(command);
-		} else if (command.startsWith(UNDO_COMMAND)) {
-			CO.setCommandType(UNDO_INDEX);
-		} else if (command.startsWith(REDO_COMMAND)) {
-			CO.setCommandType(REDO_INDEX);
-		} else if (command.startsWith(EDIT_COMMAND_1) || command.startsWith(EDIT_COMMAND_2)) {
+		} else if (isMatch(Constants.REGEX_PARSER_UNDO, command)) {
+			CO.setCommandType(Constants.UNDO_INDEX);
+		} else if (isMatch(Constants.REGEX_PARSER_REDO, command)) {
+			CO.setCommandType(Constants.REDO_INDEX);
+		} else if (isMatch(Constants.REGEX_PARSER_EDIT, command)) {
 			parseEdit(command);
-		} else if (command.startsWith(SAVE_COMMAND)) {
+		} else if (isMatch(Constants.REGEX_PARSER_SAVE, command)) {
 			parseSave(command);
-		} else if (command.startsWith(DELETE_COMMAND)) {
+		} else if (isMatch(Constants.REGEX_PARSER_DELETE, command)) {
 			parseDelete(command);
-		} else if (command.startsWith(ADD_COMMAND)) {
+		} else if (isMatch(Constants.REGEX_PARSER_ADD, command)) {
 			parseAdd(command);
-		} else if (command.startsWith(DONE_COMMAND_1) || command.startsWith(DONE_COMMAND_2)
-				|| command.startsWith(DONE_COMMAND_3) || command.startsWith(DONE_COMMAND_4)) {
+		} else if (isMatch(Constants.REGEX_PARSER_DONE, command)) {
 			parseDone(command);
-		} else if (command.startsWith(NOTDONE_COMMAND_1) || command.startsWith(NOTDONE_COMMAND_2)) {
+		} else if (isMatch(Constants.REGEX_PARSER_NOTDONE, command)) {
 			parseNotDone(command);
-		} else if (isSearch(command)) {
+		} else if (isMatch(Constants.REGEX_PARSER_SEARCH, command)) {
 			parseSearch(command);
-		} else if (command.startsWith(VIEW_RECURRING_COMMAND_1)) {
-			parseSearch(command);
-		} else if (command.startsWith(CHANGE_COMMAND)) {
-			parseChange(command);
 		} else {
 			parseSearch(command);
 		}
   	}
 	
-	private void parseChange(String command) throws Exception {
-		CO.setCommandType(CHANGE_INDEX);
-		
-		command = command.replaceFirst("change", "").trim();
-		//not done
-		CommandParser EP = new EditParser();
-		TO = EP.process(command);
-		if (TO.getTitle().isEmpty()) {
-			CO.setTaskObject(TO);
-			CO.setIndex(EP.getIndex());
-			EP.reset();	
+	private boolean isMatch(String input, String command) {
+		Pattern dateTimePattern = Pattern.compile(input);
+		Matcher matcher = dateTimePattern.matcher(command);
+		if (matcher.find()) {
+			return true;
 		} else {
-			throw new Exception("Did you mean edit \"" + command + "\"?");
+			return false;
 		}
-		
 	}
 	
+	
+	/**
+	 * method returns help index to commandobject when the 
+	 * @param command
+	 */
 	public void parseHelp(String command) {
-		CO.setCommandType(HELP_INDEX);
+		CO.setCommandType(Constants.HELP_INDEX);
 		command = command.replaceFirst("(?i)(help )", "");
 		TO.setTitle(command);
 		CO.setTaskObject(TO);
@@ -166,13 +121,13 @@ public class Parser {
 	public void parseDone(String command) {
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
-			CO.setCommandType(DONE_INDEX);
+			CO.setCommandType(Constants.DONE_INDEX);
 			command = command.substring(temp + 1);
 			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
-			CO.setCommandType(SEARCH_INDEX);
+			CO.setCommandType(Constants.SEARCH_INDEX);
 			TO.setStatus("completed");
 			CO.setTaskObject(TO);
 		}
@@ -186,40 +141,19 @@ public class Parser {
 	public void parseNotDone(String command) {
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
-			CO.setCommandType(NOTDONE_INDEX);
+			CO.setCommandType(Constants.NOTDONE_INDEX);
 			command = command.substring(temp + 1);
 			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
-			CO.setCommandType(SEARCH_INDEX);
+			CO.setCommandType(Constants.SEARCH_INDEX);
 			TO.setStatus("incomplete");
 			CO.setTaskObject(TO);
 		}
 		
 	}
 	
-	/**
-	 * method sets command type to view more details for recurring tasks
-	 * if there is no index to specify the recurring task, parseSearch will be 
-	 * invoked 
-	 * 
-	 * @param command
-	 * 				user's input for the system, such as "view 5" to view task 5 in the list
-	 * @throws Exception
-	 */
-	public void parseView(String command) throws Exception {
-		int temp = command.indexOf(" ");
-		if (temp != -1) {
-			CO.setCommandType(VIEW_RECURRING_INDEX);
-	 		command = command.substring(temp + 1);
-	 		temp = Integer.parseInt(command);
-	 		CO.setIndex(temp);
-		} else {
-			parseSearch(command);
-		}
-		
- 	}
 	
 	/**
 	 * method sets command type, index of task to edit and parts of the task to edit
@@ -229,7 +163,7 @@ public class Parser {
 	 * @throws Exception 
 	 */
 	public void parseEdit(String command) throws Exception {
-		CO.setCommandType(EDIT_INDEX);
+		CO.setCommandType(Constants.EDIT_INDEX);
 		
 		if (command.contains("edit all")) {
 			command = command.replaceFirst("edit all", "").trim();
@@ -254,9 +188,9 @@ public class Parser {
 	 * @throws Exception 
 	 */
 	public void parseAdd(String command) throws Exception {
-		CO.setCommandType(ADD_INDEX);
+		CO.setCommandType(Constants.ADD_INDEX);
 		CommandParser AP = new AddParser();
-		command = command.replaceFirst(Constants.REGEX_ADD, "").trim();
+		command = command.replaceFirst(Constants.REGEX_PARSER_ADD, "").trim();
 		TO = AP.process(command);
 		//add these 5 main attributes
 		TO.setTaskId(_taskId);
@@ -274,11 +208,11 @@ public class Parser {
 	 * @throws Exception 
 	 */
 	public void parseSearch(String command) throws Exception {
-		CO.setCommandType(SEARCH_INDEX);
+		CO.setCommandType(Constants.SEARCH_INDEX);
 		CommandParser SP = new SearchParser();
 
 		// if there is no search keyword, set TaskObject values to null/-1
-		if (command.indexOf(" ") == -1 && isSearch(command)) {
+		if (command.indexOf(" ") == -1 && isMatch(Constants.REGEX_PARSER_SEARCH,command)) {
 			TO.setStartTime(-1);
 			TO.setEndTime(-1);
 			TO.setStartDate(-1);
@@ -320,19 +254,7 @@ public class Parser {
 			return false;
 		}
 	}
-	
-	/**
-	 * method checks if the search keyword is present
-	 */
- 	public boolean isSearch(String command) {
- 		if(command.startsWith(SEARCH_COMMAND_2) || command.startsWith(SEARCH_COMMAND_1)
- 			|| command.startsWith(SEARCH_COMMAND_3) || command.startsWith(SEARCH_COMMAND_4) 
- 			|| command.startsWith(SEARCH_COMMAND_5) || command.startsWith(SEARCH_COMMAND_6)) {
- 			return true;
- 		} else {
- 			return false;
- 		}
- 	}
+
  	
  	/**
  	 * method sets command type for delete commands 
@@ -342,7 +264,7 @@ public class Parser {
  	 * @throws Exception 
  	 */
  	public void parseDelete(String command) throws Exception {
- 		CO.setCommandType(DELETE_INDEX);
+ 		CO.setCommandType(Constants.DELETE_INDEX);
  		int index;
  		index = extractDeleteIndex(command);
  		CO.setIndex(index);
@@ -384,7 +306,7 @@ public class Parser {
  	 * @throws Exception 
  	 */
  	public void parseSave(String command) throws Exception {
- 		CO.setCommandType(SAVE_INDEX);
+ 		CO.setCommandType(Constants.SAVE_INDEX);
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		if (command.length() > index) {

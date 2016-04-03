@@ -57,7 +57,6 @@ public class AddParser extends CommandParser {
         }
 		
 		_task = input;
-		//_task = "HAPPY APRIL FOOLS BITCHES";
 	}
 	
 	

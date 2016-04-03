@@ -42,7 +42,7 @@ public class UIMain extends Application {
 
 	private void setStyle(Scene scene) {
 		URL url = this.getClass().getResource("MainStyle.css");
-		if (url == null) {
+		if (url == null) {	
 			System.out.println("Error: MainStyle.css stylesheet not found.");       
 		}
 		String css = url.toExternalForm(); 

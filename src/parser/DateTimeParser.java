@@ -1,6 +1,7 @@
 package parser;
 
-
+import common.AtfLogger;
+import common.TaskObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -11,10 +12,6 @@ import java.util.regex.Matcher;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-
-import common.AtfLogger;
-import common.TaskObject;
 import parser.Constants.TaskType;
 
 /*
@@ -100,7 +97,7 @@ public class DateTimeParser {
 		tasktype = getTaskType(input);
 		//separate stuff for different task types
 		switch(tasktype) {
-		case event:
+		case event :
 			String temp1 = "", temp2 = "";
 			Pattern split = Pattern.compile(" to ");
 			Matcher matcher = split.matcher(input);
@@ -112,12 +109,12 @@ public class DateTimeParser {
 			separateDateTime(temp1, "start");
 			separateDateTime(temp2, "end");
 			break;
-		case recurring:
+		case recurring :
 			TO.setIsRecurring(true);
 			recur(input);
 			break;
-		case deadline:
-		default:
+		case deadline :
+		default :
 			if(input.contains("to")) {
 				endDateTime = startDateTime;
 			}
