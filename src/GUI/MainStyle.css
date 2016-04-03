@@ -15,6 +15,10 @@
 #taskTable .column-header .label {
 	-fx-text-fill: white;
 }
+.table-row-cell:selected { 
+   -fx-border-color: black;
+   -fx-background-color: orange
+}
 
 #taskTable .column-header {
 	-fx-background-color: #3B8686;
@@ -22,6 +26,7 @@
 	-fx-border-color: white;
     -fx-effect: innershadow( gaussian, #3B8686, 5, 0, 5, 5 );
 }
+
 
 #indexColumn {
 	-fx-alignment: CENTER; 
@@ -32,7 +37,7 @@
 #statusColumn {
 	-fx-alignment: CENTER; 
 	-fx-font-size: 17; 
-	-fx-font-family: 'Agency FB', 'Times New Roman';	
+	-fx-font-family: 'Agency FB';	
 }
 		
 #taskColumn {

@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -169,11 +170,31 @@ public class MainController implements Initializable {
 	}
 
 	private void feedbackUser() {
+		setSelectionFocus();			
 		if (isRecurringDateRequest()) {
 			fillSidebar();
 		} else {
 			displayMessage(); // print feedback message
 			display(); // refreshes table after every command
+		}
+	}
+
+	private void setSelectionFocus() {
+		if (_input.startsWith("add")){
+			taskTable.scrollTo(taskTable.getItems().size()-1);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					taskTable.getSelectionModel().select(taskTable.getItems().size()-1); 
+				}
+			});
+		} else if (_input.startsWith("edit")) {
+			String[] input = _input.split(" ");
+			int index = Integer.parseInt(input[1]);
+			taskTable.scrollTo(index-1);
+			taskTable.getSelectionModel().select(index-1);
+		} else {
+			taskTable.getSelectionModel().clearSelection();
 		}
 	}
 	
@@ -273,6 +294,39 @@ public class MainController implements Initializable {
 	}
 
 	private void setCellProperty() {
+		wrapText();
+		colourCode();
+	}
+
+	private void colourCode() {
+		if (sortStatus == 0) {
+			statusColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
+				@Override
+				public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
+					final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
+						private Text text;
+
+						@Override
+						public void updateItem(String item, boolean empty) {
+							super.updateItem(item, empty);
+							if (!isEmpty()) {
+								text = new Text(item.toString());
+								if (item.startsWith("incomplete")) {
+									this.getTableRow().getStyleClass().add("undoneTasks");
+								} else if (item.startsWith("complete")) {
+									this.getTableRow().getStyleClass().add("doneTasks");
+								}
+								setGraphic(text);
+							}
+						}
+					};
+					return cell;
+				}
+			});
+		}
+	}
+
+	private void wrapText() {
 		taskColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
@@ -303,29 +357,6 @@ public class MainController implements Initializable {
 						if (!isEmpty()) {
 							text = new Text(item.toString());
 							text.wrappingWidthProperty().bind(timeColumn.widthProperty());
-							setGraphic(text);
-						}
-					}
-				};
-				return cell;
-			}
-		});
-		
-		statusColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
-			@Override
-			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
-				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
-					private Text text;
-					@Override
-					public void updateItem(String item, boolean empty) {
-						super.updateItem(item, empty);
-						if (!isEmpty()) {
-							text = new Text(item.toString());
-							if (item.startsWith("incomplete")) {
-								this.getTableRow().getStyleClass().add("undoneTasks");	
-							} else if (item.startsWith("complete")){
-								this.getTableRow().getStyleClass().add("doneTasks");
-							}
 							setGraphic(text);
 						}
 					}
