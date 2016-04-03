@@ -47,10 +47,13 @@ public class Recurring {
 			if (status.equals(STATUS_COMPLETED)) {
 				updateEventToCompleted(task, taskList, status);
 			} else {
+				logger.log(Level.WARNING, "unable to update status of event");
 				RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
 				throw e;
 			}
 		}
+		
+		logger.log(Level.INFO, "updated status of event " + task.getTitle() + " to " + status);
 	}
 
 	private static void updateEventToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status) {
@@ -66,6 +69,7 @@ public class Recurring {
 			System.out.println(eventEndTime.toString());
 			eventEndTime = task.getEndDateTime();
 			eventStartTime = task.getStartDateTime();
+			logger.log(Level.INFO, "Modified recurring event to next set of timings, and split current overdue event");
 		}
 
 		if (task.getTaskDateTimes().size() <= 1) {
@@ -82,17 +86,25 @@ public class Recurring {
 		
 		if (task.getTaskDateTimes().size() == 1) {
 			task.setStatus(status);
+			logger.log(Level.INFO, "Recurring event has come to an end");
 		} else {
 			splitTaskFromRecurringEvent(taskName, eventTimePair.getStartDateTime(), eventTimePair.getEndDateTime(), taskList, status);
 			renewEvent(task);
+			logger.log(Level.INFO, "Modified recurring event to next set of timings, and split current completed event");
 		}
 	}
 	
 	private static void splitTaskFromRecurringEvent(String taskName, LocalDateTime startDateTime, LocalDateTime endDateTime, ArrayList<TaskObject> taskList, String status) {
 		int taskId = generateTaskId(taskList);
+		
+		assert (taskId < 0);
+		assert (startDateTime.isBefore(endDateTime));
+		
 		TaskObject splitEvent = createSplitEventTaskObject(taskName, startDateTime, endDateTime, status, taskId);
 		Add add = new Add(splitEvent, -1, taskList);
 		add.run();
+		
+		logger.log(Level.INFO, "Added the split recurring event to task list");
 	}
 	
 	private static TaskObject createSplitEventTaskObject(String taskName, LocalDateTime startDateTime, LocalDateTime endDateTime, String status, int taskId) {
@@ -100,6 +112,8 @@ public class Recurring {
 		splitEvent.setIsRecurring(false);
 		splitEvent.addToTaskDateTimes(new LocalDateTimePair(startDateTime, endDateTime));
 		TimeOutput.setEventTimeOutput(splitEvent);
+		
+		logger.log(Level.INFO, "Created a split event task object to be added");
 		return splitEvent;
 	}
 
@@ -185,11 +199,12 @@ public class Recurring {
 	}
 
 	// Used in logic upon construction of logic object
-	public static void updateRecurringDeadlines(ArrayList<TaskObject> taskList) {
+	public static void updateRecurringDeadlines(ArrayList<TaskObject> taskList) throws RecurrenceException{
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
 					updateDeadline(taskList.get(i), taskList, STATUS_OVERDUE);
+					logger.log(Level.INFO, "about to update recurring deadline:" + taskList.get(i).getTitle());
 				}
 			}
 		}
@@ -207,14 +222,19 @@ public class Recurring {
 	 * 
 	 * @param task
 	 */
-	public static void updateDeadline(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+	public static void updateDeadline(TaskObject task, ArrayList<TaskObject> taskList, String status) throws RecurrenceException{
 		if (status.equals(STATUS_OVERDUE)) {
 			updateDeadlineToOverdue(task, taskList, status);
 		} else {
 			if (status.equals(STATUS_COMPLETED)) {
 				updateDeadlineToCompleted(task, taskList, status);
+			} else {
+				logger.log(Level.WARNING, "unable to update status of deadline");
+				RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
+				throw e;
 			}
 		}
+		logger.log(Level.INFO, "updated status of deadline " + task.getTitle() + " to " + status);
 	}
 
 	private static void updateDeadlineToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status) {
@@ -227,12 +247,14 @@ public class Recurring {
 			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList, status);
 			renewDeadline(task);
 			deadlineDateTime = task.getStartDateTime();
+			logger.log(Level.INFO, "modified recurring deadline to the next deadline");
 		}
 
 		// Special case for only 1 timing left
 		if (task.getTaskDateTimes().size() == 1) {
 			if (LocalDateTime.now().isAfter(deadlineDateTime)) {
 				task.setStatus(status);
+				logger.log(Level.INFO, "recurring deadline has come to an end");
 			}
 		}
 	}
@@ -257,6 +279,8 @@ public class Recurring {
 		nextDeadline = task.getTaskDateTimes().get(0);
 		newStartDateTime = nextDeadline.getStartDateTime();
 		task.setStartDateTime(newStartDateTime);
+		
+		logger.log(Level.INFO, "set the next deadline for recurring task");
 
 		boolean isInfiniteRecurrence = checkIfInfiniteRecurrence(task.getInterval());
 		if (isInfiniteRecurrence) {

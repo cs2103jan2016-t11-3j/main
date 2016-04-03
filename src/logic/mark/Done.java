@@ -71,11 +71,11 @@ public class Done extends Mark {
 			if (task.getTaskId() == taskIdToMark) {
 				originalTask.setTaskObject(task);
 				originalTimings.addAll(task.getTaskDateTimes());
-		
+
 				taskName = task.getTitle();
 				statusBeforeChange = task.getStatus();
 				markedTask = task;
-				
+
 				if (task.getIsRecurring()) {
 					changeStatusForRecurringTask(task);
 				} else {
@@ -101,9 +101,14 @@ public class Done extends Mark {
 	}
 
 	private void changeStatusForRecurringDeadline(TaskObject task) {
-		Recurring.updateDeadline(task, taskList, STATUS_COMPLETED);
+		try {
+			Recurring.updateDeadline(task, taskList, STATUS_COMPLETED);
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			createErrorOutput(exceptionMessage);
+		}
 	}
-	
+
 	private void changeStatusForRecurringEvent(TaskObject task) {
 		try {
 			Recurring.updateEvent(task, taskList, STATUS_COMPLETED);

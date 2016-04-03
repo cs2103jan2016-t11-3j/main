@@ -71,7 +71,7 @@ public class Add {
 		this.lastSearchedIndex = lastSearchedIndex;
 		this.taskList = taskList;
 	}
-	
+
 	public Add(TaskObject taskObj, int index, ArrayList<TaskObject> taskList) {
 		this.task = taskObj;
 		this.index = index;
@@ -86,12 +86,13 @@ public class Add {
 	 *         will see
 	 */
 	public ArrayList<String> run() {
-		// Special processing to handle undoing the deletion of an occurrence of a recurring task
+		// Special processing to handle undoing the deletion of an occurrence of
+		// a recurring task
 		if (task.getIsContainingOnlyTaskDateTimes()) {
 			addSingleOccurrence();
 		} else {
 			assert (!task.getTitle().equals(""));
-			//setUpLogger();
+			// setUpLogger();
 			try {
 				determineTaskCategory();
 				processTaskInformation();
@@ -128,6 +129,7 @@ public class Add {
 
 	/**
 	 * Control flow to determine adding process for each type of task
+	 * 
 	 * @throws Exception
 	 */
 	private void processTaskInformation() throws Exception {
@@ -156,33 +158,34 @@ public class Add {
 
 	/*****************************************************************************/
 	/**
-	 * Checks for clashes between events (including recurrent times) and adds to taskList
-	 * Also creates all dates and times for recurrent tasks
+	 * Checks for clashes between events (including recurrent times) and adds to
+	 * taskList Also creates all dates and times for recurrent tasks
 	 */
 	private void processEventDetails() {
-		boolean isOverdue = checkIfOverdue();
-		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
-		if (task.getIsRecurring()) {
-			addRecurringEventTimes();
-			removeAnyDeletedOccurrences();
-		}
-		if (isOverdue) {
+		try {
+			boolean isOverdue = checkIfOverdue();
+			copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 			if (task.getIsRecurring()) {
-				try {
-					Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
-				} catch (RecurrenceException e) {
-					String exceptionMessage = e.getRecurrenceExceptionMessage();
-					output.add(exceptionMessage);
-				}
-			} else {
-				setTaskStatus(isOverdue);
+				addRecurringEventTimes();
+				removeAnyDeletedOccurrences();
 			}
+			if (isOverdue) {
+				if (task.getIsRecurring()) {
+					Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
+				} else {
+					setTaskStatus(isOverdue);
+				}
+			}
+			checkIfEventsClash();
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			output.add(exceptionMessage);
 		}
-		checkIfEventsClash();
 	}
 
 	/**
 	 * Copies startDateTime and endDateTime to taskDateTimes
+	 * 
 	 * @param startDateTime
 	 * @param endDateTime
 	 */
@@ -194,47 +197,54 @@ public class Add {
 	private void addRecurringEventTimes() {
 		Recurring.setAllRecurringEventTimes(task);
 	}
-	
+
 	private void removeAnyDeletedOccurrences() {
 		ArrayList<LocalDateTimePair> deletedOccurrences = task.getDeletedTaskDateTimes();
-		LocalDateTimePair taskCurrentStartEndDateTime = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
-		
+		LocalDateTimePair taskCurrentStartEndDateTime = new LocalDateTimePair(task.getStartDateTime(),
+				task.getEndDateTime());
+
 		try {
 			for (int i = 0; i < deletedOccurrences.size(); i++) {
 				logger.log(Level.INFO, "Removing occurrence that had been previously deleted");
 				LocalDateTimePair deletedOccurrence = deletedOccurrences.get(i);
-				
+
 				for (int j = 0; j < task.getTaskDateTimes().size(); j++) {
-					if (task.getTaskDateTimes().get(j).equals(deletedOccurrence) && 
-							!task.getTaskDateTimes().get(j).equals(taskCurrentStartEndDateTime)) {
+					if (task.getTaskDateTimes().get(j).equals(deletedOccurrence)
+							&& !task.getTaskDateTimes().get(j).equals(taskCurrentStartEndDateTime)) {
 						task.getTaskDateTimes().remove(j);
 					}
 				}
 			}
 		} catch (IndexOutOfBoundsException e) {
-			
+
 		}
 	}
-	
+
 	/***********************************************************************************/
 	/**
-	 *  Checks if a deadline is overdue, modifies status if necessary, adds to taskList
+	 * Checks if a deadline is overdue, modifies status if necessary, adds to
+	 * taskList
 	 */
 	private void processDeadlineDetails() {
-		boolean isOverdue = checkIfOverdue();
-		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
-		if (task.getIsRecurring()) {
-			addRecurringDeadlineTimes(task);
-		}
-		if (isOverdue) {
+		try {
+			boolean isOverdue = checkIfOverdue();
+			copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 			if (task.getIsRecurring()) {
-				Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
-			} else {
-				setTaskStatus(isOverdue);
+				addRecurringDeadlineTimes(task);
 			}
+			if (isOverdue) {
+				if (task.getIsRecurring()) {
+					Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
+				} else {
+					setTaskStatus(isOverdue);
+				}
+			}
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			output.add(exceptionMessage);
 		}
 	}
-	
+
 	private void addRecurringDeadlineTimes(TaskObject task) {
 		Recurring.setAllRecurringDeadlineTimes(task);
 	}
@@ -269,7 +279,7 @@ public class Add {
 	/**
 	 * Group of functions checking for clashes between events.
 	 */
-	
+
 	private void checkIfEventsClash() throws NullPointerException {
 		if (task.getStartDateTime().isAfter(task.getEndDateTime())) {
 			DateTimeException e = new DateTimeException("Start Date Time after End Date Time");
@@ -295,14 +305,14 @@ public class Add {
 	}
 
 	private void processIndividualClashes(int currentIndex, int newIndex,
-			ArrayList<LocalDateTimePair> currentTaskDateTimes, ArrayList<LocalDateTimePair> newTaskDateTimes, 
+			ArrayList<LocalDateTimePair> currentTaskDateTimes, ArrayList<LocalDateTimePair> newTaskDateTimes,
 			TaskObject current) {
-		
+
 		LocalDateTime currentStart = currentTaskDateTimes.get(currentIndex).getStartDateTime();
 		LocalDateTime currentEnd = currentTaskDateTimes.get(currentIndex).getEndDateTime();
 		LocalDateTime newStart = newTaskDateTimes.get(newIndex).getStartDateTime();
 		LocalDateTime newEnd = newTaskDateTimes.get(newIndex).getEndDateTime();
-		
+
 		if (checkIndividualTimeClash(currentStart, currentEnd, newStart, newEnd)) {
 			this.isClash = true;
 			addToClashedTasks(current);
@@ -325,7 +335,7 @@ public class Add {
 	 *            The TaskObject passed into the function from the task list.
 	 * @return
 	 */
-	private boolean checkIndividualTimeClash(LocalDateTime currentStart, LocalDateTime currentEnd, 
+	private boolean checkIndividualTimeClash(LocalDateTime currentStart, LocalDateTime currentEnd,
 			LocalDateTime newStart, LocalDateTime newEnd) throws DateTimeException {
 
 		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
@@ -358,21 +368,23 @@ public class Add {
 	/**
 	 * Group of functions for addition of task
 	 */
-	
-	// For processing undo of deletion of a single occurrence 
+
+	// For processing undo of deletion of a single occurrence
 	private void addSingleOccurrence() {
 		ArrayList<LocalDateTimePair> timings = task.getTaskDateTimes();
-		assert (timings.size() == 1); 	// it should only store 1 occurrence of timings
+		assert (timings.size() == 1); // it should only store 1 occurrence of
+										// timings
 		assert (lastSearchedIndex != -1);
-		
+
 		LocalDateTimePair occurrenceToBeAdded = timings.get(0);
 		TaskObject taskToBeModified = taskList.get(lastSearchedIndex - 1);
 		taskToBeModified.getTaskDateTimes().add(index - 1, occurrenceToBeAdded);
-		
-		// updates the startDateTime and endDateTime to that of the occurrence that has been added back
+
+		// updates the startDateTime and endDateTime to that of the occurrence
+		// that has been added back
 		taskToBeModified.updateStartAndEndDateTimes();
 		isAddSingleOccurrence = true;
-		
+
 	}
 
 	private void addTask() throws NullPointerException {
@@ -409,6 +421,7 @@ public class Add {
 		addedExternal = true;
 
 	}
+
 	/****************************************************************************/
 	/**
 	 * Group of functions for creating output.
@@ -438,8 +451,9 @@ public class Add {
 		// NEED A BETTER WAY TO OUTPUT CLASHES
 		return text;
 	}
+
 	/***************************************************************************/
-	
+
 	private void addToClashedTasks(TaskObject current) {
 		boolean canAdd = true;
 		for (int i = 0; i < clashedTasks.size(); i++) {
@@ -464,19 +478,19 @@ public class Add {
 	public TaskObject getTask() {
 		return task;
 	}
-	
+
 	public boolean getIsClash() {
 		return isClash;
 	}
-	
+
 	public boolean getIsAddSingleOccurrence() {
 		return isAddSingleOccurrence;
 	}
-	
+
 	public ArrayList<TaskObject> getClashedTasks() {
 		return clashedTasks;
 	}
-	
+
 	public void setOutput(ArrayList<String> output) {
 		this.output = output;
 	}
