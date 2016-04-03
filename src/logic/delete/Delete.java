@@ -293,7 +293,7 @@ public class Delete {
 	
 	private void setDeleteInformationForSingleOccurrenceDelete() {
 		removedTaskIndex = lastSearchedIndex - 1;
-		removedTask = taskList.get(removedTaskIndex);
+		removedTask = lastOutputTaskList.get(removedTaskIndex);
 		removedTaskName = removedTask.getTitle();
 	}
 	

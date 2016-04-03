@@ -222,43 +222,48 @@ public class Edit {
 	}
 	
 	private void editRecurrenceTiming() {
-		TaskObject task = taskList.get(editTaskIndex - 1);
+		TaskObject task = lastOutputTaskList.get(editTaskIndex - 1);
 		originalTask.setTaskObject(task);
 		
 		LocalDateTimePair originalTiming = new LocalDateTimePair();
 		try {
 			originalTiming = task.getTaskDateTimes().get(editOccurrenceIndex - 1);
+
+			originalStartDate = originalTiming.getStartDateTime().toLocalDate();	
+			originalStartTime = originalTiming.getStartDateTime().toLocalTime();
+			originalEndDate = originalTiming.getEndDateTime().toLocalDate();
+			originalEndTime = originalTiming.getEndDateTime().toLocalTime();
+			
+			if (isEditStartDateOccurrence && isEditStartTimeOccurrence) {
+				originalTiming.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
+			} else {
+				if (isEditStartDateOccurrence) {
+					originalTiming.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+				}
+				if (isEditStartTimeOccurrence) {
+					originalTiming.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
+				}
+			}
+			if (isEditEndDateOccurrence && isEditEndTimeOccurrence) {
+				originalTiming.setEndDateTime(LocalDateTime.of(editEndDate, editEndTime));
+			} else {
+				if (isEditEndDateOccurrence) {
+					originalTiming.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+				}
+				if (isEditEndTimeOccurrence) {
+					originalTiming.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
+				}
+			}
+			
+			task.updateStartAndEndDateTimes();
+			editTask = task;
 		} catch (IndexOutOfBoundsException e) {
 			tempOutput.add(MESSAGE_NO_SUCH_OCCURRENCE_EXISTS);
+			isEditStartDateOccurrence = false;
+			isEditStartTimeOccurrence = false;
+			isEditEndDateOccurrence = false;
+			isEditEndTimeOccurrence = false;
 		}
-		originalStartDate = originalTiming.getStartDateTime().toLocalDate();	
-		originalStartTime = originalTiming.getStartDateTime().toLocalTime();
-		originalEndDate = originalTiming.getEndDateTime().toLocalDate();
-		originalEndTime = originalTiming.getEndDateTime().toLocalTime();
-		
-		if (isEditStartDateOccurrence && isEditStartTimeOccurrence) {
-			originalTiming.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
-		} else {
-			if (isEditStartDateOccurrence) {
-				originalTiming.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
-			}
-			if (isEditStartTimeOccurrence) {
-				originalTiming.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
-			}
-		}
-		if (isEditEndDateOccurrence && isEditEndTimeOccurrence) {
-			originalTiming.setEndDateTime(LocalDateTime.of(editEndDate, editEndTime));
-		} else {
-			if (isEditEndDateOccurrence) {
-				originalTiming.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
-			}
-			if (isEditEndTimeOccurrence) {
-				originalTiming.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
-			}
-		}
-		
-		task.updateStartAndEndDateTimes();
-		editTask = task;
 	}
 	
 	/**
