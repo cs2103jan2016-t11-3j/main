@@ -79,7 +79,7 @@ public class Delete {
 	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
 	private int lastSearchedIndex;
 
-	// Internal checers
+	// Internal checkers
 	private boolean isDeleteSingleOccurrence = false;
 	private boolean isDeleteAll = false;
 	private boolean hasDeletedInternal = false;
@@ -449,6 +449,10 @@ public class Delete {
 	
 	public boolean getIsDeleteAll() {
 		return isDeleteAll;
+	}
+	
+	public boolean getIsDeleteSingleOccurrence() {
+		return isDeleteSingleOccurrence;
 	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {

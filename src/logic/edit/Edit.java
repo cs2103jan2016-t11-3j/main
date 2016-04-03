@@ -1060,4 +1060,8 @@ public class Edit {
 	public boolean getIsEditAll() {
 		return isEditAll;
 	}
+	
+	public boolean getIsEditSingleOccurrence() {
+		return isEditSingleOccurrence;
+	}
 }

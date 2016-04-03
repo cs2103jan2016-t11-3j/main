@@ -42,6 +42,7 @@ public class Add {
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
 
+	private boolean isAddSingleOccurrence = false;
 	private boolean isEvent = false;
 	private boolean isDeadline = false;
 	private boolean isFloating = false;
@@ -94,6 +95,7 @@ public class Add {
 				determineTaskCategory();
 				processTaskInformation();
 				addTask();
+				saveToStorage();
 				createOutput();
 			} catch (DateTimeException e) {
 				output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
@@ -355,16 +357,11 @@ public class Add {
 		
 		// updates the startDateTime and endDateTime to that of the occurrence that has been added back
 		taskToBeModified.updateStartAndEndDateTimes();
+		isAddSingleOccurrence = true;
 		
 	}
-	
-	private void addTask() {
-		addInternal();
-		addExternal();
-		logger.log(Level.INFO, "added tasks to the taskList");
-	}
 
-	private void addInternal() throws NullPointerException {
+	private void addTask() throws NullPointerException {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
 		if (index != -1) { // must add at a specific point
@@ -381,7 +378,7 @@ public class Add {
 		}
 	}
 
-	private void addExternal() {
+	private void saveToStorage() {
 		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
@@ -458,10 +455,14 @@ public class Add {
 		return isClash;
 	}
 	
+	public boolean getIsAddSingleOccurrence() {
+		return isAddSingleOccurrence;
+	}
+	
 	public ArrayList<TaskObject> getClashedTasks() {
 		return clashedTasks;
 	}
-
+	
 	public void setOutput(ArrayList<String> output) {
 		this.output = output;
 	}

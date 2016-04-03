@@ -107,7 +107,7 @@ public class CommandFacade {
 		// Clears the redo stack if it is a new command which modifies the task
 		// list
 		if (!redoList.isEmpty() && isListOperation(commandType) && !isUndoAction && !isRedoAction) {
-			clearRedoList();
+			redoList.clear();
 		}
 
 		switch (commandType) {
@@ -163,11 +163,12 @@ public class CommandFacade {
 		Add add = new Add(taskObj, index, lastSearchedIndex, taskList);
 		setOutput(add.run());
 		setLastOutputTaskList(taskList);
+		boolean isAddSingleOccurrence = add.getIsAddSingleOccurrence();
 
 		if (isUndoAction) {
-			addToList(commandObj, redoList);
+			addToList(commandObj, isAddSingleOccurrence, redoList);
 		} else {
-			addToList(commandObj, undoList);
+			addToList(commandObj, isAddSingleOccurrence, undoList);
 		}
 	}
 
@@ -190,6 +191,11 @@ public class CommandFacade {
 		setLastOutputTaskList(search.getLastOutputTaskList());
 		setLastSearchedIndex(search.getSearchIndex());	
 	}
+	
+	private void searchFunction(CommandObject cmdObjToRunSearchByIndex) {
+		Search search = new Search(cmdObjToRunSearchByIndex, taskList, lastOutputTaskList);
+		//setOutput(search.run());
+	}
 
 	// Calls Display function which outputs the entire task list.
 	private void displayFunction() {
@@ -207,6 +213,9 @@ public class CommandFacade {
 		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList, lastSearchedIndex);
 		setOutput(edit.run());
 		setLastOutputTaskList(taskList);
+
+		// if it was a single occurrence that was edited, continue to display the sidebar
+		// callSearchByIndexToDisplaySidebar(edit.getIsEditSingleOccurrence());
 
 		if (isUndoAction) {
 			addToList(edit, redoList);
@@ -250,6 +259,9 @@ public class CommandFacade {
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
 
+		// if it was a single occurrence that was edited, continue to display the sidebar
+		// callSearchByIndexToDisplaySidebar(delete.getIsDeleteSingleOccurrence());
+
 		removedTask = delete.getRemovedTask();
 		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
 				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
@@ -264,6 +276,9 @@ public class CommandFacade {
 		setLastOutputTaskList(this.taskList);
 		setUndoList(delete.getUndoList());
 		setRedoList(delete.getRedoList());
+		
+		// if it was a single occurrence that was edited, continue to display the sidebar
+		// callSearchByIndexToDisplaySidebar(delete.getIsDeleteSingleOccurrence());
 
 		removedTask = delete.getRemovedTask();
 		removedOccurrenceTiming = delete.getRemovedTaskOccurrenceDetails();
@@ -272,11 +287,6 @@ public class CommandFacade {
 		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
 				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
 		
-	}
-
-	// If the command was 'delete all', all the 3 lists would be empty
-	private boolean checkIfCommandIsDeleteAll() {
-		return taskList.isEmpty() && undoList.isEmpty() && redoList.isEmpty();
 	}
 
 	// Checks that removedTask is not null, then adds the corresponding CommandObject to the
@@ -399,12 +409,12 @@ public class CommandFacade {
 	 * facilitate future deletion. <br>
 	 * If the added task was a recurring task, 
 	 */
-	private void addToList(CommandObject commandObj, Deque<CommandObject> list) {
+	private void addToList(CommandObject commandObj, boolean isAddSingleOccurrence, Deque<CommandObject> list) {
 		assert (commandType == INDEX_ADD);
 		
 		CommandObject newCommandObj = new CommandObject();
 		
-		if (commandObj.getLastSearchedIndex() != -1) {	// it is addition of a single occurrence
+		if (isAddSingleOccurrence) {	// it is addition of a single occurrence
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
 			
 		} else {
@@ -542,12 +552,13 @@ public class CommandFacade {
 				|| command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
 	}
 
-	private void clearRedoList() {
-		while (!redoList.isEmpty()) {
-			redoList.pop();
+	/*private void callSearchByIndexToDisplaySidebar(boolean bool) {
+		if (bool) {
+			CommandObject cmdObjToRunSearchByIndex = new CommandObject(INDEX_SEARCH_DISPLAY, new TaskObject(), lastSearchedIndex);
+			searchFunction(cmdObjToRunSearchByIndex);
 		}
-	}
-
+	}*/
+	
 	private void printInvalidCommandMessage() {
 		output.clear();
 		output.add(MESSAGE_INVALID_COMMAND);
