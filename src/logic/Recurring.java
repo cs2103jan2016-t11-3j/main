@@ -43,7 +43,7 @@ public class Recurring {
 		if (status.equals(STATUS_OVERDUE)) {
 			updateEventToOverdue(task, taskList, status);
 		} else {
-			if (status.equals(STATUS_OVERDUE)) {
+			if (status.equals(STATUS_COMPLETED)) {
 				updateEventToCompleted(task, taskList, status);
 			}
 		}
