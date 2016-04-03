@@ -95,7 +95,7 @@ public class MainController implements Initializable {
 	}
 
 	private void hideSidePanel() {
-		if (!_input.startsWith("edit")) {
+		if (!_input.startsWith("edit") && !_input.startsWith("delete")) {
 			taskDateList.setVisible(false);
 		} else {
 			fillSidebar();
