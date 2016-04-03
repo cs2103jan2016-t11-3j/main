@@ -4,7 +4,11 @@ import common.TaskObject;
 import java.time.LocalDateTime;
 
 /**
- * This class is an abstract class to hold certain
+ * This class is an abstract class that is the parent class for
+ * AddParser, EditParser and SearchParser. Contains task, startdatetime
+ * and enddatetime as well as some basic methods that all 3 child will
+ * need to call. 
+ * 
  * @author sylvesterchin
  *
  */

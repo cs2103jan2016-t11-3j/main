@@ -4,6 +4,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+
+/**
+ * This class's job is to identify the correct time from a user's string input.
+ * It recognises time in 2 main formats, hh:mm and hh:mm AM/PM.
+ * 
+ * @author sylvesterchin
+ *
+ */
 public class TimeParser {
 	private final ArrayList<String> list = new ArrayList<String>();
 	private int time = -1;
@@ -12,27 +20,27 @@ public class TimeParser {
 		
 	
 	/**
-	 * this method takes in the user's input from add/edit/search parser
+	 * This method takes in the user's input from add/edit/search parser
 	 * 
-	 *@param input  time input from user
-	 *			e.g. 21:59hr, 7.13pm
+	 *@param input  
+	 *				time input from user. null input results in nothing being done
+	 *				e.g. 21:59hr, 7.13pm
 	 * @throws Exception 
 	 */
 	public void processTime(String input) throws Exception {
 		if (!input.isEmpty()) {
 			furtherProcessTime(input);
 			convertToString();
-		} else {
-			
 		}
 	}
 	
 	
 	
 	/**
-	 * this method will check process the time input by recognizing am/pm/hr
+	 * This method will check process the time input by recognizing am/pm/hr
 	 * 
-	 * @param input   time input from user
+	 * @param input   
+	 * 				time input from user, non-null string
 	 */
 	public void furtherProcessTime(String input) {
 		if (isAM(input)) {
@@ -57,7 +65,12 @@ public class TimeParser {
 	}
 	
 	/**
-	 * this method cleans the string and converts to the integer form. It will be manipulated into HHMM format
+	 * This method cleans the string and converts to the integer form. It will be manipulated into HHMM format
+	 * 
+	 * @param input
+	 * 				time input in string format. non null. 
+	 * @param isPM
+	 * 				boolean, true if the time input has "PM" in it
 	 */
 	public void setTime(String input, boolean isPM) {
 		if (input.matches(Constants.REGEX_TIME_HHMM)) {
@@ -86,8 +99,9 @@ public class TimeParser {
 	}
 	
 	/**
-	 * method will convert time from integer format in HHmm to string format in HH:mm 
-	 * and create LocalTime object
+	 * This method will convert time from integer format in HHmm to string format in HH:mm 
+	 * and create LocalTime object.
+	 * 
 	 * @throws Exception 
 	 */
 	private void convertToString() throws Exception {
@@ -117,11 +131,12 @@ public class TimeParser {
 	
 	
 	/**
-	 * this method splits string into array list for easy manipulation.
+	 * This method splits string into array list for easy manipulation.
 	 * ideally the start and end date if any, will be split into two elements of the arraylist (events)
 	 * if there is only one date, there will be no splitting
 	 * 
-	 * @param input  time input by user
+	 * @param input  
+	 * 				time input by user
 	 */
 	public void convertToArray(String input) {
 		if (input.contains("-")) {

@@ -12,8 +12,8 @@ import parser.exceptions.InvalidDateFormatException;
 
 /**
  * This class focuses on breaking down a string for date into the relevant components
- * 
- * it takes in a date input with varying degree of flexibility, in dd/mm/yy or number-month-year format
+ * it takes in a date input with varying degree of flexibility, 
+ * in dd/mm/yy or number-month-year format.
  * 
  * @author sylvesterchin
  * 
@@ -97,12 +97,15 @@ public class DateParser {
 	}
 
     /**
-	 * this method further processes the input from date-time-parser
+	 * This method further processes the input from date-time-parser
 	 * 
 	 * format types include
-	 * 1. Month spelt out:    3rd june 2013 - 4th june 2014
+	 * 1. Month spelled out:    3rd june 2013 - 4th june 2014
 	 * 2. "slash" format:     4/5-5/6
 	 * 3. incomplete format:  3 - 6 june 2015
+	 * 
+	 * @param input
+	 * 				date input from user, not null.
 	 * @throws Exception 
 	 */
 	public void processDate(String input) throws Exception {
@@ -114,7 +117,14 @@ public class DateParser {
 	    }
 	}
 	
-	
+	/**
+	 * This method will take in dates without alphabets, such as 
+	 * dates in the dd/mm/yyyy format and process it accordingly
+	 * 
+	 * @param input
+	 * 				date in dd/mm/yyyy format, not null.
+	 * @throws Exception
+	 */
 	private void processWithoutAlphabets(String input) throws Exception {
 	    if (hasSlash(input)) {
             setMonthWithSlash(input);
@@ -123,6 +133,14 @@ public class DateParser {
         }
     }
 
+	/**
+	 * This method will identify the date format of the input and process it
+	 * accordingly.
+	 * 
+	 * @param input
+	 * 				date string in either relative or ddMonthyyyy format. not null
+	 * @throws Exception
+	 */
     private void processWithAlphabets(String input) throws Exception {
 	    if (hasMonth(input)) {
             setMonth(input);
@@ -138,11 +156,12 @@ public class DateParser {
     }
 
     /**
-	 * method checks if the input string is a relative date
-	 * @param input   date string 
-	 * 			e.g. tmr (relative date)
-	 * 			e.g. 8 june (not relative date)
-	 * @return boolean   true,if the date string is a relative date
+	 * This method checks if the input string is a relative date
+	 * 
+	 * @param input   
+	 * 				date string, not null
+	 * @return boolean   
+	 * 				true,if the date string is a relative date
 	 */
 	public boolean isRelative(String input) {
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT) 
@@ -154,9 +173,10 @@ public class DateParser {
 	}
 	
 	/**
-	 * method will set date object for relative date inputs such as today, tmr, next week
+	 * This method will set date object for relative date inputs such as today, tmr, next week.
 	 * 
 	 * @param input
+	 * 				non-null string that is a relative date, such as "today" or "next fri"
 	 * @throws Exception 
 	 */
 	public void processRelativeDate(String input) throws Exception {
@@ -176,6 +196,14 @@ public class DateParser {
 		}
 	}
 
+	/**
+	 * This method will set the date object to the next nearest day that 
+	 * the input specifies.
+	 * 
+	 * @param input
+	 * 				non-null string which is a day from Monday to Sunday
+	 * @throws InvalidDateFormatException
+	 */
 	private void setDateToComingDayOfWeek(String input) throws InvalidDateFormatException {
 	    input = processDayOfWeek(input);
 	    dateObject = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.valueOf(input))); 
@@ -184,6 +212,14 @@ public class DateParser {
 		//}
 	}
 	
+	/**
+	 * This method will set the date object to the day as specified by the input
+	 * on the following week.
+	 * 
+	 * @param input
+	 * 				non-null string which contains a day from Monday to Sunday
+	 * @throws InvalidDateFormatException
+	 */
 	public void setDateNextWeek(String input) throws InvalidDateFormatException {
 		input = input.replaceAll("next", "").trim();
         input = processDayOfWeek(input);
@@ -193,16 +229,6 @@ public class DateParser {
         if(set > now ) {
             dateObject = dateObject.plusWeeks(1);
         }
-        
-	//	dateObject = LocalDate.now();
-	//	if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
-	//		dateObject = dateObject.plusWeeks(1);
-	//	} else {
-	//		dateObject = setStartofNextWeek();
-	//		while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-	//			dateObject = dateObject.plusDays(1);
-	//		}	
-	//	}
 	}
 	
 	@SuppressWarnings("unused")
@@ -211,6 +237,14 @@ public class DateParser {
 		return date;
 	}
 	
+	/**
+	 * This method will set the date object to the day as specified by the input
+	 * in this week.
+	 * 
+	 * @param input
+	 * 				non-null string which contains a day from Monday to Sunday
+	 * @throws Exception
+	 */
 	private void setDateThisWeek(String input) throws Exception {
 		input = input.replaceAll("this", "").trim();
 		input = processDayOfWeek(input);
@@ -239,18 +273,18 @@ public class DateParser {
 	}
 	
 	/**
-	 * this method checks if the string contains keywords for any of the months
+	 * This method checks if the string contains keywords for any of the months
 	 * 
-	 * @param input    string element in array list representing one date
+	 * @param input    
+	 * 				string element in array list representing one date. non null.
+	 * @return
+	 * 				boolean true if input contains any of the 12 months
+	 * 
 	 */
 	public boolean hasMonth(String input) {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_MONTHS_TEXT);
 		Matcher matcher = dateTimePattern.matcher(input);
-		if (matcher.find()) {
-			return true;
-		} else {
-			return false;
-		}
+		return matcher.find();
 	}
 	
 	//this method checks if the date is in dd/mm/yy format
@@ -269,11 +303,10 @@ public class DateParser {
 	}
 	
 	/**
-	 * this method will split a date into the day, month and year
+	 * This method will split a date into the day, month and year
 	 * 
-	 * @param input   date input by the user without the month
-	 * @param i       indicates if the date is start or end
- 	 * 
+	 * @param input   
+	 * 				date input by the user without the month. non null.
 	 */
 	public void splitStringAndProcess(String input) {
 		ArrayList<String> templist = new ArrayList<String>();
@@ -296,10 +329,10 @@ public class DateParser {
 	}
 	
 	/**
-	 * this method will set the day, month and year for inputs with in dd/mm/yy format
+	 * This method will set the day, month and year for inputs with in dd/mm/yy format
 	 * 
-	 * @param input  input by user for one date, in dd/mm/yyyy format
-	 * @param i      indicator if date is start or end date
+	 * @param input  
+	 * 				input by user for one date, in dd/mm/yyyy format
 	 * @throws Exception 
 	 */
 	public void setMonthWithSlash(String input) throws Exception {
@@ -325,12 +358,12 @@ public class DateParser {
 	}
 	
 	/**
-	 * this method takes in the string without month keywords or slashes
+	 * This method takes in the string without month keywords or slashes
 	 * and checks if it contains only digits. sets start_day if it contains 
 	 * digits only.
 	 * 
-	 *@param input  user input without month and year, just day
-	 *@param i      indicator to show if input date is start or end
+	 *@param input  
+	 *				user input without month and year, just day
 	 */
 	public void processMonthlessDate(String input, int i) {
 		input = input.replaceAll("[a-zA-Z]+", "");
@@ -358,7 +391,10 @@ public class DateParser {
 	}
 	
 	/**
-	 * this method will return the corresponding month's integer value
+	 * This method will return the corresponding month's integer value
+	 * 
+	 * @param month
+	 * 				month input in string format, non-null
 	 */
 	public int setMonthInDataProcessor(String month) {
 		month = month.toLowerCase();
@@ -391,6 +427,16 @@ public class DateParser {
 		}
 	}
 	
+	/**
+	 * This method will read the day of week and return the day-of-week in
+	 * correct format.
+	 * 
+	 * @param dayOfWeek
+	 * 				string input representing the day of the week. E.g. monday
+	 * @return
+	 * 				day-of-the-week in upper case, similar to LocalDate.getDayOfWeek output
+	 * @throws InvalidDateFormatException
+	 */
 	public String processDayOfWeek(String dayOfWeek) throws InvalidDateFormatException {
         dayOfWeek = preprocess(dayOfWeek);
         if ("monday".contains(dayOfWeek)) {
@@ -413,7 +459,7 @@ public class DateParser {
     }
 	
 	/**
-	 * method sets the LocalDate for the object by cleaning up minor format differences
+	 * This method sets the LocalDate for the object by cleaning up minor format differences
 	 * and forming yyyyMMdd string
 	 * 
 	 * passes date in string format to setDateObject method for setting the LocalDate value
@@ -439,12 +485,14 @@ public class DateParser {
 	}
 	
 	/**
-	 * method adds dashes into the date string to convert it into yyyy-MM-dd format
+	 * This method adds dashes into the date string to convert it into yyyy-MM-dd format
 	 * 
-	 * @param input   date string in yyyyMMdd format 
-	 * 			e.g. 20140529
-	 * @return string in yyyy-MM-dd format
-	 * 			e.g. 2014-05-29
+	 * @param input   
+	 * 				date string in yyyyMMdd format 
+	 * 				e.g. 20140529
+	 * @return 
+	 * 				string in yyyy-MM-dd format
+	 * 				e.g. 2014-05-29
 	 */
 	private String addDashes(String input) {
 		if (input.length() == 8) {
@@ -458,12 +506,15 @@ public class DateParser {
 		}
 	}
 	
-	
-	   
+	/**
+	 * This method returns the input in lower case and redundant whitespaces removed.
+	 * 
+	 * @param input
+	 * 				general string, in upper or lower case
+	 * @return
+	 */
     private String preprocess(String input) {
-        input.trim();
-        input.toLowerCase();
-        return input;
+        return input.toLowerCase().trim();
     }
 	
 	

@@ -123,17 +123,6 @@ public class DateTimeProcessorTest {
 		//DTP.separateDateTime("on 7sept 8.45am", true);
 	}
 	
-	@Test
-	public void testGetTaskType() {
-		String temp = DTP.getTaskType("every 2 monday 8pm until next month").toString();
-		assertEquals("recurring", temp);
-		
-		temp = DTP.getTaskType("every month 8pm until 9 jan 2017").toString();
-		assertEquals("recurring", temp);
-		
-		temp = DTP.getTaskType("every month from 5th march 9am to 11am until 9 jan 2017").toString();
-		assertEquals("recurring", temp);
-	}
 	
 	@Test
 	public void testRecur() throws Exception {

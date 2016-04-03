@@ -1,5 +1,6 @@
 package parser;
 
+import common.TaskObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -7,8 +8,15 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import common.TaskObject;
 
+/**
+ * This class is the child class of CommandParser. It's public method, process(), will
+ * split the string into two components, "task" and "date-time" if either are present. 
+ * EditParser will call DateTimeParser to process the DateTime string. EditParser will 
+ * also identify the index for the task to be edited. 
+ * 
+ * @author sylvesterchin
+ */
 public class EditParser extends CommandParser {
 	
 	private ArrayList<String> list = new ArrayList<String>();
@@ -19,8 +27,13 @@ public class EditParser extends CommandParser {
 	private int _index = -1;
 	
 	/**
-	 * this method will take in the string from the parser 
-	 * and break down its component, determining if it is a task, time or date edit
+	 * This method will take in the string from the parser and break down its component, 
+	 * determining if it is a task, time or date edit.
+	 * 
+	 * @param input
+	 * 				user's input for editing task in the list. non-null. contains index number and
+	 * 				attributes to edit
+	 * 				
 	 * @throws Exception 
 	 */
 	public TaskObject process(String input) throws Exception {
@@ -40,7 +53,6 @@ public class EditParser extends CommandParser {
 		if (identifier != null) {
 			DateTimeParser dtp = new DateTimeParser();
 			TO = dtp.parse(identifier, false);
-			//setDateTime(dtp);
         }
 		
 		_task = input;
@@ -50,13 +62,14 @@ public class EditParser extends CommandParser {
 	
 	private void setTaskObject() {
 		TO.setTitle(_task);
-		//TO.setStartDateTime(_startDateTime);
-		//TO.setEndDateTime(_endDateTime);
 	}
 	
 	/**
-	 * this method will convert instruction into string array list
+	 * This method will convert instruction into string array list
 	 * and remove the "edit" and number
+	 * 
+	 * @param input
+	 * 				string for edit command. non-null.
 	 */
 	public void convertToArray(String input) {
 		for (String temp : input.split(" ")) {
@@ -70,8 +83,12 @@ public class EditParser extends CommandParser {
 	}
 	
 	/**
-	 * this method will re-form the command that the user input
+	 * This method will re-form the command that the user input
 	 * without "edit" and the index number
+	 * 
+	 * @param input
+	 * 				string input for editing. non null
+	 * 				
 	 */
 	public String cleanString(String input) { //remove the number
 		if (input.matches("[\\d]+")) {
@@ -80,14 +97,7 @@ public class EditParser extends CommandParser {
 		input = input.replaceFirst("[\\d]+ ", "").trim();
 		return input;
 	}
-	
-	public boolean isDateTime(String input) {
-		if (input.matches(Constants.REGEX_EDIT_DATE_TIME_IDENTIFIER)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+
 	
 	public String getTask() {
 		return _task;
@@ -97,8 +107,6 @@ public class EditParser extends CommandParser {
 		_task = task;
 	}
 
-	
-	
 	public LocalDateTime getStartDateTime() {
 		return _startDateTime;
 	}

@@ -8,12 +8,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
+/**
+ * This class will be the only class from the parser component which interacts
+ * with the logic. Logic will initialise a parser object with the command and 
+ * unique taskID and call run().
+ * 
+ * Parser will call the relevant method to process the command which the user has input. 
+ * 
+ * @author sylvesterchin
+ *
+ */
 public class Parser {
 	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
-//command object. setType, setIndex, setTask, setDate, setTime, setPath
+    //command object. setType, setIndex, setTask, setDate, setTime, setPath
 	
 	private String _command;
 	private int _taskId;	// ADDED TASKID VARIABLE 
@@ -22,7 +31,7 @@ public class Parser {
 	}
 	
 	/**
-	 * Constructs the parser object that will take in the user input and a internally 
+	 * This method constructs the parser object that will take in the user input and a internally 
 	 * system generated taskID
 	 * 
 	 * @param command  
@@ -36,7 +45,7 @@ public class Parser {
 	}
 	
 	/**
-	 * Runs the methods to process the command and returns command object
+	 * This method runs the methods to process the command and returns command object
 	 * to Logic
 	 * 
 	 * @return CO 
@@ -49,7 +58,7 @@ public class Parser {
 	}
 	
 	/**
-	 * method reads string and trigger the relevant method to process string's information
+	 * This method reads string and trigger the relevant method to process string's information
 	 * 
 	 * @param command  
 	 * 				user's input to the program, not null
@@ -90,17 +99,15 @@ public class Parser {
 	private boolean isMatch(String input, String command) {
 		Pattern dateTimePattern = Pattern.compile(input);
 		Matcher matcher = dateTimePattern.matcher(command);
-		if (matcher.find()) {
-			return true;
-		} else {
-			return false;
-		}
+		return matcher.find();
 	}
 	
 	
 	/**
-	 * method returns help index to commandobject when the 
+	 * This method returns help index to CommandObject when the
+	 *  
 	 * @param command
+	 * 				string input that represents a help command
 	 */
 	public void parseHelp(String command) {
 		CO.setCommandType(Constants.HELP_INDEX);
@@ -111,9 +118,10 @@ public class Parser {
 	
 	
 	/**
-	 * method sets command type and index of the task to be marked as done
+	 * This method sets command type and index of the task to be marked as done
 	 * 
-	 * @param  command   user's input
+	 * @param  command
+	 * 				string input that represent a done command
 	 */
 	public void parseDone(String command) {
 		int temp = command.indexOf(" ");
@@ -131,9 +139,10 @@ public class Parser {
 	}
 	
 	/**
-	 * method sets command type and index of task to be marked as incomplete
+	 * This method sets command type and index of task to be marked as incomplete
 	 * 
 	 * @param command
+	 * 				string input that represents a notdone command
 	 */
 	public void parseNotDone(String command) {
 		int temp = command.indexOf(" ");
@@ -148,12 +157,11 @@ public class Parser {
 			TO.setStatus("incomplete");
 			CO.setTaskObject(TO);
 		}
-		
 	}
 	
 	
 	/**
-	 * method sets command type, index of task to edit and parts of the task to edit
+	 * This method sets command type, index of task to edit and parts of the task to edit
 	 * 
 	 * @param command   
 	 * 				user's input for the system, such as "edit 5 6pm start" 
@@ -178,10 +186,10 @@ public class Parser {
 	}
 	
 	/**
-	 * method sets command type and creates task object with details keyed in by user
+	 * This method sets command type and creates task object with details keyed in by user
 	 * 
 	 * @param command   
-	 * 				user's input as a string
+	 * 				string input that represents an add command
 	 * @throws Exception 
 	 */
 	public void parseAdd(String command) throws Exception {
@@ -189,7 +197,6 @@ public class Parser {
 		CommandParser AP = new AddParser();
 		command = command.replaceFirst(Constants.REGEX_PARSER_ADD, "").trim();
 		TO = AP.process(command);
-		//add these 5 main attributes
 		TO.setTaskId(_taskId);
 		setCategory();
 		CO.setTaskObject(TO);
@@ -197,11 +204,11 @@ public class Parser {
 	}
 	
 	/**
-	 * method sets command type and creates task object with details entered by user 
+	 * This method sets command type and creates task object with details entered by user 
 	 * for search purpose
 	 * 
 	 * @param command   
-	 * 				user's input as a string
+	 * 				string input that represents a search command
 	 * @throws Exception 
 	 */
 	public void parseSearch(String command) throws Exception {
@@ -254,7 +261,7 @@ public class Parser {
 
  	
  	/**
- 	 * method sets command type for delete commands 
+ 	 * This method sets command type for delete commands 
  	 * 
  	 * @param command 
  	 * 				user's input as a string for deleting
@@ -275,6 +282,9 @@ public class Parser {
  	
  	/**
  	 * this method returns the number that is after the delete command as an integer
+ 	 * 
+ 	 * @param command
+ 	 * 				string input that represents a delete command
  	 * @throws Exception 
  	 */
  	public int extractDeleteIndex(String command) throws Exception {		
@@ -296,10 +306,10 @@ public class Parser {
  	}
 
  	/**
- 	 * method sets command type for command object and returns file path
+ 	 * This method sets command type for command object and returns file path
  	 * 
  	 * @param command 
- 	 * 				user's input as a string 
+ 	 * 				string input that represents a save command 
  	 * @throws Exception 
  	 */
  	public void parseSave(String command) throws Exception {

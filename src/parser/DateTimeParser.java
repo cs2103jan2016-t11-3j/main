@@ -2,6 +2,9 @@ package parser;
 
 import common.AtfLogger;
 import common.TaskObject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -9,9 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import parser.Constants.TaskType;
 
 /*
@@ -69,8 +69,8 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method will take in string containing date and time, then splitting it into the date and time
-	 * separately for parsing through dateparser and timeparser
+	 * This method will take in string containing date and time, then splitting it into the date and time
+	 * separately for parsing through DateParser and TimeParser.
 	 * 
 	 * @param input      
 	 * 			user input in string format
@@ -78,7 +78,7 @@ public class DateTimeParser {
 	 * 			boolean to indicate if command is for the add parser
 	 * @throws Exception 
 	 */
-	public void parseDateTime(String input, boolean isForAdd) throws Exception {
+	private void parseDateTime(String input, boolean isForAdd) throws Exception {
 		if (isForAdd) {
 			parseDateTimeForAdd(input);
 		} else {
@@ -87,13 +87,13 @@ public class DateTimeParser {
 	}
 
 	/**
-	 * method will parse date time string according to its task type
+	 * This method will parse date time string according to its task type
 	 * 
 	 * @param input   
 	 * 			user's input in a string format
 	 * @throws Exception 
 	 */
-	public void parseDateTimeOthers(String input) throws Exception {
+	private void parseDateTimeOthers(String input) throws Exception {
 		tasktype = getTaskType(input);
 		//separate stuff for different task types
 		switch(tasktype) {
@@ -125,7 +125,7 @@ public class DateTimeParser {
 	
 	
 	/**
-	 * method will parse date time string according to its task type
+	 * This method will parse date time string according to its task type
 	 * 
 	 * @param input   
 	 * 			user's input in a string format
@@ -160,14 +160,14 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * Method will split string into the startdatetime, interval and limiter components of a recurring task identifier
+	 * This method will split string into the StartDateTime, interval and limiter components of a recurring task identifier
 	 * Limiter refers to an "until" or "for" restriction to specify the expiry of the task
 	 * 
 	 * @param input
-	 * 				string input for recurring tasks with interval, startdatetime and a limiter
+	 * 				string input for recurring tasks with interval, StartDateTime and a limiter
 	 * @throws Exception
 	 */
-	public void recur(String input) throws Exception {
+	private void recur(String input) throws Exception {
 		String intervalString = "";
 		String forstring = "";
 		
@@ -184,8 +184,8 @@ public class DateTimeParser {
 	}
 
 	/**
-	 * method searches for the regular expression representing end date for
-	 * recurring tasks that starts with "until"
+	 * This method searches for the regular expression representing end date for
+	 * recurring tasks that starts with "until".
 	 * 
 	 * @param input
 	 * 				string for recurring tasks input. not null.
@@ -193,7 +193,7 @@ public class DateTimeParser {
 	 * 				remaining string without until-string. not null.
 	 * @throws Exception
 	 */
-	public String extractUntilLimiter(String input) throws Exception {
+	private String extractUntilLimiter(String input) throws Exception {
 		String untilstring;
 		Pattern until = Pattern.compile(Constants.REGEX_RECURRING_UNTIL);
 		Matcher untilMatcher = until.matcher(input);
@@ -207,8 +207,8 @@ public class DateTimeParser {
 	}
 
 	/**
-	 * method searches for the regular expression representing end date for 
-	 * recurring tasks that starts with "for"
+	 * This method searches for the regular expression representing end date for 
+	 * recurring tasks that starts with "for".
 	 * 
 	 * @param input
 	 * 				 string for recurring tasks input. not null.
@@ -218,7 +218,7 @@ public class DateTimeParser {
 	 * @return
 	 * 				remaining string without for-string, not null
 	 */
-	public String extractForLimiter(String input) {
+	private String extractForLimiter(String input) {
 		String forstring = "";
 		Pattern multiplier = Pattern.compile(Constants.REGEX_RECURRING_FOR);
 		Matcher forMatcher = multiplier.matcher(input);
@@ -229,18 +229,18 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method extracts interval string from input. parses start date time string to process start date.
+	 * This method extracts interval string from input. parses start date time string to process start date.
 	 * calls parseFor to process forstring's count and interval. 
 	 * 
 	 * @param input
-	 * 				non-null string containing interval and startdatetime
+	 * 				non-null string containing interval and StartDateTime
 	 * @param forstring
 	 * 				"for" limiter. null if original input has no "for" limit specified
 	 * @return
 	 * 				interval string containing number and frequency of task. not null
 	 * @throws Exception
 	 */
-	public String extractInterval(String input, 
+	private String extractInterval(String input, 
 			String forstring) throws Exception {
 		String intervalString = "";
 		Pattern interval = Pattern.compile(Constants.REGEX_RECURRING_INTERVAL2);
@@ -263,10 +263,11 @@ public class DateTimeParser {
 
 	
 	/**
-	 * method calculates count for the recurring tasks to be repeated
+	 * This method calculates count for the recurring tasks to be repeated
 	 * 
 	 * @param input
-	 * 				contains number of repetition (integer, after parsing) and length of each occurrence (string)
+	 * 				contains number of repetition (integer, after parsing) 
+	 * 				and length of each occurrence (string)
 	 * @throws Exception
 	 */
 	private void parseFor(String input) throws Exception {//for x weeks
@@ -292,7 +293,7 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method returns multiplier for calculating the task's interval count
+	 * This method returns multiplier for calculating the task's interval count
 	 * for example, every day for 1 month will return 30 as there are 30 days in a month on average
 	 * 
 	 * @param forInput
@@ -310,7 +311,7 @@ public class DateTimeParser {
 		} else if (forInput.matches("WEEKLY") && intervalInput.matches("DAILY")) {
 			return 7;
 		} else if (forInput.matches("MONTHLY") && intervalInput.matches("DAILY")) {
-			return 31;
+			return 31; //or 30?
 		} else if (forInput.matches("YEARLY") && intervalInput.matches("DAILY")) {
 			return 365;
 		} else if (forInput.matches("WEEKLY") && intervalInput.matches("WEEKLY")) {
@@ -330,17 +331,46 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method will use the frequency from interval to obtain start date
-	 * if user does not input the start date
+	 * This method will use the frequency from interval to obtain start date
+	 * if user does not input the start date.
 	 * 
 	 * @param input  
 	 * 			frequency from the user's input
 	 * 			e.g. every 2 tuesday
 	 * @throws Exception 
 	 */
-	public void getStartDateFromInterval(String input) throws Exception {
+	private void getStartDateFromInterval(String input) throws Exception {
 		String _freq = "";
 		int _interval = 1;
+		
+		_freq = readFirstDayFromInterval(input);
+		_freq = cleanString(_freq);
+		
+		DateParser DP = new DateParser();
+		if (_freq.matches(Constants.REGEX_DAYS_TEXT) 
+				|| _freq.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
+			DP.parseDate(_freq);
+		}
+
+		startDate = DP.getDateObject();
+	
+		if (tasktype.equals(TaskType.event)) {
+			endDate = DP.getDateObject();	
+		}	
+	}
+
+	/**
+	 * This method will look for the first day in the interval string that corresponds
+	 * to a day of the week.
+	 * 
+	 * @param input 
+	 * 				interval string. non null.
+	 * @return
+	 * 				returns day-of=the-week or "everyday" to be parsed by DateParser
+	 */
+	private String readFirstDayFromInterval(String input) {
+		String _freq;
+		int _interval;
 		if (!input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			input = input.replaceFirst("every","").trim();
 			if (input.contains(" ") && hasNumber(input)) { // starts with a number?
@@ -356,21 +386,17 @@ public class DateTimeParser {
 		} else {
 			_freq = input;
 		}
-		
-		_freq = cleanString(_freq);
-		DateParser DP = new DateParser();
-		if (_freq.matches(Constants.REGEX_DAYS_TEXT) 
-				|| _freq.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
-			DP.parseDate(_freq);
-		}
-
-		startDate = DP.getDateObject();
-	
-		if (tasktype.equals(TaskType.event)) {
-			endDate = DP.getDateObject();	
-		}	
+		return _freq;
 	}
 	
+	/**
+	 * This method checks if the string starts with a number.
+	 * 
+	 * @param input
+	 * 				date input with interval such as a day of the week, "weeks" or "months" 
+	 * 				with integer in front as a multiplier
+	 * @return
+	 */
 	private boolean hasNumber(String input) {
 		String[] interval = input.split(" ");
 		if (interval[0].matches("[\\d]+")) {
@@ -381,7 +407,7 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method breaks down string into the interval and frequency to be stored in
+	 * This method breaks down string into the interval and frequency to be stored in
 	 * task object's interval object.
 	 * 
 	 * @param input      
@@ -389,7 +415,7 @@ public class DateTimeParser {
 	 * 			e.g. every 5 weeks
 	 * @throws Exception
 	 */
-	public void parseInterval(String input) throws Exception {
+	private void parseInterval(String input) throws Exception {
 		input = input.replaceFirst("every","").trim();
 		String _freq = "";
 		int _interval = 1;
@@ -407,13 +433,13 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method sets byDay array in interval object according to the days that are present
+	 * This method sets byDay array in interval object according to the days that are present
 	 * 
 	 * @param input
 	 * 				string containing days which the task falls on. not null 
 	 * 
 	 */
-	public void setDaysInWeek(String input) { //monday and tuesday ??
+	private void setDaysInWeek(String input) { //monday and tuesday ??
 		//wanna read using comma?
 		input = input.toLowerCase();
 		if (input.contains("mon") || input.contains("monday")) {
@@ -448,7 +474,7 @@ public class DateTimeParser {
 		TO.getInterval().setUntil(untilDateTime);
 	}
 
-	public String getFormattedFrequency(String frequency) {
+	private String getFormattedFrequency(String frequency) {
 		if (frequency.matches(Constants.REGEX_DAYS_TEXT)
 				|| frequency.matches("(week|wk)(s)?")) {
 			frequency = "WEEKLY";
@@ -466,10 +492,10 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method will take in string and identify regular expressions for time
+	 * This method will take in string and identify regular expressions for time
 	 * and date. 
 	 * 
-	 * Creates dateparser object and timeparser object
+	 * Creates DateParser object and TimeParser object
 	 * to parse date and time respectively.
 	 * 
 	 * @param input		
@@ -479,7 +505,7 @@ public class DateTimeParser {
 	 * 			type of time/date the user's input will be stored, either as start, end or until
 	 * @throws Exception 
 	 */
-	public void separateDateTime(String input, String type) throws Exception {
+	private void separateDateTime(String input, String type) throws Exception {
 		input = input.replaceFirst("until", "").trim();
 		input = input.replaceFirst("from", "").trim();
 		
@@ -491,7 +517,7 @@ public class DateTimeParser {
 		String _date = "", _time = "";
 		
 		if (timeMatcher.find()) {
-			//logger.log(Level.INFO, "Time format found");
+			logger.log(Level.INFO, "Time format found");
 			_time = getTrimmedString(input, timeMatcher.start(), timeMatcher.end());
 			_date = input.replaceAll(_time, "").trim();
 			if (_date.matches("(start|end)")) {
@@ -499,7 +525,7 @@ public class DateTimeParser {
 				_date = ""; 
 			}
 		} else {
-			//logger.log(Level.INFO, "Time format NOT found");
+			logger.log(Level.INFO, "Time format NOT found");
 			_date = input;
 		}
 	
@@ -508,7 +534,7 @@ public class DateTimeParser {
 	}
 
 
-	public void setDateTime(String type, DateParser DP, TimeParser TP) {
+	private void setDateTime(String type, DateParser DP, TimeParser TP) {
 		if (type.matches("start")) {
 			startTime = TP.getTimeObject();
 			startDate = DP.getDateObject();
@@ -522,7 +548,7 @@ public class DateTimeParser {
 	}
 
 	
-	public void processParallel(DateParser DP, TimeParser TP, String _date,
+	private void processParallel(DateParser DP, TimeParser TP, String _date,
 			String _time) throws Exception {
 		_time = cleanString(_time);
 		_date = cleanString(_date);
@@ -531,7 +557,7 @@ public class DateTimeParser {
 	}
 	
 	/**
-	 * method will set appropriate localdatetime for the task object
+	 * This method will set appropriate localdatetime for the task object
 	 * if the task is an event without end date, start date will be used
 	 * 
 	 * @param isForAdd  
@@ -539,7 +565,7 @@ public class DateTimeParser {
 	 * @param task      
 	 * 				task type (deadline, event, floating)
 	 */
-	public void setLocalDateTime(boolean isForAdd, TaskType task) {
+	private void setLocalDateTime(boolean isForAdd, TaskType task) {
 		if (isForAdd) {
 			if (startDate.equals(LocalDate.MAX) && task.toString().equals("deadline")) {
 				startDate = LocalDate.now();
@@ -565,7 +591,7 @@ public class DateTimeParser {
 	
 	
 	/**
-	 * method checks string to identify the task type
+	 * This method checks string to identify the task type
 	 * 
 	 * @param input    
 	 * 			user's input in string format
@@ -573,7 +599,7 @@ public class DateTimeParser {
 	 * @return         
 	 * 			appropriate task type for the input 
 	 */
-	public TaskType getTaskType(String input) {
+	private TaskType getTaskType(String input) {
 		if (input.matches(Constants.REGEX_DEADLINE_IDENTIFIER)) {
 			logger.log(Level.INFO, "Deadline recognised");
 			return TaskType.deadline;
@@ -592,7 +618,14 @@ public class DateTimeParser {
 		}
 	}
 	
-	//nid to take note of "7 days from now" kind of query, dont remove from, or recognise now
+	/**
+	 * This method removes keywords for identifying task. It takes into account for 
+	 * special exceptions such as today, monday and words containing identifier keywords
+	 * 
+	 * @param input
+	 * 				any general string. non-null.
+	 * @return
+	 */
 	private String cleanString(String input) {
 		input = input.replaceAll("[,]+", "").trim();
 		if (input.contains("today") || input.contains("tomorrow")) {
