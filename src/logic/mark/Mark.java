@@ -83,7 +83,7 @@ public abstract class Mark {
 		if (index >= 0 && index < lastOutputTaskList.size()) {
 			taskIdToMark = lastOutputTaskList.get(index).getTaskId();
 		} else {
-			createErrorOutput();
+			createErrorOutput(MESSAGE_MARK_DONE_ERROR);
 		}
 	}
 	
@@ -102,8 +102,8 @@ public abstract class Mark {
 
 	protected abstract boolean changeStatus();
 
-	protected void createErrorOutput() {
-		output.add(MESSAGE_MARK_ERROR);
+	protected void createErrorOutput(String errorMessage) {
+		output.add(errorMessage);
 	}
 	
 	protected void deleteSplitTaskFromTaskList() {

@@ -4,6 +4,7 @@ import parser.*;
 import storage.FileStorage;
 import logic.mark.*;
 import logic.timeOutput.*;
+import logic.exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -87,8 +88,9 @@ public class Logic {
 		try {
 			Recurring.updateRecurringEvents(taskList);
 			Recurring.updateRecurringDeadlines(taskList);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			output.add(exceptionMessage);
 		}
 		createFirstOutputTaskList();
 		// alertOutput = Alert.createAlertOutput(taskList);

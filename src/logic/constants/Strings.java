@@ -87,7 +87,9 @@ public class Strings {
 
 	//Mark Constants
 	public static final String MESSAGE_DONE = "Task: '%1s' marked as completed";
-	public static final String MESSAGE_MARK_ERROR = "Error marking task as complete";
+	public static final String MESSAGE_MARK_DONE_ERROR = "Error marking task as complete";
+	public static final String MESSAGE_MARK_INCOMPLETE_ERROR = "Error marking task as incomplete";
+	public static final String MESSAGE_MARK_OVERDUE_ERROR = "Error marking task as overdue";
 	public static final String MESSAGE_INCOMPLETE = "Task: '%1s' is marked as incomplete";
 	public static final String MESSAGE_OVERDUE = "Task: '%1s' is marked as overdue";
 	
@@ -121,6 +123,11 @@ public class Strings {
 	public static final String MESSAGE_UNDO = "%1$s undone.";
 	public static final String MESSAGE_UNDO_ERROR = "Nothing to undo!";
 	public static final String MESSAGE_UNDO_LIST_EMPTY = "Undo list is empty.";
+	
+	// Recurring Exception constants
+	public static final String MESSAGE_RECURRENCE_EXCEPTION = "Error handling recurring task: %1s";
+	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
+	
 	
 	// FOR PACKAGE-WIDE DEBUGGING PURPOSES
 	public static void printTaskObjectFields(TaskObject taskObj) {

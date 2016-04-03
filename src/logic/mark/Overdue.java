@@ -27,7 +27,7 @@ public class Overdue extends Mark {
 			saveToFile();
 			createOutput();
 		} else {
-			createErrorOutput();
+			createErrorOutput(MESSAGE_MARK_OVERDUE_ERROR);
 		}
 		return output;
 	}

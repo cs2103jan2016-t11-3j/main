@@ -3,6 +3,7 @@ package logic;
 import common.*;
 import logic.add.Add;
 import logic.timeOutput.TimeOutput;
+import logic.exceptions.RecurrenceException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +28,7 @@ public class Recurring {
 	 * 
 	 * @param taskList
 	 */
-	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) {
+	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) throws RecurrenceException{
 		logger.log(Level.INFO, "about to update all recurring events");
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
@@ -39,12 +40,15 @@ public class Recurring {
 		}
 	}
 
-	public static void updateEvent(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+	public static void updateEvent(TaskObject task, ArrayList<TaskObject> taskList, String status) throws RecurrenceException{
 		if (status.equals(STATUS_OVERDUE)) {
 			updateEventToOverdue(task, taskList, status);
 		} else {
 			if (status.equals(STATUS_COMPLETED)) {
 				updateEventToCompleted(task, taskList, status);
+			} else {
+				RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
+				throw e;
 			}
 		}
 	}

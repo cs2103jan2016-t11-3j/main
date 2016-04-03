@@ -26,7 +26,7 @@ public class Incomplete extends Mark {
 			saveToFile();
 			createOutput();
 		} else {
-			createErrorOutput();
+			createErrorOutput(MESSAGE_MARK_INCOMPLETE_ERROR);
 		}
 		return output;
 	}	

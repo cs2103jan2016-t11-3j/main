@@ -7,6 +7,7 @@ import common.CommandObject;
 import common.LocalDateTimePair;
 import common.TaskObject;
 import logic.Recurring;
+import logic.exceptions.RecurrenceException;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -53,7 +54,7 @@ public class Done extends Mark {
 			saveToFile();
 			createOutput();
 		} else {
-			createErrorOutput();
+			createErrorOutput(MESSAGE_MARK_DONE_ERROR);
 		}
 		return output;
 	}
@@ -104,7 +105,12 @@ public class Done extends Mark {
 	}
 	
 	private void changeStatusForRecurringEvent(TaskObject task) {
-		Recurring.updateEvent(task, taskList, STATUS_COMPLETED);
+		try {
+			Recurring.updateEvent(task, taskList, STATUS_COMPLETED);
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			createErrorOutput(exceptionMessage);
+		}
 	}
 
 }
