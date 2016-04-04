@@ -15,7 +15,7 @@ public class Constants {
 	/*--------------------Command Keywords-------------------------------------------------------*/
 	public static final String REGEX_PARSER_ADD = "(?i)^(add)";
 	public static final String REGEX_PARSER_SEARCH = "(?i)^(view|search|sort|find|filter|display)";
-    public static final String REGEX_PARSER_EDIT = "(?i)^(edit|update)";// edited to have number after edit  + " " + "[\\d]"
+    public static final String REGEX_PARSER_EDIT = "(?i)^(edit|update)";
     public static final String REGEX_PARSER_DELETE = "(?i)^(delete)";
     public static final String REGEX_PARSER_UNDO = "(?i)^(undo)";
     public static final String REGEX_PARSER_REDO = "(?i)^(redo)";

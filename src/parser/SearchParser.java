@@ -112,8 +112,6 @@ public class SearchParser extends CommandParser {
 		return _task;
 	}
 	
-	
- 	
  	public void resetAll() {
  		_task = null;
  	}
