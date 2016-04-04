@@ -20,11 +20,14 @@ public class Incomplete extends Mark {
 
 	public ArrayList<String> run() {
 		obtainTaskId();
+		assert (taskIdToMark != -1);
+		
 		boolean isChanged = false;
 		isChanged = changeStatus();
 		if (isChanged) {
 			saveToFile();
 			createOutput();
+			logger.log(Level.INFO, "marked task as incomplete");
 		} else {
 			createErrorOutput(MESSAGE_MARK_INCOMPLETE_ERROR);
 		}

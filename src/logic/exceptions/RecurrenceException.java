@@ -4,6 +4,7 @@ import common.TaskObject;
 import common.Interval;
 import static logic.constants.Strings.*;
 
+@SuppressWarnings("serial")
 public class RecurrenceException extends Exception{
 
 	public RecurrenceException() {
