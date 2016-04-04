@@ -21,7 +21,7 @@ import static logic.constants.Strings.*;
 public class Recurring {
 
 	private static Logger logger = AtfLogger.getLogger();
-	
+
 	/**
 	 * Method called by logic when AdultTaskFinder is launched. Searches for all
 	 * recurring events and passes it to updateEvent to determine if the
@@ -43,8 +43,9 @@ public class Recurring {
 	}
 
 	/**
-	 * Method called by updateRecurringEvents and a Done object to update an event
-	 * to the desired status of either
+	 * Method called by updateRecurringEvents and a Done object to update an
+	 * event to the desired status (either completed or overdue). Exception is
+	 * thrown if the desired status is invalid.
 	 */
 	public static void updateEvent(TaskObject task, ArrayList<TaskObject> taskList, String status)
 			throws RecurrenceException {
@@ -132,7 +133,7 @@ public class Recurring {
 		return splitEvent;
 	}
 
-	public static void renewEvent(TaskObject task) throws IndexOutOfBoundsException {
+	private static void renewEvent(TaskObject task) throws IndexOutOfBoundsException {
 		LocalDateTime newStartDateTime;
 		LocalDateTime newEndDateTime;
 		LocalDateTimePair nextEvent;
@@ -156,6 +157,16 @@ public class Recurring {
 		}
 	}
 
+	/**
+	 * Method called by Add or Edit. <br>
+	 * When a new recurring event is initially added, Add calls this method to
+	 * generate a series of recurrences for this event. <br>
+	 * When a recurring event is edited, Edit calls this method to generate the
+	 * new timings for the event.
+	 * 
+	 * @param task
+	 *            TaskObject for addition of all recurring timings
+	 */
 	public static void setAllRecurringEventTimes(TaskObject task) {
 		assert task.getCategory().equals(CATEGORY_EVENT);
 		logger.log(Level.INFO, "About to set all recurring times for event: " + task.getTitle());
@@ -182,11 +193,18 @@ public class Recurring {
 		}
 	}
 
-	/*******************************************************************************/
+	
+	 // Methods used for recurring deadlines
+	 
 	/**
-	 * Methods used for recurring deadlines
+	 * Method called by Add or Edit. <br>
+	 * When a new recurring deadline is initially added, Add calls this method
+	 * to generate a series of recurrences for this deadline. <br>
+	 * When a recurring deadline is edited, Edit calls this method to generate
+	 * the new timings for the deadline.
 	 * 
 	 * @param task
+	 *            TaskObject for addition of all recurring timings
 	 */
 
 	public static void setAllRecurringDeadlineTimes(TaskObject task) {
