@@ -39,6 +39,7 @@ public class Add {
 	private boolean addedInternal = false;
 	private boolean addedExternal = false;
 	private boolean isClash = false;
+	private boolean isOverdue = false;
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
@@ -163,7 +164,7 @@ public class Add {
 	 */
 	private void processEventDetails() {
 		try {
-			boolean isOverdue = checkIfOverdue();
+			this.isOverdue = checkIfOverdue();
 			copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 			if (task.getIsRecurring()) {
 				addRecurringEventTimes();
@@ -232,7 +233,7 @@ public class Add {
 	 */
 	private void processDeadlineDetails() {
 		try {
-			boolean isOverdue = checkIfOverdue();
+			this.isOverdue = checkIfOverdue();
 			copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
 			if (task.getIsRecurring()) {
 				addRecurringDeadlineTimes(task);
@@ -440,14 +441,18 @@ public class Add {
 	private void createOutput() {
 		if (addedInternal && addedExternal) {
 			String title = task.getTitle();
-			String text = MESSAGE_ADD.concat(title);
-			output.add(text);
-			if (isClash) {
-				for (int i = 0; i < clashedTasks.size(); i++) {
-					String clashMessage = createClashOutput(i);
-					output.add(clashMessage);
-				}
+			String text = MESSAGE_ADD.concat(title).concat(". ");
+			if (task.getIsRecurring()) {
+				text = "Recurring ".concat(text);
+				// "Recurring task added: -task-. "
 			}
+			if (isClash) {
+				text = concatenateClashOutput(text);
+			}
+			if (isOverdue) {
+				text = text.concat(MESSAGE_ADD_OVERDUE);
+			}
+			output.add(text);
 			logger.log(Level.INFO, "output created successfully");
 		} else {
 			output.add(MESSAGE_FAIL);
@@ -455,10 +460,15 @@ public class Add {
 		}
 	}
 
-	private String createClashOutput(int i) {
-		String text = "";
-		text = String.format(MESSAGE_CLASH, task.getTitle(), clashedTasks.get(i).getTitle());
-		// NEED A BETTER WAY TO OUTPUT CLASHES
+	private String concatenateClashOutput(String text) {
+		String clashFormat = String.format(MESSAGE_CLASH, task.getTitle());
+		text = text.concat(clashFormat);
+		for (int i = 0; i < clashedTasks.size(); i++) {
+			String title = clashedTasks.get(i).getTitle() + ", ";
+			text = text.concat(title);
+		}
+		text = text.substring(0, text.length() - 2);
+		text = text.concat(". ");
 		return text;
 	}
 

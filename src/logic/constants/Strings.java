@@ -34,9 +34,10 @@ public class Strings {
 	//Add Constants
 	public static final String MESSAGE_ADD = "Task added: ";
 	public static final String MESSAGE_FAIL = "Failed to add task. ";
-	public static final String MESSAGE_CLASH = "Task: %1s clashes with %2s";
+	public static final String MESSAGE_CLASH = "Task: %1s clashes with ";
 	public static final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
 	public static final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
+	public static final String MESSAGE_ADD_OVERDUE = "Task added is overdue";
 
 	//Delete Constants
 	public static final String MESSAGE_DELETE = "Task deleted: %1s";
