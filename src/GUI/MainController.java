@@ -205,7 +205,7 @@ public class MainController implements Initializable {
 				!_input.startsWith("filter") || !_input.startsWith("display") || 
 				_input.startsWith("search"))&& sidePanel.isVisible() == false) {
 			String[] input = _input.split(" ");
-			if (input.length == 1) {
+			if (input.length > 1) {
 				int index = Integer.parseInt(input[1]);
 				taskTable.scrollTo(index-1);
 				taskTable.getSelectionModel().select(index-1);
