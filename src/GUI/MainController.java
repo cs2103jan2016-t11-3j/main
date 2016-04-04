@@ -95,8 +95,10 @@ public class MainController implements Initializable {
 	}
 
 	private void hideSidePanel() {
-		if (!_input.startsWith("edit") && !_input.startsWith("delete")) {
+		if ((!_input.startsWith("edit")) && !_input.startsWith("delete")) {
+			
 			taskDateList.setVisible(false);
+		
 		} else {
 			fillSidebar();
 		}
@@ -194,7 +196,9 @@ public class MainController implements Initializable {
 					taskTable.getSelectionModel().select(taskTable.getItems().size()-1); 
 				}
 			});
-		} else if ((_input.startsWith("edit") || _input.startsWith("view"))&& taskDateList.isVisible() == false) {
+		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find") ||
+				!_input.startsWith("filter") || !_input.startsWith("display") || 
+				_input.startsWith("search"))&& taskDateList.isVisible() == false) {
 			String[] input = _input.split(" ");
 			int index = Integer.parseInt(input[1]);
 			taskTable.scrollTo(index-1);
