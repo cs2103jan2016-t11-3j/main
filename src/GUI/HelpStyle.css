@@ -1,0 +1,11 @@
+#helpPane {
+	-fx-background-image: url('background1.jpg');	
+	-fx-background-repeat: no-repeat; 
+	-fx-background-size: 100% 100%; 
+	-fx-border-radius: 20px;
+}
+
+#alertTasks {
+	-fx-font-size: 17; 
+	-fx-font-family: 'Agency FB';
+}

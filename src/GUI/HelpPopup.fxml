@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
+<VBox fx:id="helpPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
    <children>
-      <Label alignment="CENTER" onKeyPressed="#handleEscPressed" prefHeight="47.0" prefWidth="626.0" text="Help Manual" textAlignment="CENTER" textFill="#5e412f">
+      <Label alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#handleEscPressed" prefHeight="47.0" prefWidth="626.0" text="Help Manual" textAlignment="CENTER" textFill="#5e412f">
          <padding>
             <Insets left="10.0" top="10.0" />
          </padding>

@@ -65,7 +65,7 @@ public class Logic {
 	// Output is to be returned to UI after each command
 	private ArrayList<String> output = new ArrayList<String>();
 	// Output containing the list of timings pertaining to a single task
-	private ArrayList<String> taskDateTimeOutput;
+	private ArrayList<String> taskDateTimeOutput = new ArrayList<String>();
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 	// Stores the index of the last task searched
@@ -98,9 +98,9 @@ public class Logic {
 
 	// Creates the first task list containing overdue and due today
 	public void createFirstOutputTaskList() {
-		ArrayList<TaskObject> firstOutputTaskList = new ArrayList<TaskObject> ();
-		ArrayList<String> firstOutput = new ArrayList<String> ();
-	
+		ArrayList<TaskObject> firstOutputTaskList = new ArrayList<TaskObject>();
+		ArrayList<String> firstOutput = new ArrayList<String>();
+
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getStatus().equals("overdue")) {
 				firstOutputTaskList.add(taskList.get(i));
@@ -114,13 +114,13 @@ public class Logic {
 				}
 			}
 		}
-		
+
 		if (firstOutputTaskList.isEmpty()) {
 			firstOutput.add(MESSAGE_WELCOME_EMPTY);
 		} else {
 			firstOutput.add(MESSAGE_WELCOME_TASKS);
 		}
-		
+
 		setLastOutputTaskList(firstOutputTaskList);
 		setOutput(firstOutput);
 	}
@@ -133,7 +133,7 @@ public class Logic {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Constructor called by Undo/Redo. This is a secondary logic class which
 	 * only performs one operation before being deactivated.
@@ -170,16 +170,6 @@ public class Logic {
 			}
 		};
 		Collections.sort(lastOutputTaskList, dateComparator);
-	}
-
-	public void sortOutputByType() {
-		Comparator<TaskObject> typeComparator = new Comparator<TaskObject>() {
-			@Override
-			public int compare(final TaskObject o1, final TaskObject o2) {
-				return o1.getCategory().compareTo(o2.getCategory());
-			}
-		};
-		Collections.sort(lastOutputTaskList, typeComparator);
 	}
 
 	// Takes in a String argument from UI component
@@ -287,7 +277,7 @@ public class Logic {
 		commandFacade.run();
 		updateLists(commandFacade);
 
-		//System.out.println("Last searched index = " + lastSearchedIndex);
+		// System.out.println("Last searched index = " + lastSearchedIndex);
 	}
 
 	// Retrieves the updated lists from the CommandFacade class and updates the
@@ -328,7 +318,7 @@ public class Logic {
 	public ArrayList<TaskObject> getLastOutputTaskList() {
 		return lastOutputTaskList;
 	}
-	
+
 	public ArrayList<String> getTaskDateTimeOutput() {
 		return taskDateTimeOutput;
 	}
@@ -364,7 +354,7 @@ public class Logic {
 	public void setUserInput(String newUserInput) {
 		this.userInput = newUserInput;
 	}
-	
+
 	public void setTaskDateTimeOutput(ArrayList<String> taskDateTimeOutput) {
 		this.taskDateTimeOutput = taskDateTimeOutput;
 	}

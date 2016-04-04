@@ -17,6 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -37,6 +38,8 @@ public class HelpPopupController implements Initializable {
 	static ArrayList<String> displayList = MainController.getHelpList(1);
 	static int page = 1;
 	
+	@FXML 
+	private VBox helpPane;
 	@FXML
 	private TextFlow helpBox;
 	@FXML
@@ -45,6 +48,7 @@ public class HelpPopupController implements Initializable {
 	private Label topicLabel;
 	@FXML
 	private Label pageNumber;
+	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -92,11 +96,21 @@ public class HelpPopupController implements Initializable {
 
 	public void startHelp() throws IOException {		
 		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
+		Scene helpScene = new Scene(help);
+		helpStage.setScene(helpScene);
 		
-		helpStage.setScene(new Scene(help));
+		setStyle(helpScene);
 		helpStage.show();
 	}
-
+	
+	private void setStyle(Scene scene) {
+		URL url = this.getClass().getResource("HelpStyle.css");
+		if (url == null) {	
+			System.out.println("Error: HelpStyle.css stylesheet not found.");       
+		}
+		String css = url.toExternalForm(); 
+		scene.getStylesheets().add(css);
+	}
 	
 
 }

@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -38,30 +39,27 @@ import javafx.util.Duration;
 import static logic.constants.Strings.*;
 
 /**
- * Controls the TaskWindow to allow interaction with the program
- * Inputs keyed in textfield read with enter key pressed
- * Tasks displayed in tableview updates after every command
- * Feedback message displayed above the textfield
- * HelpPopup initiated with with F1 hotkey pressed
- * Program closes with Esc pressed
+ * Controls the TaskWindow to allow interaction with the program Inputs keyed in
+ * textfield read with enter key pressed Tasks displayed in tableview updates
+ * after every command Feedback message displayed above the textfield HelpPopup
+ * initiated with with F1 hotkey pressed Program closes with Esc pressed
  * 
  * @author Seow Hwee
  *
  */
 
 public class MainController implements Initializable {
-	
+
 	static String _input;
 	static UIMain _UI = new UIMain();
 	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 	HelpPopupController popupController = new HelpPopupController();
-	static int sortStatus = 0;
-	
+
 	@FXML
 	private TextField userInput;
 	@FXML
-	private TextFlow taskDateList;
-	@FXML 
+	private VBox sidePanel;
+	@FXML
 	private static BorderPane layout;
 	@FXML
 	private TextFlow feedbackBox;
@@ -80,10 +78,14 @@ public class MainController implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
-	private TableColumn<TaskObject, String> timeColumn;	
-	
+	private TableColumn<TaskObject, String> timeColumn;
 	@FXML
-	//reads input on enter
+	private ListView<String> taskDateList;
+	@FXML
+	private Label recurTitle;
+
+	@FXML
+	// reads input on enter
 	public void handleEnterPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.ENTER) {
 			readInput();
@@ -96,9 +98,9 @@ public class MainController implements Initializable {
 
 	private void hideSidePanel() {
 		if ((!_input.startsWith("edit")) && !_input.startsWith("delete")) {
-			
-			taskDateList.setVisible(false);
-		
+
+			sidePanel.setVisible(false);
+
 		} else {
 			fillSidebar();
 		}
@@ -110,23 +112,17 @@ public class MainController implements Initializable {
 			popupController.startHelp();
 		}
 		if (event.getCode() == KeyCode.F3) {
-			if (sortStatus == 0) {
-				_UI.setSortByType();
-				sortStatus = 1;
-			} else {
-				_UI.setSortByDate();
-				sortStatus = 0;
-			}
+			_UI.setSortByDate();
 			display();
 		}
 		if (event.getCode() == KeyCode.ESCAPE) {
 			System.exit(0);
 		}
 	}
-    
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert endDateColumn != null : "fx:id=\"endDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
@@ -138,22 +134,22 @@ public class MainController implements Initializable {
 		assert userInput != null : "fx:id=\"userInput\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'UIScene.fxml'.";
 		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
-		
+
 		_UI.setSortByDate();
 		manageSidePanel();
-		display(); //start program with all tasks in table
-		
+		display(); // start program with all tasks in table
+
 	}
 
 	private void manageSidePanel() {
-		taskDateList.managedProperty().bind(taskDateList.visibleProperty());
+		sidePanel.managedProperty().bind(sidePanel.visibleProperty());
 	}
 
 	private void sidePanelAnimation() {
-		TranslateTransition openNav = new TranslateTransition(new Duration(300), taskDateList);
+		TranslateTransition openNav = new TranslateTransition(new Duration(300), sidePanel);
 		openNav.setToX(0);
-		
-		if (taskDateList.getTranslateX() != 0) {
+
+		if (sidePanel.getTranslateX() != 0) {
 			openNav.play();
 		}
 
@@ -164,7 +160,7 @@ public class MainController implements Initializable {
 	}
 
 	private void passInput() throws IOException {
-		if(_input.startsWith("help")) {
+		if (_input.startsWith("help")) {
 			popupController.startHelp();
 		} else {
 			_UI.passInput(_input);
@@ -176,9 +172,9 @@ public class MainController implements Initializable {
 	}
 
 	private void feedbackUser() {
-		setSelectionFocus();			
+		setSelectionFocus();
 		if (isRecurringDateRequest()) {
-			taskDateList.setVisible(true);
+			sidePanel.setVisible(true);
 			fillSidebar();
 			sidePanelAnimation();
 		} else {
@@ -188,42 +184,54 @@ public class MainController implements Initializable {
 	}
 
 	private void setSelectionFocus() {
-		if (_input.startsWith("add")){
-			taskTable.scrollTo(taskTable.getItems().size()-1);
+		if (_input.startsWith("add")) {
+			taskTable.scrollTo(taskTable.getItems().size() - 1);
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					taskTable.getSelectionModel().select(taskTable.getItems().size()-1); 
+					taskTable.getSelectionModel().select(taskTable.getItems().size() - 1);
 				}
 			});
-		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find") ||
-				!_input.startsWith("filter") || !_input.startsWith("display") || 
-				_input.startsWith("search"))&& taskDateList.isVisible() == false) {
+		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")
+				|| !_input.startsWith("filter") || !_input.startsWith("display") || _input.startsWith("search"))
+				&& sidePanel.isVisible() == false) {
 			String[] input = _input.split(" ");
-			int index = Integer.parseInt(input[1]);
-			taskTable.scrollTo(index-1);
-			taskTable.getSelectionModel().select(index-1);
-		} else if (taskDateList.isVisible() == false){
+			if (input.length > 1) {
+				try {
+					int index = Integer.parseInt(input[1]);
+					taskTable.scrollTo(index - 1);
+					taskTable.getSelectionModel().select(index - 1);
+				} catch (NumberFormatException e) {
+
+				}
+			}
+		} else if (sidePanel.isVisible() == false) {
 			taskTable.getSelectionModel().clearSelection();
 		}
 	}
-	
+
 	private boolean isRecurringDateRequest() {
 
 		if (_UI.getOutput().size() > 0) {
 			if (_UI.getOutput().get(0).startsWith("Timings for")) {
 				return true;
-			}		
+			}
 		}
 		return false;
 	}
 
 	private void fillSidebar() {
-		taskDateList.getChildren().clear();
-		ArrayList<String> recurringTimes = _UI.getOutput();
-		for (int i = 0; i < recurringTimes.size(); i++) {
-			taskDateList.getChildren().add(new Text(recurringTimes.get(i) + "\n"));
+
+		try {
+			ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
+			recurTitle.setText(recurringTimes.get(0));
+			recurringTimes.remove(0);
+			ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
+			taskDateList.setItems(items);
+		} catch (NullPointerException e) {
+
 		}
+
 	}
 
 	private void displayMessage() {
@@ -231,15 +239,14 @@ public class MainController implements Initializable {
 		feedbackBox.getChildren().clear();
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
-	
+
 	private void display() {
-		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());		
+		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());
 		fillTable(taskData);
 	}
-	
-	
+
 	public static ArrayList<String> getHelpList(int i) {
-		switch(i) {
+		switch (i) {
 		case 1:
 			_UI.passInput("help Add");
 			break;
@@ -275,7 +282,7 @@ public class MainController implements Initializable {
 		setCellProperty();
 		taskTable.setItems(taskData);
 	}
-	
+
 	public void populateIndex() {
 		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
 			@Override
@@ -284,12 +291,12 @@ public class MainController implements Initializable {
 				if (isEmpty() || index < 0) {
 					setText(null);
 				} else {
-					setText(Integer.toString(index+1));
+					setText(Integer.toString(index + 1));
 				}
 			}
 		});
 	}
-	
+
 	public void populateColumns() {
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
@@ -302,31 +309,32 @@ public class MainController implements Initializable {
 	}
 
 	private void colourCode() {
-		if (sortStatus == 0) {
-			statusColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
-				@Override
-				public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
-					final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
-						private Text text;
+		statusColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
+			@Override
+			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
+				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
+					private Text text;
 
-						@Override
-						public void updateItem(String item, boolean empty) {
-							super.updateItem(item, empty);
-							if (!isEmpty()) {
-								text = new Text(item.toString());
-								if (item.startsWith("incomplete")) {
-									this.getTableRow().getStyleClass().add("undoneTasks");
-								} else if (item.startsWith("complete")) {
-									this.getTableRow().getStyleClass().add("doneTasks");
-								}
-								setGraphic(text);
+					@Override
+					public void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (!isEmpty()) {
+							text = new Text(item.toString());
+							if (item.startsWith("incomplete")) {
+								this.getTableRow().getStyleClass().add("undoneTasks");
+							} else if (item.startsWith("complete")) {
+								this.getTableRow().getStyleClass().add("doneTasks");
+							} else {
+								this.getTableRow().getStyleClass().add("overdueTasks");
 							}
+							setGraphic(text);
 						}
-					};
-					return cell;
-				}
-			});
-		}
+					}
+				};
+				return cell;
+			}
+		});
+
 	}
 
 	private void wrapText() {
@@ -335,6 +343,7 @@ public class MainController implements Initializable {
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
 				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
 					private Text text;
+
 					@Override
 					public void updateItem(String item, boolean empty) {
 						super.updateItem(item, empty);
@@ -354,6 +363,7 @@ public class MainController implements Initializable {
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
 				final TableCell<TaskObject, String> cell = new TableCell<TaskObject, String>() {
 					private Text text;
+
 					@Override
 					public void updateItem(String item, boolean empty) {
 						super.updateItem(item, empty);
@@ -368,5 +378,5 @@ public class MainController implements Initializable {
 			}
 		});
 	}
-	
-} 
+
+}
