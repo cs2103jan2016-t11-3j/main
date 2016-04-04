@@ -71,13 +71,13 @@ public class Parser {
 		command = command.trim();
 		
 		if (isMatch(Constants.REGEX_PARSER_EXIT, command)) {
-			CO.setCommandType(Constants.EXIT_INDEX);
+			CO.setCommandType(Constants.INDEX_EXIT);
 		} else if (isMatch(Constants.REGEX_PARSER_HELP, command)) {
 			parseHelp(command);
 		} else if (isMatch(Constants.REGEX_PARSER_UNDO, command)) {
-			CO.setCommandType(Constants.UNDO_INDEX);
+			CO.setCommandType(Constants.INDEX_UNDO);
 		} else if (isMatch(Constants.REGEX_PARSER_REDO, command)) {
-			CO.setCommandType(Constants.REDO_INDEX);
+			CO.setCommandType(Constants.INDEX_REDO);
 		} else if (isMatch(Constants.REGEX_PARSER_EDIT, command)) {
 			parseEdit(command);
 		} else if (isMatch(Constants.REGEX_PARSER_SAVE, command)) {
@@ -110,8 +110,8 @@ public class Parser {
 	 * @param command
 	 * 				string input that represents a help command
 	 */
-	public void parseHelp(String command) {
-		CO.setCommandType(Constants.HELP_INDEX);
+	private void parseHelp(String command) {
+		CO.setCommandType(Constants.INDEX_HELP);
 		command = command.replaceFirst("(?i)(help )", "");
 		TO.setTitle(command);
 		CO.setTaskObject(TO);
@@ -124,16 +124,16 @@ public class Parser {
 	 * @param  command
 	 * 				string input that represent a done command
 	 */
-	public void parseDone(String command) {
+	private void parseDone(String command) {
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
-			CO.setCommandType(Constants.DONE_INDEX);
+			CO.setCommandType(Constants.INDEX_DONE);
 			command = command.substring(temp + 1);
 			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
-			CO.setCommandType(Constants.SEARCH_INDEX);
+			CO.setCommandType(Constants.INDEX_SEARCH);
 			TO.setStatus("completed");
 			CO.setTaskObject(TO);
 		}
@@ -145,16 +145,16 @@ public class Parser {
 	 * @param command
 	 * 				string input that represents a notdone command
 	 */
-	public void parseNotDone(String command) {
+	private void parseNotDone(String command) {
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
-			CO.setCommandType(Constants.NOTDONE_INDEX);
+			CO.setCommandType(Constants.INDEX_NOTDONE);
 			command = command.substring(temp + 1);
 			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
-			CO.setCommandType(Constants.SEARCH_INDEX);
+			CO.setCommandType(Constants.INDEX_SEARCH);
 			TO.setStatus("incomplete");
 			CO.setTaskObject(TO);
 		}
@@ -168,8 +168,8 @@ public class Parser {
 	 * 				user's input for the system, such as "edit 5 6pm start" 
 	 * @throws Exception 
 	 */
-	public void parseEdit(String command) throws Exception {
-		CO.setCommandType(Constants.EDIT_INDEX);
+	private void parseEdit(String command) throws Exception {
+		CO.setCommandType(Constants.INDEX_EDIT);
 		
 		if (command.contains("edit all")) {
 			command = command.replaceFirst("edit all", "").trim();
@@ -193,8 +193,8 @@ public class Parser {
 	 * 				string input that represents an add command
 	 * @throws Exception 
 	 */
-	public void parseAdd(String command) throws Exception {
-		CO.setCommandType(Constants.ADD_INDEX);
+	private void parseAdd(String command) throws Exception {
+		CO.setCommandType(Constants.INDEX_ADD);
 		CommandParser AP = new AddParser();
 		command = command.replaceFirst(Constants.REGEX_PARSER_ADD, "").trim();
 		TO = AP.process(command);
@@ -212,8 +212,8 @@ public class Parser {
 	 * 				string input that represents a search command
 	 * @throws Exception 
 	 */
-	public void parseSearch(String command) throws Exception {
-		CO.setCommandType(Constants.SEARCH_INDEX);
+	private void parseSearch(String command) throws Exception {
+		CO.setCommandType(Constants.INDEX_SEARCH);
 		CommandParser SP = new SearchParser();
 
 		// if there is no search keyword, set TaskObject values to null/-1
@@ -231,7 +231,7 @@ public class Parser {
 	}
 	
 	
-	public void setCategory() {
+	private void setCategory() {
 		if (isFloating()) {
 			TO.setCategory("floating");
 		} else if (isDeadline()) {
@@ -243,7 +243,7 @@ public class Parser {
 		}
 	}
 	
-	public boolean isFloating() {
+	private boolean isFloating() {
 		if (TO.getEndDateTime().equals(LocalDateTime.MAX) 
 				&& TO.getStartDateTime().equals(LocalDateTime.MAX)) {
 			return true;
@@ -252,7 +252,7 @@ public class Parser {
 		}
 	}
 	
-	public boolean isDeadline() {
+	private boolean isDeadline() {
 		if (TO.getEndDateTime().equals(LocalDateTime.MAX)) {
 			return true;
 		} else {
@@ -268,8 +268,8 @@ public class Parser {
  	 * 				user's input as a string for deleting
  	 * @throws Exception 
  	 */
- 	public void parseDelete(String command) throws Exception {
- 		CO.setCommandType(Constants.DELETE_INDEX);
+	private void parseDelete(String command) throws Exception {
+ 		CO.setCommandType(Constants.INDEX_DELETE);
  		int index;
  		index = extractDeleteIndex(command);
  		CO.setIndex(index);
@@ -290,7 +290,7 @@ public class Parser {
  	 * 				string input that represents a delete command
  	 * @throws Exception 
  	 */
- 	public int extractDeleteIndex(String command) throws Exception {		
+	private int extractDeleteIndex(String command) throws Exception {		
  		String newString;
  		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
  			return -1; //quick delete
@@ -317,8 +317,8 @@ public class Parser {
  	 * 				string input that represents a save command 
  	 * @throws Exception 
  	 */
- 	public void parseSave(String command) throws Exception {
- 		CO.setCommandType(Constants.SAVE_INDEX);
+	private void parseSave(String command) throws Exception {
+ 		CO.setCommandType(Constants.INDEX_SAVE);
  		String newString;
  		int index = command.indexOf(" ") + 1;
  		if (command.length() > index) {
