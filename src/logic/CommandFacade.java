@@ -218,8 +218,9 @@ public class CommandFacade {
 	}
 	
 	private void searchFunction(CommandObject cmdObjToRunSearchByIndex) {
+		System.out.println("SPECIAL SEARCH BY INDEX");
 		Search search = new Search(cmdObjToRunSearchByIndex, taskList, lastOutputTaskList);
-		//setOutput(search.run());
+		setTaskDateTimeOutput(search.getTaskDateTimeOutput());
 	}
 
 	// Calls Display function which outputs the entire task list.
@@ -239,8 +240,8 @@ public class CommandFacade {
 		setOutput(edit.run());
 		setLastOutputTaskList(taskList);
 
-		// if it was a single occurrence that was edited, continue to display the sidebar
-		// callSearchByIndexToDisplaySidebar(edit.getIsEditSingleOccurrence());
+		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
+		callSearchByIndexToUpdateSidebar(edit.getIsEditSingleOccurrence());
 
 		if (isUndoAction) {
 			addToList(edit, redoList);
@@ -284,9 +285,6 @@ public class CommandFacade {
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
 
-		// if it was a single occurrence that was edited, continue to display the sidebar
-		// callSearchByIndexToDisplaySidebar(delete.getIsDeleteSingleOccurrence());
-
 		removedTask = delete.getRemovedTask();
 		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
 				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
@@ -302,8 +300,8 @@ public class CommandFacade {
 		setUndoList(delete.getUndoList());
 		setRedoList(delete.getRedoList());
 		
-		// if it was a single occurrence that was edited, continue to display the sidebar
-		// callSearchByIndexToDisplaySidebar(delete.getIsDeleteSingleOccurrence());
+		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
+		callSearchByIndexToUpdateSidebar(delete.getIsDeleteSingleOccurrence());
 
 		removedTask = delete.getRemovedTask();
 		removedOccurrenceTiming = delete.getRemovedTaskOccurrenceDetails();
@@ -577,12 +575,12 @@ public class CommandFacade {
 				|| command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
 	}
 
-	/*private void callSearchByIndexToDisplaySidebar(boolean bool) {
+	private void callSearchByIndexToUpdateSidebar(boolean bool) {
 		if (bool) {
 			CommandObject cmdObjToRunSearchByIndex = new CommandObject(INDEX_SEARCH_DISPLAY, new TaskObject(), lastSearchedIndex);
-			searchFunction(cmdObjToRunSearchByIndex);
+			//searchFunction(cmdObjToRunSearchByIndex);
 		}
-	}*/
+	}
 	
 	private void printInvalidCommandMessage() {
 		output.clear();

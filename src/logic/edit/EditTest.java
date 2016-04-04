@@ -111,7 +111,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("Reservist", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 9);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Title edited from 'Hiking trip' to 'Reservist'. Start date edited from '2014-07-11' to '2016-07-11'. Start time edited from '16:00' to '10:00'.");
 		
@@ -125,7 +125,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 5);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Date edited from '2017-03-24' to '2016-03-24'. Time edited from '19:00' to '11:00'.");
 		
@@ -139,7 +139,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 2);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Time edited from '23:59' to '18:00'.");
 		
@@ -154,7 +154,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 1);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Date edited from '2016-05-25' to '2016-04-25'.");
 		
@@ -169,7 +169,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, testEndDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 4);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Start date edited from '2016-12-01' to '2016-04-01'. End date edited from '2017-05-04' to '2016-04-01'.");
 		
@@ -183,7 +183,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 6);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Time edited from '23:59' to '16:00'.");
 		
@@ -197,7 +197,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("Army", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 8);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Title edited from 'Overseas paradise' to 'Army'. Start time edited from '22:24' to '10:00'.");
 		
@@ -210,7 +210,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("Travel Eastern Europe and Iceland", "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 3);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Title edited from 'Travel Eastern Europe' to 'Travel Eastern Europe and Iceland'.");
 		
@@ -224,7 +224,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("AY2016/17 Sem 2", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 7);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Title edited from 'Spring break' to 'AY2016/17 Sem 2'. Start date edited from '2001-01-11' to '2016-01-11'.");
 		
@@ -239,7 +239,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("HK trip", testStartDateTime, testEndDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 10);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Title edited from 'Confinement' to 'HK trip'. Start date edited from '2012-02-14' to '2016-01-05'. " + 
 				"Start time edited from '08:00' to '14:00'. End date edited from '2012-02-21' to '2016-01-09'. End time edited from '12:00' to '13:00'.");
@@ -254,7 +254,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 11);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Added date '2016-04-18' to task 'CS2107 presentation'. "
 				+ "Added time '09:00' to task 'CS2107 presentation'.");
@@ -274,7 +274,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, testEndDateTime, "", "", -1);		
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 12);
 				
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Added start date '2016-06-18' to task 'Europe trip'. "
 				+ "Added start time '10:00' to task 'Europe trip'. "
@@ -299,7 +299,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 13);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("Start date edited from '2016-03-25' to '2016-03-26'.");
 
@@ -333,7 +333,7 @@ public class EditTest {
 		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 14);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("All start times edited to '14:00'.");
 		
@@ -366,7 +366,7 @@ public class EditTest {
 		testTaskObject = new TaskObject("", LocalDateTime.MAX, testEndDateTime, "", "", -1);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 15);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("End time edited from '18:00' to '23:59'.");
 		
@@ -400,7 +400,7 @@ public class EditTest {
 		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 15);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("All end times edited to '23:59'.");
 		
@@ -434,7 +434,7 @@ public class EditTest {
 		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 16);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("All start dates edited to '2016-03-31'. All start times edited to '08:00'.");
 		
@@ -463,7 +463,7 @@ public class EditTest {
 		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 17);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("All end dates edited to '2016-12-31'. All end times edited to '22:22'.");
 		
@@ -493,7 +493,7 @@ public class EditTest {
 		testTaskObject.setIsEditAll(true);
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 18);
 		
-		Edit testEdit = new Edit(testCommandObject, testList, testList);
+		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
 		correctOutput.add("All start dates edited to '2011-11-11'. All end dates edited to '2011-11-11'.");
 		

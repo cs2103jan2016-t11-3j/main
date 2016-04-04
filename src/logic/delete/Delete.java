@@ -170,12 +170,10 @@ public class Delete {
 					setDeleteInformationForNormalDelete();
 					
 					if (isRecurringTask) {
-						try {
-							if (commandObj.getTaskObject().getIsEditAll()) {	
-								runNormalDelete();	// deletes entire task
-							}
-						} catch (NullPointerException e) {	
-							processDeleteForSingleOccurrence(); // deletes most recent occurrence of task
+						if (commandObj.getTaskObject().getIsEditAll()) {	
+							runNormalDelete();	// deletes entire task
+						} else {
+							processDeleteForSingleOccurrence();
 						}
 					} else {
 						runNormalDelete();
@@ -316,6 +314,8 @@ public class Delete {
 		setRemovedTask();
 		setRemovedTaskName();
 		setIsRecurringTask();
+		
+		logger.log(Level.INFO, "Set delete information for normal delete");
 	}
 	
 	private void setTaskIdToBeDeleted() {
