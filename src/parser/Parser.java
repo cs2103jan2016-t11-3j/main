@@ -276,8 +276,11 @@ public class Parser {
  		if (index > 0 && command.contains("all")) {
  			TO.setIsEditAll(true);
  			TO.setTitle("all");
- 			CO.setTaskObject(TO);
+ 		} else if (index == 0 && command.contains("done")) {
+ 			TO.setStatus("completed");
  		}
+ 		CO.setTaskObject(TO);
+ 		
  	}
  	
  	
@@ -294,6 +297,8 @@ public class Parser {
  			return -1; //quick delete
  		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) { //delete all
  			TO.setIsEditAll(true); 
+ 			return 0;
+ 		} else if (command.replaceFirst("delete","").trim().matches("(?i)(done)")) { //delete done
  			return 0;
  		} else { //delete with index
 	 		int index = command.indexOf(" ") + 1;

@@ -341,7 +341,6 @@ public class DateTimeParser {
 	 */
 	private void getStartDateFromInterval(String input) throws Exception {
 		String _freq = "";
-		int _interval = 1;
 		
 		_freq = readFirstDayFromInterval(input);
 		_freq = cleanString(_freq);
@@ -370,12 +369,12 @@ public class DateTimeParser {
 	 */
 	private String readFirstDayFromInterval(String input) {
 		String _freq;
-		int _interval;
+		//int _interval;
 		if (!input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			input = input.replaceFirst("every","").trim();
 			if (input.contains(" ") && hasNumber(input)) { // starts with a number?
 				String[] interval = input.split(" ");
-				_interval = Integer.parseInt(interval[0]);
+				//_interval = Integer.parseInt(interval[0]);
 				_freq = interval[1];
 			} else if (input.contains(" ")) {
 				String[] interval = input.split(" ");
