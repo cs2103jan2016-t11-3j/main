@@ -88,3 +88,6 @@
 .undoneTasks {
 	-fx-background-color: lightyellow;
 }
+.overdueTasks {
+	-fx-background-color: lightpink;
+}
