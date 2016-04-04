@@ -1,3 +1,4 @@
+//@@author A0125003A
 package parser;
 
 import common.AtfLogger;
@@ -14,30 +15,17 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import parser.Constants.TaskType;
 
-/*
- * so far 
- * 1. from DT to DT
- * 2. by/before/at/on DT
- * 3. DT -> ddmmyyy, ddmonthyyyy, hhmm(hrs), hhmm(am/pm)
- * 
- * 1. (tmr/tomorrow) (get today date and + 1)
- * 
- * 2. (next/previous){x} (mon/tues/wed/thur/fri/sat/sun)(week)(year)(month) 
- * 		--> count number of next n prev 
- * 		--> figure out if its day, month or year
- * 		--> get current date/time
- * 		--> add the increment
- * 
- * 3. [\\d](mins)(hours)(days)(month)(year) (later/after/before/from now)
- * 		--> identify later/fromnow n etc, 
- * 		--> identify (mins or hour) (days, month or year)
- * 		--> convert \\d to integer
- * 		--> get current time or date
- * 		--> add the number of *unit* to current -> return 
- * 
- * 
- */
 
+/**
+ * This class is the facade class that hides the DateParser and TimeParser from the 
+ * CommandParsers. Its main functionality is to:
+ * a) split string into date and time to be parsed into DateParser and TimeParser respectively
+ * b) recognise recurring tasks and process the interval and terminal date-time
+ * c) set LocalDateTime variables in TaskObject to be returned to CommandParser 
+ * 
+ * @author sylvesterchin
+ *
+ */
 public class DateTimeParser {
 	
 	private int _startTime = -1;
@@ -62,6 +50,18 @@ public class DateTimeParser {
 	
 	private static Logger logger = AtfLogger.getLogger();
 	
+	/**
+	 * This method is the only method that CommandParser will access. It parses 
+	 * date and time as well as sets LocalDateTime.
+	 * 
+	 * @param input
+	 * 				user's input consisting only date-time components. not null.
+	 * @param isForAdd
+	 * 				boolean to signify if called by AddParser
+	 * @return
+	 * 				task object with LocalDateTime and Interval object filled
+	 * @throws Exception
+	 */
 	public TaskObject parse(String input, boolean isForAdd) throws Exception {
 		parseDateTime(input, isForAdd);
 		setLocalDateTime(isForAdd, tasktype);

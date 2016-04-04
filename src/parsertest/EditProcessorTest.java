@@ -1,3 +1,4 @@
+//@@author A0125003A
 package parsertest;
 
 import static org.junit.Assert.*;
@@ -57,15 +58,6 @@ public class EditProcessorTest {
 	public void testCleanString() {
 		assertEquals("do this task", EP.cleanString("3 do this task"));
 		assertEquals("by 9.13pm", EP.cleanString("4 by 9.13pm"));
-	}
-	
-	@Test
-	public void testIsDateTime() {
-		assertTrue(EP.isDateTime("by 7 sept 8.40am"));
-		assertTrue(EP.isDateTime("from 7 june 8am to 8pm 9june"));
-		assertTrue(EP.isDateTime("by 9.13pm"));
-		
-		assertFalse(EP.isDateTime("Prep lecture for 7 june 8am"));
 	}
 	
 	private void reset() {
