@@ -68,7 +68,7 @@ public class Logic {
 	private ArrayList<String> taskDateTimeOutput;
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
-	// stores the index of the last task searched
+	// Stores the index of the last task searched
 	private int lastSearchedIndex = -1;
 
 	/**
