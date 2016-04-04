@@ -93,4 +93,8 @@ public class UIMain extends Application {
 		logic.sortOutputByDate();
 	}
 
+	public ArrayList<String> getTaskDateOutput() {
+		return logic.getTaskDateTimeOutput();
+	}
+
 }

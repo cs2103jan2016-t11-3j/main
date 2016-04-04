@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -60,7 +61,7 @@ public class MainController implements Initializable {
 	@FXML
 	private TextField userInput;
 	@FXML
-	private TextFlow taskDateList;
+	private VBox sidePanel;
 	@FXML 
 	private static BorderPane layout;
 	@FXML
@@ -81,6 +82,10 @@ public class MainController implements Initializable {
 	private TableColumn<TaskObject, Integer> endDateColumn;
 	@FXML
 	private TableColumn<TaskObject, String> timeColumn;	
+	@FXML 
+	private ListView<String> taskDateList;
+	@FXML
+	private Label recurTitle;
 	
 	@FXML
 	//reads input on enter
@@ -97,7 +102,7 @@ public class MainController implements Initializable {
 	private void hideSidePanel() {
 		if ((!_input.startsWith("edit")) && !_input.startsWith("delete")) {
 			
-			taskDateList.setVisible(false);
+			sidePanel.setVisible(false);
 		
 		} else {
 			fillSidebar();
@@ -146,14 +151,14 @@ public class MainController implements Initializable {
 	}
 
 	private void manageSidePanel() {
-		taskDateList.managedProperty().bind(taskDateList.visibleProperty());
+		sidePanel.managedProperty().bind(sidePanel.visibleProperty());
 	}
 
 	private void sidePanelAnimation() {
-		TranslateTransition openNav = new TranslateTransition(new Duration(300), taskDateList);
+		TranslateTransition openNav = new TranslateTransition(new Duration(300), sidePanel);
 		openNav.setToX(0);
 		
-		if (taskDateList.getTranslateX() != 0) {
+		if (sidePanel.getTranslateX() != 0) {
 			openNav.play();
 		}
 
@@ -178,7 +183,7 @@ public class MainController implements Initializable {
 	private void feedbackUser() {
 		setSelectionFocus();			
 		if (isRecurringDateRequest()) {
-			taskDateList.setVisible(true);
+			sidePanel.setVisible(true);
 			fillSidebar();
 			sidePanelAnimation();
 		} else {
@@ -198,12 +203,12 @@ public class MainController implements Initializable {
 			});
 		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find") ||
 				!_input.startsWith("filter") || !_input.startsWith("display") || 
-				_input.startsWith("search"))&& taskDateList.isVisible() == false) {
+				_input.startsWith("search"))&& sidePanel.isVisible() == false) {
 			String[] input = _input.split(" ");
 			int index = Integer.parseInt(input[1]);
 			taskTable.scrollTo(index-1);
 			taskTable.getSelectionModel().select(index-1);
-		} else if (taskDateList.isVisible() == false){
+		} else if (sidePanel.isVisible() == false){
 			taskTable.getSelectionModel().clearSelection();
 		}
 	}
@@ -219,11 +224,12 @@ public class MainController implements Initializable {
 	}
 
 	private void fillSidebar() {
-		taskDateList.getChildren().clear();
-		ArrayList<String> recurringTimes = _UI.getOutput();
-		for (int i = 0; i < recurringTimes.size(); i++) {
-			taskDateList.getChildren().add(new Text(recurringTimes.get(i) + "\n"));
-		}
+		
+		ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
+		recurTitle.setText(recurringTimes.get(0));
+		recurringTimes.remove(0);
+		ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
+		taskDateList.setItems(items);
 	}
 
 	private void displayMessage() {
