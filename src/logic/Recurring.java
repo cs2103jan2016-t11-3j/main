@@ -18,6 +18,14 @@ import java.time.temporal.TemporalAdjusters;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
+/**
+ * This class deals with the adding and updating of recurring task timings.
+ * It is called by various classes such as Logic, Add, Done and Edit.
+ *  
+ * @author ChongYan
+ *
+ */
+
 public class Recurring {
 
 	private static Logger logger = AtfLogger.getLogger();
@@ -109,6 +117,7 @@ public class Recurring {
 
 		if (task.getTaskDateTimes().size() <= 1) {
 			if (LocalDateTime.now().isAfter(eventEndTime)) {
+				task.setIsRecurring(false);
 				task.setStatus(status);
 				logger.log(Level.INFO, "Recurring event has come to an end");
 			}
@@ -341,6 +350,7 @@ public class Recurring {
 		// Special case for only 1 timing left
 		if (task.getTaskDateTimes().size() == 1) {
 			if (LocalDateTime.now().isAfter(deadlineDateTime)) {
+				task.setIsRecurring(false);
 				task.setStatus(status);
 				logger.log(Level.INFO, "recurring deadline has come to an end");
 			}
