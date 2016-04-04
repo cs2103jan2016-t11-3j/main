@@ -7,6 +7,7 @@ import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.logging.*;
 
+import common.AtfLogger;
 import common.TaskObject;
 
 /**
@@ -27,7 +28,7 @@ public class Save {
 	private static final String MESSAGE_SAVE_AS = "Tasks have been saved to %1s";
 	private static final String MESSAGE_SAVE_INVALID = "Save command is invalid";
 	private static final String MESSAGE_SAVE_ERROR = "Error saving file to %1s";
-	private static final Logger LOGGER = Logger.getLogger(Save.class.getName());
+	private static final Logger logger = AtfLogger.getLogger();
 
 	private boolean isSaved = false;
 	private int saveCommand = 0;
@@ -85,15 +86,18 @@ public class Save {
 		try {
 			storage.changeSaveLocation(newFilePath);
             storage.save(taskList);
-            LOGGER.log(Level.INFO, "File saved to new location");
+            logger.log(Level.INFO, "File saved to new location");
 		} catch (NoSuchFileException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            logger.log(Level.WARNING, "unable to save file to new location");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            logger.log(Level.WARNING, "unable to save file to new location");
         } catch (InvalidPathException e) {
         	e.printStackTrace();
+            logger.log(Level.WARNING, "unable to save file to new location");
         }
 		isSaved = true;
 	}
@@ -103,11 +107,13 @@ public class Save {
 		try {
 			storage.createCopy(newFilePath, "filecopy.txt");
 			isSaved = true;
-            LOGGER.log(Level.INFO, "File copy created in the same directory");
+            logger.log(Level.INFO, "File copy created in the same directory");
 		} catch (InvalidPathException e) {
 			e.printStackTrace();
+			logger.log(Level.WARNING, "unable to save file to new location");
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.log(Level.WARNING, "unable to save file to new location");
 		}
 	}
 
@@ -132,5 +138,6 @@ public class Save {
 				output.add(text);
 			}
 		}
+		logger.log(Level.INFO, "created output");
 	}
 }
