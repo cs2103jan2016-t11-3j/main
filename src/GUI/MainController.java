@@ -194,12 +194,12 @@ public class MainController implements Initializable {
 					taskTable.getSelectionModel().select(taskTable.getItems().size()-1); 
 				}
 			});
-		} else if (_input.startsWith("edit") && taskDateList.isVisible() == false) {
+		} else if ((_input.startsWith("edit") || _input.startsWith("view"))&& taskDateList.isVisible() == false) {
 			String[] input = _input.split(" ");
 			int index = Integer.parseInt(input[1]);
 			taskTable.scrollTo(index-1);
 			taskTable.getSelectionModel().select(index-1);
-		} else {
+		} else if (taskDateList.isVisible() == false){
 			taskTable.getSelectionModel().clearSelection();
 		}
 	}
