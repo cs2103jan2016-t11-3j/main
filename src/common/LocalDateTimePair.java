@@ -51,6 +51,7 @@ public class LocalDateTimePair {
 		return (this.startDateTime.equals(LocalDateTime.MAX) && this.endDateTime.equals(LocalDateTime.MAX));
 	}
 	
+	// For debugging
 	public String print() {
 		return "Start date/time = " + startDateTime.toString() + ", End date/time = " + endDateTime.toString();
 	}

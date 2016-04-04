@@ -58,7 +58,7 @@ public class Logic {
 	protected ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
 	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
-	private int taskId;
+	private int taskId; // For generation of a unique task ID for each task
 
 	// This variable will get repeatedly updated by UI for each input
 	private String userInput;
@@ -68,7 +68,7 @@ public class Logic {
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 	// Output list containing events and deadlines for alerting
 	protected ArrayList<String> alertOutput = new ArrayList<String>();
-	// stores the index of the last recurring task searched
+	// Stores the index of the last task searched
 	private int lastSearchedIndex = -1;
 
 	/**
@@ -331,6 +331,10 @@ public class Logic {
 
 	public ArrayList<String> getAlertOutput() {
 		return alertOutput;
+	}
+	
+	public int getLastSearchedIndex() {
+		return lastSearchedIndex;
 	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
