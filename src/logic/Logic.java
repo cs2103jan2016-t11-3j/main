@@ -64,10 +64,10 @@ public class Logic {
 	private String userInput;
 	// Output is to be returned to UI after each command
 	private ArrayList<String> output = new ArrayList<String>();
+	// Output containing the list of timings pertaining to a single task
+	private ArrayList<String> taskDateTimeOutput;
 	// Keeps track of the list that is constantly displayed in UI
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
-	// Output list containing events and deadlines for alerting
-	protected ArrayList<String> alertOutput = new ArrayList<String>();
 	// Stores the index of the last task searched
 	private int lastSearchedIndex = -1;
 
@@ -93,7 +93,6 @@ public class Logic {
 			output.add(exceptionMessage);
 		}
 		createFirstOutputTaskList();
-		// alertOutput = Alert.createAlertOutput(taskList);
 		logger.info("Start logic");
 	}
 
@@ -299,6 +298,7 @@ public class Logic {
 		setRedoList(commandFacade.getRedoList());
 		setLastOutputTaskList(commandFacade.getLastOutputTaskList());
 		setOutput(commandFacade.getOutput());
+		setTaskDateTimeOutput(commandFacade.getTaskDateTimeOutput());
 
 		if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
 			setLastSearchedIndex(commandFacade.getLastSearchedIndex());
@@ -328,11 +328,11 @@ public class Logic {
 	public ArrayList<TaskObject> getLastOutputTaskList() {
 		return lastOutputTaskList;
 	}
-
-	public ArrayList<String> getAlertOutput() {
-		return alertOutput;
-	}
 	
+	public ArrayList<String> getTaskDateTimeOutput() {
+		return taskDateTimeOutput;
+	}
+
 	public int getLastSearchedIndex() {
 		return lastSearchedIndex;
 	}
@@ -363,6 +363,10 @@ public class Logic {
 
 	public void setUserInput(String newUserInput) {
 		this.userInput = newUserInput;
+	}
+	
+	public void setTaskDateTimeOutput(ArrayList<String> taskDateTimeOutput) {
+		this.taskDateTimeOutput = taskDateTimeOutput;
 	}
 
 }
