@@ -85,10 +85,6 @@ public class UIMain extends Application {
 		return logic.getOutput();
 	}
 	
-	public ArrayList<String> getAlertOutput() {
-		return logic.getAlertOutput();
-	}
-	
 	public void setSortByType() {
 		logic.sortOutputByType();
 	} 

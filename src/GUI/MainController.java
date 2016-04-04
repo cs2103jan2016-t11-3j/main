@@ -261,10 +261,6 @@ public class MainController implements Initializable {
 		return _UI.getOutput();
 	}
 
-	public static ArrayList<String> getAlertOutput() {
-		return _UI.getAlertOutput();
-	}
-
 	private ArrayList<TaskObject> getOutputTaskList() {
 		return _UI.getLastOutputTaskList();
 	}

@@ -77,6 +77,5 @@
             </TextFlow>
          </right>
       </BorderPane>
-      <fx:include source="AlertPopup.fxml" />
    </children>
 </StackPane>
