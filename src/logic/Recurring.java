@@ -43,9 +43,34 @@ public class Recurring {
 	}
 
 	/**
-	 * Method called by updateRecurringEvents and a Done object to update an
+	 * Method called by updateRecurringEvents or a Done object to update an
 	 * event to the desired status (either completed or overdue). Exception is
-	 * thrown if the desired status is invalid.
+	 * thrown if the desired status is invalid. <br>
+	 * If the recurring task still has recurrences remaining, a splitting
+	 * operation will be performed, where the event will be split and a new
+	 * non-recurring event will be created with the current startDateTime and
+	 * endDateTime, with the relevant status (overdue or completed), while the
+	 * existing recurring task has its timing updated to the next occurrence.
+	 * <br>
+	 * Example: <br>
+	 * Recurring event with timings: <br>
+	 * 1. 10am to 4pm on 4/4 <br>
+	 * 2. 10am to 4pm on 11/4 <br>
+	 * 3. 10am to 4pm on 19/4 <br>
+	 * marked as completed. This results in: <br>
+	 * A split, non-recurring event with timing: <br>
+	 * 1. 10am to 4pm on 4/4, status completed <br>
+	 * And recurring event with timings: <br>
+	 * 1. 10am to 4pm on 11/4 <br>
+	 * 2. 10am to 4pm on 19/4 <br>
+	 * 
+	 * @param task
+	 *            TaskObject to be updated
+	 * @param taskList
+	 *            Stores all the tasks the user has
+	 * @param status
+	 *            The desired status for updating. Can only be either "overdue"
+	 *            or "completed"
 	 */
 	public static void updateEvent(TaskObject task, ArrayList<TaskObject> taskList, String status)
 			throws RecurrenceException {
@@ -64,7 +89,8 @@ public class Recurring {
 		logger.log(Level.INFO, "updated status of event " + task.getTitle() + " to " + status);
 	}
 
-	private static void updateEventToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status) {
+	private static void updateEventToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status)
+			throws RecurrenceException {
 		LocalDateTime eventEndTime = task.getEndDateTime();
 		LocalDateTime eventStartTime = task.getStartDateTime();
 		String taskName = task.getTitle();
@@ -89,14 +115,14 @@ public class Recurring {
 		}
 	}
 
-	private static void updateEventToCompleted(TaskObject task, ArrayList<TaskObject> taskList,
-			String status) {
+	private static void updateEventToCompleted(TaskObject task, ArrayList<TaskObject> taskList, String status)
+			throws RecurrenceException {
 		LocalDateTimePair eventTimePair = task.getTaskDateTimes().get(0);
 		String taskName = task.getTitle();
 
 		if (task.getTaskDateTimes().size() == 1) {
 			task.setStatus(status);
-			logger.log(Level.INFO, "Recurring event has come to an end");
+			logger.log(Level.WARNING, "handled one date time left but not caught in the method calling this");
 		} else {
 			splitTaskFromRecurringEvent(taskName, eventTimePair.getStartDateTime(),
 					eventTimePair.getEndDateTime(), taskList, status);
@@ -133,7 +159,7 @@ public class Recurring {
 		return splitEvent;
 	}
 
-	private static void renewEvent(TaskObject task) throws IndexOutOfBoundsException {
+	private static void renewEvent(TaskObject task) throws RecurrenceException {
 		LocalDateTime newStartDateTime;
 		LocalDateTime newEndDateTime;
 		LocalDateTimePair nextEvent;
@@ -167,7 +193,7 @@ public class Recurring {
 	 * @param task
 	 *            TaskObject for addition of all recurring timings
 	 */
-	public static void setAllRecurringEventTimes(TaskObject task) {
+	public static void setAllRecurringEventTimes(TaskObject task) throws RecurrenceException {
 		assert task.getCategory().equals(CATEGORY_EVENT);
 		logger.log(Level.INFO, "About to set all recurring times for event: " + task.getTitle());
 
@@ -193,9 +219,8 @@ public class Recurring {
 		}
 	}
 
-	
-	 // Methods used for recurring deadlines
-	 
+	// Methods used for recurring deadlines
+
 	/**
 	 * Method called by Add or Edit. <br>
 	 * When a new recurring deadline is initially added, Add calls this method
@@ -207,7 +232,7 @@ public class Recurring {
 	 *            TaskObject for addition of all recurring timings
 	 */
 
-	public static void setAllRecurringDeadlineTimes(TaskObject task) {
+	public static void setAllRecurringDeadlineTimes(TaskObject task) throws RecurrenceException {
 		assert task.getCategory().equals(CATEGORY_DEADLINE);
 
 		Interval interval = task.getInterval();
@@ -229,9 +254,19 @@ public class Recurring {
 		if (task.getTaskDateTimes().isEmpty()) {
 			task.addToTaskDateTimes(deadlineDateTime);
 		}
+
+		logger.log(Level.INFO, "successfully created all recurring timings for deadline");
 	}
 
-	// Used in logic upon construction of logic object
+	/**
+	 * Method called by logic when AdultTaskFinder is launched. Searches for all
+	 * recurring deadlines and passes it to updateDeadline to determine if the
+	 * recurring deadline has to be updated, and updates the deadline if
+	 * necessary
+	 * 
+	 * @param taskList
+	 *            List of tasks stored by AdultTaskFinder
+	 */
 	public static void updateRecurringDeadlines(ArrayList<TaskObject> taskList) throws RecurrenceException {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getIsRecurring()) {
@@ -245,16 +280,33 @@ public class Recurring {
 	}
 
 	/**
-	 * Method used when starting the program, and when a recurring task is
-	 * marked <br>
-	 * If the current time has passed the said recurrent time, this function
-	 * updates the deadline by creating a new task with this recurrent time and
-	 * adds it to the task list, with the status set as overdue/complete. This
-	 * is due to the premise that marking a recurring deadline as complete
-	 * automatically creates a new task with that deadline and marking it as
-	 * complete
+	 * Method called by updateRecurringDeadlines or a Done object to update a
+	 * deadline to the desired status (either completed or overdue). Exception
+	 * is thrown if the desired status is invalid. <br>
+	 * If the recurring task still has recurrences remaining, a splitting
+	 * operation will be performed, where the deadline will be split and a new
+	 * non-recurring deadline will be created with the current startDateTime,
+	 * with the relevant status (overdue or completed), while the existing
+	 * recurring task has its timing updated to the next occurrence. <br>
+	 * Example: <br>
+	 * Recurring deadline with timings: <br>
+	 * 1. by 4pm on 4/4 <br>
+	 * 2. by 4pm on 11/4 <br>
+	 * 3. by 4pm on 19/4 <br>
+	 * marked as completed. This results in: <br>
+	 * A split, non-recurring deadline with timing: <br>
+	 * 1. by 4pm on 4/4, status completed <br>
+	 * And recurring event with timings: <br>
+	 * 1. by 4pm on 11/4 <br>
+	 * 2. by 4pm on 19/4 <br>
 	 * 
 	 * @param task
+	 *            TaskObject to be updated
+	 * @param taskList
+	 *            Stores all the tasks the user has
+	 * @param status
+	 *            The desired status for updating. Can only be either "overdue"
+	 *            or "completed"
 	 */
 	public static void updateDeadline(TaskObject task, ArrayList<TaskObject> taskList, String status)
 			throws RecurrenceException {
@@ -273,7 +325,7 @@ public class Recurring {
 	}
 
 	private static void updateDeadlineToOverdue(TaskObject task, ArrayList<TaskObject> taskList,
-			String status) {
+			String status) throws RecurrenceException {
 		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
 		String taskName = task.getTitle();
 
@@ -283,7 +335,7 @@ public class Recurring {
 			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList, status);
 			renewDeadline(task);
 			deadlineDateTime = task.getStartDateTime();
-			logger.log(Level.INFO, "modified recurring deadline to the next deadline");
+			logger.log(Level.INFO, "updated recurring deadline");
 		}
 
 		// Special case for only 1 timing left
@@ -296,19 +348,21 @@ public class Recurring {
 	}
 
 	private static void updateDeadlineToCompleted(TaskObject task, ArrayList<TaskObject> taskList,
-			String status) {
+			String status) throws RecurrenceException {
 		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
 		String taskName = task.getTitle();
 
 		if (task.getTaskDateTimes().size() == 1) {
 			task.setStatus(status);
+			logger.log(Level.WARNING,
+					"handled one date time left but not caught in method which called this");
 		} else {
 			splitTaskFromRecurringDeadline(deadlineDateTime, taskName, taskList, status);
 			renewDeadline(task);
 		}
 	}
 
-	private static void renewDeadline(TaskObject task) {
+	private static void renewDeadline(TaskObject task) throws RecurrenceException {
 		LocalDateTime newStartDateTime;
 		LocalDateTimePair nextDeadline;
 
@@ -336,13 +390,11 @@ public class Recurring {
 
 	// returns a negative number as taskID to prevent clashing with normal IDs
 	private static int generateTaskId(ArrayList<TaskObject> taskList) {
-		int id = -2; // -1 denotes error so set to -2 to prevent any unforeseen
-						// errors
+		int id = -2;
+		// -1 denotes error so set to -2 to prevent any unforeseen bugs
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getTaskId() <= id) {
-				id = taskList.get(i).getTaskId() - 1; // so that no 2 split
-														// tasks have the same
-														// ID
+				id = taskList.get(i).getTaskId() - 1;
 			}
 		}
 		return id;
@@ -358,12 +410,8 @@ public class Recurring {
 	}
 
 	/************************************************************************************/
-	/**
-	 * Common methods shared by both deadline and events
-	 * 
-	 * @param task
-	 */
-	private static void updateInfiniteRecurrence(TaskObject task) {
+	// Below all common methods shared by recurring events and deadlines
+	private static void updateInfiniteRecurrence(TaskObject task) throws RecurrenceException {
 		int index = task.getTaskDateTimes().size() - 1;
 		LocalDateTimePair lastTimingInList = task.getTaskDateTimes().get(index);
 
@@ -372,8 +420,8 @@ public class Recurring {
 		logger.log(Level.INFO, "Inserted a new timing for infinite recurrence");
 	}
 
-	private static void setTimingsBasedOnUntil(TaskObject task, LocalDateTimePair timePair,
-			Interval interval) {
+	private static void setTimingsBasedOnUntil(TaskObject task, LocalDateTimePair timePair, Interval interval)
+			throws RecurrenceException {
 		while (!timePair.getStartDateTime().isAfter(interval.getUntil())) {
 			// not after == before and equal
 			task.addToTaskDateTimes(timePair);
@@ -393,7 +441,7 @@ public class Recurring {
 	}
 
 	private static void setTimingsBasedOnCounts(TaskObject task, LocalDateTimePair timePair,
-			Interval interval, int count) {
+			Interval interval, int count) throws RecurrenceException {
 		int[] byDayArray = interval.getByDayArray();
 
 		if (byDayArray[0] == 0) {
@@ -416,7 +464,8 @@ public class Recurring {
 		logger.log(Level.INFO, "Added recurring times for specified number of counts");
 	}
 
-	public static LocalDateTimePair setNextTimePair(Interval interval, LocalDateTimePair timePair) {
+	private static LocalDateTimePair setNextTimePair(Interval interval, LocalDateTimePair timePair)
+			throws RecurrenceException {
 		LocalDateTime startDateTime = timePair.getStartDateTime();
 		LocalDateTime endDateTime = timePair.getEndDateTime();
 		LocalDateTimePair nextTimePair = new LocalDateTimePair();
@@ -433,8 +482,8 @@ public class Recurring {
 		return nextTimePair;
 	}
 
-	public static LocalDateTimePair obtainNextTime(Interval interval, LocalDateTime startDateTime,
-			LocalDateTime endDateTime) {
+	private static LocalDateTimePair obtainNextTime(Interval interval, LocalDateTime startDateTime,
+			LocalDateTime endDateTime) throws RecurrenceException {
 		String frequency = interval.getFrequency();
 		int timeInterval = interval.getTimeInterval();
 
@@ -474,6 +523,10 @@ public class Recurring {
 				endDateTime = endDateTime.plusYears(timeInterval);
 			}
 			break;
+
+		default:
+			RecurrenceException e = new RecurrenceException(interval);
+			throw e;
 		}
 
 		return new LocalDateTimePair(startDateTime, endDateTime);

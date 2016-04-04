@@ -195,7 +195,12 @@ public class Add {
 	}
 
 	private void addRecurringEventTimes() {
-		Recurring.setAllRecurringEventTimes(task);
+		try {
+			Recurring.setAllRecurringEventTimes(task);
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			output.add(exceptionMessage);
+		}
 	}
 
 	private void removeAnyDeletedOccurrences() {
@@ -246,7 +251,12 @@ public class Add {
 	}
 
 	private void addRecurringDeadlineTimes(TaskObject task) {
-		Recurring.setAllRecurringDeadlineTimes(task);
+		try {
+			Recurring.setAllRecurringDeadlineTimes(task);
+		} catch (RecurrenceException e) {
+			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			output.add(exceptionMessage);
+		}
 	}
 
 	/**

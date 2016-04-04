@@ -128,6 +128,7 @@ public class Strings {
 	// Recurring Exception constants
 	public static final String MESSAGE_RECURRENCE_EXCEPTION = "Error handling recurring task: %1s";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
+	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL = "Interval is invalid";
 	
 	
 	// FOR PACKAGE-WIDE DEBUGGING PURPOSES
