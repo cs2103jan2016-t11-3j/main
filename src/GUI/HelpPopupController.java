@@ -41,8 +41,6 @@ public class HelpPopupController implements Initializable {
 	@FXML 
 	private VBox helpPane;
 	@FXML
-	private TextFlow helpBox;
-	@FXML
 	private TextArea helpText;
 	@FXML
 	private Label topicLabel;
@@ -54,7 +52,7 @@ public class HelpPopupController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		assert helpText != null : "fx:id=\"helpText\" was not injected: check your FXML file 'HelpPopup.fxml'.";
-        assert helpBox != null : "fx:id=\"helpBox\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+
 		setDisplay();
 	}
 

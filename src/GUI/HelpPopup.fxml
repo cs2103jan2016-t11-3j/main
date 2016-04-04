@@ -35,7 +35,7 @@
             <Insets left="10.0" right="5.0" top="5.0" />
          </padding>
       </Label>
-      <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="407.0" prefWidth="580.0" style="-fx-background-color: orange; -fx-background-radius: 10px;" wrapText="true">
+      <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="407.0" prefWidth="580.0"  wrapText="true">
          <font>
             <Font name="Agency FB" size="16.0" />
          </font>
