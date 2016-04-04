@@ -172,16 +172,6 @@ public class Logic {
 		Collections.sort(lastOutputTaskList, dateComparator);
 	}
 
-	public void sortOutputByType() {
-		Comparator<TaskObject> typeComparator = new Comparator<TaskObject>() {
-			@Override
-			public int compare(final TaskObject o1, final TaskObject o2) {
-				return o1.getCategory().compareTo(o2.getCategory());
-			}
-		};
-		Collections.sort(lastOutputTaskList, typeComparator);
-	}
-
 	// Takes in a String argument from UI component
 	public void run(String userInput) {
 		try {
