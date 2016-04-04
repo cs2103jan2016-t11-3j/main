@@ -279,13 +279,12 @@ public class Parser {
  		} else if (index == 0 && command.contains("done")) {
  			TO.setStatus("completed");
  		}
- 		CO.setTaskObject(TO);
- 		
+ 		CO.setTaskObject(TO);	
  	}
  	
  	
  	/**
- 	 * this method returns the number that is after the delete command as an integer
+ 	 * This method returns the number that is after the delete command as an integer
  	 * 
  	 * @param command
  	 * 				string input that represents a delete command
