@@ -155,7 +155,11 @@ public class Delete {
 			if (commandObj.getIndex() == -1) {
 				runQuickDelete();
 			} else if (commandObj.getIndex() == 0) {
-				runDeleteAll();
+				if (commandObj.getTaskObject().getCategory().equals("completed")) {
+					runDeleteCompletedTasks();
+				} else {
+					runDeleteAll();
+				}
 			} else {
 				checkIfDeleteSingleOccurrence();	
 				
@@ -212,6 +216,16 @@ public class Delete {
 		} else {
 			createQuickDeleteUnavailableErrorOutput();
 		}
+	}
+	
+	// Deletes all completed tasks from the task list
+	private void runDeleteCompletedTasks() {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getCategory().equals("completed")) {
+				taskList.remove(i);
+			}
+		}
+		createCompletedTasksDeletedOutput();
 	}
 	
 	// Clears everything - task list, undo list, redo list and the storage file
@@ -374,6 +388,10 @@ public class Delete {
 	private void createQuickDeleteUnavailableErrorOutput() {
 		removedTask = null;
 		tempOutput.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
+	}
+	
+	private void createCompletedTasksDeletedOutput() {
+		tempOutput.add(MESSAGE_COMPLETED_TASKS_DELETE);
 	}
 
 	private void createDeletedAllOutput() {

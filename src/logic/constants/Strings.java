@@ -42,6 +42,7 @@ public class Strings {
 	public static final String MESSAGE_DELETE = "Task deleted: %1s";
 	public static final String MESSAGE_DELETE_ERROR = "Error deleting task. ";
 	public static final String MESSAGE_DELETED_ALL = "All tasks deleted.";
+	public static final String MESSAGE_COMPLETED_TASKS_DELETE = "All completed tasks deleted.";
 	public static final String MESSAGE_SINGLE_OCCURRENCE_DELETE = "Occurrence %1s deleted.";
 	public static final String MESSAGE_MOST_RECENT_OCCURRENCE_DELETE = "Most recent occurrence deleted.";
 	public static final String MESSAGE_ALL_OCCURRENCES_DELETE= "All occurrences deleted.";
