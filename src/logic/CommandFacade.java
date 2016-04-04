@@ -45,7 +45,9 @@ public class CommandFacade {
 	private int commandType;
 	private TaskObject taskObj;
 	private int index;
-	private int lastSearchedIndex; // stores the index of the last recurring task searched	
+	private int lastSearchedIndex; // stores the index of the last recurring task searched
+	
+	private int lastCompletedTaskId;
 	
 	boolean isUndoAction;
 	boolean isRedoAction;
@@ -162,6 +164,9 @@ public class CommandFacade {
 			return;
 		} else {
 			filterOutCompletedTasks();
+			if (commandType == INDEX_COMPLETE) {
+				addRecentlyCompletedTask();
+			}
 		}
 	}
 	
@@ -170,6 +175,16 @@ public class CommandFacade {
 		for (int i = 0; i < lastOutputTaskList.size(); i++) {
 			if (!lastOutputTaskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
 				newLastOutputTaskList.add(lastOutputTaskList.get(i));
+			}
+		}
+		setLastOutputTaskList(newLastOutputTaskList);
+	}
+	
+	private void addRecentlyCompletedTask() {
+		ArrayList<TaskObject> newLastOutputTaskList = this.lastOutputTaskList;
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getTaskId() == lastCompletedTaskId) {
+				newLastOutputTaskList.add(taskList.get(i));
 			}
 		}
 		setLastOutputTaskList(newLastOutputTaskList);
@@ -384,6 +399,8 @@ public class CommandFacade {
 				addToList(done, undoList);
 			}
 		}
+		
+		lastCompletedTaskId = done.getTaskIdToMark();
 	}
 
 	/**
