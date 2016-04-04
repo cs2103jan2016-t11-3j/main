@@ -13,7 +13,8 @@ import static logic.constants.Strings.*;
 
 public class Overdue extends Mark {
 
-	public Overdue(CommandObject commandObj, ArrayList<TaskObject> taskList, ArrayList<TaskObject> lastOutputTaskList) {
+	public Overdue(CommandObject commandObj, ArrayList<TaskObject> taskList,
+			ArrayList<TaskObject> lastOutputTaskList) {
 		this.index = commandObj.getIndex();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
@@ -54,21 +55,31 @@ public class Overdue extends Mark {
 
 	/*******************************************************************************/
 
+	/**
+	 * Checks and marks all overdue tasks in the task list, called by Logic when a Logic
+	 * object is first constructed.
+	 * 
+	 * @param taskList
+	 *            stores all tasks
+	 */
 	public static void markAllOverdueTasks(ArrayList<TaskObject> taskList) {
 		boolean isOverdue = false;
 		for (int i = 0; i < taskList.size(); i++) {
-			// only for non-recurring tasks, recurring tasks have their own dedicated methods
+			// only for non-recurring tasks, recurring tasks have their own
+			// dedicated methods
 			if (!taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
 					isOverdue = performCheckOverdueDeadline(taskList.get(i));
 					if (isOverdue) {
-						taskList.get(i).setStatus("overdue");
+						taskList.get(i).setStatus(STATUS_OVERDUE);
+						logger.log(Level.INFO, "set status of non-recurring deadline to overdue");
 					}
 				}
 				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 					isOverdue = performCheckOverdueEvent(taskList.get(i));
 					if (isOverdue) {
-						taskList.get(i).setStatus("overdue");
+						taskList.get(i).setStatus(STATUS_OVERDUE);
+						logger.log(Level.INFO, "set status of non-recurring event to overdue");
 					}
 				}
 			}
@@ -77,6 +88,8 @@ public class Overdue extends Mark {
 
 	private static boolean performCheckOverdueDeadline(TaskObject task) {
 		LocalDateTime deadline = task.getStartDateTime();
+		assert (!deadline.isEqual(LocalDateTime.MAX));
+		
 		if (deadline.isBefore(LocalDateTime.now())) {
 			return true;
 		}
@@ -85,6 +98,8 @@ public class Overdue extends Mark {
 
 	private static boolean performCheckOverdueEvent(TaskObject task) {
 		LocalDateTime eventEndTime = task.getEndDateTime();
+		assert (!eventEndTime.isEqual(LocalDateTime.MAX));
+		
 		if (eventEndTime.isBefore(LocalDateTime.now())) {
 			return true;
 		}
