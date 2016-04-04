@@ -16,16 +16,14 @@ import common.TaskObject;
 import logic.Recurring;
 import logic.timeOutput.TimeOutput;
 
-import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
 /**
- * Creates an Edit object which will edit the title of a selected task to the
- * desired title. <br>
+ * Creates an Edit object which will edit the information of a selected task/occurrence. <br>
  * 
- * All the edit information is first set based on the information in the CommandObject that is 
- * passed in the constructor. This is done by having boolean checks for each attribute. The 
- * attributes that can be edited are:
+ * All the edit information is first set based on the information in the CommandObject that is passed in the
+ * constructor. This is done by having boolean checks for each attribute. The attributes that can be edited
+ * are:
  * 1. Title
  * 2. Start date
  * 3. Start time
@@ -33,24 +31,29 @@ import static logic.constants.Strings.*;
  * 5. End time
  * 6. Interval <br>
  * 
+ * If it is a single occurrence being edited instead of a task, there will only be 4 attributes that can be
+ * edited:
+ * 1. Start date
+ * 2. Start time
+ * 3. End date
+ * 4. End time
+ * 
  * If the task to be edited is a recurring task, there are 2 ways that the edit can be processed:
- * (a) Edit only the upcoming occurrence - this will be the default option, where only the date/time 
- * data for the first occurrence in the ArrayList<LocalDateTimePair> will be modified.
+ * (a) Edit only the upcoming occurrence - this will be the default option, where only the date/time data for
+ * the first occurrence in the ArrayList<LocalDateTimePair> will be modified.
  * (b) Edit all occurrences - this will be called if the user input contains the 'all' keyword, i.e.
  * 'edit all <index> ...'. This will edit the date/time details for all occurrences in the ArrayList.
  * 
- * If it is a recurrence timing that is to be edited, only 4 attributes can be modified - start 
- * date, start time, end date or end time.	
- * 
- * @param CommandObject
- *     	commandObj - Contains information regarding what to change. The TaskObject contained 
- *      within this attribute contains the desired title of a particular object, while the index 
- *      contained within this attribute contains the relative position of the task in the last 
- *      output task list.
- * @param ArrayList<TaskObject>
- * 		lastOutputTaskList - Contains the task list that is currently being displayed to the user.
- * @param ArrayList<TaskObject>
- * 		taskList - Contains the entire list of all tasks.
+ * @param commandObj	
+ * 		Contains all the information regarding what to change. The TaskObject contained within contains all
+ *		the new edit information, while the index in this CommandObject contains the relative position of the
+ *		task in the lastOutputTaskList.
+ * @param lastOutputTaskList
+ * 		Contains the task list that is currently being displayed to the user.
+ * @param taskList 				
+ * 		Contains the entire list of all tasks.
+ * @param lastSearchedIndex		
+ * 		Contains the last searched index - it is only filled if it is an edit of a n-th occurrence.
  * 	
  * @author ChongYan, RuiBin
  *
@@ -108,8 +111,8 @@ public class Edit {
 	boolean isEditEndDateOccurrence = false;
 	boolean isEditEndTimeOccurrence = false;
 	
-	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, ArrayList<TaskObject> taskList,
-			int lastSearchedIndex) {
+	public Edit(CommandObject commandObj, ArrayList<TaskObject> lastOutputTaskList, 
+			ArrayList<TaskObject> taskList, int lastSearchedIndex) {
 		this.commandObj = commandObj;
 		this.lastOutputTaskList = lastOutputTaskList;
 		this.taskList = taskList;
@@ -117,13 +120,13 @@ public class Edit {
 	}
 	
 	/**
-	 * Main method of Edit. Finds the target task and edits its title before
-	 * saving it to the external file location.
+	 * Main method of Edit. <br>
+	 * Sets the information to be edited, finds the task to be edited and edits all the information before
+	 * saving the edited task to the external file location.
 	 * @return output
 	 */
 	public ArrayList<String> run() {
 		setEditInformation();
-		//checkEditInformation();
 		setTaskToBeEdited();
 		processEdit();
 		updateCategory();
@@ -134,9 +137,11 @@ public class Edit {
 		return output;
 	}
 	
-	// Retrieves values from the data objects and sets the relevant edit information	
+	/**
+	 * Sets all the edit information by retrieving the relevant information from the CommandObject and 
+	 * TaskObject.
+	 */
 	private void setEditInformation() {
-		
 		try {
 			editTaskIndex = commandObj.getIndex();
 			
@@ -164,23 +169,28 @@ public class Edit {
 			if (!editInterval.isNull()) {
 				isEditInterval = true;
 			}
-			if (lastSearchedIndex != -1) {	// it is a recurrence timing, and not a task, that is to be edited
+			if (lastSearchedIndex != -1) {	// it is an occurrence, and not a task, that is to be edited
 				isEditSingleOccurrence = true;	
 				editTaskIndex = lastSearchedIndex;
 				editOccurrenceIndex = commandObj.getIndex();
 			}
-			isEditAll = commandObj.getTaskObject().getIsEditAll(); // checks if all recurring tasks are to be edited
+			isEditAll = commandObj.getTaskObject().getIsEditAll(); // if all occurrences are to be edited
 			
+			//checkEditInformation(); // for debugging
 		} catch (NullPointerException e) {
 			LOGGER.log(Level.WARNING, "Error setting edit information");
 		}
 	}
 
+	/**
+	 * Finds the task to be edited based on the edit task index value, and sets the originalTask to be a
+	 * replicate of this task for undo purposes.
+	 */
 	private void setTaskToBeEdited() {
 		assert (editTaskIndex > 0 && editTaskIndex <= lastOutputTaskList.size());
-		LOGGER.log(Level.INFO, "Obtained task ID to be edited");
 		
 		editTaskId = lastOutputTaskList.get(editTaskIndex-1).getTaskId();
+		LOGGER.log(Level.INFO, "Obtained task ID to be edited");
 		
 		for (int i = 0; i < taskList.size(); i++) {	
 			TaskObject task = taskList.get(i);
@@ -193,6 +203,41 @@ public class Edit {
 		}
 	}
 
+	/**
+	 * Compares the categories of the task to be edited and the edit data.
+	 * If the edit data category is not empty, then this edit is an undo function.
+	 * If it is an undo function, the date and times should be edited depending if the previous 
+	 * event (i.e. editTask) is a floating task or a deadline. 
+	 * This special check has to be implemented because by default, the boolean checks would be set
+	 * to false if the edit value is MAX, which is the case if the previous event is a floating/deadline.
+	 * 
+	 * @param task	current task
+	 */
+	private void compareOldAndNewCategory(TaskObject task) {
+		String currentTaskCategory = task.getCategory();
+		String editTaskCategory = commandObj.getTaskObject().getCategory();
+
+		// if this edit is an undo 
+		if (!editTaskCategory.equals("")) {
+			if (currentTaskCategory.equals(CATEGORY_DEADLINE) && editTaskCategory.equals(CATEGORY_FLOATING)) {
+				isEditStartDate = true;
+				isEditStartTime = true;
+			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && editTaskCategory.equals(CATEGORY_FLOATING)) {
+				isEditStartDate = true;
+				isEditStartTime = true;
+				isEditEndDate = true;
+				isEditEndTime = true;
+			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && editTaskCategory.equals(CATEGORY_DEADLINE)) {
+				isEditEndDate = true;
+				isEditEndTime = true;
+			}
+		}
+		
+	}
+
+	/**
+	 * Processes the edit depending if it is an edit of a single occurrence or of a task.
+	 */
 	private void processEdit() {
 		if (isEditSingleOccurrence) {
 			updateBooleanChecksForEditOccurrence(); // so that the correct output will be printed
@@ -225,33 +270,33 @@ public class Edit {
 		TaskObject task = lastOutputTaskList.get(editTaskIndex - 1);
 		originalTask.setTaskObject(task);
 		
-		LocalDateTimePair originalTiming = new LocalDateTimePair();
+		LocalDateTimePair timing = new LocalDateTimePair();
 		try {
-			originalTiming = task.getTaskDateTimes().get(editOccurrenceIndex - 1);
+			timing = task.getTaskDateTimes().get(editOccurrenceIndex - 1);
 
-			originalStartDate = originalTiming.getStartDateTime().toLocalDate();	
-			originalStartTime = originalTiming.getStartDateTime().toLocalTime();
-			originalEndDate = originalTiming.getEndDateTime().toLocalDate();
-			originalEndTime = originalTiming.getEndDateTime().toLocalTime();
+			originalStartDate = timing.getStartDateTime().toLocalDate();	
+			originalStartTime = timing.getStartDateTime().toLocalTime();
+			originalEndDate = timing.getEndDateTime().toLocalDate();
+			originalEndTime = timing.getEndDateTime().toLocalTime();
 			
 			if (isEditStartDateOccurrence && isEditStartTimeOccurrence) {
-				originalTiming.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
+				timing.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
 			} else {
 				if (isEditStartDateOccurrence) {
-					originalTiming.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+					timing.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
 				}
 				if (isEditStartTimeOccurrence) {
-					originalTiming.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
+					timing.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
 				}
 			}
 			if (isEditEndDateOccurrence && isEditEndTimeOccurrence) {
-				originalTiming.setEndDateTime(LocalDateTime.of(editEndDate, editEndTime));
+				timing.setEndDateTime(LocalDateTime.of(editEndDate, editEndTime));
 			} else {
 				if (isEditEndDateOccurrence) {
-					originalTiming.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+					timing.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
 				}
 				if (isEditEndTimeOccurrence) {
-					originalTiming.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
+					timing.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
 				}
 			}
 			
@@ -266,11 +311,6 @@ public class Edit {
 		}
 	}
 	
-	/**
-	 * Core method of Edit. Reads in the task ID to be edited and edits the respective information
-	 * based on the boolean checks. The data is only edited if it is different from the current.
-	 * @param editTaskId
-	 */
 	private void editTask() {
 		if (isEditTitle) {
 			editTitle(editTask);
@@ -325,39 +365,8 @@ public class Edit {
 		//}
 		
 	}
-	
-	/**
-	 * Compares the categories of the task to be edited and the edit data.
-	 * If the edit data category is not empty, then this edit is an undo function.
-	 * If it is an undo function, the date and times should be edited depending if the previous 
-	 * event (i.e. editTask) is a floating task or a deadline. 
-	 * This special check has to be implemented because by default, the boolean checks would be set
-	 * to false if the edit value is MAX, which is the case if the previous event is a floating/deadline.
-	 * 
-	 * @param task	current task
-	 */
-	private void compareOldAndNewCategory(TaskObject task) {
-		String currentTaskCategory = task.getCategory();
-		String editTaskCategory = commandObj.getTaskObject().getCategory();
 
-		// if this edit is an undo 
-		if (!editTaskCategory.equals("")) {
-			if (currentTaskCategory.equals(CATEGORY_DEADLINE) && editTaskCategory.equals(CATEGORY_FLOATING)) {
-				isEditStartDate = true;
-				isEditStartTime = true;
-			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && editTaskCategory.equals(CATEGORY_FLOATING)) {
-				isEditStartDate = true;
-				isEditStartTime = true;
-				isEditEndDate = true;
-				isEditEndTime = true;
-			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && editTaskCategory.equals(CATEGORY_DEADLINE)) {
-				isEditEndDate = true;
-				isEditEndTime = true;
-			}
-		}
-		
-	}
-
+	// Edits the title of the task
 	private void editTitle(TaskObject task) {
 		originalTitle = task.getTitle();
 		
@@ -418,10 +427,10 @@ public class Edit {
 			} else {
 				LOGGER.log(Level.INFO, "Start date and time edited");
 			}
-		} else if (originalStartTime.equals(editStartTime)) { // if old and new times are the same, only edit date
+		} else if (originalStartTime.equals(editStartTime)) { // if old time == new time, only edit date
 			isEditStartTime = false;
 			editStartDate(task);
-		} else if (originalStartDate.isEqual(editStartDate)) { // if old and new dates are the same, only edit time
+		} else if (originalStartDate.isEqual(editStartDate)) { // if old date == new date, only edit time
 			isEditStartDate = false;
 			editStartTime(task);
 		} 
@@ -601,10 +610,10 @@ public class Edit {
 			} else {
 				LOGGER.log(Level.INFO, "End date and time edited");
 			}
-		} else if (originalEndTime.equals(editEndTime)) { // if old and new times are the same, only edit date
+		} else if (originalEndTime.equals(editEndTime)) { // if old time == new time, only edit date
 			isEditEndTime = false;
 			editEndDate(task);
-		} else if (originalEndDate.isEqual(editEndDate)) { // if old and new dates are the same, only edit time
+		} else if (originalEndDate.isEqual(editEndDate)) { // if old date == new date, only edit time
 			isEditEndDate = false;
 			editEndTime(task);
 		} 
@@ -679,8 +688,8 @@ public class Edit {
 				LocalDateTimePair taskDateTime = taskDateTimes.get(i);
 				LocalDate taskOriginalEndDate = taskDateTime.getEndDateTime().toLocalDate();
 				
-				// If the original end date is null, i.e. it is a floating task which is being edited
-				// to another category, then the date will be default to today.
+				// If the original end date is null, i.e. it is a floating task which is being edited to 
+				// another category, then the date will be default to today.
 				if (taskOriginalEndDate.equals(LocalDate.MAX)) {
 					taskOriginalEndDate = LocalDate.now();
 				}
@@ -739,7 +748,7 @@ public class Edit {
 		
 		if (!originalInterval.equals(editInterval)) {
 			task.setInterval(editInterval);
-			Recurring.setAllRecurringEventTimes(task); // Calls the Recurring class to update the list of recurrence timings
+			Recurring.setAllRecurringEventTimes(task); // To update the list of recurrence timings
 			LOGGER.log(Level.INFO, "Interval edited");
 		} else {
 			isEditInterval = false;
@@ -794,13 +803,12 @@ public class Edit {
 	}
 	
 	// ------------------------- OUTPUT MESSAGES -------------------------
-	
 
 	/*
-	 * The Deadline check is because output for deadlines is slightly different, as they should 
-	 * not have start/end dates/times.
-	 * If the original date/time is equal to MAX value, then there was no previous date/time so
-	 * the output should be 'added' instead of 'edited'.
+	 * The Deadline check is because output for deadlines is slightly different, as they should not have
+	 * start/end dates/times.
+	 * If the original date/time is equal to MAX value, then there was no previous date/time so the output
+	 * should be 'added' instead of 'edited'.
 	 */
 	private void setOutput() {
 		//checkEditInformation();
@@ -905,9 +913,11 @@ public class Edit {
 	private void outputDateAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_ADD, editStartDate, editTask.getTitle()));
 	}
+	
 	private void outputDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_EDIT, originalStartDate, editStartDate));
 	}
+	
 	private void outputDateEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_FOR_ALL_OCCURRENCES_EDIT, editStartDate));
 	}
@@ -915,9 +925,11 @@ public class Edit {
 	private void outputStartDateAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_ADD, editStartDate, editTask.getTitle()));
 	}
+	
 	private void outputStartDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_EDIT, originalStartDate, editStartDate));
 	}
+	
 	private void outputStartDateEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_EDIT, editStartDate));
 	}
@@ -925,9 +937,11 @@ public class Edit {
 	private void outputTimeAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_TIME_ADD, editStartTime, editTask.getTitle()));
 	}
+	
 	private void outputTimeEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime));
 	}
+	
 	private void outputTimeEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
 	}
@@ -935,9 +949,11 @@ public class Edit {
 	private void outputStartTimeAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_TIME_ADD, editStartTime, editTask.getTitle()));
 	}
+	
 	private void outputStartTimeEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_TIME_EDIT, originalStartTime, editStartTime));
 	}
+	
 	private void outputStartTimeEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
 	}
@@ -945,9 +961,11 @@ public class Edit {
 	private void outputEndDateAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_DATE_ADD, editEndDate, editTask.getTitle()));
 	}
+	
 	private void outputEndDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_DATE_EDIT, originalEndDate, editEndDate));
 	}
+	
 	private void outputEndDateEditedForAllOccurencesMessage() {
 		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_ALL_OCCURRENCES_EDIT, editEndDate));
 	}
@@ -955,9 +973,11 @@ public class Edit {
 	private void outputEndTimeAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_TIME_ADD, editEndTime, editTask.getTitle()));
 	}
+	
 	private void outputEndTimeEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_TIME_EDIT, originalEndTime, editEndTime));
 	}
+	
 	private void outputEndTimeEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT, editEndTime));
 	}
