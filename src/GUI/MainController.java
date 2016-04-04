@@ -206,9 +206,13 @@ public class MainController implements Initializable {
 				_input.startsWith("search"))&& sidePanel.isVisible() == false) {
 			String[] input = _input.split(" ");
 			if (input.length > 1) {
-				int index = Integer.parseInt(input[1]);
-				taskTable.scrollTo(index-1);
-				taskTable.getSelectionModel().select(index-1);
+				try {
+					int index = Integer.parseInt(input[1]);
+					taskTable.scrollTo(index-1);
+					taskTable.getSelectionModel().select(index-1);
+				} catch (NumberFormatException e) {
+					
+				}
 			}
 		} else if (sidePanel.isVisible() == false){
 			taskTable.getSelectionModel().clearSelection();
@@ -227,11 +231,16 @@ public class MainController implements Initializable {
 
 	private void fillSidebar() {
 		
-		ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
-		recurTitle.setText(recurringTimes.get(0));
-		recurringTimes.remove(0);
-		ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
-		taskDateList.setItems(items);
+		try {
+			ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
+			recurTitle.setText(recurringTimes.get(0));
+			recurringTimes.remove(0);
+			ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
+			taskDateList.setItems(items);
+		} catch (NullPointerException e) {
+			
+		}
+		
 	}
 
 	private void displayMessage() {
