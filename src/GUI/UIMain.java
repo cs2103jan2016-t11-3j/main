@@ -85,10 +85,6 @@ public class UIMain extends Application {
 		return logic.getOutput();
 	}
 	
-	public void setSortByType() {
-		logic.sortOutputByType();
-	} 
-	
 	public void setSortByDate() {
 		logic.sortOutputByDate();
 	}

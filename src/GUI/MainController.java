@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -137,6 +138,7 @@ public class MainController implements Initializable {
 
 		_UI.setSortByDate();
 		manageSidePanel();
+		setWrapText(); // for sideBarList
 		display(); // start program with all tasks in table
 
 	}
@@ -378,5 +380,27 @@ public class MainController implements Initializable {
 			}
 		});
 	}
+	  
+	      private void setWrapText() {
+	          taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+	              private Text text;
+	  
+	              @Override
+	              public ListCell<String> call(ListView<String> stringListView) {
+	                  ListCell<String> cell = new ListCell<String>() {
+	  
+	                      protected void updateItem(String item, boolean empty) {
+	                          super.updateItem(item, empty);
+	                          if (!isEmpty()) {
+	                              text = new Text(item.toString());
+	                              text.wrappingWidthProperty().bind(taskDateList.widthProperty());
+	                              setGraphic(text);
+	                          }
+	                      }
+	                  };
+	                  return cell;
+	              }
+	          });
+	      }
 
 }

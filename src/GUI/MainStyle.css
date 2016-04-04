@@ -17,10 +17,13 @@
 }
 
 .table-row-cell:selected { 
-   -fx-border-color: black;
-   -fx-background-color: orange
+   -fx-border-color: red;
+	-fx-border-width: 2;
 }
-
+.table-row-cell:selected .text {
+	-fx-fill: black;
+}
+	
 #taskTable .column-header {
 	-fx-background-color: #3B8686;
 	-fx-border-width: 0.1;
@@ -88,6 +91,7 @@
 .undoneTasks {
 	-fx-background-color: lightyellow;
 }
+
 .overdueTasks {
 	-fx-background-color: lightpink;
 }
