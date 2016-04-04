@@ -150,6 +150,29 @@ public class CommandFacade {
 				printInvalidCommandMessage();
 				break;
 		}
+		
+		// method which filters lastOutputTaskList to hide completed tasks
+		filterLastOutputTaskList();
+	}
+	
+	// hides completed tasks if command is not "view done"
+	private void filterLastOutputTaskList() {
+		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == 0) 
+				&& (taskObj.getStatus().equals(STATUS_COMPLETED))) {
+			return;
+		} else {
+			filterOutCompletedTasks();
+		}
+	}
+	
+	private void filterOutCompletedTasks() {
+		ArrayList<TaskObject> newLastOutputTaskList = new ArrayList<TaskObject>();
+		for (int i = 0; i < lastOutputTaskList.size(); i++) {
+			if (!lastOutputTaskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
+				newLastOutputTaskList.add(lastOutputTaskList.get(i));
+			}
+		}
+		setLastOutputTaskList(newLastOutputTaskList);
 	}
 
 	
