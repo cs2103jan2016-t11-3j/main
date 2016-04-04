@@ -102,15 +102,17 @@ public class Logic {
 		ArrayList<String> firstOutput = new ArrayList<String>();
 
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getStatus().equals("overdue")) {
+			if (taskList.get(i).getStatus().equals(STATUS_OVERDUE)) {
 				firstOutputTaskList.add(taskList.get(i));
 			}
 		}
 
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getStartDateTime().toLocalDate().equals(LocalDate.now())) {
-				if (checkNotDuplicate(taskList.get(i), firstOutputTaskList)) {
-					firstOutputTaskList.add(taskList.get(i));
+			if (!taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
+				if (taskList.get(i).getStartDateTime().toLocalDate().equals(LocalDate.now())) {
+					if (checkNotDuplicate(taskList.get(i), firstOutputTaskList)) {
+						firstOutputTaskList.add(taskList.get(i));
+					}
 				}
 			}
 		}
@@ -145,7 +147,8 @@ public class Logic {
 	 * @param redoList
 	 *            The deque of CommandObjects which stores all redo actions
 	 */
-	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList) {
+	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList,
+			Deque<CommandObject> redoList) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
@@ -244,8 +247,8 @@ public class Logic {
 		if (!(isUndoAction || isRedoAction)) {
 			commandObj.setLastSearchedIndex(lastSearchedIndex);
 		}
-		CommandFacade commandFacade = new CommandFacade(taskList, undoList, redoList, lastOutputTaskList, commandObj,
-				isUndoAction, isRedoAction);
+		CommandFacade commandFacade = new CommandFacade(taskList, undoList, redoList, lastOutputTaskList,
+				commandObj, isUndoAction, isRedoAction);
 		commandFacade.run();
 		updateLists(commandFacade);
 

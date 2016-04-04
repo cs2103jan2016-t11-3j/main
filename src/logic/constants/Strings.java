@@ -131,6 +131,10 @@ public class Strings {
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL = "Interval is invalid";
 	
+	// Mark Exception constants
+	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";
+	public static final String MESSAGE_MARK_EXCEPTION_SAME_STATUS = "Task already has status: %1s";
+	
 	
 	// FOR PACKAGE-WIDE DEBUGGING PURPOSES
 	public static void printTaskObjectFields(TaskObject taskObj) {

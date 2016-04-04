@@ -47,7 +47,7 @@ public class CommandFacade {
 	private int index;
 	private int lastSearchedIndex; // stores the index of the last recurring task searched
 	
-	private int lastCompletedTaskId;
+	private int lastCompletedTaskId; // stores task id of task most recently marked completed
 	
 	boolean isUndoAction;
 	boolean isRedoAction;
@@ -400,7 +400,7 @@ public class CommandFacade {
 			}
 		}
 		
-		lastCompletedTaskId = done.getTaskIdToMark();
+		lastCompletedTaskId = done.getMostRecentlyMarkedTaskId();
 	}
 
 	/**
