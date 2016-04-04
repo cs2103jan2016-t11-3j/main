@@ -157,10 +157,15 @@ public class CommandFacade {
 	
 	// hides completed tasks if command is not "view done"
 	private void filterLastOutputTaskList() {
-		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == 0) 
+		System.out.println(commandType);
+		System.out.println(index);
+		System.out.println(taskObj.getStatus());
+		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == -1) 
 				&& (taskObj.getStatus().equals(STATUS_COMPLETED))) {
+			System.out.println("Not filtering");
 			return;
 		} else {
+			System.out.println("filtering");
 			filterOutCompletedTasks();
 		}
 	}
