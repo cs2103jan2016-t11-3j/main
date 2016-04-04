@@ -139,7 +139,9 @@ public class MainController implements Initializable {
 		_UI.setSortByDate();
 		manageSidePanel();
 		setWrapText(); // for sideBarList
+		displayMessage();
 		display(); // start program with all tasks in table
+		
 
 	}
 
