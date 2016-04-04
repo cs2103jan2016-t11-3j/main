@@ -39,6 +39,7 @@ public class CommandFacade {
 	private Deque<CommandObject> redoList;
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output;
+	private ArrayList<String> taskDateTimeOutput;
 
 	private CommandObject commandObj;
 	private int commandType;
@@ -189,7 +190,8 @@ public class CommandFacade {
 		Search search = new Search(commandObj, taskList, lastOutputTaskList);
 		setOutput(search.run());
 		setLastOutputTaskList(search.getLastOutputTaskList());
-		setLastSearchedIndex(search.getSearchIndex());	
+		setLastSearchedIndex(search.getSearchIndex());
+		setTaskDateTimeOutput(search.getTaskDateTimeOutput());
 	}
 	
 	private void searchFunction(CommandObject cmdObjToRunSearchByIndex) {
@@ -597,6 +599,11 @@ public class CommandFacade {
 	public int getLastSearchedIndex() {
 		return lastSearchedIndex;
 	}
+	
+	// Returns arraylist of timeoutput to commandFacade
+	public ArrayList<String> getTaskDateTimeOutput() {
+		return taskDateTimeOutput;
+	}
 
 	public void setTaskList(ArrayList<TaskObject> newTaskList) {
 		this.taskList = newTaskList;
@@ -649,5 +656,10 @@ public class CommandFacade {
 	public void setLastSearchedIndex(int lastSearchedIndex) {
 		this.lastSearchedIndex = lastSearchedIndex;
 		//commandObj.setLastSearchedIndex(lastSearchedIndex);
+	}
+	
+	// Called by Search
+	public void setTaskDateTimeOutput(ArrayList<String> taskDateTimeOutput) {
+		this.taskDateTimeOutput = taskDateTimeOutput;
 	}
 }

@@ -55,6 +55,7 @@ public class Search extends Display {
 	private ArrayList<TaskObject> matchedTasks = new ArrayList<TaskObject>();
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
+	private ArrayList<String> taskDateTimeOutput = new ArrayList<String>();
 
 	private String searchTitle = "";
 	private LocalDate searchDate = LocalDate.MAX;
@@ -374,6 +375,7 @@ public class Search extends Display {
 		String timeOutput;
 
 		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
+		taskDateTimeOutput.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
 			try {
 				if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
@@ -382,7 +384,7 @@ public class Search extends Display {
 						endDateTime = foundTask.getTaskDateTimes().get(i).getEndDateTime();
 						timeOutput = TimeOutput.setEventTimeOutput(startDateTime, endDateTime);
 						timeOutput = Integer.toString(i+1) + ". " + timeOutput;
-						output.add(timeOutput);
+						taskDateTimeOutput.add(timeOutput);
 					}
 				} else {
 					if (foundTask.getCategory().equals(CATEGORY_DEADLINE)) {
@@ -390,7 +392,7 @@ public class Search extends Display {
 							startDateTime = foundTask.getTaskDateTimes().get(i).getStartDateTime();
 							timeOutput = TimeOutput.setDeadlineTimeOutput(startDateTime);
 							timeOutput = Integer.toString(i+1) + ". " + timeOutput;
-							output.add(timeOutput);
+							taskDateTimeOutput.add(timeOutput);
 						}
 					}
 				}
@@ -406,7 +408,7 @@ public class Search extends Display {
 				}
 			}
 			timeOutput = "1. " + foundTask.getTimeOutputString();
-			output.add(timeOutput);
+			taskDateTimeOutput.add(timeOutput);
 		}
 	}
 
@@ -451,5 +453,9 @@ public class Search extends Display {
 		}
 
 		return lastOutputTaskList;
+	}
+	
+	public ArrayList<String> getTaskDateTimeOutput(){
+		return taskDateTimeOutput;
 	}
 }
