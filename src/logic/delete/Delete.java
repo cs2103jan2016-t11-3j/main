@@ -155,7 +155,7 @@ public class Delete {
 			if (commandObj.getIndex() == -1) {
 				runQuickDelete();
 			} else if (commandObj.getIndex() == 0) {
-				if (commandObj.getTaskObject().getCategory().equals("completed")) {
+				if (commandObj.getTaskObject().getStatus().equals("completed")) {
 					runDeleteCompletedTasks();
 				} else {
 					runDeleteAll();
