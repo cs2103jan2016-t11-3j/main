@@ -373,6 +373,8 @@ public class Search extends Display {
 		LocalDateTime startDateTime;
 		LocalDateTime endDateTime;
 		String timeOutput;
+		
+		taskDateTimeOutput.clear();
 
 		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		taskDateTimeOutput.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
