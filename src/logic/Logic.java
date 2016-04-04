@@ -123,10 +123,6 @@ public class Logic {
 
 		setLastOutputTaskList(firstOutputTaskList);
 		setOutput(firstOutput);
-		
-		for (int i = 0; i < output.size(); i++) {
-			System.out.println(output.get(i));
-		}
 	}
 
 	private boolean checkNotDuplicate(TaskObject task, ArrayList<TaskObject> firstOutputTaskList) {
