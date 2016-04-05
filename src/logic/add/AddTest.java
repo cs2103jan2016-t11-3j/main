@@ -26,23 +26,23 @@ public class AddTest {
 	private static ArrayList<TaskObject> testArray = new ArrayList<TaskObject>();
 
 	/*********************************************************************************/
-	
+
 	@Test
 	// Add floating task. No partitions
 	public void testZ() throws Exception {
 		Parser parser = new Parser("add dinner by tmr 7pm", 1);
 		ArrayList<String> actualOutput = new ArrayList<String>();
-		//TaskObject task = new TaskObject("Dinner tonight", 1);
+		// TaskObject task = new TaskObject("Dinner tonight", 1);
 		TaskObject temp = parser.run().getTaskObject();
 		Add add = new Add(temp, -1, testArray);
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: dinner");
+		expectedOutput.add("Task added: dinner. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
-	
+
 	@Test
 	// Add floating task. No partitions
 	public void testA() {
@@ -53,7 +53,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: Dinner tonight");
+		expectedOutput.add("Task added: Dinner tonight. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -71,7 +71,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: Assignment 1");
+		expectedOutput.add("Task added: Assignment 1. ");
 
 		assertEquals(expectedOutput, actualOutput);
 
@@ -90,7 +90,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: CE2");
+		expectedOutput.add("Task added: CE2. Task added is overdue");
 
 		assertEquals(expectedOutput, actualOutput);
 
@@ -112,7 +112,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 1");
+		expectedOutput.add("Task added: event 1. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -130,8 +130,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 2");
-		expectedOutput.add("Task: event 2 clashes with event 1");
+		expectedOutput.add("Task added: event 2. Task: event 2 clashes with event 1. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -149,9 +148,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 3");
-		expectedOutput.add("Task: event 3 clashes with event 2");
-		expectedOutput.add("Task: event 3 clashes with event 1");
+		expectedOutput.add("Task added: event 3. Task: event 3 clashes with event 2, event 1. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -169,15 +166,13 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 4");
-		expectedOutput.add("Task: event 4 clashes with event 2");
-		expectedOutput.add("Task: event 4 clashes with event 1");
+		expectedOutput.add("Task added: event 4. Task: event 4 clashes with event 2, event 1. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
 
 	@Test
-	// Add completely new event
+	// Add completely new event, overdue
 	public void testH() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 
@@ -189,14 +184,13 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 5");
+		expectedOutput.add("Task added: event 5. Task added is overdue");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
 
 	@Test
-	// Add clashing event: current task StartDateTime between new task start and
-	// end
+	// Add clashing event: current task StartDateTime between new task start and end
 	public void testI() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 
@@ -208,15 +202,13 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 6");
-		expectedOutput.add("Task: event 6 clashes with event 5");
+		expectedOutput.add("Task added: event 6. Task: event 6 clashes with event 5. Task added is overdue");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
 
 	@Test
-	// Add clashing event: current task EndDateTime between new task start and
-	// end
+	// Add clashing event: current task EndDateTime between new task start and end
 	public void testJ() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 
@@ -228,15 +220,13 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 7");
-		expectedOutput.add("Task: event 7 clashes with event 5");
+		expectedOutput.add("Task added: event 7. Task: event 7 clashes with event 5. Task added is overdue");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
 
 	@Test
-	// Add clashing event: New task starts and ends within timings of current
-	// task
+	// Add clashing event: New task starts and ends within timings of current task
 	public void testK() {
 		ArrayList<String> actualOutput = new ArrayList<String>();
 
@@ -248,8 +238,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 8");
-		expectedOutput.add("Task: event 8 clashes with event 5");
+		expectedOutput.add("Task added: event 8. Task: event 8 clashes with event 5. Task added is overdue");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -267,7 +256,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 9");
+		expectedOutput.add("Task added: event 9. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -285,8 +274,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 10");
-		expectedOutput.add("Task: event 10 clashes with event 9");
+		expectedOutput.add("Task added: event 10. Task: event 10 clashes with event 9. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -304,8 +292,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 11");
-		expectedOutput.add("Task: event 11 clashes with event 10");
+		expectedOutput.add("Task added: event 11. Task: event 11 clashes with event 10. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -323,8 +310,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 12");
-		expectedOutput.add("Task: event 12 clashes with event 10");
+		expectedOutput.add("Task added: event 12. Task: event 12 clashes with event 10. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -342,7 +328,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 13");
+		expectedOutput.add("Task added: event 13. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -360,11 +346,11 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 14");
+		expectedOutput.add("Task added: event 14. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
-	
+
 	@Test
 	// Tests exception handling: start time after end time
 	public void testR() {
@@ -382,6 +368,7 @@ public class AddTest {
 
 		assertEquals(expectedOutput, actualOutput);
 	}
+
 	/*********************************************************************************/
 
 	@Test
@@ -400,29 +387,31 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 16");
+		expectedOutput.add("Recurring Task added: event 16. ");
 		assertEquals(expectedOutput, actualOutput);
-		
-		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair> ();
-		
+
+		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair>();
+
 		LocalDateTime testStart = LocalDateTime.of(2016, 06, 18, 12, 00);
 		LocalDateTime testEnd = LocalDateTime.of(2016, 06, 18, 14, 00);
-		
-		while(testStart.isBefore(LocalDateTime.of(2016, 9, 24, 12, 00))) {
+
+		while (!testStart.isAfter(LocalDateTime.of(2016, 9, 24, 12, 00))) {
 			LocalDateTimePair pair = new LocalDateTimePair(testStart, testEnd);
 			expectedDateTimes.add(pair);
 			testStart = testStart.plusWeeks(2);
 			testEnd = testEnd.plusWeeks(2);
 		}
-		
+
 		assertEquals(expectedDateTimes.size(), task.getTaskDateTimes().size());
-		
+
 		for (int i = 0; i < expectedDateTimes.size(); i++) {
-			assertEquals(expectedDateTimes.get(i).getStartDateTime(), task.getTaskDateTimes().get(i).getStartDateTime());
-			assertEquals(expectedDateTimes.get(i).getEndDateTime(), task.getTaskDateTimes().get(i).getEndDateTime());
+			assertEquals(expectedDateTimes.get(i).getStartDateTime(),
+					task.getTaskDateTimes().get(i).getStartDateTime());
+			assertEquals(expectedDateTimes.get(i).getEndDateTime(),
+					task.getTaskDateTimes().get(i).getEndDateTime());
 		}
 	}
-	
+
 	@Test
 	// Adds recurrent task with preset "count"
 	public void testT() throws Exception {
@@ -439,33 +428,33 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 17");
-		expectedOutput.add("Task: event 17 clashes with event 16");
+		expectedOutput.add("Recurring Task added: event 17. Task: event 17 clashes with event 16. ");
 		assertEquals(expectedOutput, actualOutput);
-		
+
 		assertTrue(add.getIsClash());
-		
-		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair> ();
-		
+
+		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair>();
+
 		LocalDateTime testStart = LocalDateTime.of(2016, 06, 26, 12, 00);
 		LocalDateTime testEnd = LocalDateTime.of(2016, 06, 26, 14, 00);
-		
-		for(int i = 0; i < interval.getCount(); i++) {
+
+		for (int i = 0; i < interval.getCount(); i++) {
 			LocalDateTimePair pair = new LocalDateTimePair(testStart, testEnd);
 			expectedDateTimes.add(pair);
 			testStart = testStart.plusDays(6);
 			testEnd = testEnd.plusDays(6);
 		}
-		
+
 		assertEquals(expectedDateTimes.size(), task.getTaskDateTimes().size());
-		
+
 		for (int i = 0; i < expectedDateTimes.size(); i++) {
-			//System.out.println(task.getTaskDateTimes().get(i).getStartDateTime().toString());
-			//System.out.println(task.getTaskDateTimes().get(i).getEndDateTime().toString());
-			assertEquals(expectedDateTimes.get(i).getStartDateTime(), task.getTaskDateTimes().get(i).getStartDateTime());
-			assertEquals(expectedDateTimes.get(i).getEndDateTime(), task.getTaskDateTimes().get(i).getEndDateTime());
+			// System.out.println(task.getTaskDateTimes().get(i).getStartDateTime().toString());
+			// System.out.println(task.getTaskDateTimes().get(i).getEndDateTime().toString());
+			assertEquals(expectedDateTimes.get(i).getStartDateTime(),
+					task.getTaskDateTimes().get(i).getStartDateTime());
+			assertEquals(expectedDateTimes.get(i).getEndDateTime(),
+					task.getTaskDateTimes().get(i).getEndDateTime());
 		}
 	}
 	/*********************************************************************************/
 }
-
