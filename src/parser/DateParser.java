@@ -208,9 +208,6 @@ public class DateParser {
 	private void setDateToComingDayOfWeek(String input) throws InvalidDateFormatException {
 	    input = processDayOfWeek(input);
 	    dateObject = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.valueOf(input))); 
-		//while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-		//	dateObject = dateObject.plusDays(1);
-		//}
 	}
 	
 	/**
@@ -257,21 +254,6 @@ public class DateParser {
         } else if (set > now) {
             dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input)));
         }
-        /**
-        if (LocalDate.now().getDayOfWeek().toString().toLowerCase().contains(input)) {
-			dateObject = LocalDate.now();
-		} else {
-			dateObject = LocalDate.now(); 
-			//set the date first
-			while (!dateObject.getDayOfWeek().toString().toLowerCase().contains(input)) {
-				dateObject = dateObject.plusDays(1);
-			}
-			
-			if (dateObject.getDayOfWeek().getValue() < LocalDate.now().getDayOfWeek().getValue()) {
-				throw new Exception(input + " is over this week. Did you mean next " + input + "?");
-			}
-		}
-	    */
 	}
 	
 	/**

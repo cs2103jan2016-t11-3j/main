@@ -26,7 +26,9 @@ public class FilePath {
     protected static void changePreferedDirectory(String directory) throws IOException {
         Logger logger = AtfLogger.getLogger();
         mkdirIfNotExist(directory);
-        checkDirectory(directory);
+        if (!directoryValid(directory)) {
+            throw new InvalidPathException(directory, "Cannot be used");
+        }
         writePreferredDirectory(directory);
         logger.info(String.format(Constants.LOG_CHANGE_PREFERED_DIR, directory));
     }
@@ -41,7 +43,9 @@ public class FilePath {
      */
     protected static String getPath() throws FileNotFoundException , IOException {
         String directory = readPreferedDirectory();
-        checkDirectory(directory);
+        if (!directoryValid(directory)) {
+            throw new InvalidPathException(directory, "Cannot be used");
+        }
         Path path = Paths.get(directory, Constants.DATA_FILENAME);
         return path.toString();
     }
@@ -51,19 +55,22 @@ public class FilePath {
      * @param directory
      * @throws InvalidPathException
      */
-    protected static void checkDirectory(String directory) throws InvalidPathException {
-        assert directory != null;
+    protected static boolean directoryValid(String directory)  {
+        if (directory == null) {
+            return false;
+        }
         Path path = Paths.get(directory);
         if( !Files.isExecutable(path) || !Files.isWritable(path) || !Files.isReadable(path)) {
-            throw new InvalidPathException(directory, "Cannot be used");
+            return false;
         }
+        return true;
     }
 
     /**
      * Checks if the specified filePath is writable and readable.  
      * @param filePath or path of file to check
      */
-    protected static boolean checkPath(String filePath) {
+    protected static boolean pathValid(String filePath) {
         Path path = Paths.get(filePath);
         return Files.isReadable(path) && Files.isWritable(path);
     }

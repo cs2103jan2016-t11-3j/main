@@ -28,7 +28,7 @@ public class FileStorage implements IStorage {
     }
 
     @Override
-    public  void save(ArrayList<TaskObject> newTaskList) 
+    public void save(ArrayList<TaskObject> newTaskList) 
             throws NoSuchFileException, IOException {
         String filePath = null;
         try {
@@ -37,7 +37,7 @@ public class FileStorage implements IStorage {
             FilePath.initializeDefaultSave();
             filePath = FilePath.getPath();
         }
-        if(filePath == null) { // defensive measure
+        if (filePath == null) { // defensive measure
             FilePath.initializeDefaultSave();
             filePath = FilePath.getPath();
         }
@@ -60,7 +60,7 @@ public class FileStorage implements IStorage {
     @Override
     public ArrayList<TaskObject> load(String directory, String fileName) 
             throws InvalidPathException, FileNotFoundException, IOException, JsonSyntaxException{
-        if (!FilePath.checkPath(directory)) {
+        if (!FilePath.pathValid(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
         String filePath = Paths.get(directory, fileName).toString();
@@ -71,7 +71,7 @@ public class FileStorage implements IStorage {
     @Override
     public void createCopy(String directory , String fileName) 
             throws InvalidPathException ,IOException  {
-        if (!FilePath.checkPath(directory)) {
+        if (!FilePath.pathValid(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
         ArrayList<TaskObject> taskList = load();
@@ -82,7 +82,7 @@ public class FileStorage implements IStorage {
     @Override
     public void changeSaveLocation (String directory) 
             throws InvalidPathException, IOException {
-        if (!FilePath.checkPath(directory)) {
+        if (!FilePath.pathValid(directory)) {
             throw new InvalidPathException(directory, "Invalid Directory");
         }
         ArrayList<TaskObject> taskList = load();
