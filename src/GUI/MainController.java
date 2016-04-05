@@ -230,13 +230,17 @@ public class MainController implements Initializable {
 	}
 
 	private void fillSidebar() {
-
+		taskDateList.getItems().clear();
 		try {
 			ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
+
 			recurTitle.setText(recurringTimes.get(0));
 			recurringTimes.remove(0);
 			ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
+			
+			taskDateList.getItems().clear();
 			taskDateList.setItems(items);
+			System.out.println(taskDateList.getItems());
 		} catch (NullPointerException e) {
 
 		}
@@ -388,26 +392,22 @@ public class MainController implements Initializable {
 		});
 	}
 	  
-	      private void setWrapText() {
-	          taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-	              private Text text;
-	  
-	              @Override
-	              public ListCell<String> call(ListView<String> stringListView) {
-	                  ListCell<String> cell = new ListCell<String>() {
-	  
-	                      protected void updateItem(String item, boolean empty) {
-	                          super.updateItem(item, empty);
-	                          if (!isEmpty()) {
-	                              text = new Text(item.toString());
-	                              text.wrappingWidthProperty().bind(taskDateList.widthProperty());
-	                              setGraphic(text);
-	                          }
-	                      }
-	                  };
-	                  return cell;
-	              }
-	          });
-	      }
+	private void setWrapText() {
+		 taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+	            @Override
+	            public ListCell<String> call(final ListView<String> list) {
+	                return new ListCell<String>() {
+	                    {
+	                        Text text = new Text();
+	                        text.wrappingWidthProperty().bind(taskDateList.widthProperty());
+	                        text.textProperty().bind(itemProperty());
+
+	                        setPrefWidth(0);
+	                        setGraphic(text);
+	                    }
+	                };
+	            }
+	        });
+	}
 
 }
