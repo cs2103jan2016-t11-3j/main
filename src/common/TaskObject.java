@@ -182,21 +182,25 @@ public class TaskObject implements Comparable<TaskObject> {
 
 	// Checks if title, dates and times are invalid values
 	public boolean isSearchKeywordPresent() {
-		return (!title.equals("") || !startDateTime.equals(LocalDateTime.MAX)
-				|| !endDateTime.equals(LocalDateTime.MAX));
+		return (!this.title.equals("") || !this.startDateTime.equals(LocalDateTime.MAX)
+				|| !this.category.equals("") || !this.status.equals(""));
 	}
-
-	// for testing purpose
-	public void resetAttributes() {
-		setTitle("");
-		setStartDateTime(LocalDateTime.MAX);
-		setEndDateTime(LocalDateTime.MAX);
+	
+	public boolean isInfiniteRecurrence() {
+		return (this.interval.getCount() == -1 && this.interval.getUntil().equals(LocalDateTime.MAX));
 	}
 
 	public boolean isNull() {
 		return (title.equals("") && startDateTime.equals(LocalDateTime.MAX)
 				&& endDateTime.equals(LocalDateTime.MAX) && category.equals("") && status.equals("")
 				&& taskId == -1 && timeOutputString.equals(""));
+	}
+	
+	// for testing purpose
+	public void resetAttributes() {
+		setTitle("");
+		setStartDateTime(LocalDateTime.MAX);
+		setEndDateTime(LocalDateTime.MAX);
 	}
 
 	@Override

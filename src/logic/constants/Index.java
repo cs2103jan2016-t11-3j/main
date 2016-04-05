@@ -15,4 +15,6 @@ public class Index {
 	public static final int INDEX_INCOMPLETE = 11;
 	public static final int INDEX_OVERDUE = 12;
 	
+	public static final int RECURRENCE_CONSTANT_COUNT = 10;
+	
 }

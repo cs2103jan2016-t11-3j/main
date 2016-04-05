@@ -29,7 +29,6 @@ import static logic.constants.Strings.*;
 public class Recurring {
 
 	private static Logger logger = AtfLogger.getLogger();
-	private static final int RECURRENCE_CONSTANT_COUNT = 10;
 
 	/**
 	 * Method called by logic when AdultTaskFinder is launched. Searches for all
