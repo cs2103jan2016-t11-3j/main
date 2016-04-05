@@ -74,7 +74,7 @@ public class SearchParser extends CommandParser {
 		return input.matches("(?i)(done|completed)");
 	}
 	
-	private void setStatus(String input){
+	private void setStatus(String input) {
 		TO.setStatus("completed");
 	}
 	
@@ -105,7 +105,7 @@ public class SearchParser extends CommandParser {
 	}
 	
 	public String removeSearchKeyword(String input) {
-		return input.replaceFirst("search ", "").trim();
+		return input.replaceFirst(Constants.REGEX_PARSER_SEARCH, "").trim();
 	}
 	
 	public String getTask() {

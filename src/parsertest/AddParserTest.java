@@ -2,38 +2,107 @@ package parsertest;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
+
 import org.junit.Test;
 
 import common.TaskObject;
-
 import parser.AddParser;
 
 public class AddParserTest {
-	
 	AddParser AP = new AddParser();
 	TaskObject TO = new TaskObject();
+	
+	//--test adding floating task
+	//partition for all general string without identifiable date time
 	@Test
-	public void testProcess() throws Exception {
+	public void testA() throws Exception {
+		TO = AP.process("buy homework");
 		
-		AP.process("buy homework");
-		assertEquals("buy homework", AP.getTask());
+		//Basic Details
+		assertEquals("buy homework", TO.getTitle());
+		assertEquals(LocalDateTime.MAX, TO.getStartDateTime());
+		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
+		assertEquals("incomplete", TO.getStatus());
+	}
+	
+	//--test adding deadline with date and time
+	//all date time format should work if date time parser works, hence
+	//it is considered the same test case
+	@Test
+	public void testB() throws Exception {
+		TO = AP.process("buy eggs by tmr 19.13hrs");
 		
-		TO = AP.process("be nice to merrel by today 9pm");
-		assertEquals("be nice to merrel", AP.getTask());
-		assertEquals("2016-04-03T21:00",TO.getStartDateTime().toString());
+		//Basic Details
+		assertEquals("buy eggs", TO.getTitle());
+		assertEquals("2016-04-06T19:13", TO.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
+		assertEquals("incomplete", TO.getStatus());
+	}
+	
+	//--test adding event with date and time
+	//all date time format should work if date time parser works, hence
+	//it is considered the same test case	
+	@Test
+	public void testC() throws Exception {
+		TO = AP.process("bdae partee from tmr 9am to 10pm");
 		
-		TO = AP.process("5pm lecture every tuesday at 4pm until 9june");
-		assertEquals("5pm lecture", AP.getTask());
-		assertEquals("2016-04-05T16:00",TO.getStartDateTime().toString());
-		assertTrue(TO.getIsRecurring());
+		//Basic Details
+		assertEquals("bdae partee", TO.getTitle());
+		assertEquals("2016-04-06T09:00", TO.getStartDateTime().toString());
+		assertEquals("2016-04-06T22:00", TO.getEndDateTime().toString());
+		assertEquals("incomplete", TO.getStatus());
+	}
+	
+	//--test adding recurring deadline with date and time and fixed termination date
+	@Test
+	public void testD() throws Exception {
+		TO = AP.process("dota time everyday at 11pm until 9 may");
 		
-		TO = AP.process("5pm lecture every thursday from 8am to 9am until 9june");
-		assertEquals("5pm lecture", AP.getTask());
-		assertEquals("2016-04-07T08:00",TO.getStartDateTime().toString());
+		//Basic Details
+		assertEquals("dota time", TO.getTitle());
+		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
+		assertEquals("incomplete", TO.getStatus());
 		
-		TO = AP.process("ie2100 hw by today");
-		assertEquals("ie2100 hw", AP.getTask());
-		assertEquals("2016-04-03T23:59:59.999999999",TO.getStartDateTime().toString());
+		//Interval Details
+		assertEquals("2016-05-09T23:59:59.999999999", TO.getInterval().getUntil().toString());
+		assertEquals("DAILY", TO.getInterval().getFrequency());
+		assertEquals(1, TO.getInterval().getTimeInterval());
+	}
+	
+	//--test adding recurring deadline with date and time and specified count til termination date
+	@Test
+	public void testE() throws Exception {
+		TO = AP.process("dota time every 2 day at 11pm for 2 months");
 		
+		//Basic Details
+		assertEquals("dota time", TO.getTitle());
+		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
+		assertEquals("incomplete", TO.getStatus());
+
+		//Interval Details
+		assertEquals(31, TO.getInterval().getCount());
+		assertEquals("DAILY", TO.getInterval().getFrequency());
+		assertEquals(2, TO.getInterval().getTimeInterval());
+	}
+	
+	//--test adding recurring deadline without termination date
+	@Test
+	public void testF() throws Exception {
+		TO = AP.process("dota time every 2 day at 11pm");
+		
+		//Basic Details
+		assertEquals("dota time", TO.getTitle());
+		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
+		assertEquals("incomplete", TO.getStatus());
+
+		//Interval Details
+		assertEquals(-1, TO.getInterval().getCount());
+		assertEquals("DAILY", TO.getInterval().getFrequency());
+		assertEquals(2, TO.getInterval().getTimeInterval());
+		assertEquals(LocalDateTime.MAX, TO.getInterval().getUntil());
 	}
 }

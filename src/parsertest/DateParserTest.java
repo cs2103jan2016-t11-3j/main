@@ -1,52 +1,69 @@
+//@@author A0125003A
 package parsertest;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 import java.time.LocalDate;
-
 import org.junit.Test;
-
 import parser.DateParser;
 
-public class DateProcessorTest {
+public class DateParserTest {
 
 	DateParser DP = new DateParser();
 	
+	/*POSITIVE VALUE PARTITION CASES*/		
+	/*case 1: test ability to read ddmm formats*/
 	@Test
-	public void testProcessDate() throws Exception {
-		/*POSITIVE VALUE PARTITION CASES*/
-		/*case 1: test ability to read ddmm formats*/
+	public void testA() throws Exception {	
 		DP.parseDate("7/6");
 		assertEquals("2016-06-07", DP.getDateObject().toString());
 		reset();
-		
-		/*case 2: test ability to read ddmonthyyyy formats*/
+	}
+	
+	/*case 2: test ability to read ddmonthyyyy formats*/
+	@Test
+	public void testB() throws Exception {
 		DP.parseDate("6 june 2014");
 		assertEquals("2014-06-06", DP.getDateObject().toString());
 		reset();
-		
-		/*case 3: test ability to read ddmmyyyy formats*/
+	}
+	
+	/*case 3: test ability to read ddmmyyyy formats*/
+	@Test
+	public void testC() throws Exception {
 		DP.parseDate("5/6/16");
 		assertEquals("2016-06-05", DP.getDateObject().toString());
 		reset();
-		
-		/*case 4: test ability to read relative dates*/
+	}
+	
+	/*case 4: test ability to read relative dates*/
+	@Test
+	public void testD() throws Exception {
 		DP.parseDate("next friday");
-		assertEquals("2016-04-08", DP.getDateObject().toString());
+		assertEquals("2016-04-15", DP.getDateObject().toString());
 		reset();
-		
-		/*case 5: boundary value for positive-value partition (31)*/
+	}
+	
+	/*case 5: boundary value for positive-value partition (31)*/
+	@Test
+	public void testE() throws Exception {
 		DP.parseDate("31 july 2000");
 		assertEquals("2000-07-31", DP.getDateObject().toString());
 		reset();
-		
-		/*case 6: boundary value for positive-value partition (31)*/
+	}
+	
+	/*case 6: boundary value for positive-value partition (31)*/
+	@Test
+	public void testF() throws Exception {
 		DP.parseDate("31/12/2000");
 		assertEquals("2000-12-31", DP.getDateObject().toString());
 		reset();
-		
+	}
+	
+	/*case 7: reading relative dates*/
+	@Test
+	public void testG() throws Exception {
 		DP.parseDate("everyday");
-		assertEquals("2016-03-31", DP.getDateObject().toString());
+		assertEquals("2016-04-05", DP.getDateObject().toString());
 		reset();
 		
 		DP.parseDate("today");
@@ -56,76 +73,36 @@ public class DateProcessorTest {
 		DP.parseDate("tonight");
         assertEquals(LocalDate.now(), DP.getDateObject());
         reset();
-
-		/*NEGATIVE VALUE TEST CASES*/
-		/*case 5: test ability to reject non-slash separated numbers*/
-		try {
-			DP.parseDate("7.6");
-			assert false;
-		} catch (Exception e) {
-			assert true;
-		}
-		reset();
-		
-		/*case 6: test if exception is thrown when date is not valid*/
-		try {
-			DP.parseDate("51 july 1030");
-			assert false;
-		} catch (Exception e) {
-			assert true;
-		}
-		reset();
-		
-		/*case 7: test if exception is thrown when date is at boundary*/
-		try {
-			DP.parseDate("32 july 1030");
-			assert false;
-		} catch (Exception e) {
-			assert true;
-		}
-		reset();
 	}
-
+	
+	/*NEGATIVE VALUE TEST CASES*/
+	/*case 8: test ability to reject non-symbol separated numbers*/
 	@Test(expected = Exception.class)
-    public void testProcessInvalidDate() throws Exception {
-	    DP.parseDate("323 feb 2012");
+    public void testH() throws Exception {
+	    DP.parseDate("1 11 2012");
 	}
 	
+	/*case 9: ability to reject out of bound dates. boundary being 31*/
+	@Test(expected = Exception.class)
+    public void testI() throws Exception {
+	    DP.parseDate("32 feb 2012");
+	}
 	
-	@Test
-	public void testHasMonth() {
-		/*test for cases in the positive value partition*/
-		assertTrue(DP.hasMonth("jannuary")); //misspelt
-		assertTrue(DP.hasMonth(" November")); //untrimmed
-		assertTrue(DP.hasMonth("feb")); //short forms
-		assertTrue(DP.hasMonth("DeCemmber")); //inconsistent casing
-		assertTrue(DP.hasMonth("3rd March 2015")); //full ddMonthyyyy format
-		
-		/*test for cases in the negative value partition*/
-		assertFalse(DP.hasMonth("first month"));
+	/*case 10: ability to reject non-conforming relative date formats*/
+	@Test(expected = Exception.class)
+    public void testJ() throws Exception {
+	    DP.parseDate("next next monday");
+	}
+	
+	//method resets the list and dates for testing purposes
+	private void reset() {
+		DP.resetDate();
+		DP.clearList();
 	}
 
-	@Test
-	public void testHasSlash() {
-		/*test for values in the positive partition*/
-		assertTrue(DP.hasSlash("4/5/3"));
-		
-		/*tests for the values in the negative partition*/
-		assertFalse(DP.hasSlash("4.5.3"));
-		assertFalse(DP.hasSlash("5 june 05"));
-	}
-	
-	@Test
-	public void testIsRelative() {
-		/*test for values in the positive partition (relative dates)*/
-		assertTrue(DP.isRelative("tmr"));
-		assertTrue(DP.isRelative("today"));
-		assertTrue(DP.isRelative("next week"));
-		assertTrue(DP.isRelative("next wednesday"));
-		
-	}
-	
-	@Test
+}
+/*
+ * @Test
 	public void testProcessRelativeDate() throws Exception {
 		
 		DP.processRelativeDate("next tue");
@@ -252,12 +229,4 @@ public class DateProcessorTest {
 		
 		//test ability to recognize longer strings
 		assertEquals(3, DP.setMonthInDataProcessor("3 March"));
-	}
-	
-	//method resets the list and dates for testing purposes
-	private void reset() {
-		DP.resetDate();
-		DP.clearList();
-	}
-
-}
+	}*/
