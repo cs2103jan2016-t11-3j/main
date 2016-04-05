@@ -127,8 +127,8 @@ public class DateParser {
 	 * @throws Exception
 	 */
 	private void processWithoutAlphabets(String input) throws Exception {
-	    if (hasSlash(input)) {
-            setMonthWithSlash(input);
+	    if (hasSymbolSeparator(input)) {
+            setSymbolSeparatedDate(input);
         } else {
             throw new InvalidDateFormatException(input);
         }
@@ -272,7 +272,7 @@ public class DateParser {
 	}
 	
 	//this method checks if the date is in dd/mm/yy format
-	public boolean hasSlash(String input) {
+	public boolean hasSymbolSeparator(String input) {
 		if(input.contains("/") || input.contains(".") || input.contains("-") ) {
 			return true;
 		} else {
@@ -323,7 +323,7 @@ public class DateParser {
 	 * 				input by user for one date, in dd/mm/yyyy format
 	 * @throws Exception 
 	 */
-	public void setMonthWithSlash(String input) throws Exception {
+	public void setSymbolSeparatedDate(String input) throws Exception {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		
 		for (String temp : input.split("[.-/]")) {
