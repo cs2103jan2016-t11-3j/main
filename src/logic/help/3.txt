@@ -1,10 +1,12 @@
-Viewing/Searching for an existing event/task using task description
+Enter <search keyword>
+Enter <“view”/“find”/“search”/“display”/"filter"> <search keyword> 
 
-Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the search keywords. The search keywords should contain at least one word from the task description, although the search terms do not have to be case-sensitive. 
+The program will display a list of events/tasks that matches the search terms, sorted in order of time.
 
-The program will display a list of events/tasks that matches the search terms, sorted in order of time. If there are no tasks matching the search terms, the software will display “No tasks found”.
 
-Please note that entering only the command without any search terms displays all events/tasks, sorted in order of time.
+Enter <“view”/“find”/“search”/“display”/"filter">
+
+The program displays all events/tasks, sorted in order of time.
 
 Usage Examples: 
 view dinner	

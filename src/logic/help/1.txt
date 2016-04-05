@@ -1,5 +1,5 @@
-Adding a new event/floating task
-Enter “add”, followed by the event/floating task description. The start and end date time can also be included with the event/floating task and the information will automatically be added to the event details.
+Enter “add” <event/floating task description>
+Enter “add” <event/floating task description> <start/end date time> 
 
 Usage Examples:
 add Dinner with John 7pm - 8pm	
