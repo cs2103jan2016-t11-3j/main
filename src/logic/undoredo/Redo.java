@@ -12,6 +12,17 @@ import logic.Logic;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
+/**
+ * The Redo class is a child class of the UndoRedo class.
+ * The first CommandObject in the redo list ArrayDeque is "popped" and a secondary Logic class is created to 
+ * process the operation.
+ * 
+ * @param taskList ArrayList containing all tasks
+ * @param undoList Deque containing all undo tasks
+ * @param redoList Deque containing all redo tasks
+ * @author RuiBin
+ */
+
 public class Redo extends UndoRedo {
 	
 	private Logic secondaryLogic;
@@ -46,7 +57,7 @@ public class Redo extends UndoRedo {
 		assert (commandType == INDEX_ADD || commandType == INDEX_DELETE || commandType == INDEX_EDIT ||
 				commandType == INDEX_COMPLETE || commandType == INDEX_INCOMPLETE);
 		
-		switch (commandType){
+		switch (commandType) {
 			case INDEX_ADD :
 				return "Add";
 			case INDEX_DELETE :

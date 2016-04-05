@@ -12,6 +12,17 @@ import logic.Logic;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
+/**
+ * The Undo class is a child class of the UndoRedo class.
+ * The first CommandObject in the undo list ArrayDeque is "popped" and a secondary Logic class is created to 
+ * process the operation.
+ * 
+ * @param taskList ArrayList containing all tasks
+ * @param undoList Deque containing all undo tasks
+ * @param redoList Deque containing all redo tasks
+ * @author RuiBin
+ */
+
 public class Undo extends UndoRedo {
 
 	private Logic secondaryLogic;

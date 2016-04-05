@@ -20,7 +20,7 @@ import static logic.constants.Index.*;
  * @param taskList ArrayList containing all tasks
  * @param undoList Deque containing all undo tasks
  * @param redoList Deque containing all redo tasks
- * @author Ruibin
+ * @author RuiBin
  */
 
 public class UndoRedo {
