@@ -234,7 +234,6 @@ public class Parser {
 			TO.setCategory("floating");
 		} else if (isDeadline()) {
 			TO.setCategory("deadline");
-			TO.setEndDateTime(TO.getStartDateTime());
 		}  else {
 			TO.setCategory("event"); //edited mistake here
 		}

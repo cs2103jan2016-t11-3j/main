@@ -4,6 +4,21 @@ import java.time.LocalDateTime;
 import java.time.DateTimeException;
 import java.util.ArrayList;
 
+/**
+ * The TaskObject class contains all pertinent information regarding a task. The main attributes are: <br>
+ * 1. Title <br>
+ * 2. Start date/time <br>
+ * 3. End date/time <br>
+ * 4. Category <br>
+ * 5. Status <br>
+ * 6. Task ID <br>
+ * 7. Interval object (for recurring tasks) <br>
+ * 8. ArrayList of multiple dates and times (for recurring tasks) <br>
+ * 
+ * @author RuiBin, ChongYan
+ *
+ */
+
 public class TaskObject implements Comparable<TaskObject> {
 
 	protected String title = "";
@@ -13,24 +28,16 @@ public class TaskObject implements Comparable<TaskObject> {
 	protected String status = ""; // completed, overdue or incomplete
 	protected int taskId = -1;
 	protected String timeOutputString = ""; // stores date time in the desired output for GUI
-	protected boolean isRecurring;
 	protected Interval interval = new Interval();
 	// stores all occurrences of a task
 	protected ArrayList<LocalDateTimePair> taskDateTimes = new ArrayList<LocalDateTimePair>();
+	protected boolean isRecurring;
 	// stores all occurrences that has been deleted (if any)
 	protected ArrayList<LocalDateTimePair> deletedTaskDateTimes = new ArrayList<LocalDateTimePair>();
 
 	// Checks to facilitate undo processes
 	protected boolean isEditAll = false;
 	protected boolean isContainingOnlyTaskDateTimes = false;
-
-	/*
-	 * Not used in Logic anymore 
-	 * protected int startDate;
-	 * protected int endDate; 
-	 * protected int startTime;
-	 * protected int endTime;
-	 */
 
 	// ------------------------------------ CONSTRUCTORS ------------------------------------
 
@@ -145,7 +152,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.isEditAll = bool;
 	}
 
-	// empty constructor
+	// Empty constructor
 	public TaskObject() {
 
 	}
@@ -211,15 +218,6 @@ public class TaskObject implements Comparable<TaskObject> {
 	public LocalDateTime getEndDateTime() {
 		return endDateTime;
 	}
-	/*
-	 * public int getStartDate() { return startDate; }
-	 * 
-	 * public int getEndDate() { return endDate; }
-	 * 
-	 * public int getStartTime() { return startTime; }
-	 * 
-	 * public int getEndTime() { return endTime; }
-	 */
 
 	public String getCategory() {
 		return category;
@@ -273,16 +271,6 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.endDateTime = newEndDateTime;
 	}
 
-	/*
-	 * public void setStartDate(int newStartDate) { this.startDate = newStartDate; }
-	 * 
-	 * public void setEndDate(int newEndDate) { this.endDate = newEndDate; }
-	 * 
-	 * public void setStartTime(int newStartTime) { this.startTime = newStartTime; }
-	 * 
-	 * public void setEndTime(int newEndTime) { this.endTime = newEndTime; }
-	 */
-
 	public void setCategory(String newCategory) {
 		this.category = newCategory;
 	}
@@ -332,23 +320,3 @@ public class TaskObject implements Comparable<TaskObject> {
 	}
 
 }
-
-/*
- * // Constructor for event tasks public TaskObject(String title, int startDate, int endDate, int startTime,
- * int endTime, String category, String status, int taskId) { this.title = title; this.startDate = startDate;
- * this.endDate = endDate; this.startTime = startTime; this.endTime = endTime; this.category = category;
- * this.status = status; this.taskId = taskId; }
- * 
- * // Constructor for deadline tasks public TaskObject(String title, int endDate, int endTime, String
- * category, String status, int taskId){ this.title = title; this.startDate = endDate; this.endDate = endDate;
- * this.startTime = endTime; this.endTime = endTime; this.category = category; this.status = status;
- * this.taskId = taskId; }
- * 
- * // Constructor for floating tasks public TaskObject(String title, String category, String status, int
- * taskId) { this.title = title; this.startDate = -1; this.endDate = -1; this.startTime = -1; this.endTime =
- * -1; this.category = category; this.status = status; this.taskId = taskId; }
- * 
- * // Constructor for search keyword, delete, save and for edit-title functions public TaskObject(String
- * title){ this.title = title; this.startDate = -1; this.endDate = -1; this.startTime = -1; this.endTime = -1;
- * this.category = ""; this.status = ""; this.taskId = -1; }
- */
