@@ -25,33 +25,31 @@ public class TimeOutput {
 	static DateTimeFormatter shortFormatter = DateTimeFormatter.ofPattern("dd/MM");
 
 	/**
-	 * Formats a time output for GUI to display, for the entire list of tasks.
-	 * For events, the following are the permutations for display: <br>
+	 * Formats a time output for GUI to display, for the entire list of tasks. For events, the following are
+	 * the permutations for display: <br>
 	 * 
-	 * 1. with event within a day, start and end date in the same week as the
-	 * current week: "on Thursday 24/03/16, from 15:00 to 16:00" <br>
-	 * 2. with event across days, start and end date in the same week as the
-	 * current week:
-	 * "on Thursday 24/03/16, from 15:00 to 16:00 on Friday 25/03/16" <br>
-	 * 3. with event across days, start date in current week, end date in next
-	 * week: "on Thursday 24/03/16, from 15:00 to 16:00 on next Friday 01/04/16"
+	 * 1. with event within a day, start and end date in the same week as the current week:
+	 * "from 15:00 to 16:00 on Thursday 24/03" <br>
+	 * 2. with event across days, start and end date in the same week as the current week:
+	 * "from 15:00 on Thursday 24/03 to 16:00 on Friday 25/03" <br>
+	 * 3. with event across days, start date in current week, end date in next week:
+	 * "from 15:00 on Thursday 24/03 to 16:00 on next Friday 01/04" <br>
+	 * 4. with events within a day, start and end date in different week from current week:
+	 * "from 15:00 to 16:00 on 31/03/16" <br>
+	 * 5. with events across days, start and end date in different week from current week:
+	 * "from 15:00 on 31/03/16 to 16:00 on 01/04/16" <br>
+	 * 
+	 * * if start time does not exist, format will be "from -date- to -end time- on date" <br>
+	 * * if both start, end time do not exist, format will be "from -date- to -end date-" <br>
+	 * * if only end time does not exist, format will be "from -start time- on -start date- to -end date-"
 	 * <br>
-	 * 4. with events within a day, start and end date in different week from
-	 * current week: "on 31/03/16, from 15:00 to 16:00" <br>
-	 * 5. with events across days, start and end date in different week from
-	 * current week: "on 31/03/16, from 15:00 to 16:00 on 01/04/2016" <br>
-	 * 
-	 * * if start time does not exist, format will be
-	 * "from -date- to -end time- on date" <br>
-	 * * if both start, end time do not exist, format will be
-	 * "from -date- to -end date-" <br>
-	 * * if only end time does not exist, format will be "on -start date-, from
-	 * -start time- to -end date-" <br>
 	 * 
 	 * <br>
 	 * For deadlines, the following are the permutations for display: <br>
-	 * 1. deadlines without time in same week: "by Thursday 24/03/16" <br>
-	 * 2. deadlines with time in same week: "by 15:00 on Thursday 24/03/16" <br>
+	 * 1. deadlines without time in same week: "by Thursday 24/03" <br>
+	 * 2. deadlines with time in same week: "by 15:00 on Thursday 24/03" <br>
+	 * 3. deadlines without time in different week: "by 31/03/16" <br>
+	 * 4. deadlines with time in different week: "by 15:00 on 31/03/16"
 	 * 
 	 * @param taskList
 	 *            contains all the tasks for the user
@@ -72,11 +70,19 @@ public class TimeOutput {
 		}
 	}
 
+	/**
+	 * Helper method to setTimeOutputForGui, but also called individually by methods in Search and Recurring
+	 * to set the timeOutputString for a specific event without running through the entire task list. Format
+	 * of timeOutputString identical to those specified in setTimeOutputForGui.
+	 * 
+	 * @param event
+	 *            TaskObject of category "event" whose timeOutputString is to be modified
+	 */
 	public static void setEventTimeOutput(TaskObject event) {
 		String line;
 		String[] start;
 		String[] end;
-		
+
 		try {
 			start = createDateTimeArray(event.getStartDateTime(), false);
 			if (checkIfInTheSameWeek(event.getStartDateTime().toLocalDate())) {
@@ -93,6 +99,16 @@ public class TimeOutput {
 		}
 	}
 
+	/**
+	 * A variant of setEventTimeOutput, for Recurring tasks to display all occurrences in the desired
+	 * timeOutput format. Only called from searchByIndex in Search.
+	 * 
+	 * @param startDateTime
+	 *            LocalDateTime containing the start date and time of the event
+	 * @param endDateTime
+	 *            LocalDateTime containing the end date and time of the event
+	 * @return String containing the timeOutput for this set of start and end timings
+	 */
 	public static String setEventTimeOutput(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		String line = "";
 		String[] start;
@@ -121,7 +137,7 @@ public class TimeOutput {
 			formattedString = String.format(DISPLAY_TIME_EVENT_3, start[1], end[1], end[0]);
 			// End Date will not be printed
 		} else {
-			if (!end[1].equals("") && !start[1].equals("")) { 
+			if (!end[1].equals("") && !start[1].equals("")) {
 				// if both start and end time exist
 				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[1], start[0], end[1], end[0]);
 				// End Date will be printed
@@ -143,9 +159,12 @@ public class TimeOutput {
 	}
 
 	/**
-	 * Formats the timing for GUI to display for deadlines
+	 * Helper method to setTimeOutputForGui, but also called individually by methods in Search and Recurring
+	 * to set the timeOutputString for a specific deadline without running through the entire task list.
+	 * Format of timeOutputString identical to those specified in setTimeOutputForGui.
 	 * 
 	 * @param deadline
+	 *            TaskObject of category "deadline" whose timeOutput is to be set
 	 */
 	public static void setDeadlineTimeOutput(TaskObject deadline) {
 		String line;
@@ -159,7 +178,15 @@ public class TimeOutput {
 			System.out.println(MESSAGE_NULL_POINTER_EXCEPTION);
 		}
 	}
-	
+
+	/**
+	 * A variant of setDeadlineTimeOutput, for Recurring tasks to display all occurrences in the desired
+	 * timeOutput format. Only called from searchByIndex in Search.
+	 * 
+	 * @param startDateTime
+	 *            LocalDateTime containing the deadline of this task
+	 * @return String containing the timeOutput information for this task
+	 */
 	public static String setDeadlineTimeOutput(LocalDateTime startDateTime) {
 		String line = "";
 		try {
@@ -185,7 +212,8 @@ public class TimeOutput {
 		return formattedString;
 	}
 
-	private static String[] createDateTimeArray(LocalDateTime dateTime, boolean isEndDate) throws DateTimeException {
+	private static String[] createDateTimeArray(LocalDateTime dateTime, boolean isEndDate)
+			throws DateTimeException {
 		String[] timeArray = new String[2];
 
 		timeArray[0] = processRelativeDate(dateTime.toLocalDate(), isEndDate);
@@ -249,7 +277,15 @@ public class TimeOutput {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Common method called by Delete and Edit to set the timeOutput for a task. Method basically contains
+	 * control statements to determine if it is a deadline or an event, and calls the relevant helper
+	 * functions to set the timeOutput
+	 * 
+	 * @param task
+	 *            Task whose timeOutput is to be modified
+	 */
 	public static void setTaskTimeOutput(TaskObject task) {
 		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
 			setDeadlineTimeOutput(task);
