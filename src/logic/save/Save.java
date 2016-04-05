@@ -12,13 +12,15 @@ import common.TaskObject;
 
 /**
  * Creates a Save object to perform two main types of operations. <br>
- * 1) Save to - Permanently changes the default location for the file to be saved. Also saves
- * the file there for the first time when this command is executed. <br>
- * 2) Save as - Saves a copy of the file at the specified location. Default location
- * will not be changed.
- * @param int saveCommand - Default value 0, which will not be recognised by the program.
- * Takes the value of 1 for "Save to" and value of 2 for "Save as".
- * @param boolean isSaved - Value determines whether file was saved successfully to the location
+ * 1) Save to - Permanently changes the default location for the file to be saved. Also saves the file there
+ * for the first time when this command is executed. <br>
+ * 2) Save as - Saves a copy of the file at the specified location. Default location will not be changed.
+ * 
+ * @param int
+ *            saveCommand - Default value 0, which will not be recognised by the program. Takes the value of 1
+ *            for "Save to" and value of 2 for "Save as".
+ * @param boolean
+ *            isSaved - Value determines whether file was saved successfully to the location
  * @author ChongYan
  *
  */
@@ -42,10 +44,11 @@ public class Save {
 
 	/**
 	 * Constructor for Save object.
-	 * @param taskObj - Contains the details of execution in the title attribute. 
-	 * Precondition: Title must be of the format "to -file directory-" or "as -file directory-"
-	 * or else the constructor will not modify the value of saveCommand, which will lead
-	 * to the abortion of the operation.
+	 * 
+	 * @param taskObj
+	 *            - Contains the details of execution in the title attribute. Precondition: Title must be of
+	 *            the format "to -file directory-" or "as -file directory-" or else the constructor will not
+	 *            modify the value of saveCommand, which will lead to the abortion of the operation.
 	 * @param taskList
 	 */
 	public Save(TaskObject taskObj, ArrayList<TaskObject> taskList) {
@@ -64,10 +67,11 @@ public class Save {
 	}
 
 	/**
-	 * Main method of the Save class. Makes use of saveCommand to determine which
-	 * save operation to execute. Does not do anything and returns an error output
-	 * if saveCommand == 0, and if the file location is invalid.
-	 * @return
+	 * Main method of the Save class. Makes use of saveCommand to determine which save operation to execute.
+	 * Does not do anything and returns an error output if saveCommand == 0, and if the file location is
+	 * invalid.
+	 * 
+	 * @return ArrayList<String> containing an output message indicating the success or failure of operation
 	 */
 	public ArrayList<String> run() {
 		if (saveCommand == 1) {
@@ -85,20 +89,20 @@ public class Save {
 		FileStorage storage = FileStorage.getInstance();
 		try {
 			storage.changeSaveLocation(newFilePath);
-            storage.save(taskList);
-            logger.log(Level.INFO, "File saved to new location");
+			storage.save(taskList);
+			logger.log(Level.INFO, "File saved to new location");
 		} catch (NoSuchFileException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            logger.log(Level.WARNING, "unable to save file to new location");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            logger.log(Level.WARNING, "unable to save file to new location");
-        } catch (InvalidPathException e) {
-        	e.printStackTrace();
-            logger.log(Level.WARNING, "unable to save file to new location");
-        }
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.log(Level.WARNING, "unable to save file to new location");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.log(Level.WARNING, "unable to save file to new location");
+		} catch (InvalidPathException e) {
+			e.printStackTrace();
+			logger.log(Level.WARNING, "unable to save file to new location");
+		}
 		isSaved = true;
 	}
 
@@ -107,7 +111,7 @@ public class Save {
 		try {
 			storage.createCopy(newFilePath, "filecopy.txt");
 			isSaved = true;
-            logger.log(Level.INFO, "File copy created in the same directory");
+			logger.log(Level.INFO, "File copy created in the same directory");
 		} catch (InvalidPathException e) {
 			e.printStackTrace();
 			logger.log(Level.WARNING, "unable to save file to new location");
