@@ -102,6 +102,10 @@ public class Add {
 				e.printStackTrace();
 				output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
 				logger.log(Level.WARNING, "tried to retrieve an unavailable object");
+			} catch (RecurrenceException e) {
+				String exceptionMessage = e.getRecurrenceExceptionMessage();
+				output.add(exceptionMessage);
+				logger.log(Level.WARNING, "task added has invalid recurrence properties");
 			} catch (Exception e) {
 				e.printStackTrace();
 				output.add(MESSAGE_FAIL);
@@ -128,7 +132,7 @@ public class Add {
 	 * 
 	 * @throws Exception
 	 */
-	private void processTaskInformation() throws Exception {
+	private void processTaskInformation() throws Exception, RecurrenceException {
 		if (isEvent) {
 			assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
 			assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
@@ -157,26 +161,21 @@ public class Add {
 	 * Checks for clashes between events (including recurrent times) and adds to taskList Also creates all
 	 * dates and times for recurrent tasks
 	 */
-	private void processEventDetails() {
-		try {
-			this.isOverdue = checkIfOverdue();
-			copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
-			if (task.getIsRecurring()) {
-				addRecurringEventTimes();
-				removeAnyDeletedOccurrences();
-			}
-			if (isOverdue) {
-				if (task.getIsRecurring()) {
-					Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
-				} else {
-					setTaskStatus(isOverdue);
-				}
-			}
-			checkIfEventsClash();
-		} catch (RecurrenceException e) {
-			String exceptionMessage = e.getRecurrenceExceptionMessage();
-			output.add(exceptionMessage);
+	private void processEventDetails() throws RecurrenceException {
+		this.isOverdue = checkIfOverdue();
+		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+		if (task.getIsRecurring()) {
+			addRecurringEventTimes();
+			removeAnyDeletedOccurrences();
 		}
+		if (isOverdue) {
+			if (task.getIsRecurring()) {
+				Recurring.updateEvent(task, taskList, STATUS_OVERDUE);
+			} else {
+				setTaskStatus(isOverdue);
+			}
+		}
+		checkIfEventsClash();
 	}
 
 	/**
@@ -190,13 +189,8 @@ public class Add {
 		task.addToTaskDateTimes(pair);
 	}
 
-	private void addRecurringEventTimes() {
-		try {
-			Recurring.setAllRecurringEventTimes(task);
-		} catch (RecurrenceException e) {
-			String exceptionMessage = e.getRecurrenceExceptionMessage();
-			output.add(exceptionMessage);
-		}
+	private void addRecurringEventTimes() throws RecurrenceException {
+		Recurring.setAllRecurringEventTimes(task);
 	}
 
 	private void removeAnyDeletedOccurrences() {
@@ -225,33 +219,23 @@ public class Add {
 	/**
 	 * Checks if a deadline is overdue, modifies status if necessary, adds to taskList
 	 */
-	private void processDeadlineDetails() {
-		try {
-			this.isOverdue = checkIfOverdue();
-			copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+	private void processDeadlineDetails() throws RecurrenceException {
+		this.isOverdue = checkIfOverdue();
+		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+		if (task.getIsRecurring()) {
+			addRecurringDeadlineTimes(task);
+		}
+		if (isOverdue) {
 			if (task.getIsRecurring()) {
-				addRecurringDeadlineTimes(task);
+				Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
+			} else {
+				setTaskStatus(isOverdue);
 			}
-			if (isOverdue) {
-				if (task.getIsRecurring()) {
-					Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
-				} else {
-					setTaskStatus(isOverdue);
-				}
-			}
-		} catch (RecurrenceException e) {
-			String exceptionMessage = e.getRecurrenceExceptionMessage();
-			output.add(exceptionMessage);
 		}
 	}
 
-	private void addRecurringDeadlineTimes(TaskObject task) {
-		try {
-			Recurring.setAllRecurringDeadlineTimes(task);
-		} catch (RecurrenceException e) {
-			String exceptionMessage = e.getRecurrenceExceptionMessage();
-			output.add(exceptionMessage);
-		}
+	private void addRecurringDeadlineTimes(TaskObject task) throws RecurrenceException {
+		Recurring.setAllRecurringDeadlineTimes(task);
 	}
 
 	/**

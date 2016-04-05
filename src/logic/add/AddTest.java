@@ -467,40 +467,5 @@ public class AddTest {
 		}
 	}
 	/*********************************************************************************/
-	
-	@Test // Test for addition of a single occurrence to the recurrence details of a recurring task
-	public void testU() {
-		ArrayList<String> actualOutput = new ArrayList<String>();
-		
-		// Creating a sample recurring task
-		ArrayList<LocalDateTimePair> originalRecurrenceDetails = new ArrayList<LocalDateTimePair>();
-		LocalDateTime startOne= LocalDateTime.of(LocalDate.parse("2016-01-01"), LocalTime.parse("00:00"));
-		LocalDateTime endOne = LocalDateTime.of(LocalDate.parse("2016-01-01"), LocalTime.parse("23:59"));
-		LocalDateTime startTwo = LocalDateTime.of(LocalDate.parse("2016-02-01"), LocalTime.parse("00:00"));
-		LocalDateTime endTwo = LocalDateTime.of(LocalDate.parse("2016-02-01"), LocalTime.parse("23:59"));
-		LocalDateTime startThree = LocalDateTime.of(LocalDate.parse("2016-03-01"), LocalTime.parse("00:00"));
-		LocalDateTime endThree = LocalDateTime.of(LocalDate.parse("2016-03-01"), LocalTime.parse("23:59"));
-		originalRecurrenceDetails.add(new LocalDateTimePair(startTwo, endTwo));
-		originalRecurrenceDetails.add(new LocalDateTimePair(startThree, endThree));
-		
-		TaskObject recurrenceTask = new TaskObject("1st day of every month", startOne, endThree, "event", "incomplete",
-				18, true, originalRecurrenceDetails);
-		testArray.add(recurrenceTask); // this is the 20th item in the list
-		
-		// Creating the sample task object
-		ArrayList<LocalDateTimePair> occurrenceToBeAdded = new ArrayList<LocalDateTimePair>();
-		occurrenceToBeAdded.add(new LocalDateTimePair(startOne, endOne));
-		TaskObject testTaskObj = new TaskObject(occurrenceToBeAdded);
-		Add add = new Add(testTaskObj, 20, testArray);
-		actualOutput = add.run();
-		
-		ArrayList<LocalDateTimePair> editedRecurrenceDetails = testArray.get(testArray.size()-1).getTaskDateTimes();
-		assertEquals(editedRecurrenceDetails.get(0).getStartDateTime(), startOne);
-		assertEquals(editedRecurrenceDetails.get(0).getEndDateTime(), endOne);
-		
-	}
-	
-	
-
 }
 
