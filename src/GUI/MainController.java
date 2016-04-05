@@ -164,9 +164,12 @@ public class MainController implements Initializable {
 	}
 
 	private void passInput() throws IOException {
+		System.out.println(_input);
 		if (_input.startsWith("help")) {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
+		} else if (_input.startsWith("sort")){
+			_UI.setSortByDate();
 		} else {
 			_UI.passInput(_input);
 		}
@@ -198,8 +201,9 @@ public class MainController implements Initializable {
 				}
 			});
 		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")
-				|| !_input.startsWith("filter") || !_input.startsWith("display") || _input.startsWith("search"))
-				&& sidePanel.isVisible() == false) {
+				|| !_input.startsWith("filter") || !_input.startsWith("display") || _input.startsWith("search")
+				|| !_input.startsWith("list")) && sidePanel.isVisible() == false) {
+			
 			String[] input = _input.split(" ");
 			if (input.length > 1) {
 				try {
