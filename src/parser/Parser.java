@@ -218,10 +218,8 @@ public class Parser {
 
 		// if there is no search keyword, set TaskObject values to null/-1
 		if (command.indexOf(" ") == -1 && isMatch(Constants.REGEX_PARSER_SEARCH,command)) {
-			TO.setStartTime(-1);
-			TO.setEndTime(-1);
-			TO.setStartDate(-1);
-			TO.setEndDate(-1);
+			TO.setStartDateTime(LocalDateTime.MAX);
+			TO.setEndDateTime(LocalDateTime.MAX);
 		} else {
 			command = command.substring(command.indexOf(" ")+1);
 			TO = SP.process(command);
@@ -236,8 +234,6 @@ public class Parser {
 			TO.setCategory("floating");
 		} else if (isDeadline()) {
 			TO.setCategory("deadline");
-			TO.setEndTime(TO.getStartTime());
-			TO.setEndDate(TO.getStartDate());
 		}  else {
 			TO.setCategory("event"); //edited mistake here
 		}
@@ -339,22 +335,6 @@ public class Parser {
 
  	public String getTask() {
  		return TO.getTitle();
- 	}
- 	
- 	public int getStartDate() {
- 		return TO.getStartDate();
- 	}
- 	
- 	public int getStartTime() {
- 		return TO.getStartTime();
- 	}
- 	
- 	public int getEndDate() {
- 		return TO.getEndDate();
- 	}
- 	
- 	public int getEndTime() {
- 		return TO.getEndTime();
  	}
  	
  	public LocalDateTime getStartDateTime() {

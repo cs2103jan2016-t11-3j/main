@@ -55,10 +55,7 @@ public class Strings {
 
 	// Display Constants
 	public static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
-	public static final String MESSAGE_SEARCH_RESULTS = "Search results:";
-	public static final String DISPLAY_RESULT_DEADLINE = "%1s. %2s, %3$s, %4$shrs, %5$s";
-	public static final String DISPLAY_RESULT_EVENT = "%1s. %2s, %3$s-%4$s, %5$shrs-%6$shrs, %7$s";
-	public static final String DISPLAY_RESULT_FLOATING = "%1s. %2s, %3$s. TaskId: %4$s";
+	public static final String MESSAGE_DISPLAYING_ALL_TASKS = "Displaying all tasks.";
 
 	// Edit Constants
 	public static final String MESSAGE_TITLE_EDIT = "Title edited from '%1s' to '%2s'. ";
@@ -104,8 +101,10 @@ public class Strings {
 
 	// Search Constants
 	public static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
+	public static final String MESSAGE_SEARCH_PARAMETERS = "Displaying tasks for the search parameters:\n%1s";
+	public static final String MESSAGE_RECURRENCE_TIMINGS_DISPLAY = "Displaying recurrence timings for task %1s.";
 	public static final String MESSAGE_TIMINGS_FOUND = "Timings for %1s:";
-	public static final String MESSAGE_TIMINGS_NOT_FOUND = "Task not found";
+	public static final String MESSAGE_TASK_INDEX_NOT_FOUND_ERROR = "No such task index found.";
 
 	// TimeOutput Constants
 	public static final String MESSAGE_DATE_TIME_CONVERSION_ERROR = "Error converting DateTime to GUI Display";
