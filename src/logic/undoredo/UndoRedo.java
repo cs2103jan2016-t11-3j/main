@@ -15,7 +15,7 @@ import static logic.constants.Index.*;
  * The list of undo/redo operations are:
  * 1. Add <-> Delete
  * 2. Edit <-> Edit
- * 3. Incomplete <-> Done <-> Overdue
+ * 3. Incomplete <-> Complete
  * 
  * @param taskList ArrayList containing all tasks
  * @param undoList Deque containing all undo tasks
@@ -25,7 +25,7 @@ import static logic.constants.Index.*;
 
 public class UndoRedo {
 
-	protected static final Logger LOGGER = Logger.getLogger(UndoRedo.class.getName());
+	protected static final Logger logger = Logger.getLogger(UndoRedo.class.getName());
 	
 	private Undo undo;
 	private Redo redo;
@@ -41,18 +41,6 @@ public class UndoRedo {
 		this.redoList = redoList;
 	}
 	
-	public ArrayList<TaskObject> getTaskList() {
-		return taskList;
-	}
-	
-	public Deque<CommandObject> getUndoList() {
-		return undoList;
-	}
-	
-	public Deque<CommandObject> getRedoList() {
-		return redoList;
-	}
-	
 	public ArrayList<String> run(int commandType) {
 		assert (commandType == INDEX_UNDO || commandType == INDEX_REDO);
 
@@ -65,6 +53,20 @@ public class UndoRedo {
 		}
 		
 		return output;
+	}
+	
+	// ---------------------------------- GETTERS ---------------------------------- 
+	
+	public ArrayList<TaskObject> getTaskList() {
+		return taskList;
+	}
+	
+	public Deque<CommandObject> getUndoList() {
+		return undoList;
+	}
+	
+	public Deque<CommandObject> getRedoList() {
+		return redoList;
 	}
 	
 	public Undo getUndo() {
