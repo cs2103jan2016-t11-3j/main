@@ -42,6 +42,11 @@ public class LocalDateTimePair {
 		this.endDateTime = endDateTime;
 	}
 	
+	public void setDateTimePair(LocalDateTimePair dateTimePair) {
+		this.startDateTime = dateTimePair.getStartDateTime();
+		this.endDateTime = dateTimePair.getEndDateTime();
+	}
+	
 	public boolean equals(LocalDateTimePair newDateTimePair) {
 		return (this.startDateTime.equals(newDateTimePair.getStartDateTime()) && this.endDateTime.equals(newDateTimePair.getEndDateTime()));
 		

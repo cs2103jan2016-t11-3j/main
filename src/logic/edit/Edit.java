@@ -72,6 +72,7 @@ public class Edit {
 	private ArrayList<String> output = new ArrayList<String>();
 
 	private TaskObject originalTask = new TaskObject(); // original task info; for undo purposes
+	private ArrayList<LocalDateTimePair> originalTimings = new ArrayList<LocalDateTimePair>(); 	// for undo
 	private TaskObject editTask; // task to be edited
 	private int editTaskIndex;
 	private int editOccurrenceIndex = -1;
@@ -196,11 +197,15 @@ public class Edit {
 
 		for (int i = 0; i < taskList.size(); i++) {
 			TaskObject task = taskList.get(i);
-			if (taskList.get(i).getTaskId() == editTaskId) {
+			if (task.getTaskId() == editTaskId) {
 				editTask = task;
-				originalTask.setTaskObject(task);
 				isRecurringTask = task.getIsRecurring();
 				compareOldAndNewCategory(task);
+
+				originalTask.setTaskObject(task);
+				originalTimings.addAll(task.getTaskDateTimes());
+				originalTask.setTaskDateTimes(originalTimings);
+				originalTimings.clear();
 			}
 		}
 	}
@@ -222,7 +227,8 @@ public class Edit {
 		// if this edit is an undo
 		if (!editTaskCategory.equals("")) {
 			if (currentTaskCategory.equals(CATEGORY_DEADLINE) && 
-					editTaskCategory.equals(CATEGORY_FLOATING)) {
+					(editTaskCategory.equals(CATEGORY_FLOATING) || 
+							editTaskCategory.equals(CATEGORY_DEADLINE))) {
 				isEditStartDate = true;
 				isEditStartTime = true;
 			} else if (currentTaskCategory.equals(CATEGORY_EVENT) && 
@@ -237,7 +243,6 @@ public class Edit {
 				isEditEndTime = true;
 			}
 		}
-
 	}
 
 	/**
@@ -275,16 +280,30 @@ public class Edit {
 	private void editRecurrenceTiming() {
 		TaskObject task = lastOutputTaskList.get(editTaskIndex - 1);
 		originalTask.setTaskObject(task);
+		originalTimings.addAll(task.getTaskDateTimes());
 
 		LocalDateTimePair timing = new LocalDateTimePair();
+		LocalDateTimePair originalTiming = new LocalDateTimePair();
+		
 		try {
+			originalTiming.setDateTimePair(task.getTaskDateTimes().get(editOccurrenceIndex - 1));
 			timing = task.getTaskDateTimes().get(editOccurrenceIndex - 1);
-
+			
 			originalStartDate = timing.getStartDateTime().toLocalDate();
 			originalStartTime = timing.getStartDateTime().toLocalTime();
 			originalEndDate = timing.getEndDateTime().toLocalDate();
 			originalEndTime = timing.getEndDateTime().toLocalTime();
 
+			// it is an undo function
+			if (!commandObj.getTaskObject().getTaskDateTimes().isEmpty()) {
+				LocalDateTimePair editDateTimes = 
+						commandObj.getTaskObject().getTaskDateTimes().get(editOccurrenceIndex - 1);
+				editStartDate = editDateTimes.getStartDateTime().toLocalDate();
+				editStartTime = editDateTimes.getStartDateTime().toLocalTime();
+				editEndDate = editDateTimes.getEndDateTime().toLocalDate();
+				editEndTime = editDateTimes.getEndDateTime().toLocalTime();
+			} 
+			
 			if (isEditStartDateOccurrence && isEditStartTimeOccurrence) {
 				timing.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
 			} else {
@@ -305,6 +324,11 @@ public class Edit {
 					timing.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
 				}
 			}
+
+			// Ensures that originalTask contains the old timings
+			originalTask.setTaskDateTimes(originalTimings);
+			originalTask.getTaskDateTimes().remove(editOccurrenceIndex - 1);
+			originalTask.getTaskDateTimes().add(editOccurrenceIndex - 1, originalTiming);
 
 			task.updateStartAndEndDateTimes();
 			editTask = task;
@@ -813,6 +837,7 @@ public class Edit {
 		System.out.println("isEditInterval = " + isEditInterval);
 		System.out.println("isRecurringTask = " + isRecurringTask);
 		System.out.println("isEditAll = " + isEditAll);
+		System.out.println("isEditSingleOccurrence = " + isEditSingleOccurrence);
 	}
 
 	// ------------------------- OUTPUT MESSAGES -------------------------
@@ -999,22 +1024,22 @@ public class Edit {
 	}
 
 	private void outputStartDateOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_OCCURRENCE_EDITED, editTaskIndex,
+		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_OCCURRENCE_EDITED, editOccurrenceIndex,
 				originalStartDate, editStartDate));
 	}
 
 	private void outputStartTimeOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_OCCURRENCE_EDITED, editTaskIndex,
+		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_OCCURRENCE_EDITED, editOccurrenceIndex,
 				originalStartTime, editStartTime));
 	}
 
 	private void outputEndDateOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_OCCURRENCE_EDITED, editTaskIndex, originalEndDate,
+		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_OCCURRENCE_EDITED, editOccurrenceIndex, originalEndDate,
 				editEndDate));
 	}
 
 	private void outputEndTimeOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_OCCURRENCE_EDITED, editTaskIndex, originalEndTime,
+		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_OCCURRENCE_EDITED, editOccurrenceIndex, originalEndTime,
 				editEndTime));
 	}
 

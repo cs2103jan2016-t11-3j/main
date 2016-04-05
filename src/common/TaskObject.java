@@ -321,6 +321,7 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.taskDateTimes = task.getTaskDateTimes();
 		this.isEditAll = task.getIsEditAll();
 		this.isContainingOnlyTaskDateTimes = task.getIsContainingOnlyTaskDateTimes();
+		
 	}
 
 }
