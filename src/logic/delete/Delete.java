@@ -219,10 +219,14 @@ public class Delete {
 	// Deletes all completed tasks from the task list
 	private void runDeleteCompletedTasks() {
 		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getCategory().equals("completed")) {
+			System.out.println(taskList.get(i).getTitle() + " " + taskList.get(i).getStatus());
+			if (taskList.get(i).getStatus().equals("completed")) {
+				System.out.println("deleted: " + taskList.get(i).getTitle());
 				taskList.remove(i);
+				i--; // since all remaining index of taskList will be reduced by 1
 			}
 		}
+		deleteExternal();
 		createCompletedTasksDeletedOutput();
 	}
 	
