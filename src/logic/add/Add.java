@@ -417,6 +417,7 @@ public class Add {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			logger.log(Level.WARNING, "did not manage to add task externally, invalid file");
+			output.add(MESSAGE_REQUEST_SAVE_LOCATION);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -448,8 +449,10 @@ public class Add {
 			output.add(text);
 			logger.log(Level.INFO, "output created successfully");
 		} else {
-			output.add(MESSAGE_FAIL);
-			logger.log(Level.WARNING, "task was not added, failure output created");
+			if (output.isEmpty()) {
+				output.add(MESSAGE_FAIL);
+				logger.log(Level.WARNING, "task was not added, failure output created");
+			}
 		}
 	}
 
