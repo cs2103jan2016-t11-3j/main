@@ -226,8 +226,9 @@ public class CommandFacade {
 	}
 
 	private void searchFunction(CommandObject cmdObjToRunSearchByIndex) {
-		System.out.println("SPECIAL SEARCH BY INDEX");
 		Search search = new Search(cmdObjToRunSearchByIndex, taskList, lastOutputTaskList);
+		search.run();
+		setLastSearchedIndex(search.getSearchIndex());
 		setTaskDateTimeOutput(search.getTaskDateTimeOutput());
 	}
 
@@ -451,18 +452,15 @@ public class CommandFacade {
 		} else {
 			if (index == -1) { // if task was previously added to the end of the list
 				if (commandObj.getTaskObject().getIsRecurring()) {
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size()); // isEditAll
-																											// set
-																											// to
-																											// 'true'
+					// isEditAll set to 'true'
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size());
 				} else {
 					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
 				}
 			} else { // if task was previously added to a pre-determined location in the list
 				if (commandObj.getTaskObject().getIsRecurring()) {
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index); // isEditAll
-																									// set to
-																									// 'true'
+					// isEditAll set to 'true'
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index);
 				} else {
 					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
 				}
@@ -490,7 +488,9 @@ public class CommandFacade {
 		CommandObject newCommandObj = new CommandObject();
 
 		/*
-		 * 2 types of delete: 1. delete task 2. delete occurrence in ArrayList<LocalDateTimePair>
+		 * 2 types of delete: 
+		 * 1. delete task 
+		 * 2. delete occurrence in ArrayList<LocalDateTimePair>
 		 */
 		if (removedOccurrenceTiming.isEmpty()) {
 			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
@@ -558,7 +558,6 @@ public class CommandFacade {
 
 	// Returns the appropriate command index depending on the previous status
 	private int getCommandIndex(String prevStatus) {
-		System.out.println("prevStatus = " + prevStatus);
 		if (prevStatus.equals("overdue")) {
 			return INDEX_OVERDUE;
 		} else {
@@ -589,7 +588,7 @@ public class CommandFacade {
 		if (bool) {
 			CommandObject cmdObjToRunSearchByIndex = new CommandObject(INDEX_SEARCH_DISPLAY, 
 					new TaskObject(), lastSearchedIndex);
-			// searchFunction(cmdObjToRunSearchByIndex);
+			searchFunction(cmdObjToRunSearchByIndex);
 		}
 	}
 

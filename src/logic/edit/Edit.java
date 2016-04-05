@@ -190,6 +190,8 @@ public class Edit {
 	 * replicate of this task for undo purposes.
 	 */
 	private void setTaskToBeEdited() {
+		System.out.println("EDIT TASK INDEX = " + editTaskIndex);
+		System.out.println("lastOutputTaskList.size() = " + lastOutputTaskList.size());
 		assert (editTaskIndex > 0 && editTaskIndex <= lastOutputTaskList.size());
 
 		editTaskId = lastOutputTaskList.get(editTaskIndex - 1).getTaskId();

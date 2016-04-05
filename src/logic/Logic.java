@@ -252,7 +252,7 @@ public class Logic {
 		commandFacade.run();
 		updateLists(commandFacade);
 
-		// System.out.println("Last searched index = " + lastSearchedIndex);
+		System.out.println("Last searched index = " + lastSearchedIndex);
 	}
 
 	// Retrieves the updated lists from the CommandFacade class and updates the
@@ -264,12 +264,13 @@ public class Logic {
 		setLastOutputTaskList(commandFacade.getLastOutputTaskList());
 		setOutput(commandFacade.getOutput());
 		setTaskDateTimeOutput(commandFacade.getTaskDateTimeOutput());
-
+		setLastSearchedIndex(commandFacade.getLastSearchedIndex());
+		/*
 		if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
 			setLastSearchedIndex(commandFacade.getLastSearchedIndex());
 		} else {
 			setLastSearchedIndex(-1);
-		}
+		}*/
 	}
 
 	// ------------------------- GETTERS AND SETTERS -------------------------
