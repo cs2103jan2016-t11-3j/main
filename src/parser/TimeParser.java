@@ -80,22 +80,21 @@ public class TimeParser {
 		} else {
 			input = input.replaceAll("[:!-/a-zA-Z]+", "");
 			input = input.replaceAll(" ", "");
-			int temp = 0;
-			temp = Integer.parseInt(input);
-			if (temp < 100) { //converts time to 4 digit format
-				temp = temp * 100;
+			int _time = 0;
+			_time = Integer.parseInt(input);
+			if (_time < 100) { //converts time to 4 digit format
+				_time = _time * 100;
 			}
 			
 			if (isPM) { //converts timing to correct value
-				temp = temp + 1200;
-			} else if (!isPM && temp > 1159) {
-				temp = temp - 1200;
+				_time = _time + 1200;
+			} else if (!isPM && _time > 1159 && _time < 1260) { //only for 12.xxam cases
+				_time = _time - 1200;
+			} else if (!isPM && _time > 1259) {
+				_time = _time + 9999; // anything more than 12.59am will be rendered invalid
 			}
 			
-			if (temp > 2359) {
-				temp = temp - 1200; // how ah here
-			}
-			time = temp;	
+			time = _time;	
 		}
 	}
 	

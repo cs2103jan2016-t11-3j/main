@@ -273,7 +273,11 @@ public class DateParser {
 	
 	//this method checks if the date is in dd/mm/yy format
 	public boolean hasSlash(String input) {
-		return input.contains("/");
+		if(input.contains("/") || input.contains(".") || input.contains("-") ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	//this method will allocate relevant integer to month variable
@@ -322,7 +326,7 @@ public class DateParser {
 	public void setMonthWithSlash(String input) throws Exception {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		
-		for (String temp : input.split("/")) {
+		for (String temp : input.split("[.-/]")) {
 			temp = temp.replaceAll(" ", "");
 			temp = temp.replaceAll("[a-zA-Z]+", "");
 			int tempInt = Integer.parseInt(temp);
