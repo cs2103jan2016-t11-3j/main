@@ -72,15 +72,14 @@ public class FilePathTest extends storage.FilePath {
      */
     @Test
     public void testCheckValidFolder() {
-        checkDirectory(".");
+        directoryValid(".");
     }
 
     /**
      * Test case for checking that an invalid folder is indeed not usable by storage.
      */
-    @Test(expected = InvalidPathException.class)
     public void testCheckInalidPath() {
-        checkDirectory("fail");
+        assertEquals(false, directoryValid("fail"));
     }
     
     /**

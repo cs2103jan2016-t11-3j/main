@@ -8,3 +8,7 @@
 #helpText {
 	-fx-background-color: #F0A830; 
 }
+
+#pageNumber {
+	-fx-text-fill: white;
+}

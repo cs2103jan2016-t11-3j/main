@@ -52,6 +52,9 @@ public class HelpPopupController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		assert helpText != null : "fx:id=\"helpText\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+	    assert helpPane != null : "fx:id=\"helpPane\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+	    assert pageNumber != null : "fx:id=\"pageNumber\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+	    assert topicLabel != null : "fx:id=\"topicLabel\" was not injected: check your FXML file 'HelpPopup.fxml'.";
 
 		setDisplay();
 	}

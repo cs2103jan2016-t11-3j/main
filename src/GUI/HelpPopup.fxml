@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<VBox fx:id="helpPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
+<VBox fx:id="helpPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#handleEscPressed" prefHeight="47.0" prefWidth="626.0" text="Help Manual" textAlignment="CENTER" textFill="#5e412f">
+      <Label alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#handleEscPressed" text="Help Manual" textAlignment="CENTER" textFill="#5e412f">
          <padding>
             <Insets left="10.0" top="10.0" />
          </padding>
@@ -35,7 +35,7 @@
             <Insets left="10.0" right="5.0" top="5.0" />
          </padding>
       </Label>
-      <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="407.0" prefWidth="580.0"  wrapText="true">
+      <TextArea fx:id="helpText" editable="false" onKeyPressed="#handleArrowPressed" onKeyReleased="#handleEscPressed" prefHeight="407.0" prefWidth="580.0" wrapText="true" VBox.vgrow="ALWAYS">
          <font>
             <Font name="Agency FB" size="16.0" />
          </font>
