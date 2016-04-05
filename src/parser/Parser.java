@@ -170,17 +170,24 @@ public class Parser {
 	 */
 	private void parseEdit(String command) throws Exception {
 		CO.setCommandType(Constants.INDEX_EDIT);
+		boolean isEditAllRecurring = false;
 		
-		if (command.contains("edit all")) {
+		if (command.startsWith("edit all")) {
+			System.out.println(command);
 			command = command.replaceFirst("edit all", "").trim();
-			TO.setIsRecurring(true);
-			TO.setIsEditAll(true);
+			isEditAllRecurring = true;
 		} else {
 			command = command.replaceFirst(Constants.REGEX_PARSER_EDIT, "").trim();
 		}
 		
 		CommandParser EP = new EditParser();
 		TO = EP.process(command);
+		
+		if (isEditAllRecurring) {
+			TO.setIsRecurring(true);
+			TO.setIsEditAll(true);
+		}
+		
 		CO.setTaskObject(TO);
 		CO.setIndex(EP.getIndex());
 		EP.reset();

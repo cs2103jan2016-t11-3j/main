@@ -17,9 +17,6 @@ import java.util.regex.Pattern;
  */
 
 public class AddParser extends CommandParser {
-	private TimeParser TP = new TimeParser();
-	private DateParser DP = new DateParser();
-	
 	private TaskObject TO = new TaskObject();
 	
 	/**
@@ -44,7 +41,7 @@ public class AddParser extends CommandParser {
 	 * 				same input as process() method. not null.
 	 * @throws Exception
 	 */
-	public void setTask(String input) throws Exception {
+	private void setTask(String input) throws Exception {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_DATE_TIME_IDENTIFIER);
 		Matcher matcher = dateTimePattern.matcher(input);
 		
@@ -81,16 +78,6 @@ public class AddParser extends CommandParser {
  	 	
  	public void reset() {
  		_task = null;
- 	}
- 	
- 	public void clearDP() {
- 		DP.clearList();
- 		DP.resetDate();
- 	}
- 	
- 	public void clearTP() {
- 		TP.clearList();
- 		TP.resetTime();
  	}
 
 	@Override
