@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import logic.Logic;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 
 /**
  * Launches the program, initiating the TaskWindow users interact with
@@ -34,7 +35,6 @@ public class UIMain extends Application {
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 720, 500);
 		setStyle(scene);
-
 		window.setTitle("Adult TaskFinder");
 		window.setScene(scene);
 		window.show();

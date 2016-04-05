@@ -4,6 +4,10 @@
 	-fx-background-size: 100% 100%; 
 	-fx-border-radius: 20px;
 }
+@font-face {
+	font-family: Abel;
+	src: url(Abel-Regular.ttf);
+}
 
 #taskTable {
 	-fx-border-color: #78C0A8; 
@@ -13,6 +17,7 @@
 }
 
 #taskTable .column-header .label {
+	-fx-font-weight: bold;
 	-fx-text-fill: white;
 }
 
@@ -35,24 +40,24 @@
 #indexColumn {
 	-fx-alignment: CENTER; 
 	-fx-font-size: 17; 
-	-fx-font-family: 'Agency FB';	
+	-fx-font-family: 'Abel', FallBack, sans-serif;	
 }
 
 #statusColumn {
 	-fx-alignment: CENTER; 
 	-fx-font-size: 17; 
-	-fx-font-family: 'Agency FB';	
+	-fx-font-family: 'Abel', FallBack, sans-serif;	
 }
 		
 #taskColumn {
 	-fx-font-size: 17; 
-	-fx-font-family: 'Agency FB';	
+	-fx-font-family: 'Abel', FallBack, sans-serif;	
 	-fx-alignment: CENTER-LEFT
 }
 
 #timeColumn {
 	-fx-font-size: 17; 
-	-fx-font-family: 'Agency FB';	
+	-fx-font-family: 'Abel', FallBack, sans-serif;	
 }
 
 #feedbackBox {
