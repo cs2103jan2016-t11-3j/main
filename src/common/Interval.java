@@ -1,6 +1,7 @@
 package common;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class Interval implements Comparator<Interval> {
@@ -129,5 +130,15 @@ public class Interval implements Comparator<Interval> {
 	// Returns true if all the values are the default values
 	public boolean isNull() {
 		return (freq.equals("") && interval == -1 && count == -1 && until.equals(LocalDateTime.MAX));
+	}
+	
+	// For debugging
+	public void print() {
+		System.out.println("freq = " + freq);
+		System.out.println("interval = " + interval);
+		System.out.println("count = " + count);
+		System.out.println("until = " + until.toString());
+		System.out.println("byDay = " + byDay);
+		System.out.println("byDayArray = " + Arrays.toString(byDayArray));
 	}
 }
