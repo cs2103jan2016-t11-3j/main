@@ -5,6 +5,8 @@ import common.AtfLogger;
 import common.CommandObject;
 import common.LocalDateTimePair;
 import common.TaskObject;
+import logic.Recurring;
+import logic.exceptions.RecurrenceException;
 import logic.timeOutput.TimeOutput;
 
 import java.io.IOException;
@@ -280,6 +282,15 @@ public class Delete {
 			removedTask.setTaskDateTimes(taskDateTimes);
 			removedTask.updateStartAndEndDateTimes();
 			
+			// If it is an infinitely recurring task, add 1 more task to the end of the list
+			if (removedTask.isInfiniteRecurrence()) {
+				try {
+					Recurring.updateInfiniteRecurrence(removedTask);
+				} catch (RecurrenceException e) {
+					output.add(String.format(MESSAGE_RECURRENCE_EXCEPTION, removedTask.getTitle()));
+				}
+			}
+			
 			if (deleteExternal()) {
 				TimeOutput.setTaskTimeOutput(removedTask); // to update the recurrence date in GUI
 				createSingleOccurrenceOutput();
@@ -289,7 +300,6 @@ public class Delete {
 			createSingleOccurrenceMissingErrorOutput();
 		}
 		
-		// might need additional handling for deletion of indefinite recurring tasks
 	}
 	
 	// ----------------------- PROCESSING DELETE -----------------------

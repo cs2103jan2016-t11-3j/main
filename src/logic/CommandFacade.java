@@ -24,10 +24,9 @@ import java.util.Deque;
 import com.sun.media.jfxmedia.logging.Logger;
 
 /**
- * This class represents a facade pattern to parse the CommandObject that has
- * been returned by the parser. A new CommandFacade class is initialised with
- * each new user input, and all relevant arguments are passed to this class. The
- * variables that will be actually used depends on the input of the user.
+ * This class represents a facade pattern to parse the CommandObject that has been returned by the parser. A
+ * new CommandFacade class is initialised with each new user input, and all relevant arguments are passed to
+ * this class. The variables that will be actually used depends on the input of the user.
  * 
  * @author RuiBin
  *
@@ -46,9 +45,9 @@ public class CommandFacade {
 	private TaskObject taskObj;
 	private int index;
 	private int lastSearchedIndex; // stores the index of the last recurring task searched
-	
+
 	private int lastCompletedTaskId; // stores task id of task most recently marked completed
-	
+
 	boolean isUndoAction;
 	boolean isRedoAction;
 
@@ -62,18 +61,17 @@ public class CommandFacade {
 	 * @param redoList
 	 *            The deque of CommandObjects which stores all redo actions
 	 * @param lastOutputTaskList
-	 *            The ArrayList which keeps track of what is currently being
-	 *            displayed to the user
+	 *            The ArrayList which keeps track of what is currently being displayed to the user
 	 * @param commandObj
-	 *            The CommandObject returned by the Parser class which returns
-	 *            the processed information
+	 *            The CommandObject returned by the Parser class which returns the processed information
 	 * @param isUndoAction
 	 *            Tracks if this call is an undo action
 	 * @param isRedoAction
 	 *            Tracks if this call is an undo action
 	 */
-	public CommandFacade(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList, Deque<CommandObject> redoList,
-			ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
+	public CommandFacade(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList,
+			Deque<CommandObject> redoList, ArrayList<TaskObject> lastOutputTaskList, CommandObject commandObj,
+			boolean isUndoAction, boolean isRedoAction) {
 		this.taskList = taskList;
 		this.undoList = undoList;
 		this.redoList = redoList;
@@ -85,15 +83,12 @@ public class CommandFacade {
 	}
 
 	/**
-	 * The run method is called by Logic after each initialisation of the
-	 * CommandFacade class. It parses the command type and calls the appropriate
-	 * function. Responsible for manipulating the undoList and determining
-	 * whether the redoList should be cleared. <br>
-	 * The redoList will be cleared as long as the command given is not an undo
-	 * or redo. <br>
-	 * A "reverse" CommandObject will be created and pushed into the undoList if
-	 * the current CommandObject is an action which manipulates the existing
-	 * task list.
+	 * The run method is called by Logic after each initialisation of the CommandFacade class. It parses the
+	 * command type and calls the appropriate function. Responsible for manipulating the undoList and
+	 * determining whether the redoList should be cleared. <br>
+	 * The redoList will be cleared as long as the command given is not an undo or redo. <br>
+	 * A "reverse" CommandObject will be created and pushed into the undoList if the current CommandObject is
+	 * an action which manipulates the existing task list.
 	 */
 	public void run() {
 
@@ -114,52 +109,52 @@ public class CommandFacade {
 		}
 
 		switch (commandType) {
-			case INDEX_ADD :
+			case INDEX_ADD:
 				addFunction();
 				break;
-			case INDEX_SEARCH_DISPLAY :
+			case INDEX_SEARCH_DISPLAY:
 				checkDisplayOrSearch();
 				break;
-			case INDEX_EDIT :
+			case INDEX_EDIT:
 				editFunction();
 				break;
-			case INDEX_DELETE :
+			case INDEX_DELETE:
 				deleteFunction();
 				break;
-			case INDEX_UNDO :
-			case INDEX_REDO :
+			case INDEX_UNDO:
+			case INDEX_REDO:
 				undoRedoFunction();
 				break;
-			case INDEX_SAVE :
+			case INDEX_SAVE:
 				saveFunction();
 				break;
-			case INDEX_EXIT :
+			case INDEX_EXIT:
 				exitFunction();
 				break;
-			case INDEX_HELP :
+			case INDEX_HELP:
 				helpFunction();
 				break;
-			case INDEX_COMPLETE :
+			case INDEX_COMPLETE:
 				doneFunction();
 				break;
-			case INDEX_INCOMPLETE :
+			case INDEX_INCOMPLETE:
 				incompleteFunction();
 				break;
-			case INDEX_OVERDUE :
+			case INDEX_OVERDUE:
 				overdueFunction();
 				break;
-			default :
+			default:
 				printInvalidCommandMessage();
 				break;
 		}
-		
+
 		// method which filters lastOutputTaskList to hide completed tasks
 		filterLastOutputTaskList();
 	}
-	
+
 	// hides completed tasks if command is not "view done"
 	private void filterLastOutputTaskList() {
-		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == -1) 
+		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == -1)
 				&& (taskObj.getStatus().equals(STATUS_COMPLETED))) {
 			return;
 		} else {
@@ -169,7 +164,7 @@ public class CommandFacade {
 			}
 		}
 	}
-	
+
 	private void filterOutCompletedTasks() {
 		ArrayList<TaskObject> newLastOutputTaskList = new ArrayList<TaskObject>();
 		for (int i = 0; i < lastOutputTaskList.size(); i++) {
@@ -179,7 +174,7 @@ public class CommandFacade {
 		}
 		setLastOutputTaskList(newLastOutputTaskList);
 	}
-	
+
 	private void addRecentlyCompletedTask() {
 		ArrayList<TaskObject> newLastOutputTaskList = this.lastOutputTaskList;
 		for (int i = 0; i < taskList.size(); i++) {
@@ -190,13 +185,11 @@ public class CommandFacade {
 		setLastOutputTaskList(newLastOutputTaskList);
 	}
 
-	
 	// ----------------------- FUNCTIONS -------------------------
-	
+
 	/**
-	 * Calls Add function, which adds the task to the task list and writes it to
-	 * storage. It then adds the reverse CommandObject to the undo list or the
-	 * redo list.
+	 * Calls Add function, which adds the task to the task list and writes it to storage. It then adds the
+	 * reverse CommandObject to the undo list or the redo list.
 	 */
 	private void addFunction() {
 		Add add = new Add(taskObj, index, lastSearchedIndex, taskList);
@@ -212,9 +205,8 @@ public class CommandFacade {
 	}
 
 	/**
-	 * This method checks for the presence of a search keyword in TaskObject. If
-	 * there is a keyword, search function will be called. If there is no
-	 * keyword, display function will be called.
+	 * This method checks for the presence of a search keyword in TaskObject. If there is a keyword, search
+	 * function will be called. If there is no keyword, display function will be called.
 	 */
 	private void checkDisplayOrSearch() {
 		if (taskObj.isSearchKeywordPresent() || commandObj.getIndex() != -1) {
@@ -232,7 +224,7 @@ public class CommandFacade {
 		setLastSearchedIndex(search.getSearchIndex());
 		setTaskDateTimeOutput(search.getTaskDateTimeOutput());
 	}
-	
+
 	private void searchFunction(CommandObject cmdObjToRunSearchByIndex) {
 		System.out.println("SPECIAL SEARCH BY INDEX");
 		Search search = new Search(cmdObjToRunSearchByIndex, taskList, lastOutputTaskList);
@@ -244,12 +236,12 @@ public class CommandFacade {
 		Display display = new Display(taskList);
 		setOutput(display.run());
 		setLastOutputTaskList(display.getLastOutputTaskList());
-		setLastSearchedIndex(-1);	
+		setLastSearchedIndex(-1);
 	}
 
 	/**
-	 * Calls Edit function which edits the task title, date, or both. It then
-	 * adds the reverse CommandObject to the undo list or the redo list.
+	 * Calls Edit function which edits the task title, date, or both. It then adds the reverse CommandObject
+	 * to the undo list or the redo list.
 	 */
 	private void editFunction() {
 		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList, lastSearchedIndex);
@@ -267,55 +259,56 @@ public class CommandFacade {
 	}
 
 	/**
-	 * The method checks if there is a task specified in the Delete command. If
-	 * there is no task specified, quick delete is run, i.e. deletes the most
-	 * recently added task. If there is a task specified, normal delete is run
-	 * to remove the specified task.
+	 * The method checks if there is a task specified in the Delete command. If there is no task specified,
+	 * quick delete is run, i.e. deletes the most recently added task. If there is a task specified, normal
+	 * delete is run to remove the specified task.
 	 */
 	private void deleteFunction() {
 		// 4 things to track
 		TaskObject removedTask = new TaskObject();
-		LocalDateTimePair removedOccurrenceTiming = new LocalDateTimePair(); // will be filled if it is a single-occurrence-delete
+		LocalDateTimePair removedOccurrenceTiming = new LocalDateTimePair(); // will be filled if it is a
+																				// single-occurrence-delete
 		Integer removedOccurrenceIndex = Integer.valueOf(-1);
 		Boolean isDeleteAll = false;
-		Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quadruple = 
-				new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>();
-		
+		Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quadruple = new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>();
+
 		if (index == -1) { // no task specified
-			quadruple = quickDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
+			quadruple = quickDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex,
+					isDeleteAll);
 		} else {
-			quadruple = normalDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
+			quadruple = normalDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex,
+					isDeleteAll);
 		}
-		
+
 		isDeleteAll = quadruple.getFourth();
 		if (!isDeleteAll) {
 			processUndoForDelete(quadruple.getFirst(), quadruple.getSecond(), quadruple.getThird());
 		}
 	}
 
-	private Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quickDelete(
-			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex, Boolean isDeleteAll) {
-		
+	private Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quickDelete(TaskObject removedTask,
+			LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex, Boolean isDeleteAll) {
+
 		CommandObject commandObjForQuickDelete = new CommandObject(INDEX_DELETE, new TaskObject(), -1);
 		Delete delete = new Delete(commandObjForQuickDelete, taskList, undoList);
 		setOutput(delete.run());
 		setLastOutputTaskList(taskList);
 
 		removedTask = delete.getRemovedTask();
-		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
-				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
+		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(removedTask,
+				removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
 	}
 
-	private Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> normalDelete(
-			TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex, Boolean isDeleteAll) {
-		
+	private Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> normalDelete(TaskObject removedTask,
+			LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex, Boolean isDeleteAll) {
+
 		Delete delete = new Delete(commandObj, taskList, lastOutputTaskList, undoList, redoList);
 		setOutput(delete.run());
 		setTaskList(delete.getTaskList());
 		setLastOutputTaskList(this.taskList);
 		setUndoList(delete.getUndoList());
 		setRedoList(delete.getRedoList());
-		
+
 		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
 		callSearchByIndexToUpdateSidebar(delete.getIsDeleteSingleOccurrence());
 
@@ -323,14 +316,15 @@ public class CommandFacade {
 		removedOccurrenceTiming = delete.getRemovedTaskOccurrenceDetails();
 		removedOccurrenceIndex = delete.getRemovedOccurrenceIndex();
 		isDeleteAll = delete.getIsDeleteAll();
-		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(
-				removedTask, removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
-		
+		return new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>(removedTask,
+				removedOccurrenceTiming, removedOccurrenceIndex, isDeleteAll);
+
 	}
 
 	// Checks that removedTask is not null, then adds the corresponding CommandObject to the
 	// undo list or the redo list
-	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, Integer removedOccurrenceIndex) {
+	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming,
+			Integer removedOccurrenceIndex) {
 		assert (!removedTask.isNull());
 
 		if (isUndoAction) {
@@ -341,9 +335,8 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Calls the UndoRedo class, which is a parent of the Undo and Redo classes.
-	 * The class reads in the command type and then calls the relevant child
-	 * class.
+	 * Calls the UndoRedo class, which is a parent of the Undo and Redo classes. The class reads in the
+	 * command type and then calls the relevant child class.
 	 */
 	private void undoRedoFunction() {
 		UndoRedo undoRedo = new UndoRedo(taskList, undoList, redoList);
@@ -357,8 +350,7 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Calls the Save function, which saves the task list to an appropriate
-	 * storage place.
+	 * Calls the Save function, which saves the task list to an appropriate storage place.
 	 */
 	private void saveFunction() {
 		Save save = new Save(taskObj, taskList);
@@ -374,9 +366,8 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Calls the Help function, which displays the user guide. If there is a
-	 * search keyword entered, only the relevant topics will be displayed. If
-	 * there is no search keyword entered, the entire user guide will be
+	 * Calls the Help function, which displays the user guide. If there is a search keyword entered, only the
+	 * relevant topics will be displayed. If there is no search keyword entered, the entire user guide will be
 	 * displayed.
 	 */
 	private void helpFunction() {
@@ -400,7 +391,7 @@ public class CommandFacade {
 				addToList(done, undoList);
 			}
 		}
-		
+
 		lastCompletedTaskId = done.getMostRecentlyMarkedTaskId();
 	}
 
@@ -442,96 +433,98 @@ public class CommandFacade {
 	// ------------------------- OVERLOADED METHODS TO POPULATE UNDO/REDO LIST -------------------------
 
 	/**
-	 * Method for adding a CommandObject containing "add"  to either the undoList or redoList, 
-	 * which is previously determined by the caller.
-	 * <br>
-	 * A "delete" CommandObject will be pushed into the list.
-	 * The index of the previously added TaskObject will be added into the CommandObject to 
-	 * facilitate future deletion. <br>
-	 * If the added task was a recurring task, 
+	 * Method for adding a CommandObject containing "add" to either the undoList or redoList, which is
+	 * previously determined by the caller. <br>
+	 * A "delete" CommandObject will be pushed into the list. The index of the previously added TaskObject
+	 * will be added into the CommandObject to facilitate future deletion. <br>
+	 * If the added task was a recurring task,
 	 */
-	private void addToList(CommandObject commandObj, boolean isAddSingleOccurrence, Deque<CommandObject> list) {
+	private void addToList(CommandObject commandObj, boolean isAddSingleOccurrence,
+			Deque<CommandObject> list) {
 		assert (commandType == INDEX_ADD);
-		
+
 		CommandObject newCommandObj = new CommandObject();
-		
-		if (isAddSingleOccurrence) {	// it is addition of a single occurrence
+
+		if (isAddSingleOccurrence) { // it is addition of a single occurrence
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
-			
+
 		} else {
-			if (index == -1) {	// if task was previously added to the end of the list
+			if (index == -1) { // if task was previously added to the end of the list
 				if (commandObj.getTaskObject().getIsRecurring()) {
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size()); // isEditAll set to 'true'
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size()); // isEditAll
+																											// set
+																											// to
+																											// 'true'
 				} else {
-				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
 				}
-			} else {	// if task was previously added to a pre-determined location in the list
+			} else { // if task was previously added to a pre-determined location in the list
 				if (commandObj.getTaskObject().getIsRecurring()) {
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index); // isEditAll set to 'true'
+					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index); // isEditAll
+																									// set to
+																									// 'true'
 				} else {
 					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
 				}
 			}
 		}
-		
+
 		list.push(newCommandObj);
 	}
-	
+
 	/**
-	 * Method for adding a CommandObject containing "add" or "delete" to either
-	 * the undoList or redoList, which is previously determined by the caller.
-	 * <br>
-	 * For command "add", 
-	 * For command "delete", an "add" CommandObject will be pushed into the
-	 * list, together with a copy of the task which was just deleted.
+	 * Method for adding a CommandObject containing "add" or "delete" to either the undoList or redoList,
+	 * which is previously determined by the caller. <br>
+	 * For command "add", For command "delete", an "add" CommandObject will be pushed into the list, together
+	 * with a copy of the task which was just deleted.
 	 * 
 	 * @param commandObj
 	 *            The CommandObject to be added to the stated list.
 	 * @param list
 	 *            Either a undoList or a redoList
 	 */
-	private void addToList(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming, 
+	private void addToList(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming,
 			Integer removedOccurrenceIndex, Deque<CommandObject> list) {
 		assert (commandType == INDEX_DELETE);
-		
+
 		CommandObject newCommandObj = new CommandObject();
 
 		/*
-		 * 2 types of delete:
-		 * 1. delete task
-		 * 2. delete occurrence in ArrayList<LocalDateTimePair>
+		 * 2 types of delete: 1. delete task 2. delete occurrence in ArrayList<LocalDateTimePair>
 		 */
 		if (removedOccurrenceTiming.isEmpty()) {
 			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
 		} else {
 			TaskObject taskObjWithRemovedOccurrenceTiming = new TaskObject(removedOccurrenceTiming);
-			if (lastSearchedIndex == -1) {	// if it is a deletion of the most recent occurrence	
-				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, index);
+			if (lastSearchedIndex == -1) { // if it is a deletion of the most recent occurrence
+				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming,
+						removedOccurrenceIndex, index);
 			} else {
-				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming, removedOccurrenceIndex, lastSearchedIndex);
+				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming,
+						removedOccurrenceIndex, lastSearchedIndex);
 			}
 		}
-		
+
 		list.push(newCommandObj);
 	}
 
 	/**
-	 * Method for adding a CommandObject containing edit to either the undoList
-	 * or redoList, predetermined by the caller of this method. <br>
+	 * Method for adding a CommandObject containing edit to either the undoList or redoList, predetermined by
+	 * the caller of this method. <br>
 	 * 
 	 * @param editOriginal
-	 *            Contains an Edit object which stores information on retrieving
-	 *            the original TaskObject prior to the edit.
+	 *            Contains an Edit object which stores information on retrieving the original TaskObject prior
+	 *            to the edit.
 	 * @param list
 	 *            Either an undoList or redoList
 	 */
 	private void addToList(Edit editOriginal, Deque<CommandObject> list) {
-		
+
 		TaskObject originalTask = editOriginal.getOriginalTask();
 		originalTask.setIsEditAll(editOriginal.getIsEditAll());
 		int editTaskIndex = editOriginal.getEditTaskIndex();
 		int editOccurrenceIndex = editOriginal.getEditOccurrenceIndex();
-		
+
 		CommandObject newCommandObj = new CommandObject();
 		if (editOccurrenceIndex == -1) {
 			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editTaskIndex);
@@ -542,8 +535,7 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Constructs a CommandObject for either "done", "incomplete" or "overdue"
-	 * and pushes it into the list.
+	 * Constructs a CommandObject for either "done", "incomplete" or "overdue" and pushes it into the list.
 	 * 
 	 * @param mark
 	 *            Mark object which performed the modification to the task list
@@ -589,24 +581,25 @@ public class CommandFacade {
 	 * @return a boolean value indicating whether the command involves editing
 	 */
 	private boolean isListOperation(int command) {
-		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE || command == INDEX_COMPLETE
-				|| command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
+		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE
+				|| command == INDEX_COMPLETE || command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
 	}
 
 	private void callSearchByIndexToUpdateSidebar(boolean bool) {
 		if (bool) {
-			CommandObject cmdObjToRunSearchByIndex = new CommandObject(INDEX_SEARCH_DISPLAY, new TaskObject(), lastSearchedIndex);
-			//searchFunction(cmdObjToRunSearchByIndex);
+			CommandObject cmdObjToRunSearchByIndex = new CommandObject(INDEX_SEARCH_DISPLAY, 
+					new TaskObject(), lastSearchedIndex);
+			// searchFunction(cmdObjToRunSearchByIndex);
 		}
 	}
-	
+
 	private void printInvalidCommandMessage() {
 		output.clear();
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
 
 	// ------------------------- GETTERS AND SETTERS -------------------------
-	
+
 	public int getCommandType() {
 		return commandType;
 	}
@@ -634,11 +627,11 @@ public class CommandFacade {
 	public CommandObject getCommandObject() {
 		return commandObj;
 	}
-	
+
 	public int getLastSearchedIndex() {
 		return lastSearchedIndex;
 	}
-	
+
 	// Returns arraylist of timeoutput to commandFacade
 	public ArrayList<String> getTaskDateTimeOutput() {
 		return taskDateTimeOutput;
@@ -686,7 +679,7 @@ public class CommandFacade {
 	private void setIndex() {
 		this.index = commandObj.getIndex();
 	}
-	
+
 	public void setLastSearchedIndex() {
 		this.lastSearchedIndex = commandObj.getLastSearchedIndex();
 	}
@@ -694,9 +687,9 @@ public class CommandFacade {
 	// Called by Search/Display
 	public void setLastSearchedIndex(int lastSearchedIndex) {
 		this.lastSearchedIndex = lastSearchedIndex;
-		//commandObj.setLastSearchedIndex(lastSearchedIndex);
+		// commandObj.setLastSearchedIndex(lastSearchedIndex);
 	}
-	
+
 	// Called by Search
 	public void setTaskDateTimeOutput(ArrayList<String> taskDateTimeOutput) {
 		this.taskDateTimeOutput = taskDateTimeOutput;
