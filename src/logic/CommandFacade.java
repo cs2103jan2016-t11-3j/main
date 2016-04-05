@@ -217,10 +217,11 @@ public class CommandFacade {
 	 * keyword, display function will be called.
 	 */
 	private void checkDisplayOrSearch() {
-		if (taskObj.isSearchKeywordPresent())
+		if (taskObj.isSearchKeywordPresent() || commandObj.getIndex() != -1) {
 			searchFunction();
-		else
+		} else {
 			displayFunction();
+		}
 	}
 
 	// Calls Search function which outputs only the tasks that match the search keyword.

@@ -56,13 +56,16 @@ public class Search extends Display {
 	private ArrayList<TaskObject> lastOutputTaskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<String> taskDateTimeOutput = new ArrayList<String>();
+	private ArrayList<String> searchParametersList = new ArrayList<String>();
 
+	// Search keywords
 	private String searchTitle = "";
 	private LocalDate searchDate = LocalDate.MAX;
 	private LocalTime searchTime = LocalTime.MAX;
 	private String searchCategory = "";
 	private String searchStatus = "";
 	private int searchIndex = -1;
+	// Boolean checks for the search keywords
 	boolean isSearchTitle = false;
 	boolean isSearchDate = false;
 	boolean isSearchTime = false;
@@ -94,15 +97,13 @@ public class Search extends Display {
 	 */
 	public ArrayList<String> run() {
 		setSearchInformation();
-		// printSearchInformation();
 		processSearch();
 		setOutput();
 
 		return output;
 	}
 
-	// Retrieves values from the data objects and sets the relevant search
-	// information
+	// Retrieves values from the data objects and sets the relevant search information
 	private void setSearchInformation() {
 		try {
 			searchTitle = taskObj.getTitle().toLowerCase();
@@ -110,11 +111,11 @@ public class Search extends Display {
 				isSearchTitle = true;
 			}
 			searchDate = taskObj.getStartDateTime().toLocalDate();
-			if (searchDate.compareTo(LocalDate.MAX) != 0) {
+			if (!searchDate.equals(LocalDate.MAX)) {
 				isSearchDate = true;
 			}
 			searchTime = taskObj.getStartDateTime().toLocalTime();
-			if (searchTime.compareTo(LocalTime.MAX) != 0) {
+			if (!searchTime.equals(LocalTime.MAX)) {
 				isSearchTime = true;
 			}
 			searchCategory = taskObj.getCategory();
@@ -123,7 +124,7 @@ public class Search extends Display {
 			}
 			searchStatus = taskObj.getStatus();
 			if (!searchStatus.equals("")) {
-				isSearchStatus= true;
+				isSearchStatus = true;
 			}
 			searchIndex = commandObj.getIndex();
 			if (searchIndex != -1) {
@@ -133,7 +134,7 @@ public class Search extends Display {
 			logger.log(Level.WARNING, "Error setting search information");
 		}
 
-		// printSearchInformation();
+		//printSearchInformation();
 	}
 
 	private void processSearch() {
@@ -141,18 +142,23 @@ public class Search extends Display {
 
 		if (isSearchTitle) {
 			matchedTasks = searchByTitle(matchedTasks);
+			searchParametersList.add(searchTitle);
 		}
 		if (isSearchDate) {
 			matchedTasks = searchByDate(matchedTasks);
+			searchParametersList.add(searchDate.toString());
 		}
 		if (isSearchTime) {
 			matchedTasks = searchByTime(matchedTasks);
+			searchParametersList.add(searchTime.toString());
 		}
 		if (isSearchCategory) {
 			matchedTasks = searchByCategory(matchedTasks);
+			searchParametersList.add(searchCategory);
 		}
 		if (isSearchStatus) {
 			matchedTasks = searchByStatus(matchedTasks);
+			searchParametersList.add(searchStatus);
 		}
 		if (isSearchIndex) {
 			searchByIndex();
@@ -341,8 +347,8 @@ public class Search extends Display {
 		try {
 			int taskIdToSearch = lastOutputTaskList.get(searchIndex - 1).getTaskId();
 			isFound = findTaskWithIndex(taskIdToSearch);
-		} catch (NullPointerException e) {
-			throw new NullPointerException("invalid index");
+		} catch (IndexOutOfBoundsException e) {
+			output.add(MESSAGE_TASK_INDEX_NOT_FOUND_ERROR);
 		}
 	}
 
@@ -361,9 +367,9 @@ public class Search extends Display {
 		if (matchedTasks.isEmpty()) {
 			output.add(String.format(MESSAGE_NO_RESULTS_FOUND));
 		} else {
-			// if output is not empty, the overloaded setOutput(TaskObject
-			// foundTask) method has already been called
+			// if output is not empty, the overloaded setOutput() method below has already been called
 			if (output.isEmpty()) {
+				generateSearchParametersOutput();
 				output.addAll(super.runSpecificList(matchedTasks));
 			}
 		}
@@ -414,6 +420,21 @@ public class Search extends Display {
 		}
 	}
 
+	private void generateSearchParametersOutput() {
+		String searchParameters = "";
+		
+		for (int i = 0; i < searchParametersList.size(); i++) {
+			searchParameters = searchParameters.concat("\'" + searchParametersList.get(i) + "\'");
+			
+			// To handle the fencepost problem
+			if (i != searchParametersList.size() - 1) {
+				searchParameters = searchParameters.concat(", ");
+			}
+		}
+		
+		output.add(String.format(MESSAGE_SEARCH_PARAMETERS, searchParameters));
+	}
+	
 	// FOR DEBUG
 	private void printSearchInformation() {
 		System.out.println("search title = " + searchTitle);

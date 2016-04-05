@@ -178,7 +178,7 @@ public class Edit {
 			}
 			isEditAll = commandObj.getTaskObject().getIsEditAll(); // if all occurrences are to be edited
 
-			checkEditInformation(); // for debugging
+			//checkEditInformation(); // for debugging
 		} catch (NullPointerException e) {
 			LOGGER.log(Level.WARNING, "Error setting edit information");
 		}
@@ -1026,6 +1026,9 @@ public class Edit {
 			String concatOutput = "";
 			for (int i = 0; i < tempOutput.size(); i++) {
 				concatOutput = concatOutput.concat(tempOutput.get(i));
+				if (i != tempOutput.size() - 1) {
+					concatOutput = concatOutput.concat("\n");
+				}
 			}
 
 			output.add(concatOutput.trim());
