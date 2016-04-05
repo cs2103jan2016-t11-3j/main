@@ -288,7 +288,7 @@ public class DateTimeParser {
 			multiplier = getMultiplier(forFreq, TO.getInterval().getFrequency());	
 		}
 		
-		count = multiplier * numberOf * TO.getInterval().getTimeInterval();
+		count = multiplier * numberOf / TO.getInterval().getTimeInterval();
 		TO.getInterval().setCount(count);
 	}
 	
