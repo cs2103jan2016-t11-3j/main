@@ -4,6 +4,8 @@ import common.TaskObject;
 import common.Interval;
 import static logic.constants.Strings.*;
 
+import java.time.LocalDateTime;
+
 @SuppressWarnings("serial")
 public class RecurrenceException extends Exception{
 
@@ -21,6 +23,10 @@ public class RecurrenceException extends Exception{
 	
 	public RecurrenceException(Interval interval) {
 		super(String.format(MESSAGE_RECURRENCE_EXCEPTION, MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL));
+	}
+	
+	public RecurrenceException(LocalDateTime until) {
+		super(String.format(MESSAGE_RECURRENCE_EXCEPTION, MESSAGE_RECURRENCE_EXCEPTION_INVALID_UNTIL));
 	}
 	
 	public String getRecurrenceExceptionMessage() {
