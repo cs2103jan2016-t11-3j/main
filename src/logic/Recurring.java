@@ -29,6 +29,7 @@ import static logic.constants.Strings.*;
 public class Recurring {
 
 	private static Logger logger = AtfLogger.getLogger();
+	private static final int RECURRENCE_CONSTANT_COUNT = 10;
 
 	/**
 	 * Method called by logic when AdultTaskFinder is launched. Searches for all
@@ -218,7 +219,7 @@ public class Recurring {
 			if (interval.getCount() != -1) {
 				setTimingsBasedOnCounts(task, eventDateTime, interval, interval.getCount());
 			} else {
-				setTimingsBasedOnCounts(task, eventDateTime, interval, 10);
+				setTimingsBasedOnCounts(task, eventDateTime, interval, RECURRENCE_CONSTANT_COUNT);
 			}
 		}
 
@@ -255,7 +256,7 @@ public class Recurring {
 			if (interval.getCount() != -1) {
 				setTimingsBasedOnCounts(task, deadlineDateTime, interval, interval.getCount());
 			} else {
-				setTimingsBasedOnCounts(task, deadlineDateTime, interval, 10);
+				setTimingsBasedOnCounts(task, deadlineDateTime, interval, RECURRENCE_CONSTANT_COUNT);
 			}
 		}
 
@@ -421,7 +422,7 @@ public class Recurring {
 
 	/************************************************************************************/
 	// Below all common methods shared by recurring events and deadlines
-	private static void updateInfiniteRecurrence(TaskObject task) throws RecurrenceException {
+	public static void updateInfiniteRecurrence(TaskObject task) throws RecurrenceException {
 		int index = task.getTaskDateTimes().size() - 1;
 		LocalDateTimePair lastTimingInList = task.getTaskDateTimes().get(index);
 
