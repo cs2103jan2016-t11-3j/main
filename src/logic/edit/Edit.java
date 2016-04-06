@@ -190,8 +190,6 @@ public class Edit {
 	 * replicate of this task for undo purposes.
 	 */
 	private void setTaskToBeEdited() {
-		System.out.println("EDIT TASK INDEX = " + editTaskIndex);
-		System.out.println("lastOutputTaskList.size() = " + lastOutputTaskList.size());
 		assert (editTaskIndex > 0 && editTaskIndex <= lastOutputTaskList.size());
 
 		editTaskId = lastOutputTaskList.get(editTaskIndex - 1).getTaskId();
@@ -859,9 +857,17 @@ public class Edit {
 			if (isEditStartDate) {
 				if (isEditStartDateForAllOccurrences) {
 					if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
-						outputDateEditedForAllOccurrencesMessage();
+						if (originalStartDate.equals(LocalDate.MAX)) {
+							outputDateAddedForAllOccurrencesMessage();
+						} else {
+							outputDateEditedForAllOccurrencesMessage();
+						}
 					} else {
-						outputStartDateEditedForAllOccurrencesMessage();
+						if (originalStartDate.equals(LocalDate.MAX)) {
+							outputStartDateAddedForAllOccurrencesMessage();
+						} else {
+							outputStartDateEditedForAllOccurrencesMessage();
+						}
 					}
 				} else {
 					if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
@@ -882,9 +888,17 @@ public class Edit {
 			if (isEditStartTime) {
 				if (isEditStartTimeForAllOccurrences) {
 					if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
+						if (originalStartTime.equals(LocalTime.MAX)) { 
+							outputTimeAddedForAllOccurrencesMessage();
+						} else {
 						outputTimeEditedForAllOccurrencesMessage();
+						}
 					} else {
-						outputStartTimeEditedForAllOccurrencesMessage();
+						if (originalStartTime.equals(LocalTime.MAX)) { 
+							outputStartTimeAddedForAllOccurrencesMessage();
+						} else {
+							outputStartTimeEditedForAllOccurrencesMessage();
+						}
 					}
 				} else {
 					if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
@@ -904,7 +918,11 @@ public class Edit {
 			}
 			if (isEditEndDate) {
 				if (isEditEndDateForAllOccurrences) {
-					outputEndDateEditedForAllOccurencesMessage();
+					if (originalEndDate.equals(LocalDate.MAX)) {
+						outputEndDateAddedForAllOccurrencesMessage();
+					} else {
+						outputEndDateEditedForAllOccurrencesMessage();
+					}
 				} else {
 					if (originalEndDate.equals(LocalDate.MAX)) {
 						outputEndDateAddedMessage();
@@ -915,7 +933,11 @@ public class Edit {
 			}
 			if (isEditEndTime) {
 				if (isEditEndTimeForAllOccurrences) {
-					outputEndTimeEditedForAllOccurrencesMessage();
+					if (originalEndTime.equals(LocalTime.MAX)) {
+						outputEndTimeAddedForAllOccurrencesMessage();
+					} else {
+						outputEndTimeEditedForAllOccurrencesMessage();
+					}
 				} else {
 					if (originalEndTime.equals(LocalTime.MAX)) {
 						outputEndTimeAddedMessage();
@@ -929,31 +951,47 @@ public class Edit {
 			}
 		} else { // Output for editing of a single occurrence
 			if (isEditStartDateOccurrence) {
-				if (originalStartDate.equals(LocalDate.MAX)) {
-					outputStartDateOccurrenceAddedMessage();
+				if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
+					if (originalStartDate.equals(LocalDate.MAX)) {
+						outputDateAddedForOccurrenceMessage();
+					} else {
+						outputDateEditedForOccurrenceMessage();
+					}
 				} else {
-					outputStartDateOccurrenceEditedMessage();
+					if (originalStartDate.equals(LocalDate.MAX)) {
+						outputStartDateAddedForOccurrenceMessage();
+					} else {
+						outputStartDateEditedForOccurrenceMessage();
+					}
 				}
 			}
 			if (isEditStartTimeOccurrence) {
-				if (originalStartTime.equals(LocalTime.MAX)) {
-					outputStartTimeOccurrenceAddedMessage();
+				if (editTask.getCategory().equals(CATEGORY_DEADLINE)) {
+					if (originalStartTime.equals(LocalTime.MAX)) {
+						outputTimeAddedForOccurrenceMessage();
+					} else {
+						outputTimeEditedForOccurrenceMessage();
+					}
 				} else {
-					outputStartTimeOccurrenceEditedMessage();
+					if (originalStartTime.equals(LocalTime.MAX)) {
+						outputStartTimeAddedForOccurrenceMessage();
+					} else {
+						outputStartTimeEditedForOccurrenceMessage();
+					}
 				}
 			}
 			if (isEditEndDateOccurrence) {
 				if (originalEndDate.equals(LocalDate.MAX)) {
-					outputEndDateOccurrenceAddedMessage();
+					outputEndDateAddedForOccurrenceMessage();
 				} else {
-					outputEndDateOccurrenceEditedMessage();
+					outputEndDateEditedForOccurrenceMessage();
 				}
 			}
 			if (isEditEndTimeOccurrence) {
 				if (originalEndTime.equals(LocalTime.MAX)) {
 					outputEndTimeOccurrenceAddedMessage();
 				} else {
-				outputEndTimeOccurrenceEditedMessage();
+					outputEndTimeOccurrenceEditedMessage();
 				}
 			}
 		}
@@ -965,6 +1003,7 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_TITLE_EDIT, originalTitle, editTitle));
 	}
 
+	// DATE
 	private void outputDateAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_ADD, editStartDate, editTask.getTitle()));
 	}
@@ -972,11 +1011,51 @@ public class Edit {
 	private void outputDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_EDIT, originalStartDate, editStartDate));
 	}
+	
+	private void outputDateAddedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_DATE_FOR_OCCURRENCE_ADD, editStartDate, editOccurrenceIndex));
+	}
+	
+	private void outputDateEditedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_DATE_FOR_OCCURRENCE_EDIT, editOccurrenceIndex,
+				originalStartDate, editStartDate));
+	}
 
+	private void outputDateAddedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_DATE_FOR_ALL_OCCURRENCES_ADD, editStartDate));
+	}
+	
 	private void outputDateEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_DATE_FOR_ALL_OCCURRENCES_EDIT, editStartDate));
 	}
+	
+	// TIME
+	private void outputTimeAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_ADD, editStartTime, editTask.getTitle()));
+	}
+	
+	private void outputTimeEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime));
+	}
 
+	private void outputTimeAddedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_FOR_OCCURRENCE_ADD, editStartTime, editOccurrenceIndex));
+	}
+	
+	private void outputTimeEditedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_DATE_FOR_OCCURRENCE_EDIT, editOccurrenceIndex,
+				originalStartTime, editStartTime));
+	}
+
+	private void outputTimeAddedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_FOR_ALL_OCCURRENCES_ADD, editStartTime));
+	}
+	
+	private void outputTimeEditedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
+	}
+
+	// START DATE
 	private void outputStartDateAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_ADD, editStartDate, editTask.getTitle()));
 	}
@@ -984,23 +1063,26 @@ public class Edit {
 	private void outputStartDateEditedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_EDIT, originalStartDate, editStartDate));
 	}
+	
+	private void outputStartDateAddedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_OCCURRENCE_ADD, editStartDate, 
+				editOccurrenceIndex));
+	}
+	
+	private void outputStartDateEditedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_OCCURRENCE_EDIT, editOccurrenceIndex,
+				originalStartDate, editStartDate));
+	}
+	
+	private void outputStartDateAddedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_ADD, editStartDate));
+	}
 
 	private void outputStartDateEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_EDIT, editStartDate));
 	}
 
-	private void outputTimeAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_TIME_ADD, editStartTime, editTask.getTitle()));
-	}
-
-	private void outputTimeEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_TIME_EDIT, originalStartTime, editStartTime));
-	}
-
-	private void outputTimeEditedForAllOccurrencesMessage() {
-		tempOutput.add(String.format(MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
-	}
-
+	// START TIME
 	private void outputStartTimeAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_START_TIME_ADD, editStartTime, editTask.getTitle()));
 	}
@@ -1009,10 +1091,25 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_START_TIME_EDIT, originalStartTime, editStartTime));
 	}
 
+	private void outputStartTimeAddedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_OCCURRENCE_ADD, editStartTime,
+				editOccurrenceIndex));
+	}
+	
+	private void outputStartTimeEditedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_OCCURRENCE_EDIT, editOccurrenceIndex,
+				originalStartTime, editStartTime));
+	}
+
+	private void outputStartTimeAddedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_ADD, editStartTime));
+	}
+
 	private void outputStartTimeEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT, editStartTime));
 	}
 
+	// END DATE
 	private void outputEndDateAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_DATE_ADD, editEndDate, editTask.getTitle()));
 	}
@@ -1021,10 +1118,25 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_END_DATE_EDIT, originalEndDate, editEndDate));
 	}
 
-	private void outputEndDateEditedForAllOccurencesMessage() {
+	private void outputEndDateAddedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_OCCURRENCE_ADD, editEndDate,
+				editOccurrenceIndex));
+	}
+	
+	private void outputEndDateEditedForOccurrenceMessage() {
+		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_OCCURRENCE_EDIT, editOccurrenceIndex,
+				originalEndDate, editEndDate));
+	}
+
+	private void outputEndDateAddedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_ALL_OCCURRENCES_ADD, editEndDate));
+	}
+	
+	private void outputEndDateEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_ALL_OCCURRENCES_EDIT, editEndDate));
 	}
 
+	// END TIME
 	private void outputEndTimeAddedMessage() {
 		tempOutput.add(String.format(MESSAGE_END_TIME_ADD, editEndTime, editTask.getTitle()));
 	}
@@ -1033,52 +1145,26 @@ public class Edit {
 		tempOutput.add(String.format(MESSAGE_END_TIME_EDIT, originalEndTime, editEndTime));
 	}
 
+	private void outputEndTimeOccurrenceAddedMessage() {
+		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_OCCURRENCE_ADD, editEndTime,
+				editOccurrenceIndex));
+	}
+	
+	private void outputEndTimeOccurrenceEditedMessage() {
+		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_OCCURRENCE_EDIT, editOccurrenceIndex,
+				originalEndTime, editEndTime));
+	}
+
+	private void outputEndTimeAddedForAllOccurrencesMessage() {
+		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_ADD, editEndTime));
+	}
+	
 	private void outputEndTimeEditedForAllOccurrencesMessage() {
 		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT, editEndTime));
 	}
 
 	private void outputIntervalEditedMessage() {
 		tempOutput.add(MESSAGE_INTERVAL_EDIT);
-	}
-
-	private void outputStartDateOccurrenceAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_OCCURRENCE_ADDED, editStartDate,
-				editOccurrenceIndex));
-	}
-	
-	private void outputStartDateOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_DATE_FOR_OCCURRENCE_EDITED, editOccurrenceIndex,
-				originalStartDate, editStartDate));
-	}
-
-	private void outputStartTimeOccurrenceAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_OCCURRENCE_ADDED, editStartTime,
-				editOccurrenceIndex));
-	}
-	
-	private void outputStartTimeOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_START_TIME_FOR_OCCURRENCE_EDITED, editOccurrenceIndex,
-				originalStartTime, editStartTime));
-	}
-
-	private void outputEndDateOccurrenceAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_OCCURRENCE_ADDED, editEndDate,
-				editOccurrenceIndex));
-	}
-	
-	private void outputEndDateOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_DATE_FOR_OCCURRENCE_EDITED, editOccurrenceIndex,
-				originalEndDate, editEndDate));
-	}
-
-	private void outputEndTimeOccurrenceAddedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_OCCURRENCE_ADDED, editEndTime,
-				editOccurrenceIndex));
-	}
-	
-	private void outputEndTimeOccurrenceEditedMessage() {
-		tempOutput.add(String.format(MESSAGE_END_TIME_FOR_OCCURRENCE_EDITED, editOccurrenceIndex,
-				originalEndTime, editEndTime));
 	}
 
 	// Combines all the output strings into 1 string
