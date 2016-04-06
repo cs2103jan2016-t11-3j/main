@@ -64,7 +64,10 @@
          <right>
             <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="200.0" translateX="100.0" visible="false" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="recurTitle" />
+                  <Label fx:id="recurTitle" wrapText="true">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin></Label>
                   <ListView fx:id="taskDateList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                </children>
                <BorderPane.margin>

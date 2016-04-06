@@ -73,6 +73,7 @@
 	-fx-font-size: 15;
 	-fx-text-fill: #5e412f;
 }
+
 #userInput {
 	-fx-background-radius: 0.5em;
 	-fx-font-family: 'Abel';
@@ -102,8 +103,8 @@
 
 #recurTitle {
 	-fx-alignment: CENTER; 
-	-fx-font-size: 20; 
-	-fx-font-family: 'Abel';	
+	-fx-font-size: 17; 
+	-fx-font-family: 'Ubuntu';	
 	-fx-text-fill: #5e412f;
 }
 
