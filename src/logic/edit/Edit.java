@@ -750,7 +750,7 @@ public class Edit {
 				// If the original end date is null, i.e. it is a floating task which is being edited to
 				// another category, then the date will be default to today.
 				if (taskOriginalEndDate.equals(LocalDate.MAX)) {
-					taskOriginalEndDate = LocalDate.now();
+					taskOriginalEndDate = taskDateTime.getStartDateTime().toLocalDate();
 				}
 
 				// Sets the end time to be the new time
@@ -760,6 +760,7 @@ public class Edit {
 
 			// then edit the TaskObject
 			task.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
+			task.updateStartAndEndDateTimes();
 
 			LOGGER.log(Level.INFO, "End times edited for all occurrences of recurring task");
 			isEditEndTimeForAllOccurrences = true;
@@ -785,7 +786,7 @@ public class Edit {
 		// If the original end date is null, i.e. it is a floating task which is being edited to another
 		// category, then the date will be default to today.
 		if (originalEndDate.equals(LocalDate.MAX)) {
-			originalEndDate = LocalDate.now();
+			originalEndDate = task.getStartDateTime().toLocalDate();
 		}
 
 		if (!originalEndTime.equals(editEndTime)) {
@@ -876,7 +877,7 @@ public class Edit {
 	 * date/time so the output should be 'added' instead of 'edited'.
 	 */
 	private void setOutput() {
-		// checkEditInformation();
+		//checkEditInformation();
 
 		if (!isEditSingleOccurrence) {
 			if (isEditTitle) {
