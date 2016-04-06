@@ -83,6 +83,8 @@ public class MainController implements Initializable {
 	private ListView<String> taskDateList;
 	@FXML
 	private Label recurTitle;
+	@FXML
+	private Label programName;
 
 	@FXML
 	// reads input on enter

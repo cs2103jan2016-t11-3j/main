@@ -1,3 +1,9 @@
+#programName {
+	-fx-font-size: 30;
+	-fx-text-fill: #5e412f;
+	-fx-font-family: 'Ubuntu' 	
+}
+
 #layout {
 	-fx-background-image: url('background4.jpg');	
 	-fx-background-repeat: no-repeat; 
@@ -62,6 +68,11 @@
 	-fx-background-radius: 8 8 0 0;
 }
 
+#feedbackMessage {
+	-fx-font-family: 'Ubuntu';
+	-fx-font-size: 15;
+	-fx-text-fill: #5e412f;
+}
 #userInput {
 	-fx-background-radius: 0.5em;
 	-fx-font-family: 'Abel';
@@ -91,10 +102,11 @@
 
 #recurTitle {
 	-fx-alignment: CENTER; 
-	-fx-font-size: 18; 
+	-fx-font-size: 20; 
 	-fx-font-family: 'Abel';	
 	-fx-text-fill: #5e412f;
 }
+
 .doneTasks {
 	-fx-background-color: lightgray;
 }
@@ -113,16 +125,11 @@
 }
 
 @font-face {
-	font-family: Ubuntu Regular;
+	font-family: 'Ubuntu';
 	src: url(Ubuntu-Regular.ttf);
 }
 
 @font-face {
-	font-family: Ubuntu Light;
+	font-family: 'Ubuntu Light';
 	src: url(Ubuntu-Light.ttf);
-}
-
-@font-face {
-	font-family: Ubuntu Medium;
-	src: url(Ubuntu-Medium.ttf);
 }
