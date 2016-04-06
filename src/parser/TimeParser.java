@@ -88,6 +88,9 @@ public class TimeParser {
 			
 			if (isPM) { //converts timing to correct value
 				_time = _time + 1200;
+				if (_time > 2359 && _time < 2460 ) {
+					_time = _time - 1200;
+				}
 			} else if (!isPM && _time > 1159 && _time < 1260) { //only for 12.xxam cases
 				_time = _time - 1200;
 			} else if (!isPM && _time > 1259) {
