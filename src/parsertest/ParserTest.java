@@ -196,8 +196,8 @@ public class ParserTest {
 		cmd = tempParser.run();
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("go gym", cmd.getTaskObject().getTitle());
-		assertEquals("2016-04-11T08:00",cmd.getTaskObject().getStartDateTime().toString());
-		assertEquals("2016-04-11T09:00",cmd.getTaskObject().getEndDateTime().toString());
+		assertEquals("2016-04-06T08:00",cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-06T09:00",cmd.getTaskObject().getEndDateTime().toString());
 		assertEquals("WEEKLY",cmd.getTaskObject().getInterval().getFrequency());
 		assertEquals(1,cmd.getTaskObject().getInterval().getTimeInterval());
 		assertEquals(LocalDateTime.MAX,cmd.getTaskObject().getInterval().getUntil());

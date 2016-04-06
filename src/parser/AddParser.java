@@ -2,7 +2,6 @@
 package parser;
 
 import common.TaskObject;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,10 +20,10 @@ public class AddParser extends CommandParser {
 	
 	/**
 	 * This method will take in the command and allocate the correct information
-	 * to task/date/time
+	 * to task/date/time.
 	 * 
 	 * @param input    
-	 * 				string input from user
+	 * 				string input from user.
 	 * @throws Exception 
 	 */
 	public TaskObject process(String input) throws Exception {
@@ -35,7 +34,7 @@ public class AddParser extends CommandParser {
 	
 	/**
 	 * This method will split string into task and date-time. Calls DateTimeParser 
-	 * for date-time string and sets task in AddParser class
+	 * for date-time string and sets task in AddParser class.
 	 * 
 	 * @param input
 	 * 				same input as process() method. not null.
@@ -72,12 +71,6 @@ public class AddParser extends CommandParser {
 	//for testing purposes
  	public String getTask() {
  		return _task;
- 	}
- 	
- 
- 	 	
- 	public void reset() {
- 		_task = null;
  	}
 
 	@Override

@@ -123,10 +123,4 @@ public class EditParser extends CommandParser {
 	public void resetList() {
 		list.clear();
 	}
-	
- 	public void reset() {
- 		setTask("");
- 		_startDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
- 		_endDateTime = LocalDateTime.of(LocalDate.MAX, LocalTime.MAX);
- 	}
 }

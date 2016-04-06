@@ -18,7 +18,6 @@ public class TimeParserTest {
 	public void testA() throws Exception {
 		TP.processTime("8.01pm");
 		assertEquals("20:01", TP.getTimeObject().toString());
-		reset();
 	}
 	
 	/*case 2: test timeparser ability to read in hhmm(am/pm) format*/
@@ -26,7 +25,6 @@ public class TimeParserTest {
 	public void testB() throws Exception {
 		TP.processTime("12.01am");
 		assertEquals("00:01", TP.getTimeObject().toString());
-		reset();
 	}
 	
 	/*case 3: test timeparser ability to read in hhmm(hr) format*/
@@ -34,7 +32,6 @@ public class TimeParserTest {
 	public void testC() throws Exception {
 		TP.processTime("12:34hrs");
 		assertEquals("12:34", TP.getTimeObject().toString());
-		reset();
 	}
 	
 	/*NEGATIVE PARTITION (random number without am/pm/hr)*/
@@ -64,11 +61,4 @@ public class TimeParserTest {
     public void testG() throws Exception {
 		TP.processTime("13.00am");
 	}
-	
-	private void reset() {
-		TP.resetTime();
-	}
-
-	
-
 }

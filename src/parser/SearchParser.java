@@ -117,12 +117,6 @@ public class SearchParser extends CommandParser {
  	}
 
 	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public int getIndex() {
 		return index;
 	}

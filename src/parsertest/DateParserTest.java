@@ -63,7 +63,7 @@ public class DateParserTest {
 	@Test
 	public void testG() throws Exception {
 		DP.parseDate("everyday");
-		assertEquals("2016-04-05", DP.getDateObject().toString());
+		assertEquals("2016-04-06", DP.getDateObject().toString());
 		reset();
 		
 		DP.parseDate("today");
@@ -97,7 +97,6 @@ public class DateParserTest {
 	//method resets the list and dates for testing purposes
 	private void reset() {
 		DP.resetDate();
-		DP.clearList();
 	}
 
 }

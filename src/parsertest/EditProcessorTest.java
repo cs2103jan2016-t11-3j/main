@@ -62,7 +62,6 @@ public class EditProcessorTest {
 	
 	private void reset() {
 		EP.resetList();
-		EP.reset();
 		Tempshit.resetAttributes();
 	}
 }
