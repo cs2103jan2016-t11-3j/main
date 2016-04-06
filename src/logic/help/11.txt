@@ -1,6 +1,5 @@
-Create a backup copy of the saved events/task
+Exiting the programme
 
-Enter “save as” followed by file to save a copy of the saved events/tasks list into the selected location.
+Enter “exit” or “quit”. 
 
-Usage Examples:
-save as C:\Program Files	Sets TaskFinder to save file containing task information at the folder Program Files in C:. This only happens once
+Data will automatically be saved to default file location before exiting.

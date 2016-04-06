@@ -1,3 +1,6 @@
-Undo the last command
+Change default save location
 
-Enter “undo”. This automatically restores the state of the task scheduler to what it was before the last command was entered. Do note that the “undo” command can only undo up to 3 actions before the most recent action.
+Enter “save to” followed by the path to set a new default save location
+
+Usage Examples:
+save to C:\Program Files	Sets TaskFinder to, by default, save files containing task information at the folder Program Files in C:

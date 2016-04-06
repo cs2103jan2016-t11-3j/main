@@ -19,6 +19,8 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonSyntaxException;
+
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
@@ -196,13 +198,13 @@ public class Logic {
 			setLastOutputTaskList(taskList);
 		} catch (FileNotFoundException e) {
 			// No file found in specified save location
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		} catch (DateTimeException e) {
-			e.printStackTrace();
-		}
+		} catch (JsonSyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 
 	// Sets the starting task ID value. This value should be larger than the
