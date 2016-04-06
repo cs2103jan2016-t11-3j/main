@@ -3,9 +3,11 @@ package parser;
 
 import common.AtfLogger;
 import common.TaskObject;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -13,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
 import parser.Constants.TaskType;
 
 
@@ -354,8 +357,8 @@ public class DateTimeParser {
 		startDate = DP.getDateObject();
 	
 		if (tasktype.equals(TaskType.event)) {
-			endDate = DP.getDateObject();	
-		}	
+			endDate = DP.getDateObject();
+		}
 	}
 
 	/**
@@ -378,7 +381,8 @@ public class DateTimeParser {
 				_freq = interval[1];
 			} else if (input.contains(" ")) {
 				String[] interval = input.split(" ");
-				_freq = interval[0];
+				_freq = getNextNearestDayInInterval();
+				//_freq = interval[0];
 			} else {
 				_freq = input;
 			}
@@ -386,6 +390,47 @@ public class DateTimeParser {
 			_freq = input;
 		}
 		return _freq;
+	}
+	
+	private String getNextNearestDayInInterval() {
+		int start = 0;
+		int now = LocalDate.now().getDayOfWeek().getValue();
+		for (int i = now; i < TO.getInterval().getByDayArray().length ; i++) {
+			if (TO.getInterval().getByDayArray()[i] == 1) {
+				start = i;
+			}
+		}
+		
+		if (start == 7 && TO.getInterval().getByDayArray()[7] == 0) {
+			//get from behind the now
+			for (int i = 1; i < now ; i++) {
+				if (TO.getInterval().getByDayArray()[i] == 1) {
+					start = i;
+				}
+			}
+		}
+		
+		return getDayInWeek(start);
+	}
+	
+	private String getDayInWeek(int index) {
+		if (index == 1) {
+			return "monday";
+		} else if (index == 2) {
+			return "tuesday";
+		} else if (index == 3) {
+			return "wednesday";
+		} else if (index == 4) {
+			return "thursday";
+		} else if (index == 5) {
+			return "friday";
+		} else if (index == 6) {
+			return "saturday";
+		} else if (index == 7) {
+			return "sunday";
+		} else {
+			return "";
+		}
 	}
 	
 	/**
