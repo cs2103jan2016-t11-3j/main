@@ -1,3 +1,5 @@
+//@@author A0130622X
+
 package GUI;
 
 import java.io.IOException;
@@ -94,6 +96,11 @@ public class MainController implements Initializable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML
 	public void handleKeyPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
