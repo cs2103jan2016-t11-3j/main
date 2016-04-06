@@ -425,16 +425,9 @@ public class Add {
 		if (addedInternal && addedExternal) {
 			String title = task.getTitle().concat(". ");
 			String text;
-			if (task.getIsRecurring()) {
-				text = MESSAGE_ADD_RECURRING.concat(title);
-				// "Recurring task added: -title-. "
-			} else {
-				text = MESSAGE_ADD_NON_RECURRING.concat(title);
-				// "Task added: - title-."
-			}
-			if (isOverdue) {
-				text = text.concat(MESSAGE_ADD_OVERDUE);
-			}
+			
+			text = concatenateTitleOutput(title);
+			text = concatenateOverdueOutput(text);
 			if (isClash) {
 				text = concatenateClashOutput(text);
 			}
@@ -447,6 +440,25 @@ public class Add {
 				logger.log(Level.WARNING, "task was not added, failure output created");
 			}
 		}
+	}
+	
+	private String concatenateTitleOutput(String title) {
+		String text;
+		if (task.getIsRecurring()) {
+			text = MESSAGE_ADD_RECURRING.concat(title);
+			// "Recurring task added: -title-. "
+		} else {
+			text = MESSAGE_ADD_NON_RECURRING.concat(title);
+			// "Task added: - title-."
+		}
+		return text;
+	}
+	
+	private String concatenateOverdueOutput(String text) {
+		if (isOverdue) {
+			text = text.concat(MESSAGE_ADD_OVERDUE);
+		}
+		return text;
 	}
 
 	private String concatenateClashOutput(String text) {
