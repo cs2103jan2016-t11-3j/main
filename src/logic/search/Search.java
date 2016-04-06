@@ -383,7 +383,7 @@ public class Search extends Display {
 		
 		taskDateTimeOutput.clear();
 
-		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
+		output.add(String.format(MESSAGE_RECURRENCE_TIMINGS_DISPLAY, searchIndex));
 		taskDateTimeOutput.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
 			try {
