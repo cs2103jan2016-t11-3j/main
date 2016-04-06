@@ -423,18 +423,22 @@ public class Add {
 
 	private void createOutput() {
 		if (addedInternal && addedExternal) {
-			String title = task.getTitle();
-			String text = MESSAGE_ADD.concat(title).concat(". ");
+			String title = task.getTitle().concat(". ");
+			String text;
 			if (task.getIsRecurring()) {
-				text = "Recurring ".concat(text);
-				// "Recurring task added: -task-. "
-			}
-			if (isClash) {
-				text = concatenateClashOutput(text);
+				text = MESSAGE_ADD_RECURRING.concat(title);
+				// "Recurring task added: -title-. "
+			} else {
+				text = MESSAGE_ADD_NON_RECURRING.concat(title);
+				// "Task added: - title-."
 			}
 			if (isOverdue) {
 				text = text.concat(MESSAGE_ADD_OVERDUE);
 			}
+			if (isClash) {
+				text = concatenateClashOutput(text);
+			}
+			
 			output.add(text);
 			logger.log(Level.INFO, "output created successfully");
 		} else {

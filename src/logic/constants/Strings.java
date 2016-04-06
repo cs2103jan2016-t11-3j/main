@@ -32,12 +32,13 @@ public class Strings {
 	public static final String MESSAGE_INVALID_FREQUENCY = "Invalid frequency";
 
 	// Add Constants
-	public static final String MESSAGE_ADD = "Task added: ";
+	public static final String MESSAGE_ADD_NON_RECURRING = "Task added: ";
+	public static final String MESSAGE_ADD_RECURRING = "Recurring task added: ";
 	public static final String MESSAGE_FAIL = "Failed to add task. ";
-	public static final String MESSAGE_CLASH = "Task: %1s clashes with ";
+	public static final String MESSAGE_CLASH = "\nTask: %1s clashes with ";
 	public static final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
 	public static final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
-	public static final String MESSAGE_ADD_OVERDUE = "Task added is overdue";
+	public static final String MESSAGE_ADD_OVERDUE = "Task added is overdue.";
 	public static final String MESSAGE_REQUEST_SAVE_LOCATION = "Error saving to file. Please enter \"save to\" followed by a valid file directory";
 
 	// Delete Constants

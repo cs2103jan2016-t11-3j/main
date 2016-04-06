@@ -90,7 +90,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: CE2. Task added is overdue");
+		expectedOutput.add("Task added: CE2. Task added is overdue.");
 
 		assertEquals(expectedOutput, actualOutput);
 
@@ -130,7 +130,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 2. Task: event 2 clashes with event 1. ");
+		expectedOutput.add("Task added: event 2. \nTask: event 2 clashes with event 1. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -184,7 +184,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 5. Task added is overdue");
+		expectedOutput.add("Task added: event 5. Task added is overdue.");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -202,7 +202,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 6. Task: event 6 clashes with event 5. Task added is overdue");
+		expectedOutput.add("Task added: event 6. Task added is overdue.\nTask: event 6 clashes with event 5. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -220,7 +220,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 7. Task: event 7 clashes with event 5. Task added is overdue");
+		expectedOutput.add("Task added: event 7. Task added is overdue.\nTask: event 7 clashes with event 5. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -238,7 +238,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 8. Task: event 8 clashes with event 5. Task added is overdue");
+		expectedOutput.add("Task added: event 8. Task added is overdue.\nTask: event 8 clashes with event 5. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -274,7 +274,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 10. Task: event 10 clashes with event 9. ");
+		expectedOutput.add("Task added: event 10. \nTask: event 10 clashes with event 9. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -292,7 +292,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 11. Task: event 11 clashes with event 10. ");
+		expectedOutput.add("Task added: event 11. \nTask: event 11 clashes with event 10. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -310,7 +310,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 12. Task: event 12 clashes with event 10. ");
+		expectedOutput.add("Task added: event 12. \nTask: event 12 clashes with event 10. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -387,7 +387,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Recurring Task added: event 16. ");
+		expectedOutput.add("Recurring task added: event 16. ");
 		assertEquals(expectedOutput, actualOutput);
 
 		ArrayList<LocalDateTimePair> expectedDateTimes = new ArrayList<LocalDateTimePair>();
@@ -428,7 +428,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Recurring Task added: event 17. Task: event 17 clashes with event 16. ");
+		expectedOutput.add("Recurring task added: event 17. \nTask: event 17 clashes with event 16. ");
 		assertEquals(expectedOutput, actualOutput);
 
 		assertTrue(add.getIsClash());
