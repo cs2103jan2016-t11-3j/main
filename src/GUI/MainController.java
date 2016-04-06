@@ -83,6 +83,8 @@ public class MainController implements Initializable {
 	private ListView<String> taskDateList;
 	@FXML
 	private Label recurTitle;
+	@FXML
+	private Label programName;
 
 	@FXML
 	// reads input on enter
@@ -164,7 +166,6 @@ public class MainController implements Initializable {
 	}
 
 	private void passInput() throws IOException {
-		System.out.println(_input);
 		if (_input.startsWith("help")) {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
@@ -240,7 +241,6 @@ public class MainController implements Initializable {
 			
 			taskDateList.getItems().clear();
 			taskDateList.setItems(items);
-			System.out.println(taskDateList.getItems());
 		} catch (NullPointerException e) {
 
 		}

@@ -110,12 +110,35 @@ public class Logic {
 		ArrayList<TaskObject> firstOutputTaskList = new ArrayList<TaskObject>();
 		ArrayList<String> firstOutput = new ArrayList<String>();
 
+		addOverdueTasksToFirstOutputTaskList(firstOutputTaskList);
+		addTasksDueTodayToFirstOutputTaskList(firstOutputTaskList);
+		if (firstOutputTaskList.isEmpty()) {
+			addIncompleteTasksToFirstOutputTaskList(firstOutputTaskList);
+		} else {
+			firstOutput.add(MESSAGE_WELCOME_TASKS_OVERDUE_TODAY);
+		}
+
+		if (firstOutputTaskList.isEmpty()) {
+			firstOutput.add(MESSAGE_WELCOME_EMPTY);
+		} else {
+			if (firstOutput.isEmpty()) {
+				firstOutput.add(MESSAGE_WELCOME_TASKS_INCOMPLETE);
+			}
+		}
+
+		setLastOutputTaskList(firstOutputTaskList);
+		setOutput(firstOutput);
+	}
+
+	private void addOverdueTasksToFirstOutputTaskList(ArrayList<TaskObject> firstOutputTaskList) {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getStatus().equals(STATUS_OVERDUE)) {
 				firstOutputTaskList.add(taskList.get(i));
 			}
 		}
+	}
 
+	private void addTasksDueTodayToFirstOutputTaskList(ArrayList<TaskObject> firstOutputTaskList) {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (!taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
 				if (taskList.get(i).getStartDateTime().toLocalDate().equals(LocalDate.now())) {
@@ -125,15 +148,14 @@ public class Logic {
 				}
 			}
 		}
+	}
 
-		if (firstOutputTaskList.isEmpty()) {
-			firstOutput.add(MESSAGE_WELCOME_EMPTY);
-		} else {
-			firstOutput.add(MESSAGE_WELCOME_TASKS);
+	private void addIncompleteTasksToFirstOutputTaskList(ArrayList<TaskObject> firstOutputTaskList) {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getStatus().equals(STATUS_INCOMPLETE)) {
+				firstOutputTaskList.add(taskList.get(i));
+			}
 		}
-
-		setLastOutputTaskList(firstOutputTaskList);
-		setOutput(firstOutput);
 	}
 
 	private boolean checkNotDuplicate(TaskObject task, ArrayList<TaskObject> firstOutputTaskList) {
