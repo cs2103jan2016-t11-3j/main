@@ -8,11 +8,14 @@ public final class Constants {
     public static final String DEFAULT_DIRECTORY = ".";
     public static final String ATF_DIRECTORY = "atf_files";
     
-    public static final String DATA_FILENAME = "data.txt";
+    public static final String FILENAME_DATA = "data.txt";
+    public static final String FILENAME_BACKUP_DATA = "atf_backup.json";
+    public static final Path FILEPATH_BACKUP_DATA = Paths
+            .get(DEFAULT_DIRECTORY, ATF_DIRECTORY , FILENAME_BACKUP_DATA);
     
     public static final String FILENAME_SAVEINFO = "saveInfo.txt";
     public static final Path FILEPATH_SAVEINFO = Paths.get(ATF_DIRECTORY, FILENAME_SAVEINFO);
-    public static final Path FILEPATH_DEFAULT_SAVE_ = Paths
+    public static final Path FILEPATH_DEFAULT_SAVE = Paths
             .get(DEFAULT_DIRECTORY, ATF_DIRECTORY , FILENAME_SAVEINFO);
     
     public static final String FILENAME_LOG = "log.txt";

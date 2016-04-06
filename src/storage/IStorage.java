@@ -63,9 +63,18 @@ public interface IStorage {
      * @throws FileNotFoundException No file found at the specified path
      * @throws JsonSyntaxException Specified file is not in correct format
      */
-    ArrayList<TaskObject> load(String directory, String fileName)
+    ArrayList<TaskObject> load(String filePath)
             throws InvalidPathException, IOException, FileNotFoundException, JsonSyntaxException;
     
+    /**
+     * Load from backup file.
+     * @return
+     * @throws InvalidPathException
+     * @throws JsonSyntaxException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    ArrayList<TaskObject> loadBackup() throws InvalidPathException, JsonSyntaxException, 
+            FileNotFoundException, IOException;
     
-
 }
