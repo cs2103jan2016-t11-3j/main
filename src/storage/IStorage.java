@@ -56,12 +56,12 @@ public interface IStorage {
      * Load from specified path.
      * 
      * @param directory
-     * @param fileName
+     * @param filePath The filePath of the datafile to be read.
      * @return
-     * @throws InvalidPathException The specified path is invalid
-     * @throws IOException Error reading from file
-     * @throws FileNotFoundException No file found at the specified path
-     * @throws JsonSyntaxException Specified file is not in correct format
+     * @throws InvalidPathException The specified path is invalid.
+     * @throws IOException Error reading from file.
+     * @throws FileNotFoundException No file found at the specified path.
+     * @throws JsonSyntaxException Specified file is not in correct format.
      */
     ArrayList<TaskObject> load(String filePath)
             throws InvalidPathException, IOException, FileNotFoundException, JsonSyntaxException;
@@ -69,10 +69,10 @@ public interface IStorage {
     /**
      * Load from backup file.
      * @return
-     * @throws InvalidPathException
-     * @throws JsonSyntaxException
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws InvalidPathException The specified path is invalid.
+     * @throws IOException Error reading from file.
+     * @throws FileNotFoundException No file found at the specified path.
+     * @throws JsonSyntaxException Specified file is not in correct format.
      */
     ArrayList<TaskObject> loadBackup() throws InvalidPathException, JsonSyntaxException, 
             FileNotFoundException, IOException;

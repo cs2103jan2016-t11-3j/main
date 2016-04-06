@@ -44,9 +44,7 @@ public class TaskData {
         }
         Logger logger = AtfLogger.getLogger();
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(taskList);
         writer.write(json + NEW_LINE);
         writer.close();
