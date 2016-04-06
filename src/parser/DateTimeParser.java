@@ -398,6 +398,7 @@ public class DateTimeParser {
 		for (int i = now; i < TO.getInterval().getByDayArray().length ; i++) {
 			if (TO.getInterval().getByDayArray()[i] == 1) {
 				start = i;
+				break;
 			}
 		}
 		
@@ -406,6 +407,7 @@ public class DateTimeParser {
 			for (int i = 1; i < now ; i++) {
 				if (TO.getInterval().getByDayArray()[i] == 1) {
 					start = i;
+					break;
 				}
 			}
 		}
