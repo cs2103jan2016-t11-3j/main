@@ -306,22 +306,50 @@ public class Edit {
 			
 			if (isEditStartDateOccurrence && isEditStartTimeOccurrence) {
 				timing.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
+				if (originalStartDate.equals(editStartDate)) {
+					isEditStartDateOccurrence = false;
+				}
+				if (originalStartTime.equals(editStartTime)) {
+					isEditStartTimeOccurrence = false;
+				}
 			} else {
 				if (isEditStartDateOccurrence) {
-					timing.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+					if (originalStartDate.equals(editStartDate)) {
+						isEditStartDateOccurrence = false;
+					} else {
+						timing.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
+					}
 				}
 				if (isEditStartTimeOccurrence) {
-					timing.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
+					if (originalStartTime.equals(editStartTime)) {
+						isEditStartTimeOccurrence = false;
+					} else {
+						timing.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
+					}
 				}
 			}
 			if (isEditEndDateOccurrence && isEditEndTimeOccurrence) {
 				timing.setEndDateTime(LocalDateTime.of(editEndDate, editEndTime));
+				if (originalEndDate.equals(editEndDate)) {
+					isEditEndDateOccurrence = false;
+				}
+				if (originalEndTime.equals(editEndTime)) {
+					isEditEndTimeOccurrence = false;
+				}
 			} else {
 				if (isEditEndDateOccurrence) {
-					timing.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+					if (originalEndDate.equals(editEndDate)) {
+						isEditEndDateOccurrence = false;
+					} else {
+						timing.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
+					}
 				}
 				if (isEditEndTimeOccurrence) {
-					timing.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
+					if (originalEndTime.equals(editEndTime)) {
+						isEditEndTimeOccurrence = false;
+					} else {
+						timing.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
+					}
 				}
 			}
 
