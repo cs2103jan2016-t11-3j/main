@@ -221,9 +221,9 @@ public class Logic {
 		Comparator<TaskObject> dateComparator = new Comparator<TaskObject>() {
 			@Override
 			public int compare(final TaskObject o1, final TaskObject o2) {
-				if (o1.getStatus() == o2.getStatus()) {
-					if (o1.getStartDateTime() == o2.getStartDateTime()) {
-						if (o1.getEndDateTime() == o2.getEndDateTime()) {
+				if (o1.getStatus().equals(o2.getStatus())) {
+					if (o1.getStartDateTime().equals(o2.getStartDateTime())) {
+						if (o1.getEndDateTime().equals(o2.getEndDateTime())) {
 							return o1.getTitle().compareTo(o2.getTitle());
 						}
 						return o1.getEndDateTime().compareTo(o2.getEndDateTime());

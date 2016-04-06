@@ -68,7 +68,7 @@
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin></Label>
-                  <ListView fx:id="taskDateList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="taskDateList" onKeyPressed="#handleKeyPressed" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                </children>
                <BorderPane.margin>
                   <Insets left="10.0" />
