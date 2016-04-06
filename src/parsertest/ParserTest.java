@@ -449,6 +449,19 @@ public class ParserTest {
 		reset();
 	}
 	
+	//--Test editing start and end DateTime
+	@Test
+	public void testEdit7() throws Exception {
+		Parser tempParser = new Parser("EDIT all 2 from 755pm to 9pm", 1);
+		CommandObject cmd = new CommandObject();
+		cmd = tempParser.run();
+		assertEquals(3, cmd.getCommandType());
+		assertEquals("", cmd.getTaskObject().getTitle());
+		assertEquals("+999999999-12-31T19:55",cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("+999999999-12-31T21:00",cmd.getTaskObject().getEndDateTime().toString());
+		reset();
+	}
+	
 	//--Test saving file as another name
 	@Test
 	public void testSave() throws Exception {

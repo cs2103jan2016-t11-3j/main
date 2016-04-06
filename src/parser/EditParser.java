@@ -2,9 +2,7 @@
 package parser;
 
 import common.TaskObject;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +22,6 @@ public class EditParser extends CommandParser {
 
 	private TaskObject TO = new TaskObject();
 
-	
 	private int _index = -1;
 	
 	/**
@@ -72,15 +69,14 @@ public class EditParser extends CommandParser {
 	 * @param input
 	 * 				string for edit command. non-null.
 	 */
-	public void convertToArray(String input) {
-		for (String temp : input.split(" ")) {
-			list.add(temp);
+	private void convertToArray(String input) {
+		int index = 0;
+		index = input.indexOf(" ");
+		if (index != -1) {
+			_index = Integer.parseInt(input.substring(0, index));	
+		} else {
+			_index = Integer.parseInt(input);
 		}
-		//remove "edit" and "number"
-		//list.remove(0);
-		String index = list.get(0);
-		_index = Integer.parseInt(index);
-		list.remove(0); 	// REMOVED THIS BECAUSE EDIT FUNCTION NEEDS THE INDEX NUMBER
 	}
 	
 	/**
@@ -91,7 +87,7 @@ public class EditParser extends CommandParser {
 	 * 				string input for editing. non null
 	 * 				
 	 */
-	public String cleanString(String input) { //remove the number
+	private String cleanString(String input) { //remove the number
 		if (input.matches("[\\d]+")) {
 			return "";
 		}
@@ -118,9 +114,5 @@ public class EditParser extends CommandParser {
 	
 	public int getIndex() {
 		return _index;
-	}
- 	
-	public void resetList() {
-		list.clear();
 	}
 }
