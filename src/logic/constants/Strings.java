@@ -155,6 +155,7 @@ public class Strings {
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL = "Interval is invalid";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_UNTIL = "End of Recurrence is invalid";
+	public static final String MESSAGE_RECURRENCE_EXCEPTION_CORRUPTED = "Corrupted task: %1s removed";
 
 	// Load Exception constants
 	public static final String MESSAGE_LOAD_EXCEPTION_IO = "Error reading information from external file storage";

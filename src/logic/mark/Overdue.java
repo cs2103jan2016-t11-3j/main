@@ -70,7 +70,7 @@ public class Overdue extends Mark {
 			if (!taskList.get(i).getIsRecurring()) {
 				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
 					if (!taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
-						isOverdue = performCheckOverdueDeadline(taskList.get(i));
+						isOverdue = performCheckOverdue(taskList.get(i));
 						if (isOverdue) {
 							taskList.get(i).setStatus(STATUS_OVERDUE);
 							logger.log(Level.INFO, "set status of non-recurring deadline to overdue");
@@ -79,7 +79,7 @@ public class Overdue extends Mark {
 				}
 				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 					if (!taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
-						isOverdue = performCheckOverdueEvent(taskList.get(i));
+						isOverdue = performCheckOverdue(taskList.get(i));
 						if (isOverdue) {
 							taskList.get(i).setStatus(STATUS_OVERDUE);
 							logger.log(Level.INFO, "set status of non-recurring event to overdue");
@@ -90,21 +90,11 @@ public class Overdue extends Mark {
 		}
 	}
 
-	private static boolean performCheckOverdueDeadline(TaskObject task) {
-		LocalDateTime deadline = task.getStartDateTime();
-		assert (!deadline.isEqual(LocalDateTime.MAX));
+	private static boolean performCheckOverdue(TaskObject task) {
+		LocalDateTime startDateTime = task.getStartDateTime();
+		assert (!startDateTime.isEqual(LocalDateTime.MAX));
 
-		if (deadline.isBefore(LocalDateTime.now())) {
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean performCheckOverdueEvent(TaskObject task) {
-		LocalDateTime eventEndTime = task.getEndDateTime();
-		assert (!eventEndTime.isEqual(LocalDateTime.MAX));
-
-		if (eventEndTime.isBefore(LocalDateTime.now())) {
+		if (startDateTime.isBefore(LocalDateTime.now())) {
 			return true;
 		}
 		return false;
