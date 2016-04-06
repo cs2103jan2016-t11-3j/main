@@ -23,9 +23,9 @@ public class saveTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.DATA_FILENAME);
+        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.FILENAME_DATA);
         Path path2 = Paths.get(Constants.DEFAULT_DIRECTORY, 
-                Constants.ATF_DIRECTORY, Constants.DATA_FILENAME);
+                Constants.ATF_DIRECTORY, Constants.FILENAME_DATA);
         Files.deleteIfExists(path1);
         Files.deleteIfExists(path2);
         Files.deleteIfExists(Constants.FILEPATH_SAVEINFO);
@@ -41,9 +41,9 @@ public class saveTest {
 
     @After
     public void tearDown() throws Exception {
-        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.DATA_FILENAME);
+        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.FILENAME_DATA);
         Path path2 = Paths.get(Constants.DEFAULT_DIRECTORY, 
-                Constants.ATF_DIRECTORY, Constants.DATA_FILENAME);
+                Constants.ATF_DIRECTORY, Constants.FILENAME_DATA);
         Files.deleteIfExists(path1);
         Files.deleteIfExists(path2);
         Files.deleteIfExists(Constants.FILEPATH_SAVEINFO);

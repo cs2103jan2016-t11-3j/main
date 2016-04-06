@@ -40,6 +40,7 @@ public class FileStorageTest {
     public static ArrayList<TaskObject> taskList1 = new ArrayList<TaskObject>();
     public static ArrayList<TaskObject> taskList2 = new ArrayList<TaskObject>();
     public static String moveDir = Paths.get(Constants.ATF_DIRECTORY).toString();
+    IStorage storage = FileStorage.getInstance();
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -58,13 +59,13 @@ public class FileStorageTest {
     }
 
     private static void deleteInfo() throws IOException {
-        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.DATA_FILENAME);
+        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.FILENAME_DATA);
         Path path2 = Paths.get(moveDir , "test");
-        Path path3 = Paths.get(moveDir , Constants.DATA_FILENAME);
+        Path path3 = Paths.get(moveDir , Constants.FILENAME_DATA);
         Files.deleteIfExists(path1);
         Files.deleteIfExists(path2);
         Files.deleteIfExists(path3);
-        Files.deleteIfExists(Constants.FILEPATH_DEFAULT_SAVE_);
+        Files.deleteIfExists(Constants.FILEPATH_DEFAULT_SAVE);
     }
 
     /**
@@ -72,6 +73,7 @@ public class FileStorageTest {
      */
     @Before
     public void setUp() throws Exception {
+        storage = null;
     }
 
     /**
@@ -130,11 +132,18 @@ public class FileStorageTest {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
         storage.createCopy(moveDir, "test");
-        ArrayList<TaskObject> actualTaskList = 
-                storage.load(moveDir , "test");
+        String path = Paths.get(moveDir, "test").toString();
+        ArrayList<TaskObject> actualTaskList = storage.load(path);
         AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList1 , actualTaskList);
     }
 
+    @Test (expected = InvalidPathException.class)
+    public void testLoadFrom() throws InvalidPathException, JsonSyntaxException, FileNotFoundException, IOException {
+        IStorage storage = FileStorage.getInstance();
+        String path = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.FILENAME_DATA).toString();
+        storage.load(path);
+    }
+    
     /**
      * Tests that the preferred directory to save files can be changed and storage reads from the 
      * new preferred directory subsequently.

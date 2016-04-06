@@ -46,7 +46,7 @@ public class FilePath {
         if (!directoryValid(directory)) {
             throw new InvalidPathException(directory, "Cannot be used");
         }
-        Path path = Paths.get(directory, Constants.DATA_FILENAME);
+        Path path = Paths.get(directory, Constants.FILENAME_DATA);
         return path.toString();
     }
     
@@ -83,7 +83,7 @@ public class FilePath {
      * @throws IOException Error creating the file containing the save location
      */
     static void initializeDefaultSave() throws IOException {
-        if(!Files.exists(Constants.FILEPATH_DEFAULT_SAVE_)) {
+        if(!Files.exists(Constants.FILEPATH_DEFAULT_SAVE)) {
             changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
         }
     }

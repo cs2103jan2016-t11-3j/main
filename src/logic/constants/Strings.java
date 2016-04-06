@@ -21,6 +21,7 @@ public class Strings {
 	public static final String MESSAGE_BY_TODAY = "by end of today";
 	public static final String MESSAGE_WELCOME_TASKS = "Tasks overdue and due today";
 	public static final String MESSAGE_WELCOME_EMPTY = "No tasks overdue and due today";
+	public static final String MESSAGE_FAILED_PROCESSING = "Failed to process input";
 
 	// Recurring/Interval Constants
 	public static final String FREQ_HOURLY = "HOURLY";
@@ -153,6 +154,11 @@ public class Strings {
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL = "Interval is invalid";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_UNTIL = "End of Recurrence is invalid";
+	
+	// Load Exception constants
+	public static final String MESSAGE_LOAD_EXCEPTION_IO = "Error reading information from external file storage";
+	public static final String MESSAGE_LOAD_EXCEPTION_FNF = "Saved storage file not found";
+	public static final String MESSAGE_LOAD_EXCEPTION_JSON = "Error interpreting information from external file storage";
 
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";

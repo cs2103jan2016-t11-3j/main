@@ -4,10 +4,6 @@
 	-fx-background-size: 100% 100%; 
 	-fx-border-radius: 20px;
 }
-@font-face {
-	font-family: Abel;
-	src: url(Abel-Regular.ttf);
-}
 
 #taskTable {
 	-fx-border-color: #78C0A8; 
@@ -18,6 +14,7 @@
 
 #taskTable .column-header .label {
 	-fx-font-weight: bold;
+	-fx-font-family: 'Ubuntu Light';
 	-fx-text-fill: white;
 }
 
@@ -67,10 +64,12 @@
 
 #userInput {
 	-fx-background-radius: 0.5em;
+	-fx-font-family: 'Abel';
+	-fx-font-size: 16;
 }
 
 #taskDateList {
-	-fx-font-family: 'Agency FB';
+	-fx-font-family: 'Abel';
 	-fx-font-size: 17; 
 	
 }
@@ -83,10 +82,17 @@
 	-fx-border-width: 3px; 
 }
 
+#sidePanel .scroll-bar:vertical .increment-arrow,
+#sidePanel .scroll-bar:vertical .decrement-arrow,
+#sidePanel .scroll-bar:vertical .increment-button,
+#sidePanel .scroll-bar:vertical .decrement-button {
+    -fx-padding:0;
+}
+
 #recurTitle {
 	-fx-alignment: CENTER; 
-	-fx-font-size: 20; 
-	-fx-font-family: 'Agency FB Bold';	
+	-fx-font-size: 18; 
+	-fx-font-family: 'Abel';	
 	-fx-text-fill: #5e412f;
 }
 .doneTasks {
@@ -99,4 +105,24 @@
 
 .overdueTasks {
 	-fx-background-color: lightpink;
+}
+
+@font-face {
+	font-family: Abel;
+	src: url(Abel-Regular.ttf);
+}
+
+@font-face {
+	font-family: Ubuntu Regular;
+	src: url(Ubuntu-Regular.ttf);
+}
+
+@font-face {
+	font-family: Ubuntu Light;
+	src: url(Ubuntu-Light.ttf);
+}
+
+@font-face {
+	font-family: Ubuntu Medium;
+	src: url(Ubuntu-Medium.ttf);
 }
