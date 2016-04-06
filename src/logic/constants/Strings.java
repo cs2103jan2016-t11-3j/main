@@ -151,6 +151,7 @@ public class Strings {
 	public static final String MESSAGE_RECURRENCE_EXCEPTION = "Error handling recurring task: %1s";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL = "Interval is invalid";
+	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_UNTIL = "End of Recurrence is invalid";
 
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";

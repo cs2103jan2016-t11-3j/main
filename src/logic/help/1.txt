@@ -1,5 +1,6 @@
-Enter “add” <event/floating task description>
-Enter “add” <event/floating task description> <start/end date time> 
+Adding an Event/Deadline/Floating task
+Enter “add” <event/deadline/floating task description>
+Enter “add” <event/deadline/floating task description> <start/end date time> 
 
 Usage Examples:
 add Dinner with John 7pm - 8pm	
