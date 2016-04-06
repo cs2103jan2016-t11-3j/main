@@ -1,3 +1,5 @@
+//@@author A0124636H
+
 package logic;
 
 import common.*;
@@ -28,9 +30,10 @@ import com.sun.media.jfxmedia.logging.Logger;
  * new CommandFacade class is initialised with each new user input, and all relevant arguments are passed to
  * this class. The variables that will be actually used depends on the input of the user.
  * 
- * @author RuiBin
+ * @author RuiBin, ChongYan
  *
  */
+
 public class CommandFacade {
 
 	private ArrayList<TaskObject> taskList;
@@ -98,7 +101,7 @@ public class CommandFacade {
 		// + undoList.size() + ", redo size = " + redoList.size());
 		// System.out.println("commandObj command type = " +
 		// commandObj.getCommandType());
-		// if (taskObj != null) printTaskObjectFields(taskObj);
+		//printTaskObjectFields(taskObj);
 		// System.out.println("commandObj index = " + commandObj.getIndex());
 		// System.out.println();
 
@@ -152,6 +155,8 @@ public class CommandFacade {
 		filterLastOutputTaskList();
 	}
 
+//@@author A0124052X
+	
 	// hides completed tasks if command is not "view done"
 	private void filterLastOutputTaskList() {
 		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == -1)
@@ -185,6 +190,8 @@ public class CommandFacade {
 		setLastOutputTaskList(newLastOutputTaskList);
 	}
 
+	
+//@@author A0124636H
 	// ----------------------- FUNCTIONS -------------------------
 
 	/**

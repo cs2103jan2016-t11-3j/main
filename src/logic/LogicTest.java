@@ -1,3 +1,5 @@
+//@@author A0124636H
+
 package logic;
 
 import static org.junit.Assert.*;
@@ -77,6 +79,8 @@ public class LogicTest {
 		assertEquals(2, logic.getLastOutputTaskList().size());
 		assertEquals(6, logic.getTaskList().get(1).getTaskDateTimes().size());
 	}
+	
+//@@author A0124052X
 	
 	@Test // Test quick delete
 	public void testAF() {

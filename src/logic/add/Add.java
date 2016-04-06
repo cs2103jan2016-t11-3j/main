@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic.add;
 
 import logic.*;
@@ -11,11 +13,9 @@ import java.util.ArrayList;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.logging.*;
-import java.io.File;
 
 import common.TaskObject;
 
-import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
 /**
@@ -362,6 +362,8 @@ public class Add {
 	 * Group of functions for addition of task
 	 */
 
+//@@author A0124636H
+	
 	// For processing undo of deletion of a single occurrence
 	private void addSingleOccurrence() {
 		ArrayList<LocalDateTimePair> timings = task.getTaskDateTimes();
@@ -380,6 +382,8 @@ public class Add {
 
 	}
 
+//@@author A0124052X
+	
 	private void addTask() throws NullPointerException {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;

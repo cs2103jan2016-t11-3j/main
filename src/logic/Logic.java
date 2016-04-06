@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic;
 
 import parser.*;
@@ -196,6 +198,8 @@ public class Logic {
 		}
 		return true;
 	}
+	
+//@@author A0124636H
 
 	/**
 	 * Constructor called by Undo/Redo. This is a secondary logic class which only performs one operation
@@ -215,6 +219,8 @@ public class Logic {
 		this.redoList = redoList;
 		this.lastOutputTaskList = taskList;
 	}
+	
+//@@author A0130622X
 
 	// sorts lastOutputTaskList by Date
 	public void sortOutputByDate() {
@@ -235,6 +241,8 @@ public class Logic {
 		};
 		Collections.sort(lastOutputTaskList, dateComparator);
 	}
+	
+//@@author A0124636H
 
 	/**
 	 * Main processing component of AdultTaskFinder. All user inputs will be passed through this command,
@@ -255,6 +263,8 @@ public class Logic {
 		}
 	}
 
+//@@author A0124052X
+	
 	/**
 	 * Internal method which is called during the initialisation of Logic object. Purpose of this method is to
 	 * call storage and retrieve all existing task information from the external file source, if available
@@ -274,7 +284,14 @@ public class Logic {
 		taskList = storage.load();
 		setLastOutputTaskList(taskList);
 	}
+	
+	// Checks for overdue tasks at the start when the program is first run
+	private void checkOverdue() {
+		Overdue.markAllOverdueTasks(taskList);
+	}
 
+//@@author A0124636H
+	
 	// Sets the starting task ID value. This value should be larger than the
 	// current largest task ID value in the task list so as to avoid overlap.
 	private void setStartingTaskId() {
@@ -287,11 +304,6 @@ public class Logic {
 		}
 
 		this.taskId = largestTaskId + 1;
-	}
-
-	// Checks for overdue tasks at the start when the program is first run
-	private void checkOverdue() {
-		Overdue.markAllOverdueTasks(taskList);
 	}
 
 	/**

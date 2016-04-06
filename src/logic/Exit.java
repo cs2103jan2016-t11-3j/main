@@ -1,3 +1,5 @@
+//@@author A0124636H
+
 package logic;
 
 public class Exit {

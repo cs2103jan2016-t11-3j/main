@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic.delete;
 
 import logic.*;
@@ -127,6 +129,8 @@ public class DeleteTest {
 		assertEquals(expectedOutput, actualOutput);
 	}
 
+//@@author A0124636H
+	
 	@Test
 	// Delete all
 	public void testDeleteAll() {
