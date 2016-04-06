@@ -64,7 +64,7 @@ public class ParserTest {
 		cmd = tempParser.run();
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", cmd.getTaskObject().getTitle());
-		assertEquals("2016-04-06T09:00",cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-07T09:00",cmd.getTaskObject().getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, cmd.getTaskObject().getEndDateTime());
 		assertEquals("incomplete", cmd.getTaskObject().getStatus());
 		assertEquals("deadline", cmd.getTaskObject().getCategory());
@@ -79,7 +79,7 @@ public class ParserTest {
 		cmd = tempParser.run();
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("homework IE2100", cmd.getTaskObject().getTitle());
-		assertEquals("2016-04-06T23:59:59.999999999",cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-07T23:59:59.999999999",cmd.getTaskObject().getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, cmd.getTaskObject().getEndDateTime());
 		assertEquals("incomplete", cmd.getTaskObject().getStatus());
 		assertEquals("deadline", cmd.getTaskObject().getCategory());
@@ -106,13 +106,13 @@ public class ParserTest {
 	//--Test adding deadline with time only
 	@Test
 	public void testAdd6() throws Exception {
-		Parser tempParser = new Parser("add prep 5pm lecture by 9am", 1);
+		Parser tempParser = new Parser("add prep 5pm lecture by 12.10pm", 1);
 		CommandObject cmd = new CommandObject();
 		cmd = tempParser.run();
 		assertEquals(1, tempParser.getCommandType());
 		
 		assertEquals("prep 5pm lecture", cmd.getTaskObject().getTitle());
-		assertEquals("2016-04-05T09:00",cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-06T12:10",cmd.getTaskObject().getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, cmd.getTaskObject().getEndDateTime());
 		assertEquals("incomplete", cmd.getTaskObject().getStatus());
 		assertEquals("deadline", cmd.getTaskObject().getCategory());
@@ -239,7 +239,7 @@ public class ParserTest {
 		cmd = tempParser.run();
 		assertEquals(1, tempParser.getCommandType());
 		assertEquals("play dota", cmd.getTaskObject().getTitle());
-		assertEquals("2016-04-05T23:00",cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-06T23:00",cmd.getTaskObject().getStartDateTime().toString());
 		assertEquals("DAILY",cmd.getTaskObject().getInterval().getFrequency());
 		assertEquals(1,cmd.getTaskObject().getInterval().getTimeInterval());
 		assertEquals("incomplete", cmd.getTaskObject().getStatus());
@@ -282,7 +282,7 @@ public class ParserTest {
 		cmd = tempParser.run();
 		assertEquals(2, cmd.getCommandType());
 		assertEquals("", tempParser.getTask());
-		assertEquals("2016-04-05T23:59:59.999999999", cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-06T23:59:59.999999999", cmd.getTaskObject().getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, cmd.getTaskObject().getEndDateTime());
 		reset();
 	}

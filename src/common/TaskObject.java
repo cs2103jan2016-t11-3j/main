@@ -162,6 +162,10 @@ public class TaskObject implements Comparable<TaskObject> {
 	public void addToTaskDateTimes(LocalDateTimePair pair) {
 		this.taskDateTimes.add(pair);
 	}
+	
+	public void addToTaskDateTimes(int index, LocalDateTimePair pair) {
+		this.taskDateTimes.add(index, pair);
+	}
 
 	public void removeFromTaskDateTimes(int index) {
 		this.taskDateTimes.remove(index);

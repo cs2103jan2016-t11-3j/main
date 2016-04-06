@@ -1,7 +1,5 @@
 package logic.constants;
 
-import static logic.constants.Strings.MESSAGE_START_DATE_FOR_OCCURRENCE_EDITED;
-
 import common.TaskObject;
 
 public class Strings {
@@ -23,6 +21,7 @@ public class Strings {
 	public static final String MESSAGE_BY_TODAY = "by end of today";
 	public static final String MESSAGE_WELCOME_TASKS = "Tasks overdue and due today";
 	public static final String MESSAGE_WELCOME_EMPTY = "No tasks overdue and due today";
+	public static final String MESSAGE_FAILED_PROCESSING = "Failed to process input";
 
 	// Recurring/Interval Constants
 	public static final String FREQ_HOURLY = "HOURLY";
@@ -34,12 +33,13 @@ public class Strings {
 	public static final String MESSAGE_INVALID_FREQUENCY = "Invalid frequency";
 
 	// Add Constants
-	public static final String MESSAGE_ADD = "Task added: ";
+	public static final String MESSAGE_ADD_NON_RECURRING = "Task added: ";
+	public static final String MESSAGE_ADD_RECURRING = "Recurring task added: ";
 	public static final String MESSAGE_FAIL = "Failed to add task. ";
-	public static final String MESSAGE_CLASH = "Task: %1s clashes with ";
+	public static final String MESSAGE_CLASH = "\nTask: %1s clashes with ";
 	public static final String MESSAGE_INVALID_TIME = "Reason: Invalid time input.";
 	public static final String MESSAGE_NULL_POINTER = "Reason: No object available to access.";
-	public static final String MESSAGE_ADD_OVERDUE = "Task added is overdue";
+	public static final String MESSAGE_ADD_OVERDUE = "Task added is overdue.";
 	public static final String MESSAGE_REQUEST_SAVE_LOCATION = "Error saving to file. Please enter \"save to\" followed by a valid file directory";
 
 	// Delete Constants
@@ -61,32 +61,49 @@ public class Strings {
 
 	// Edit Constants
 	public static final String MESSAGE_TITLE_EDIT = "Title edited from '%1s' to '%2s'. ";
+	
 	public static final String MESSAGE_DATE_ADD = "Added date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_DATE_EDIT = "Date edited from '%1s' to '%2s'. ";
+	public static final String MESSAGE_DATE_FOR_OCCURRENCE_ADD = "Added date '%1s' to occurrence %2s. ";
+	public static final String MESSAGE_DATE_FOR_OCCURRENCE_EDIT = "Date of occurrence %1s edited from '%2s' to %3s'. ";
+	public static final String MESSAGE_DATE_FOR_ALL_OCCURRENCES_ADD = "Added date '%1s' to all occurrences. ";
 	public static final String MESSAGE_DATE_FOR_ALL_OCCURRENCES_EDIT = "All dates edited to '%1s'. ";
+	
 	public static final String MESSAGE_TIME_ADD = "Added time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_TIME_EDIT = "Time edited from '%1s' to '%2s'. ";
+	public static final String MESSAGE_TIME_FOR_OCCURRENCE_ADD = "Added time '%1s' to occurrence %2s. ";
+	public static final String MESSAGE_TIME_FOR_OCCURRENCE_EDIT = "TIme of occurrence %1s edited from '%2s' to %3s'. ";
+	public static final String MESSAGE_TIME_FOR_ALL_OCCURRENCES_ADD = "Added time '%1s' to all occurrences. ";
 	public static final String MESSAGE_TIME_FOR_ALL_OCCURRENCES_EDIT = "All times edited to '%1s'. ";
+	
 	public static final String MESSAGE_START_DATE_ADD = "Added start date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_START_DATE_EDIT = "Start date edited from '%1s' to '%2s'. ";
-	public static final String MESSAGE_START_DATE_FOR_OCCURRENCE_ADDED = "Added start date '%1s' to occurrence %2s. ";
-	public static final String MESSAGE_START_DATE_FOR_OCCURRENCE_EDITED = "Start date of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_START_DATE_FOR_OCCURRENCE_ADD = "Added start date '%1s' to occurrence %2s. ";
+	public static final String MESSAGE_START_DATE_FOR_OCCURRENCE_EDIT = "Start date of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_ADD = "Added start date '%1s' to all occurrences. ";
 	public static final String MESSAGE_START_DATE_FOR_ALL_OCCURRENCES_EDIT = "All start dates edited to '%1s'. ";
+	
 	public static final String MESSAGE_START_TIME_ADD = "Added start time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_START_TIME_EDIT = "Start time edited from '%1s' to '%2s'. ";
-	public static final String MESSAGE_START_TIME_FOR_OCCURRENCE_ADDED = "Added start time '%1s' to occurrence %2s. ";
-	public static final String MESSAGE_START_TIME_FOR_OCCURRENCE_EDITED = "Start time of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_START_TIME_FOR_OCCURRENCE_ADD = "Added start time '%1s' to occurrence %2s. ";
+	public static final String MESSAGE_START_TIME_FOR_OCCURRENCE_EDIT = "Start time of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_ADD = "Added start time '%1s' to all occurrences. ";
 	public static final String MESSAGE_START_TIME_FOR_ALL_OCCURRENCES_EDIT = "All start times edited to '%1s'. ";
+	
 	public static final String MESSAGE_END_DATE_ADD = "Added end date '%1s' to task '%2s'. ";
 	public static final String MESSAGE_END_DATE_EDIT = "End date edited from '%1s' to '%2s'. ";
-	public static final String MESSAGE_END_DATE_FOR_OCCURRENCE_ADDED = "Added end date '%1s' to occurrence %2s. ";
-	public static final String MESSAGE_END_DATE_FOR_OCCURRENCE_EDITED = "End date of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_END_DATE_FOR_OCCURRENCE_ADD = "Added end date '%1s' to occurrence %2s. ";
+	public static final String MESSAGE_END_DATE_FOR_OCCURRENCE_EDIT = "End date of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_END_DATE_FOR_ALL_OCCURRENCES_ADD = "Added end date '%1s' to all occurrences. ";
 	public static final String MESSAGE_END_DATE_FOR_ALL_OCCURRENCES_EDIT = "All end dates edited to '%1s'. ";
+	
 	public static final String MESSAGE_END_TIME_ADD = "Added end time '%1s' to task '%2s'. ";
 	public static final String MESSAGE_END_TIME_EDIT = "End time edited from '%1s' to '%2s'. ";
-	public static final String MESSAGE_END_TIME_FOR_OCCURRENCE_ADDED = "Added end time '%1s' to occurrence %2s. ";
-	public static final String MESSAGE_END_TIME_FOR_OCCURRENCE_EDITED = "End time of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_END_TIME_FOR_OCCURRENCE_ADD = "Added end time '%1s' to occurrence %2s. ";
+	public static final String MESSAGE_END_TIME_FOR_OCCURRENCE_EDIT = "End time of occurrence %1s edited from '%2s' to '%3s'. ";
+	public static final String MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_ADD = "Added end time '%1s' to all occurrences. ";
 	public static final String MESSAGE_END_TIME_FOR_ALL_OCCURRENCES_EDIT = "All end times edited to '%1s'. ";
+	
 	public static final String MESSAGE_INTERVAL_EDIT = "Interval edited. ";
 	public static final String MESSAGE_NO_EDIT = "No edits have been made.";
 	public static final String MESSAGE_NO_SUCH_OCCURRENCE_EXISTS = "No such occurrence exists. ";
@@ -137,6 +154,11 @@ public class Strings {
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS = "Invalid status to change to";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_INTERVAL = "Interval is invalid";
 	public static final String MESSAGE_RECURRENCE_EXCEPTION_INVALID_UNTIL = "End of Recurrence is invalid";
+	
+	// Load Exception constants
+	public static final String MESSAGE_LOAD_EXCEPTION_IO = "Error reading information from external file storage";
+	public static final String MESSAGE_LOAD_EXCEPTION_FNF = "Saved storage file not found";
+	public static final String MESSAGE_LOAD_EXCEPTION_JSON = "Error interpreting information from external file storage";
 
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";

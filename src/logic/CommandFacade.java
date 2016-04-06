@@ -202,6 +202,7 @@ public class CommandFacade {
 		} else {
 			addToList(commandObj, isAddSingleOccurrence, undoList);
 		}
+		setLastSearchedIndex(-1);
 	}
 
 	/**
@@ -356,6 +357,7 @@ public class CommandFacade {
 	private void saveFunction() {
 		Save save = new Save(taskObj, taskList);
 		setOutput(save.run());
+		setLastSearchedIndex(-1);
 	}
 
 	/**
@@ -375,6 +377,7 @@ public class CommandFacade {
 		String helpSearchKey = taskObj.getTitle();
 		Help help = new Help(helpSearchKey);
 		setOutput(help.run());
+		setLastSearchedIndex(-1);
 	}
 
 	/**
@@ -384,6 +387,7 @@ public class CommandFacade {
 		Done done = new Done(commandObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
 		setLastOutputTaskList(taskList);
+		setLastSearchedIndex(-1);
 
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
 			if (isUndoAction) {
@@ -403,7 +407,8 @@ public class CommandFacade {
 		Overdue overdue = new Overdue(commandObj, taskList, lastOutputTaskList);
 		setOutput(overdue.run());
 		setLastOutputTaskList(taskList);
-
+		setLastSearchedIndex(-1);
+		
 		if (overdue.getTaskIdToMark() != -1) {
 			if (isUndoAction) {
 				addToList(overdue, redoList);
@@ -411,6 +416,7 @@ public class CommandFacade {
 				addToList(overdue, undoList);
 			}
 		}
+		
 	}
 
 	/**
@@ -420,7 +426,8 @@ public class CommandFacade {
 		Incomplete incomplete = new Incomplete(commandObj, taskList, lastOutputTaskList);
 		setOutput(incomplete.run());
 		setLastOutputTaskList(taskList);
-
+		setLastSearchedIndex(-1);
+		
 		if (incomplete.getTaskIdToMark() != -1) {
 			if (isUndoAction) {
 				System.out.println("CommandFacade:383 - Adding to redoList");

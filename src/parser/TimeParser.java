@@ -82,20 +82,28 @@ public class TimeParser {
 			input = input.replaceAll(" ", "");
 			int _time = 0;
 			_time = Integer.parseInt(input);
-			if (_time < 100) { //converts time to 4 digit format
-				_time = _time * 100;
-			}
-			
-			if (isPM) { //converts timing to correct value
-				_time = _time + 1200;
-			} else if (!isPM && _time > 1159 && _time < 1260) { //only for 12.xxam cases
-				_time = _time - 1200;
-			} else if (!isPM && _time > 1259) {
-				_time = _time + 9999; // anything more than 12.59am will be rendered invalid
-			}
-			
-			time = _time;	
+			time = timeConverter(isPM, _time);	
 		}
+	}
+
+
+
+	public int timeConverter(boolean isPM, int _time) {
+		if (_time < 100) { //converts time to 4 digit format
+			_time = _time * 100;
+		}
+		
+		if (isPM) { //converts timing to correct value
+			_time = _time + 1200;
+			if (_time > 2359 && _time < 2460 ) {
+				_time = _time - 1200;
+			}
+		} else if (!isPM && _time > 1159 && _time < 1260) { //only for 12.xxam cases
+			_time = _time - 1200;
+		} else if (!isPM && _time > 1259) {
+			_time = _time + 9999; // anything more than 12.59am will be rendered invalid
+		}
+		return _time;
 	}
 	
 	/**

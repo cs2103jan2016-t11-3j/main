@@ -36,6 +36,9 @@ public class HelpTopic {
 	// Helper function for constructor
 	public void readFile(String topicFile) {
 	    InputStream is = this.getClass().getResourceAsStream(topicFile);
+	    if (is == null) {
+	        return;
+	    }
 	    String text = "";
 		try { 
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(is));

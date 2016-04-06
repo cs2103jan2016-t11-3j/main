@@ -143,6 +143,7 @@ public class Search extends Display {
 		if (isSearchTitle) {
 			matchedTasks = searchByTitle(matchedTasks);
 			searchParametersList.add(searchTitle);
+			System.out.println("Search:146 - searchTitle = " + searchTitle);
 		}
 		if (isSearchDate) {
 			matchedTasks = searchByDate(matchedTasks);
@@ -195,7 +196,7 @@ public class Search extends Display {
 			int j = 0;
 			while (j < splitTaskTitle.length && !isMatch) {
 				String word = splitTaskTitle[j].trim();	// removes any potential whitespaces
-				if (word.startsWith(searchTitle)) {
+				if (word.startsWith(searchTitle) || word.endsWith(searchTitle)) {
 					match.add(list.get(i));
 					isMatch = true;
 				}

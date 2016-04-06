@@ -1,6 +1,6 @@
-Change default save location
+Create a backup copy of the saved events/task
 
-Enter “save to” followed by the path to set a new default save location
+Enter “save as” followed by file to save a copy of the saved events/tasks list into the selected location.
 
 Usage Examples:
-save to C:\Program Files	Sets TaskFinder to, by default, save files containing task information at the folder Program Files in C:
+save as C:\Program Files	Sets TaskFinder to save file containing task information at the folder Program Files in C:. This only happens once

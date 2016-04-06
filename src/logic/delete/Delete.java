@@ -125,8 +125,7 @@ public class Delete {
 	 * @param taskList
 	 *            Existing list of tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
-	 *            List of tasks outputted in the last command (e.g. Search,
-	 *            Display)
+	 *            List of tasks outputted in the last command (e.g. Search, Display)
 	 * @param undoList
 	 *            Deque containing the list of undo tasks
 	 * @param redoList
@@ -299,10 +298,71 @@ public class Delete {
 		} catch (IndexOutOfBoundsException e) {
 			createSingleOccurrenceMissingErrorOutput();
 		}
-		
+	}
+
+	private boolean deleteInternal() {
+		try {
+			taskList.remove(removedTaskIndex);
+			checkForOverdueTask();
+			return true;
+		} catch (NullPointerException e) {
+			return false;
+		}
 	}
 	
-	// ----------------------- PROCESSING DELETE -----------------------
+	/*
+	 * This method will be relevant in the case of undoing the addition of a recurring task where the first 
+	 * occurrence is overdue. This ensures that when the undo is processed, the split overdue task will be
+	 * deleted along with the main task.
+	 */
+	private void checkForOverdueTask() {
+		if (removedTask.getIsRecurring()) {	// situation will only arise for recurring tasks
+			int i = taskList.size() - 1;
+			boolean isFoundSimiliarTask = false;
+			
+			while (i >= 0 && !isFoundSimiliarTask) {
+				TaskObject overdueTask = taskList.get(i);
+				if (isSimiliarTasks(removedTask, overdueTask)) {
+					addTimingsOfOverdueTaskBackToOriginalTask(removedTask, overdueTask);
+					taskList.remove(i);
+					isFoundSimiliarTask = true;
+				}
+				i--;
+			}
+		}
+	}
+	
+	private boolean isSimiliarTasks(TaskObject removedTask, TaskObject task) {
+		return (removedTask.getTitle().equals(task.getTitle()) &&
+				removedTask.getCategory().equals(task.getCategory()) &&
+				task.getStatus().equals(STATUS_OVERDUE) &&
+				task.getTaskId() < 0);
+	}
+	
+	private void addTimingsOfOverdueTaskBackToOriginalTask(TaskObject removedTask, TaskObject overdueTask) {
+		LocalDateTimePair overdueTaskTiming = new LocalDateTimePair(overdueTask.getStartDateTime(), 
+				overdueTask.getEndDateTime());
+		removedTask.addToTaskDateTimes(0, overdueTaskTiming);
+		removedTask.updateStartAndEndDateTimes();
+	}
+
+	private boolean deleteExternal() {
+		FileStorage storage = FileStorage.getInstance();
+		try {
+			storage.save(taskList);
+			logger.log(Level.INFO, "Storage file replaced");
+		} catch (NoSuchFileException e) {
+			// TODO Auto-generated catch block
+			// Ask user to specify new location or use default location
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	// ----------------------- SETTING DELETE INFORMATION -----------------------
 	
 	private void checkIfDeleteSingleOccurrence() {
 		if (lastSearchedIndex != -1) {
@@ -359,31 +419,6 @@ public class Delete {
 		isRecurringTask = removedTask.getIsRecurring();
 	}
 
-	private boolean deleteInternal() {
-		try {
-			taskList.remove(removedTaskIndex);
-			return true;
-		} catch (NullPointerException e) {
-			return false;
-		}
-	}
-
-	private boolean deleteExternal() {
-		FileStorage storage = FileStorage.getInstance();
-		try {
-			storage.save(taskList);
-			logger.log(Level.INFO, "Storage file replaced");
-		} catch (NoSuchFileException e) {
-			// TODO Auto-generated catch block
-			// Ask user to specify new location or use default location
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
 	// ----------------------- CREATING OUTPUT -----------------------
 	
 	private void createOutput() {
