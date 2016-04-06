@@ -272,7 +272,7 @@ public class DateParser {
 	 * 				boolean true if input contains any of the 12 months
 	 * 
 	 */
-	public boolean hasMonth(String input) {
+	private boolean hasMonth(String input) {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_MONTHS_TEXT);
 		Matcher matcher = dateTimePattern.matcher(input);
 		return matcher.find();
@@ -324,7 +324,7 @@ public class DateParser {
 	 * @return boolean   
 	 * 				true,if the date string is a relative date.
 	 */
-	public boolean isRelative(String input) {
+	private boolean isRelative(String input) {
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT) 
 				|| input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			return true;
@@ -340,7 +340,7 @@ public class DateParser {
 	 * 				non-null string that is a relative date, such as "today" or "next fri".
 	 * @throws Exception 
 	 */
-	public void processRelativeDate(String input) throws Exception {
+	private void processRelativeDate(String input) throws Exception {
 		input = preprocess(input);
 		if (input.matches(Constants.REGEX_RELATIVE_DATE_0) 
 				|| input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
@@ -368,7 +368,7 @@ public class DateParser {
 	 * @param month
 	 * 				month input in string format, non-null.
 	 */
-	public int setMonthInDateProcessor(String month) {
+	private int setMonthInDateProcessor(String month) {
 		month = month.toLowerCase();
 		if (month == MONTH_1_1 || month.contains(MONTH_1_2)) {
 			return VALUE_JAN;
@@ -420,7 +420,7 @@ public class DateParser {
 	 * 				non-null string which contains a day from Monday to Sunday.
 	 * @throws InvalidDateFormatException
 	 */
-	public void setDateNextWeek(String input) throws InvalidDateFormatException {
+	private void setDateNextWeek(String input) throws InvalidDateFormatException {
 		input = input.replaceAll("next", "").trim();
         input = processDayOfWeek(input);
         dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input)));
@@ -472,7 +472,7 @@ public class DateParser {
 	 * 				day-of-the-week in upper case, similar to LocalDate.getDayOfWeek output.
 	 * @throws InvalidDateFormatException
 	 */
-	public String processDayOfWeek(String dayOfWeek) throws InvalidDateFormatException {
+	private String processDayOfWeek(String dayOfWeek) throws InvalidDateFormatException {
         dayOfWeek = preprocess(dayOfWeek);
         if ("monday".contains(dayOfWeek)) {
             return "MONDAY" ;

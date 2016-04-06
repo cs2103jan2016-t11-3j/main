@@ -513,17 +513,13 @@ public class DateTimeParser {
 	 */
 	private String readFirstDayFromInterval(String input) {
 		String _freq;
-		//int _interval;
 		if (!input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			input = input.replaceFirst("every","").trim();
 			if (input.contains(" ") && hasNumber(input)) { // starts with a number?
 				String[] interval = input.split(" ");
-				//_interval = Integer.parseInt(interval[0]);
 				_freq = interval[1];
 			} else if (input.contains(" ")) {
-				//String[] interval = input.split(" ");
 				_freq = getNextNearestDayInInterval();
-				//_freq = interval[0];
 			} else {
 				_freq = input;
 			}
@@ -686,7 +682,6 @@ public class DateTimeParser {
 		
 		return getDayInWeek(start);
 	}
-	
 
 	// ================================
 	// Seventh Level of Abstraction
@@ -728,12 +723,6 @@ public class DateTimeParser {
 		}
 		return frequency;
 	}
-
-	
-	
-	
-	
-	
 	
 	//getters!!!!
 	public int getStartDate() {

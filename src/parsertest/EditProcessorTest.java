@@ -34,6 +34,11 @@ public class EditProcessorTest {
 		assertEquals("2016-07-07T23:59:59.999999999", Tempshit.getEndDateTime().toString());
 		reset();
 		
+		Tempshit = EP.process("4 from 8am to 9am");
+		assertEquals("+999999999-12-31T08:00", Tempshit.getStartDateTime().toString());
+		assertEquals("+999999999-12-31T09:00", Tempshit.getEndDateTime().toString());
+		reset();
+		
 		Tempshit = EP.process("4 from 8june 8.15am to 7/7 7pm");
 		assertEquals("2016-06-08T08:15", Tempshit.getStartDateTime().toString());
 		assertEquals("2016-07-07T19:00", Tempshit.getEndDateTime().toString());
@@ -54,14 +59,7 @@ public class EditProcessorTest {
 		reset();
 	}
 	
-	@Test
-	public void testCleanString() {
-		assertEquals("do this task", EP.cleanString("3 do this task"));
-		assertEquals("by 9.13pm", EP.cleanString("4 by 9.13pm"));
-	}
-	
 	private void reset() {
-		EP.resetList();
 		Tempshit.resetAttributes();
 	}
 }

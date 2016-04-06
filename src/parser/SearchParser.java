@@ -2,7 +2,6 @@
 package parser;
 
 import common.TaskObject;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,14 +15,14 @@ import java.util.regex.Pattern;
  */
 public class SearchParser extends CommandParser {
 	private TaskObject TO = new TaskObject();
-	private int index=-1;
+	private int index = -1;
 	
 	/**
 	 * This method checks if the search command is looking for category, recurring dates, status,
 	 * task, date or time and calls the appropriate function.
 	 * 
 	 * @param input
-	 * 				search command, non-null 
+	 * 				search command, non-null
 	 * 				
 	 */
 	public TaskObject process(String input) throws Exception {
@@ -104,7 +103,7 @@ public class SearchParser extends CommandParser {
 		TO.setTitle(_task);
 	}
 	
-	public String removeSearchKeyword(String input) {
+	private String removeSearchKeyword(String input) {
 		return input.replaceFirst(Constants.REGEX_PARSER_SEARCH, "").trim();
 	}
 	

@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * This class's job is to identify the correct time from a user's string input.
- * It recognises time in 2 main formats, hh:mm and hh:mm AM/PM.
+ * It recognises time in 2 main formats, hh:mm and hh:mm AM/PM. 
  * 
  * @author sylvesterchin
  *
@@ -19,7 +19,8 @@ public class TimeParser {
 		
 	
 	/**
-	 * This method takes in the user's input from add/edit/search parser
+	 * This method takes in the user's input from add/edit/search parser, checks if empty
+	 * and processes it into 
 	 * 
 	 *@param input  
 	 *				time input from user. null input results in nothing being done
@@ -29,7 +30,7 @@ public class TimeParser {
 	public void processTime(String input) throws Exception {
 		if (!input.isEmpty()) {
 			furtherProcessTime(input);
-			convertToString();
+			createLocalTimeObject();
 		}
 	}
 	
@@ -59,7 +60,7 @@ public class TimeParser {
 	 * 
 	 * @throws Exception 
 	 */
-	private void convertToString() throws Exception {
+	private void createLocalTimeObject() throws Exception {
 		String minute, hour;
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		
@@ -88,7 +89,8 @@ public class TimeParser {
 	// ================================
 	
 	/**
-	 * This method cleans the string and converts to the integer form. It will be manipulated into HHMM format
+	 * This method cleans the string and converts to the integer form. 
+	 * It will be manipulated into HHMM format.
 	 * 
 	 * @param input
 	 * 				time input in string format. non null. 
@@ -125,9 +127,13 @@ public class TimeParser {
 	// ================================
 	
 	/**
+	 * This method will convert input time into a number that is within the range of 
+	 * 0-2400 if the input is a valid time. 
 	 * 
 	 * @param isPM
+	 * 				boolean to show if the original input had a "pm" marker.
 	 * @param _time
+	 * 				time input by user. positive, non-null. 
 	 * @return
 	 */
 	private int timeConverter(boolean isPM, int _time) {
