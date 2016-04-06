@@ -122,4 +122,112 @@ public class LogicTest {
 		assertEquals(originalNumberOfOccurrences - 1, logic.getTaskList().get(0).getTaskDateTimes().size());
 	}
 	
+	@Test // test search for title
+	public void testAI() {
+		logic.run("add CS2103 lecture every friday from 4pm to 6pm until 1 May");
+		logic.run("add assignment 1 by 31/4 4pm");
+		logic.run("add IE2100 lecture every sunday from 1pm to 2pm");
+		
+		assertEquals(4, logic.getTaskList().size());
+		
+		logic.run("search lecture");
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Displaying tasks for the search parameters:\n\'lecture\'");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(2, logic.getLastOutputTaskList().size());
+		
+		logic.run("search junk");
+		expectedOutput.clear();
+		expectedOutput.add("No results found for the specified parameters.");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(2, logic.getLastOutputTaskList().size());
+	}
+	
+	@Test // search by category
+	public void testAJ() {
+		logic.run("search event");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Displaying tasks for the search parameters:\n\'event\'");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(2, logic.getLastOutputTaskList().size());
+		
+		logic.run("search deadline");
+		expectedOutput.clear();
+		expectedOutput.add("Displaying tasks for the search parameters:\n\'deadline\'");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(2, logic.getLastOutputTaskList().size());
+	}
+	
+	@Test // marking a task as done
+	public void testAK() {
+		logic.run("done 1");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Task: \'run\' marked as completed");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(5, logic.getLastOutputTaskList().size());
+	}
+	
+	@Test // search by status and display
+	public void testAL() {
+		logic.run("view completed");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Displaying tasks for the search parameters:\n\'completed\'");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(1, logic.getLastOutputTaskList().size());
+		
+		logic.run("display");
+		expectedOutput.clear();
+		expectedOutput.add("Displaying all tasks.");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(4, logic.getLastOutputTaskList().size());
+	}
+	
+	@Test // delete all occurrences
+	public void testAM() {
+		logic.run("delete 2 all");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("All occurrences deleted.");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(3, logic.getLastOutputTaskList().size());
+		assertEquals(4, logic.getTaskList().size());
+	}
+	
+	@Test // delete done
+	public void testAN() {
+		logic.run("delete done");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("All completed tasks deleted.");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(3, logic.getLastOutputTaskList().size());
+		assertEquals(3, logic.getTaskList().size());
+	}
+	
+	@Test // search time
+	public void testAO() {
+		logic.run("search 10/4");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Displaying tasks for the search parameters:\n\'2016-04-10\'");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(1, logic.getLastOutputTaskList().size());
+		assertEquals(3, logic.getTaskList().size());
+	}
+	
+	@Test // edit title
+	public void testAP() {
+		logic.run("display");
+		logic.run("edit 3 IE3100 Lecture");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Title edited from \'IE2100 lecture\' to \'IE3100 Lecture\'.");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(3, logic.getLastOutputTaskList().size());
+	}
+	
+	@Test // edit date and time
+	public void testAQ() {
+		logic.run("edit 2 by 1900hrs 25/4");
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Date edited from \'2016-04-30\' to \'2016-04-25\'. \nTime edited from \'16:00\' to \'19:00\'.");
+		assertEquals(expectedOutput, logic.getOutput());
+		assertEquals(3, logic.getLastOutputTaskList().size());
+	}
 }
