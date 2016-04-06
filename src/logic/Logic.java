@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonSyntaxException;
@@ -29,28 +30,22 @@ import common.CommandObject;
 import common.TaskObject;
 
 /**
- * Main driver for Adult TaskFinder. Upon initialisation of the object,
- * retrieves all existing tasks from an external file source and places them
- * into an ArrayList of TaskObjects. The main Logic object initialised in the
- * GUI will exist until exit command is inputted. <br>
- * Alternatively, secondary Logic objects may be initialised when Undo or Redo
- * commands are given. In this case, secondary Logic objects will only carry out
- * the specific task required before it "dies".
+ * Main driver for Adult TaskFinder. Upon initialisation of the object, retrieves all existing tasks from an
+ * external file source and places them into an ArrayList of TaskObjects. The main Logic object initialised in
+ * the GUI will exist until exit command is inputted. <br>
+ * Alternatively, secondary Logic objects may be initialised when Undo or Redo commands are given. In this
+ * case, secondary Logic objects will only carry out the specific task required before it "dies".
  * 
  * @param taskList
- *            - Initialised as an empty list of TaskObjects, will maintain all
- *            TaskObjects existing in Adult TaskFinder internally throughout the
- *            runtime of the program.
+ *            - Initialised as an empty list of TaskObjects, will maintain all TaskObjects existing in Adult
+ *            TaskFinder internally throughout the runtime of the program.
  * @param undoList
- *            - Stack of CommandObjects stored for undoing. Every time a command
- *            is executed, the reverse of that command will be pushed into
- *            undoList in the form of a CommandObject.
+ *            - Stack of CommandObjects stored for undoing. Every time a command is executed, the reverse of
+ *            that command will be pushed into undoList in the form of a CommandObject.
  * @param redoList
- *            - Stack of CommandObjects stored for redoing. Every time a command
- *            is popped from the undoList for undoing, the reverse of that
- *            command will be pushed into the redoList as an CommandObject.
- *            Clears itself whenever the user inputs a command which is not
- *            "undo".
+ *            - Stack of CommandObjects stored for redoing. Every time a command is popped from the undoList
+ *            for undoing, the reverse of that command will be pushed into the redoList as an CommandObject.
+ *            Clears itself whenever the user inputs a command which is not "undo".
  * @author ChongYan, RuiBin
  *
  */
@@ -74,27 +69,39 @@ public class Logic {
 	private int lastSearchedIndex = -1;
 
 	/**
-	 * Constructor called by UI. Loads all existing tasks and checks each task
-	 * to see whether any of them are overdue, and updates their corresponding
-	 * statuses.
+	 * Constructor called by UI. Loads all existing tasks and checks each task to see whether any of them are
+	 * overdue, and updates their corresponding statuses.
 	 */
 	public Logic() {
 		Logger logger = AtfLogger.getLogger();
 		taskList = new ArrayList<TaskObject>();
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
-		loadTaskList();
-		TimeOutput.setTimeOutputForGui(taskList);
-		setStartingTaskId();
-		checkOverdue();
 		try {
+			loadTaskList();
+			TimeOutput.setTimeOutputForGui(taskList);
+			setStartingTaskId();
+			checkOverdue();
 			Recurring.updateRecurringEvents(taskList);
 			Recurring.updateRecurringDeadlines(taskList);
+			createFirstOutputTaskList();
 		} catch (RecurrenceException e) {
 			String exceptionMessage = e.getRecurrenceExceptionMessage();
 			output.add(exceptionMessage);
+			logger.log(Level.WARNING, "unable to update recurrences");
+		} catch (FileNotFoundException e) {
+			output.add(MESSAGE_LOAD_EXCEPTION_FNF);
+			logger.log(Level.WARNING,
+					"unable to read information from external file storage, file not found");
+		} catch (IOException e) {
+			output.add(MESSAGE_LOAD_EXCEPTION_IO);
+			logger.log(Level.WARNING,
+					"unable to read information from external file storage, general IO exception");
+		} catch (JsonSyntaxException e) {
+			output.add(MESSAGE_LOAD_EXCEPTION_JSON);
+			logger.log(Level.WARNING,
+					"unable to read information from external file storage, Json syntax error");
 		}
-		createFirstOutputTaskList();
 		logger.info("Start logic");
 	}
 
@@ -139,8 +146,8 @@ public class Logic {
 	}
 
 	/**
-	 * Constructor called by Undo/Redo. This is a secondary logic class which
-	 * only performs one operation before being deactivated.
+	 * Constructor called by Undo/Redo. This is a secondary logic class which only performs one operation
+	 * before being deactivated.
 	 * 
 	 * @param taskList
 	 *            The default taskList storing all the tasks
@@ -185,26 +192,16 @@ public class Logic {
 			parseCommandObject(commandObj, false, false);
 			TimeOutput.setTimeOutputForGui(taskList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			output.clear();
+			output.add(MESSAGE_FAILED_PROCESSING);
 		}
 	}
 
 	// Loads all existing tasks into the program from Storage
-	private void loadTaskList() {
-		try {
-			FileStorage storage = FileStorage.getInstance();
-			taskList = storage.load();
-			// convertDateTime(taskList);
-			setLastOutputTaskList(taskList);
-		} catch (FileNotFoundException e) {
-			// No file found in specified save location
-		} catch (JsonSyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+	private void loadTaskList() throws FileNotFoundException, JsonSyntaxException, IOException {
+		FileStorage storage = FileStorage.getInstance();
+		taskList = storage.load();
+		setLastOutputTaskList(taskList);
 	}
 
 	// Sets the starting task ID value. This value should be larger than the
@@ -229,8 +226,8 @@ public class Logic {
 	/**
 	 * Calls Parser to parse the user input
 	 * 
-	 * @return CommandObject containing information on the task to be
-	 *         manipulated, as well as the command to execute
+	 * @return CommandObject containing information on the task to be manipulated, as well as the command to
+	 *         execute
 	 */
 	private CommandObject callParser() throws Exception {
 		Parser parser = new Parser(userInput, taskId);
@@ -239,11 +236,10 @@ public class Logic {
 	}
 
 	/**
-	 * Calls the CommandFacade class and passes all relevant arguments.
-	 * CommandFacade class will be responsible for parsing the CommandObject and
-	 * calling the appropriate function. All the lists (task list, undo list,
-	 * redo list, last output task list, output) in Logic are subsequently
-	 * updated with the values from the CommandFacade class.
+	 * Calls the CommandFacade class and passes all relevant arguments. CommandFacade class will be
+	 * responsible for parsing the CommandObject and calling the appropriate function. All the lists (task
+	 * list, undo list, redo list, last output task list, output) in Logic are subsequently updated with the
+	 * values from the CommandFacade class.
 	 */
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		if (!(isUndoAction || isRedoAction)) {
@@ -268,11 +264,9 @@ public class Logic {
 		setTaskDateTimeOutput(commandFacade.getTaskDateTimeOutput());
 		setLastSearchedIndex(commandFacade.getLastSearchedIndex());
 		/*
-		if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
-			setLastSearchedIndex(commandFacade.getLastSearchedIndex());
-		} else {
-			setLastSearchedIndex(-1);
-		}*/
+		 * if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
+		 * setLastSearchedIndex(commandFacade.getLastSearchedIndex()); } else { setLastSearchedIndex(-1); }
+		 */
 	}
 
 	// ------------------------- GETTERS AND SETTERS -------------------------
