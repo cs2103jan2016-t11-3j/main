@@ -148,7 +148,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 3. Task: event 3 clashes with event 2, event 1. ");
+		expectedOutput.add("Task added: event 3. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -166,7 +166,7 @@ public class AddTest {
 		actualOutput = add.run();
 
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: event 4. Task: event 4 clashes with event 2, event 1. ");
+		expectedOutput.add("Task added: event 4. ");
 
 		assertEquals(expectedOutput, actualOutput);
 	}

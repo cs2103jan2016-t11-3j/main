@@ -326,29 +326,34 @@ public class Add {
 	private boolean checkIndividualTimeClash(LocalDateTime currentStart, LocalDateTime currentEnd,
 			LocalDateTime newStart, LocalDateTime newEnd) throws DateTimeException {
 
-		if (currentStart.isAfter(newStart) || currentStart.isEqual(newStart)) {
-			if (currentStart.isBefore(newEnd) || currentStart.isEqual(newEnd)) {
+		// For special cases e.g. 1200-1400 and 1400-1600
+		if (currentEnd.isEqual(newStart)) {
+			return false;
+		}
+		if (newEnd.isEqual(currentStart)) {
+			return false;
+		}
+		
+		if (!currentStart.isBefore(newStart)) {
+			if (!currentStart.isAfter(newEnd)) {
 				return true;
 			}
 		}
-		if (currentEnd.isAfter(newStart) || currentEnd.isEqual(newStart)) {
-			if (currentEnd.isBefore(newEnd) || currentEnd.isEqual(newEnd)) {
+		if (!currentEnd.isBefore(newStart)) {
+			if (!currentEnd.isAfter(newEnd)) {
 				return true;
 			}
 		}
-		if (newStart.isAfter(currentStart) || newStart.isEqual(currentStart)) {
-			if (newStart.isBefore(currentEnd) || newStart.isEqual(currentEnd)) {
+		if (!newStart.isBefore(currentStart)) {
+			if (!newStart.isAfter(currentEnd)) {
 				return true;
 			}
 		}
-		if (newEnd.isAfter(currentStart) || newEnd.isEqual(currentStart)) {
-			if (newEnd.isBefore(currentEnd) || newEnd.isEqual(currentEnd)) {
+		if (!newEnd.isBefore(currentStart)) {
+			if (!newEnd.isAfter(currentEnd)) {
 				return true;
 			}
 		}
-
-		logger.log(Level.INFO, "no clash detected between two timings");
-
 		return false;
 	}
 
