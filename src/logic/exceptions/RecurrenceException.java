@@ -9,12 +9,17 @@ import java.time.LocalDateTime;
 @SuppressWarnings("serial")
 public class RecurrenceException extends Exception{
 
+	private int taskId = -1;
+	private String title = "";
+	
 	public RecurrenceException() {
 		
 	}
 	
 	public RecurrenceException(TaskObject task) {
 		super(String.format(MESSAGE_RECURRENCE_EXCEPTION, task.getTitle()));
+		this.taskId = task.getTaskId();
+		this.title = task.getTitle();
 	}
 	
 	public RecurrenceException(String errorMessage) {
@@ -31,5 +36,13 @@ public class RecurrenceException extends Exception{
 	
 	public String getRecurrenceExceptionMessage() {
 		return super.getMessage();
+	}
+	
+	public String getTaskName() {
+		return title;
+	}
+	
+	public int getTaskId() {
+		return taskId;
 	}
 }

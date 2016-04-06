@@ -51,6 +51,7 @@ import common.TaskObject;
  */
 public class Logic {
 
+	static Logger logger = AtfLogger.getLogger();
 	// Maintained throughout the entire running operation of the program
 	protected ArrayList<TaskObject> taskList = new ArrayList<TaskObject>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
@@ -69,11 +70,12 @@ public class Logic {
 	private int lastSearchedIndex = -1;
 
 	/**
-	 * Constructor called by UI. Loads all existing tasks and checks each task to see whether any of them are
-	 * overdue, and updates their corresponding statuses.
+	 * Constructor called by UI only upon starting up. Loads all existing tasks and checks each task to see
+	 * whether any of them are overdue, and updates their corresponding statuses. Sets the next Task ID of a
+	 * task which will be added to the list. Also calls method to set up the list of tasks which will be shown
+	 * to users, as well as the relevant welcome message.
 	 */
 	public Logic() {
-		Logger logger = AtfLogger.getLogger();
 		taskList = new ArrayList<TaskObject>();
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
@@ -86,7 +88,13 @@ public class Logic {
 			Recurring.updateRecurringDeadlines(taskList);
 			createFirstOutputTaskList();
 		} catch (RecurrenceException e) {
-			String exceptionMessage = e.getRecurrenceExceptionMessage();
+			String exceptionMessage;
+			if (e.getTaskId() != -1) {
+				removeFromTaskList(e.getTaskId());
+				exceptionMessage = String.format(MESSAGE_RECURRENCE_EXCEPTION_CORRUPTED, e.getTaskName());
+			} else {
+				exceptionMessage = e.getRecurrenceExceptionMessage();
+			}
 			output.add(exceptionMessage);
 			logger.log(Level.WARNING, "unable to update recurrences");
 		} catch (FileNotFoundException e) {
@@ -105,8 +113,27 @@ public class Logic {
 		logger.info("Start logic");
 	}
 
-	// Creates the first task list containing overdue and due today
-	public void createFirstOutputTaskList() {
+	private void removeFromTaskList(int taskId) {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getTaskId() == taskId) {
+				taskList.remove(i);
+			}
+		}
+	}
+
+	/**
+	 * Method which is only called during startup of AdultTaskFinder. Tasks are added to a "first output" task
+	 * list in the following order: <br>
+	 * 1. Tasks overdue <br>
+	 * 2. Tasks due today <br>
+	 * If there are no tasks in the task list at this point, method will proceed to look for tasks which are
+	 * incomplete and add them to the "first output" task list, regardless of whether it is due today, even if
+	 * it is a floating task. <br>
+	 * However, if there are no tasks in the list even at this point, then no tasks will be showed on startup.
+	 * The message shown to the user varies based on the tasks which were added to the "first output" task
+	 * list.
+	 */
+	private void createFirstOutputTaskList() {
 		ArrayList<TaskObject> firstOutputTaskList = new ArrayList<TaskObject>();
 		ArrayList<String> firstOutput = new ArrayList<String>();
 
@@ -116,13 +143,16 @@ public class Logic {
 			addIncompleteTasksToFirstOutputTaskList(firstOutputTaskList);
 		} else {
 			firstOutput.add(MESSAGE_WELCOME_TASKS_OVERDUE_TODAY);
+			logger.log(Level.INFO, "added overdue and tasks due today to show on startup");
 		}
 
 		if (firstOutputTaskList.isEmpty()) {
 			firstOutput.add(MESSAGE_WELCOME_EMPTY);
+			logger.log(Level.INFO, "no incomplete tasks to show on startup");
 		} else {
 			if (firstOutput.isEmpty()) {
 				firstOutput.add(MESSAGE_WELCOME_TASKS_INCOMPLETE);
+				logger.log(Level.INFO, "added incomplete tasks to show on startup");
 			}
 		}
 
@@ -206,7 +236,13 @@ public class Logic {
 		Collections.sort(lastOutputTaskList, dateComparator);
 	}
 
-	// Takes in a String argument from UI component
+	/**
+	 * Main processing component of AdultTaskFinder. All user inputs will be passed through this command,
+	 * where the internal logic of the software will process the command and react accordingly.
+	 * 
+	 * @param userInput
+	 *            String input that is obtained from UI component. Cannot be empty.
+	 */
 	public void run(String userInput) {
 		try {
 			setUserInput(userInput);
@@ -219,7 +255,20 @@ public class Logic {
 		}
 	}
 
-	// Loads all existing tasks into the program from Storage
+	/**
+	 * Internal method which is called during the initialisation of Logic object. Purpose of this method is to
+	 * call storage and retrieve all existing task information from the external file source, if available
+	 * 
+	 * @throws FileNotFoundException
+	 *             Specific exception where file does not exist, will be caught and processed by Logic
+	 *             constructor
+	 * @throws JsonSyntaxException
+	 *             Specific exception where the Json Library is unable to read the external file, will be
+	 *             caught and processed by Logic constructor
+	 * @throws IOException
+	 *             General exception for failing to read a file, will be caught and processed by Logic
+	 *             constructor
+	 */
 	private void loadTaskList() throws FileNotFoundException, JsonSyntaxException, IOException {
 		FileStorage storage = FileStorage.getInstance();
 		taskList = storage.load();
@@ -241,12 +290,12 @@ public class Logic {
 	}
 
 	// Checks for overdue tasks at the start when the program is first run
-	public void checkOverdue() {
+	private void checkOverdue() {
 		Overdue.markAllOverdueTasks(taskList);
 	}
 
 	/**
-	 * Calls Parser to parse the user input
+	 * Calls Parser to parse the user input.
 	 * 
 	 * @return CommandObject containing information on the task to be manipulated, as well as the command to
 	 *         execute
@@ -262,6 +311,14 @@ public class Logic {
 	 * responsible for parsing the CommandObject and calling the appropriate function. All the lists (task
 	 * list, undo list, redo list, last output task list, output) in Logic are subsequently updated with the
 	 * values from the CommandFacade class.
+	 * 
+	 * @param commandObj
+	 *            CommandObject obtained from parsing the user input, will be used in the CommandFacade object
+	 *            to process changes to AdultTaskFinder
+	 * @param isUndoAction
+	 *            Boolean variable denoting if the method is called as a result of an undo command
+	 * @param isRedoAction
+	 *            Boolean variable denoting if the method is called as a result of a redo command
 	 */
 	public void parseCommandObject(CommandObject commandObj, boolean isUndoAction, boolean isRedoAction) {
 		if (!(isUndoAction || isRedoAction)) {
