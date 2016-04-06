@@ -62,8 +62,8 @@ public class DateParserTest {
 	/*case 7: reading relative dates*/
 	@Test
 	public void testG() throws Exception {
-		DP.parseDate("everyday");
-		assertEquals("2016-04-06", DP.getDateObject().toString());
+		DP.parseDate("every day");
+		assertEquals("2016-04-07", DP.getDateObject().toString());
 		reset();
 		
 		DP.parseDate("today");

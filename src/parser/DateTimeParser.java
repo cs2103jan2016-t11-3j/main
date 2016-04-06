@@ -409,7 +409,11 @@ public class DateTimeParser {
 		}
 
 		startDate = DP.getDateObject();
-	
+		
+		if (startDate.equals(LocalDate.MAX)) {
+			startDate = LocalDate.now();
+		}
+ 	
 		if (tasktype.equals(TaskType.event)) {
 			endDate = DP.getDateObject();
 		}
