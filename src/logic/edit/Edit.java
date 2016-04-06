@@ -786,7 +786,7 @@ public class Edit {
 		// If the original end date is null, i.e. it is a floating task which is being edited to another
 		// category, then the date will be default to today.
 		if (originalEndDate.equals(LocalDate.MAX)) {
-			originalEndDate = LocalDate.now();
+			originalEndDate = task.getStartDateTime().toLocalDate();
 		}
 
 		if (!originalEndTime.equals(editEndTime)) {
@@ -877,7 +877,7 @@ public class Edit {
 	 * date/time so the output should be 'added' instead of 'edited'.
 	 */
 	private void setOutput() {
-		checkEditInformation();
+		//checkEditInformation();
 
 		if (!isEditSingleOccurrence) {
 			if (isEditTitle) {
