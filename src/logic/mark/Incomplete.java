@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic.mark;
 
 import java.util.ArrayList;
@@ -48,6 +50,8 @@ public class Incomplete extends Mark {
 		}
 		return output;
 	}
+	
+//@@author A0124636H
 
 	@Override
 	protected boolean changeStatus() {

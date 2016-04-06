@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic.mark;
 
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class Done extends Mark {
 		output.add(text);
 	}
 
+//@@author A0124636H
+	
 	protected boolean changeStatus() {
 		try {
 			for (int i = 0; i < taskList.size(); i++) {
@@ -108,6 +112,8 @@ public class Done extends Mark {
 			return false;
 		}
 	}
+	
+//@@author A0124052X
 
 	// On top of this, consider implementation for event
 	private void changeStatusForRecurringTask(TaskObject task) {
