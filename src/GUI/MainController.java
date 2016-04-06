@@ -173,10 +173,10 @@ public class MainController implements Initializable {
 			sidePanel.setVisible(true);
 			fillSidebar();
 			sidePanelAnimation();
-		} else {
-			displayMessage(); // print feedback message
-			display(); // refreshes table after every command
 		}
+
+		displayMessage(); // print feedback message
+		display(); // refreshes table after every command
 	}
 
 	private void setSelectionFocus() {
@@ -210,7 +210,7 @@ public class MainController implements Initializable {
 	private boolean isRecurringDateRequest() {
 
 		if (_UI.getOutput().size() > 0) {
-			if (_UI.getOutput().get(0).startsWith("Timings for")) {
+			if (_UI.getOutput().get(0).startsWith("Displaying recurrence")) {
 				return true;
 			}
 		}
