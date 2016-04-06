@@ -2,6 +2,7 @@
 
 package logic.mark;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -75,8 +76,14 @@ public class Incomplete extends Mark {
 					}
 					logger.log(Level.INFO, "Undo-incomplete processed");
 				} catch (NullPointerException e) {
-					task.setStatus(STATUS_INCOMPLETE);
-					logger.log(Level.INFO, "Status changed to \'incomplete\'");
+					if (task.getStartDateTime().isAfter(LocalDateTime.now())) {
+						task.setStatus(STATUS_INCOMPLETE);
+						logger.log(Level.INFO, "Status changed to \'incomplete\'");
+					} else {
+						task.setStatus(STATUS_OVERDUE);
+						logger.log(Level.INFO, "Status changed to \'overdue\'");
+					}
+					
 				}
 
 				return true;
