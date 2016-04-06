@@ -1,6 +1,7 @@
 package logic.add;
 
 import logic.*;
+import logic.exceptions.AddException;
 import logic.exceptions.RecurrenceException;
 import storage.*;
 import common.*;
@@ -106,6 +107,13 @@ public class Add {
 				String exceptionMessage = e.getRecurrenceExceptionMessage();
 				output.add(exceptionMessage);
 				logger.log(Level.WARNING, "task added has invalid recurrence properties");
+			} catch (AddException e) {
+				if (e.getIsRecurring() && e.getCategory().equals(CATEGORY_FLOATING)) {
+					output.add(MESSAGE_ADD_EXCEPTION + " " + MESSAGE_ADD_FLOATING_RECURRING);
+				} else {
+					output.add(MESSAGE_ADD_EXCEPTION);
+				}
+				logger.log(Level.WARNING, e.getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 				output.add(MESSAGE_FAIL);
@@ -132,7 +140,7 @@ public class Add {
 	 * 
 	 * @throws Exception
 	 */
-	private void processTaskInformation() throws Exception, RecurrenceException {
+	private void processTaskInformation() throws Exception, RecurrenceException, AddException {
 		if (isEvent) {
 			assert (!task.getStartDateTime().equals(LocalDateTime.MAX));
 			assert (!task.getEndDateTime().equals(LocalDateTime.MAX));
@@ -149,6 +157,7 @@ public class Add {
 			assert (task.getStartDateTime().equals(LocalDateTime.MAX));
 			assert (task.getEndDateTime().equals(LocalDateTime.MAX));
 			logger.log(Level.INFO, "floating to be added");
+			processFloatingDetails();
 		}
 		if (!isEvent && !isDeadline && !isFloating) {
 			Exception e = new Exception("Invalid task");
@@ -355,6 +364,13 @@ public class Add {
 			}
 		}
 		return false;
+	}
+	
+	private void processFloatingDetails() throws AddException {
+		if (task.getIsRecurring()) {
+			AddException e = new AddException(task);
+			throw e;
+		}
 	}
 
 	/********************************************************************************/

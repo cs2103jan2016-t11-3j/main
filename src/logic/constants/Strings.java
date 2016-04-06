@@ -165,6 +165,10 @@ public class Strings {
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";
 	public static final String MESSAGE_MARK_EXCEPTION_SAME_STATUS = "Task already has status: %1s";
+	
+	// Add Exception constants
+	public static final String MESSAGE_ADD_EXCEPTION = "Error adding task to task list";
+	public static final String MESSAGE_ADD_FLOATING_RECURRING = "Task with no time cannot be set as a recurring task";
 
 	// FOR PACKAGE-WIDE DEBUGGING PURPOSES
 	public static void printTaskObjectFields(TaskObject taskObj) {
