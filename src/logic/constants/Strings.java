@@ -169,7 +169,7 @@ public class Strings {
 	// Load Constants
 	public static final String KEYWORD_FROM = "from ";
 	public static final String KEYWORD_BACKUP = "backup";
-	public static final String MESSAGE_LOAD_SUCCESS = "Loaded file from: ";
+	public static final String MESSAGE_LOAD_SUCCESS = "Loaded file from: %1s";
 
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";

@@ -77,6 +77,7 @@ public class Load {
 		} else {
 			if (loadCommand == LOAD_BACKUP) {
 				loadedTaskList = storage.loadBackup();
+				createOutput();
 			} else {
 				IOException e = new IOException("Invalid command");
 				throw e;
@@ -87,9 +88,11 @@ public class Load {
 	private void createOutput() {
 		if (loadCommand == LOAD_FROM) {
 			System.out.println(filePath);
-			output.add(String.format(MESSAGE_LOAD_SUCCESS, filePath));
+			System.out.println("Entered frm");
+			output.add(String.format(MESSAGE_LOAD_SUCCESS, "\n" + filePath));
 		} else {
 			if (loadCommand == LOAD_BACKUP) {
+				System.out.println("Entered bk");
 				output.add(String.format(MESSAGE_LOAD_SUCCESS, KEYWORD_BACKUP));
 			}
 		}
