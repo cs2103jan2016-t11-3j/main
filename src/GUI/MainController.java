@@ -74,6 +74,11 @@ public class MainController implements Initializable {
 	@FXML
 	private Label programName;
 
+	/**
+	 * Handles enter pressed by reading input in textfield and process input.
+	 * @param event - Enter pressed
+	 * @throws IOException
+	 */
 	@FXML
 	// reads input on enter
 	public void handleEnterPressed(KeyEvent event) throws IOException {
@@ -97,8 +102,10 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * 
-	 * @param event
+	 * Handles when F1 pressed by activating help. 
+	 * Handles when F3 pressed by sorting displayed list.
+	 * Handles then Esc pressed by closing program.
+	 * @param event - F1 or F3 or Esc Pressed
 	 * @throws IOException
 	 */
 	@FXML
@@ -289,14 +296,14 @@ public class MainController implements Initializable {
 		return _UI.getLastOutputTaskList();
 	}
 
-	public void fillTable(ObservableList<TaskObject> taskData) {
+	private void fillTable(ObservableList<TaskObject> taskData) {
 		populateIndex();
 		populateColumns();
 		setCellProperty();
 		taskTable.setItems(taskData);
 	}
 
-	public void populateIndex() {
+	private void populateIndex() {
 		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
 			@Override
 			public void updateIndex(int index) {
@@ -310,7 +317,7 @@ public class MainController implements Initializable {
 		});
 	}
 
-	public void populateColumns() {
+	private void populateColumns() {
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
 		timeColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("timeOutputString"));
