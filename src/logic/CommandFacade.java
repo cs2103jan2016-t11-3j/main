@@ -453,6 +453,7 @@ public class CommandFacade {
 		Load load = new Load(taskObj);
 		setOutput(load.run());
 		setLastOutputTaskList(load.getLoadedTaskList());
+		setTaskList(load.getLoadedTaskList());
 		setLastSearchedIndex(-1);
 		undoList.clear();
 		redoList.clear();
