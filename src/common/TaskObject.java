@@ -1,3 +1,5 @@
+//@@author A0124636H
+
 package common;
 
 import java.time.LocalDateTime;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
  * 7. Interval object (for recurring tasks) <br>
  * 8. ArrayList of multiple dates and times (for recurring tasks) <br>
  * 
- * @author RuiBin, ChongYan
+ * @author RuiBin
  *
  */
 

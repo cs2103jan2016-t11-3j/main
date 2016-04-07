@@ -1,4 +1,7 @@
+//@@author A0124636H
+
 package logic.display;
+
 import logic.*;
 
 import static org.junit.Assert.*;

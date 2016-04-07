@@ -1,3 +1,5 @@
+//@@author A0124636H
+
 package logic.search;
 import static org.junit.Assert.assertEquals;
 

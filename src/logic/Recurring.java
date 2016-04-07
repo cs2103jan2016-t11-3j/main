@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic;
 
 import common.*;
@@ -29,6 +31,10 @@ import static logic.constants.Strings.*;
 public class Recurring {
 
 	private static Logger logger = AtfLogger.getLogger();
+	
+	// ==================================================================
+	// Methods used by Recurring events
+	// ==================================================================
 
 	/**
 	 * Method called by logic when AdultTaskFinder is launched. Searches for all recurring events and passes
@@ -37,6 +43,8 @@ public class Recurring {
 	 * 
 	 * @param taskList
 	 *            List of tasks stored by AdultTaskFinder
+	 * @throws RecurrenceException
+	 *            Customised exception called when there is a fault performing any recurrence related command
 	 */
 	public static void updateRecurringEvents(ArrayList<TaskObject> taskList) throws RecurrenceException {
 		logger.log(Level.INFO, "about to update all recurring events");
@@ -95,8 +103,15 @@ public class Recurring {
 
 	private static void updateEventToOverdue(TaskObject task, ArrayList<TaskObject> taskList, String status)
 			throws RecurrenceException {
-		LocalDateTime eventEndTime = task.getEndDateTime();
-		LocalDateTime eventStartTime = task.getStartDateTime();
+		// Prevent IndexOutOfBoundsException
+		if (task.getTaskDateTimes().isEmpty()) {
+			RecurrenceException e = new RecurrenceException(task);
+			throw e;
+		}
+		
+		LocalDateTimePair eventTimePair = task.getTaskDateTimes().get(0);
+		LocalDateTime eventEndTime = eventTimePair.getEndDateTime();
+		LocalDateTime eventStartTime = eventTimePair.getStartDateTime();
 		String taskName = task.getTitle();
 
 		assert (!eventEndTime.equals(LocalDateTime.MAX));
@@ -122,6 +137,12 @@ public class Recurring {
 
 	private static void updateEventToCompleted(TaskObject task, ArrayList<TaskObject> taskList, String status)
 			throws RecurrenceException {
+		// Prevent IndexOutOfBoundsException
+		if (task.getTaskDateTimes().isEmpty()) {
+			RecurrenceException e = new RecurrenceException(task);
+			throw e;
+		}
+		
 		LocalDateTimePair eventTimePair = task.getTaskDateTimes().get(0);
 		String taskName = task.getTitle();
 
@@ -169,6 +190,7 @@ public class Recurring {
 		LocalDateTime newEndDateTime;
 		LocalDateTimePair nextEvent;
 
+		// For this method to be called, there must be at least 2 timings present
 		assert (task.getTaskDateTimes().size() > 1);
 
 		task.removeFromTaskDateTimes(0);
@@ -223,7 +245,9 @@ public class Recurring {
 		}
 	}
 
+	// ========================================================================
 	// Methods used for recurring deadlines
+	// ========================================================================
 
 	/**
 	 * Method called by Add or Edit. <br>
@@ -326,6 +350,12 @@ public class Recurring {
 
 	private static void updateDeadlineToOverdue(TaskObject task, ArrayList<TaskObject> taskList,
 			String status) throws RecurrenceException {
+		// Prevent IndexOutOfBoundsException
+		if (task.getTaskDateTimes().isEmpty()) {
+			RecurrenceException e = new RecurrenceException(task);
+			throw e;
+		}
+		
 		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
 		String taskName = task.getTitle();
 
@@ -350,6 +380,12 @@ public class Recurring {
 
 	private static void updateDeadlineToCompleted(TaskObject task, ArrayList<TaskObject> taskList,
 			String status) throws RecurrenceException {
+		// Prevent IndexOutOfBoundsException
+		if (task.getTaskDateTimes().isEmpty()) {
+			RecurrenceException e = new RecurrenceException(task);
+			throw e;
+		}
+		
 		LocalDateTime deadlineDateTime = task.getTaskDateTimes().get(0).getStartDateTime();
 		String taskName = task.getTitle();
 
@@ -367,6 +403,9 @@ public class Recurring {
 		LocalDateTime newStartDateTime;
 		LocalDateTimePair nextDeadline;
 
+		// To even use this method, at least 2 timings must be present in task
+		assert (task.getTaskDateTimes().size() > 1);
+		
 		task.removeFromTaskDateTimes(0);
 		nextDeadline = task.getTaskDateTimes().get(0);
 		newStartDateTime = nextDeadline.getStartDateTime();
@@ -575,6 +614,9 @@ public class Recurring {
 
 	private static LocalDateTime generateNextStartDateTime(Interval interval, LocalDateTime startDateTime,
 			ArrayList<LocalDateTime> comparisonList) {
+		
+		assert (comparisonList.size() > 0);
+		
 		Collections.sort(comparisonList);
 		// Takes the first timing as it is the earliest
 		LocalDateTime newStartDateTime = comparisonList.get(0);
@@ -640,7 +682,4 @@ public class Recurring {
 			return false;
 		}
 	}
-
-	// ----------------------------- GETTERS -----------------------------
-
 }

@@ -1,3 +1,5 @@
+//@@author A0130622X
+
 package GUI;
 	
 import java.net.URL;
@@ -10,7 +12,6 @@ import javafx.stage.Stage;
 import logic.Logic;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.text.Font;
 
 /**
  * Launches the program, initiating the TaskWindow users interact with

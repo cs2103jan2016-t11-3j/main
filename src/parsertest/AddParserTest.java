@@ -105,4 +105,20 @@ public class AddParserTest {
 		assertEquals(2, TO.getInterval().getTimeInterval());
 		assertEquals(LocalDateTime.MAX, TO.getInterval().getUntil());
 	}
+	
+	@Test
+	public void testG() throws Exception {
+		TO = AP.process("dota time every day");
+		
+		//Basic Details
+		assertEquals("dota time", TO.getTitle());
+		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
+		assertEquals("incomplete", TO.getStatus());
+		
+		//Interval Details
+		assertEquals("2016-05-09T23:59:59.999999999", TO.getInterval().getUntil().toString());
+		assertEquals("DAILY", TO.getInterval().getFrequency());
+		assertEquals(1, TO.getInterval().getTimeInterval());
+	}
 }

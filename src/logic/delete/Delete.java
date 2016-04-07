@@ -1,3 +1,5 @@
+//@@author A0124052X
+
 package logic.delete;
 
 import storage.*;
@@ -140,6 +142,8 @@ public class Delete {
 		this.redoList = redoList;
 		this.lastSearchedIndex = commandObj.getLastSearchedIndex();
 	}
+	
+//@@author A0124636H
 
 	/**
 	 * Called by logic to find and delete an object in the task list.
@@ -190,6 +194,8 @@ public class Delete {
 		concatenateOutput();
 		return output;
 	}
+	
+//@@author A0124052X
 
 	/**
 	 * Main method driving the quick delete function. Checks if the top of the
@@ -231,6 +237,8 @@ public class Delete {
 		createCompletedTasksDeletedOutput();
 	}
 	
+//@@author A0124636H
+	
 	// Clears everything - task list, undo list, redo list and the storage file
 	private void runDeleteAll() {
 		taskList.clear();
@@ -252,6 +260,8 @@ public class Delete {
 		}
 	}
 	
+//@@author A0124052X
+	
 	// Delete is handled differently if it is a recurring task
 	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException {
 		assert (!taskList.isEmpty());
@@ -268,6 +278,8 @@ public class Delete {
 			createErrorOutput();
 		}
 	}
+	
+//@@author A0124636H
 	
 	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
 	private void runSingleOccurrenceDelete() throws NullPointerException {
@@ -299,6 +311,8 @@ public class Delete {
 			createSingleOccurrenceMissingErrorOutput();
 		}
 	}
+	
+//@@author A0124052X
 
 	private boolean deleteInternal() {
 		try {
@@ -309,6 +323,8 @@ public class Delete {
 			return false;
 		}
 	}
+	
+//@@author A0124636H
 	
 	/*
 	 * This method will be relevant in the case of undoing the addition of a recurring task where the first 
@@ -345,6 +361,8 @@ public class Delete {
 		removedTask.addToTaskDateTimes(0, overdueTaskTiming);
 		removedTask.updateStartAndEndDateTimes();
 	}
+	
+//@@author A0124052X
 
 	private boolean deleteExternal() {
 		FileStorage storage = FileStorage.getInstance();
@@ -382,6 +400,8 @@ public class Delete {
 		removedTask = lastOutputTaskList.get(removedTaskIndex);
 		removedTaskName = removedTask.getTitle();
 	}
+	
+//@@author A0124052X
 	
 	private void setDeleteInformationForNormalDelete() {
 		setTaskIdToBeDeleted();

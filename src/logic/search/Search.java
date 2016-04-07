@@ -1,3 +1,5 @@
+//@@author A0124636H
+
 package logic.search;
 
 import logic.display.Display;
@@ -337,6 +339,8 @@ public class Search extends Display {
 		
 	}
 
+//@@author A0124052X
+	
 	/**
 	 * Retrieves the task contained in the last output task list via an index,
 	 * and proceeds to output all the timings associated with the task
@@ -383,7 +387,7 @@ public class Search extends Display {
 		
 		taskDateTimeOutput.clear();
 
-		output.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
+		output.add(String.format(MESSAGE_RECURRENCE_TIMINGS_DISPLAY, searchIndex));
 		taskDateTimeOutput.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
 			try {
@@ -420,6 +424,8 @@ public class Search extends Display {
 			taskDateTimeOutput.add(timeOutput);
 		}
 	}
+	
+//@@author A0124636H
 
 	private void generateSearchParametersOutput() {
 		String searchParameters = "";

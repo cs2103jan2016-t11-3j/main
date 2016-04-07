@@ -28,17 +28,20 @@ public class Parser {
 	private String _command;
 	private int _taskId;	// ADDED TASKID VARIABLE 
 	
+	/**
+	 * This is the general constructor for testing purposes.
+	 */
 	public Parser() {
 	}
 	
 	/**
-	 * This method constructs the parser object that will take in the user input and a internally 
-	 * system generated taskID
+	 * This method constructs the parser object and assigns the command and a internally 
+	 * system generated taskID.
 	 * 
 	 * @param command  
-	 * 				user's input into the system of String type
+	 * 				user's input into the system of String type.
 	 * @param taskId   
-	 * 				system generated ID
+	 * 				system generated ID.
 	 */
 	public Parser(String command, int taskId) {
 		_command = command;
@@ -47,7 +50,7 @@ public class Parser {
 	
 	/**
 	 * This method runs the methods to process the command and returns command object
-	 * to Logic
+	 * to Logic.
 	 * 
 	 * @return CO 
 	 * 				command object that contains task description and task object
@@ -60,9 +63,11 @@ public class Parser {
 	
 	/**
 	 * This method reads string and trigger the relevant method to process string's information
+	 * using a set of if-else conditions to check for task-related keywords. If keywords are absent, 
+	 * it will be processed as a search.
 	 * 
 	 * @param command  
-	 * 				user's input to the program, not null
+	 * 				user's input to the program, not null.
 	 * @throws Exception 
 	 */
 	public void allocate(String command) throws Exception {
@@ -96,6 +101,11 @@ public class Parser {
 			parseSearch(command);
 		}
   	}
+	
+	
+	// ================================
+	// First Level of Abstraction
+	// ================================
 	
 	private boolean isMatch(String input, String command) {
 		Pattern dateTimePattern = Pattern.compile(input);
@@ -172,9 +182,9 @@ public class Parser {
 		CO.setCommandType(Constants.INDEX_EDIT);
 		boolean isEditAllRecurring = false;
 		
-		if (command.startsWith("edit all")) {
+		if (command.toLowerCase().startsWith("edit all")) {
 			System.out.println(command);
-			command = command.replaceFirst("edit all", "").trim();
+			command = command.replaceFirst("(?i)(edit all)", "").trim();
 			isEditAllRecurring = true;
 		} else {
 			command = command.replaceFirst(Constants.REGEX_PARSER_EDIT, "").trim();
@@ -190,7 +200,6 @@ public class Parser {
 		
 		CO.setTaskObject(TO);
 		CO.setIndex(EP.getIndex());
-		EP.reset();
 	}
 	
 	/**
@@ -208,7 +217,6 @@ public class Parser {
 		TO.setTaskId(_taskId);
 		setCategory();
 		CO.setTaskObject(TO);
-		AP.reset();
 	}
 	
 	/**
@@ -235,6 +243,51 @@ public class Parser {
 		CO.setTaskObject(TO);
 	}
 	
+	/**
+ 	 * This method sets command type for delete commands 
+ 	 * 
+ 	 * @param command 
+ 	 * 				user's input as a string for deleting
+ 	 * @throws Exception 
+ 	 */
+	private void parseDelete(String command) throws Exception {
+ 		CO.setCommandType(Constants.INDEX_DELETE);
+ 		int index;
+ 		index = extractDeleteIndex(command);
+ 		CO.setIndex(index);
+ 		if (index > 0 && command.contains("all")) {
+ 			TO.setIsEditAll(true);
+ 			TO.setTitle("all");
+ 		} else if (index == 0 && command.contains("done")) {
+ 			TO.setStatus("completed");
+ 		}
+ 		CO.setTaskObject(TO);	
+ 	}
+	
+	/**
+ 	 * This method sets command type for command object and returns file path
+ 	 * 
+ 	 * @param command 
+ 	 * 				string input that represents a save command 
+ 	 * @throws Exception 
+ 	 */
+	private void parseSave(String command) throws Exception {
+ 		CO.setCommandType(Constants.INDEX_SAVE);
+ 		String newString;
+ 		int index = command.indexOf(" ") + 1;
+ 		if (command.length() > index) {
+ 			newString = command.substring(index);
+ 	 		TO.setTitle(newString);
+ 	 		CO.setTaskObject(TO);	
+ 		} else {
+ 			throw new Exception("Filepath missing");
+ 		}
+ 		
+ 	}
+	
+	// ================================
+	// Second Level of Abstraction
+	// ================================
 	
 	private void setCategory() {
 		if (isFloating()) {
@@ -265,28 +318,6 @@ public class Parser {
 
  	
  	/**
- 	 * This method sets command type for delete commands 
- 	 * 
- 	 * @param command 
- 	 * 				user's input as a string for deleting
- 	 * @throws Exception 
- 	 */
-	private void parseDelete(String command) throws Exception {
- 		CO.setCommandType(Constants.INDEX_DELETE);
- 		int index;
- 		index = extractDeleteIndex(command);
- 		CO.setIndex(index);
- 		if (index > 0 && command.contains("all")) {
- 			TO.setIsEditAll(true);
- 			TO.setTitle("all");
- 		} else if (index == 0 && command.contains("done")) {
- 			TO.setStatus("completed");
- 		}
- 		CO.setTaskObject(TO);	
- 	}
- 	
- 	
- 	/**
  	 * This method returns the number that is after the delete command as an integer
  	 * 
  	 * @param command
@@ -313,26 +344,7 @@ public class Parser {
 	 	return Integer.parseInt(newString);
  	}
 
- 	/**
- 	 * This method sets command type for command object and returns file path
- 	 * 
- 	 * @param command 
- 	 * 				string input that represents a save command 
- 	 * @throws Exception 
- 	 */
-	private void parseSave(String command) throws Exception {
- 		CO.setCommandType(Constants.INDEX_SAVE);
- 		String newString;
- 		int index = command.indexOf(" ") + 1;
- 		if (command.length() > index) {
- 			newString = command.substring(index);
- 	 		TO.setTitle(newString);
- 	 		CO.setTaskObject(TO);	
- 		} else {
- 			throw new Exception("Filepath missing");
- 		}
- 		
- 	}
+ 	
  	
  	//all the getters for testing purposes
  	

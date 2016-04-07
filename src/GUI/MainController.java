@@ -1,6 +1,7 @@
+//@@author A0130622X
+
 package GUI;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,32 +13,23 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-
-import static logic.constants.Strings.*;
 
 /**
  * Controls the TaskWindow to allow interaction with the program Inputs keyed in
@@ -56,15 +48,11 @@ public class MainController implements Initializable {
 	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
 
 	@FXML
-	private TextField userInput;
+	private static BorderPane layout;
 	@FXML
 	private VBox sidePanel;
 	@FXML
-	private static BorderPane layout;
-	@FXML
-	private TextFlow feedbackBox;
-	@FXML
-	private Text feedbackMessage;
+	private ListView<String> taskDateList;
 	@FXML
 	private TableView<TaskObject> taskTable;
 	@FXML
@@ -74,15 +62,17 @@ public class MainController implements Initializable {
 	@FXML
 	private TableColumn<TaskObject, String> statusColumn;
 	@FXML
-	private TableColumn<TaskObject, Integer> startDateColumn;
-	@FXML
-	private TableColumn<TaskObject, Integer> endDateColumn;
-	@FXML
 	private TableColumn<TaskObject, String> timeColumn;
 	@FXML
-	private ListView<String> taskDateList;
+	private TextFlow feedbackBox;
+	@FXML
+	private Text feedbackMessage;
+	@FXML
+	private TextField userInput;
 	@FXML
 	private Label recurTitle;
+	@FXML
+	private Label programName;
 
 	@FXML
 	// reads input on enter
@@ -106,6 +96,11 @@ public class MainController implements Initializable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML
 	public void handleKeyPressed(KeyEvent event) throws IOException {
 		if (event.getCode() == KeyCode.F1) {
@@ -124,24 +119,25 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert endDateColumn != null : "fx:id=\"endDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert timeColumn != null : "fx:id=\"timeColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert indexColumn != null : "fx:id=\"indexColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert startDateColumn != null : "fx:id=\"startDateColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert statusColumn != null : "fx:id=\"statusColumn\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert feedbackMessage != null : "fx:id=\"feedbackMessage\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert userInput != null : "fx:id=\"userInput\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'UIScene.fxml'.";
-		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'UIScene.fxml'.";
+		assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert taskDateList != null : "fx:id=\"taskDateList\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert recurTitle != null : "fx:id=\"recurTitle\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert timeColumn != null : "fx:id=\"timeColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert indexColumn != null : "fx:id=\"indexColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert statusColumn != null : "fx:id=\"statusColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert programName != null : "fx:id=\"programName\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert feedbackMessage != null : "fx:id=\"feedbackMessage\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert userInput != null : "fx:id=\"userInput\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert sidePanel != null : "fx:id=\"sidePanel\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'TaskWindow.fxml'.";
 
 		_UI.setSortByDate();
 		manageSidePanel();
 		setWrapText(); // for sideBarList
 		displayMessage();
 		display(); // start program with all tasks in table
-		
 
 	}
 
@@ -164,11 +160,10 @@ public class MainController implements Initializable {
 	}
 
 	private void passInput() throws IOException {
-		System.out.println(_input);
 		if (_input.startsWith("help")) {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
-		} else if (_input.startsWith("sort")){
+		} else if (_input.startsWith("sort")) {
 			_UI.setSortByDate();
 		} else {
 			_UI.passInput(_input);
@@ -185,10 +180,10 @@ public class MainController implements Initializable {
 			sidePanel.setVisible(true);
 			fillSidebar();
 			sidePanelAnimation();
-		} else {
-			displayMessage(); // print feedback message
-			display(); // refreshes table after every command
 		}
+
+		displayMessage(); // print feedback message
+		display(); // refreshes table after every command
 	}
 
 	private void setSelectionFocus() {
@@ -203,7 +198,7 @@ public class MainController implements Initializable {
 		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")
 				|| !_input.startsWith("filter") || !_input.startsWith("display") || _input.startsWith("search")
 				|| !_input.startsWith("list")) && sidePanel.isVisible() == false) {
-			
+
 			String[] input = _input.split(" ");
 			if (input.length > 1) {
 				try {
@@ -222,7 +217,7 @@ public class MainController implements Initializable {
 	private boolean isRecurringDateRequest() {
 
 		if (_UI.getOutput().size() > 0) {
-			if (_UI.getOutput().get(0).startsWith("Timings for")) {
+			if (_UI.getOutput().get(0).startsWith("Displaying recurrence")) {
 				return true;
 			}
 		}
@@ -237,10 +232,9 @@ public class MainController implements Initializable {
 			recurTitle.setText(recurringTimes.get(0));
 			recurringTimes.remove(0);
 			ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
-			
+
 			taskDateList.getItems().clear();
 			taskDateList.setItems(items);
-			System.out.println(taskDateList.getItems());
 		} catch (NullPointerException e) {
 
 		}
@@ -257,7 +251,13 @@ public class MainController implements Initializable {
 		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());
 		fillTable(taskData);
 	}
-
+	
+	/**
+	 * Called by HelpPopupController to retrieve content in help manual for display.
+	 * 
+	 * @param i - index to indicate which section of help manual to retrieve
+	 * @return _UI.getOutput: returns ArrayList<String> from different sections of help manual
+	 */
 	public static ArrayList<String> getHelpList(int i) {
 		switch (i) {
 		case 1:
@@ -391,23 +391,23 @@ public class MainController implements Initializable {
 			}
 		});
 	}
-	  
-	private void setWrapText() {
-		 taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-	            @Override
-	            public ListCell<String> call(final ListView<String> list) {
-	                return new ListCell<String>() {
-	                    {
-	                        Text text = new Text();
-	                        text.wrappingWidthProperty().bind(taskDateList.widthProperty());
-	                        text.textProperty().bind(itemProperty());
 
-	                        setPrefWidth(0);
-	                        setGraphic(text);
-	                    }
-	                };
-	            }
-	        });
+	private void setWrapText() {
+		taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+			@Override
+			public ListCell<String> call(final ListView<String> list) {
+				return new ListCell<String>() {
+					{
+						Text text = new Text();
+						text.wrappingWidthProperty().bind(taskDateList.widthProperty());
+						text.textProperty().bind(itemProperty());
+
+						setPrefWidth(0);
+						setGraphic(text);
+					}
+				};
+			}
+		});
 	}
 
 }
