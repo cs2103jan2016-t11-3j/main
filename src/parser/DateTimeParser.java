@@ -374,7 +374,6 @@ public class DateTimeParser {
 			intervalString = getTrimmedString(input, intervalMatcher.start(), intervalMatcher.end());
 			input = input.replaceFirst(intervalString, "").trim();
 			parseInterval(intervalString);
-			
 			if (!input.isEmpty()) {
 				parseDateTime(input,true);
 			}
@@ -409,7 +408,7 @@ public class DateTimeParser {
 		}
 
 		startDate = DP.getDateObject();
-		
+
 		if (startDate.equals(LocalDate.MAX)) {
 			startDate = LocalDate.now();
 		}
@@ -438,6 +437,12 @@ public class DateTimeParser {
 		}
 	}
 	
+	// ================================
+	// Sixth Level of Abstraction
+	// ================================
+	
+	
+
 	private void processParallel(DateParser DP, TimeParser TP, String _date,
 			String _time) throws Exception {
 		_time = cleanString(_time);
@@ -580,6 +585,7 @@ public class DateTimeParser {
 	private void setDaysInWeek(String input) { //monday and tuesday ??
 		//wanna read using comma?
 		input = input.toLowerCase();
+		
 		if (input.contains("mon") || input.contains("monday")) {
 			TO.getInterval().setByDay(1);
 		}
@@ -676,8 +682,9 @@ public class DateTimeParser {
 				start = i;
 				break;
 			}
+			start = i;
 		}
-		
+
 		if (start == 7 && TO.getInterval().getByDayArray()[7] == 0) {
 			//get from behind the now
 			for (int i = 1; i < now ; i++) {
@@ -687,7 +694,6 @@ public class DateTimeParser {
 				}
 			}
 		}
-		
 		return getDayInWeek(start);
 	}
 
