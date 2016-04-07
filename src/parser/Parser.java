@@ -97,6 +97,8 @@ public class Parser {
 			parseNotDone(command);
 		} else if (isMatch(Constants.REGEX_PARSER_SEARCH, command)) {
 			parseSearch(command);
+		} else if (isMatch(Constants.REGEX_PARSER_LOAD, command)) {
+			parseLoad(command);
 		} else {
 			parseSearch(command);
 		}
@@ -282,8 +284,25 @@ public class Parser {
  		} else {
  			throw new Exception("Filepath missing");
  		}
- 		
  	}
+	
+	private void parseLoad(String command) throws Exception {
+		CO.setCommandType(Constants.INDEX_LOAD);
+ 		String newString;
+ 		int index = command.indexOf(" ") + 1;
+ 		if (command.length() > index) {
+ 			if (command.contains("backup")) {
+ 				newString = "backup";
+ 			} else {
+ 				newString = command.substring(index);
+ 			}
+ 	 		TO.setTitle(newString);
+ 	 		CO.setTaskObject(TO);	
+ 		} else {
+ 			throw new Exception("Filepath missing");
+ 		}
+ 		
+	}
 	
 	// ================================
 	// Second Level of Abstraction
