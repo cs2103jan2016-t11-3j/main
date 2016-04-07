@@ -375,7 +375,7 @@ public class CommandFacade {
 	 * Calls the Exit function, which exits the program
 	 */
 	private void exitFunction() {
-		Exit exit = new Exit();
+		Exit exit = new Exit(taskList);
 		exit.run();
 	}
 
