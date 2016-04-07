@@ -81,15 +81,26 @@ public class UIMain extends Application {
 		
 		return taskList;
 	}
-
+	
+	/**
+	 * Called by MainController to get output generated after processing user input.
+	 * @return logic.getOutput()
+	 */
 	public ArrayList<String> getOutput() {
 		return logic.getOutput();
 	}
 	
+	/**
+	 * Called by MainController to sort the list displayed in tableview according to time.
+	 */
 	public void setSortByDate() {
 		logic.sortOutputByDate();
 	}
-
+	
+	/**
+	 * Called by MainController to obtain array list of task timings.
+	 * @return logic.getTaskDateTimeOutput() 
+	 */
 	public ArrayList<String> getTaskDateOutput() {
 		return logic.getTaskDateTimeOutput();
 	}
