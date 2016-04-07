@@ -49,6 +49,7 @@ public class SearchParser extends CommandParser {
 	 */
 	private void searchTaskDateTime(String input) throws Exception {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
+		Pattern dayOnlyPattern = Pattern.compile(Constants.REGEX_DAYS_TEXT);
 		Matcher matcher = dateTimePattern.matcher(input);
 		
 		String identifier = null;
@@ -67,7 +68,6 @@ public class SearchParser extends CommandParser {
 
 		setTaskObject();
 	}
-	
 	
 	private boolean isSearchByStatus(String input) {
 		return input.matches("(?i)(done|completed)");
@@ -119,5 +119,4 @@ public class SearchParser extends CommandParser {
 	public int getIndex() {
 		return index;
 	}
-	
 }

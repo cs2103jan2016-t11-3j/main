@@ -21,49 +21,6 @@ import parser.exceptions.InvalidDateFormatException;
  */
 
 public class DateParser {
-	
-	// possible words that the user may input.
-	private static final String MONTH_1_1 = "january";
-	private static final String MONTH_1_2 = "jan";
-	private static final String MONTH_2_1 = "february";
-	private static final String MONTH_2_2 = "feb";
-	private static final String MONTH_3_1 = "march";
-	private static final String MONTH_3_2 = "mar";
-	private static final String MONTH_4_1 = "april";
-	private static final String MONTH_4_2 = "apr";
-	private static final String MONTH_5_1 = "may";
-	private static final String MONTH_6_1 = "june";
-	private static final String MONTH_6_2 = "jun";
-	private static final String MONTH_7_1 = "july";
-	private static final String MONTH_7_2 = "jul";
-	private static final String MONTH_8_1 = "august";
-	private static final String MONTH_8_2 = "aug";
-	private static final String MONTH_9_1 = "september";
-	private static final String MONTH_9_2 = "sept";
-	private static final String MONTH_10_1 = "october";
-	private static final String MONTH_10_2 = "oct";
-	private static final String MONTH_11_1 = "november";
-	private static final String MONTH_11_2 = "nov";
-	private static final String MONTH_12_1 = "december";
-	private static final String MONTH_12_2 = "dec";
-	
-	//corresponding integer value for each month.
-	private static final int VALUE_JAN = 1;
-	private static final int VALUE_FEB = 2;
-	private static final int VALUE_MAR = 3;
-	private static final int VALUE_APR = 4;
-	private static final int VALUE_MAY = 5;
-	private static final int VALUE_JUN = 6;
-	private static final int VALUE_JUL = 7;
-	private static final int VALUE_AUG = 8;
-	private static final int VALUE_SEPT = 9;
-	private static final int VALUE_OCT = 10;
-	private static final int VALUE_NOV = 11;
-	private static final int VALUE_DEC = 12;
-	
-	//changeable default year.
-	private static final int DEFAULT_YEAR = 2016;
-	
 	private int day = -1;
 	private int month = -1;
 	private int year = -1;
@@ -136,7 +93,7 @@ public class DateParser {
 		if (year < 100 && year != -1) {
 			year = 2000 + year;
 		} else if (year == -1) {
-			year = DEFAULT_YEAR;
+			year = Constants.DEFAULT_YEAR;
 		}
 		if (day > 31 || month > 12) {
 			throw new Exception("Invalid Date");
@@ -182,11 +139,9 @@ public class DateParser {
             setMonth(input);
             input = removeMonth(input);
             splitStringAndProcess(input);
-        }
-	    else if (isRelative(input)) { 
+        } else if (isRelative(input)) { 
             processRelativeDate(input);
-        }
-	    else {
+        } else {
 	        throw new InvalidDateFormatException(input);
 	    }
     }
@@ -370,30 +325,30 @@ public class DateParser {
 	 */
 	private int setMonthInDateProcessor(String month) {
 		month = month.toLowerCase();
-		if (month == MONTH_1_1 || month.contains(MONTH_1_2)) {
-			return VALUE_JAN;
-		} else if (month == MONTH_2_1 || month.contains(MONTH_2_2)) {
-			return VALUE_FEB;
-		} else if (month == MONTH_3_1 || month.contains(MONTH_3_2)) {
-			return VALUE_MAR;
-		} else if (month == MONTH_4_1 || month.contains(MONTH_4_2)) {
-			return VALUE_APR;
-		} else if (month.contains(MONTH_5_1)) {
-			return VALUE_MAY;
-		} else if (month == MONTH_6_1 || month.contains(MONTH_6_2)) {
-			return VALUE_JUN;
-		} else if (month == MONTH_7_1 || month.contains(MONTH_7_2)) {
-			return VALUE_JUL;
-		} else if (month == MONTH_8_1 || month.contains(MONTH_8_2)) {
-			return VALUE_AUG;
-		} else if (month == MONTH_9_1 || month.contains(MONTH_9_2)) {
-			return VALUE_SEPT;
-		} else if (month == MONTH_10_1 || month.contains(MONTH_10_2)) {
-			return VALUE_OCT;
-		} else if (month == MONTH_11_1 || month.contains(MONTH_11_2)) {
-			return VALUE_NOV;
-		} else if (month == MONTH_12_1 || month.contains(MONTH_12_2)) {
-			return VALUE_DEC;
+		if (month.contains(Constants.MONTH_1_1) || month.contains(Constants.MONTH_1_2)) {
+			return Constants.VALUE_JAN;
+		} else if (month.contains(Constants.MONTH_2_1) || month.contains(Constants.MONTH_2_2)) {
+			return Constants.VALUE_FEB;
+		} else if (month.contains(Constants.MONTH_3_1) || month.contains(Constants.MONTH_3_2)) {
+			return Constants.VALUE_MAR;
+		} else if (month.contains(Constants.MONTH_4_1) || month.contains(Constants.MONTH_4_2)) {
+			return Constants.VALUE_APR;
+		} else if (month.contains(Constants.MONTH_5_1)) {
+			return Constants.VALUE_MAY;
+		} else if (month.contains(Constants.MONTH_6_1) || month.contains(Constants.MONTH_6_2)) {
+			return Constants.VALUE_JUN;
+		} else if (month.contains(Constants.MONTH_7_1) || month.contains(Constants.MONTH_7_2)) {
+			return Constants.VALUE_JUL;
+		} else if (month.contains(Constants.MONTH_8_1) || month.contains(Constants.MONTH_8_2)) {
+			return Constants.VALUE_AUG;
+		} else if (month.contains(Constants.MONTH_9_1) || month.contains(Constants.MONTH_9_2)) {
+			return Constants.VALUE_SEPT;
+		} else if (month.contains(Constants.MONTH_10_1) || month.contains(Constants.MONTH_10_2)) {
+			return Constants.VALUE_OCT;
+		} else if (month.contains(Constants.MONTH_11_1) || month.contains(Constants.MONTH_11_2)) {
+			return Constants.VALUE_NOV;
+		} else if (month.contains(Constants.MONTH_12_1) || month.contains(Constants.MONTH_12_2)) {
+			return Constants.VALUE_DEC;
 		} else {
 			return -1;
 		}
@@ -474,23 +429,24 @@ public class DateParser {
 	 */
 	private String processDayOfWeek(String dayOfWeek) throws InvalidDateFormatException {
         dayOfWeek = preprocess(dayOfWeek);
-        if ("monday".contains(dayOfWeek)) {
-            return "MONDAY" ;
-        } else if ("tuesday".contains(dayOfWeek)) {
-            return "TUESDAY" ;
-        } else if ("wednesday".contains(dayOfWeek)) {
-            return "WEDNESDAY" ;
-        } else if ("thursday".contains(dayOfWeek)) {
-            return "THURSDAY" ;
-        } else if ("friday".contains(dayOfWeek)) {
-            return "FRIDAY" ;
-        } else if ("saturday".contains(dayOfWeek)) {
-            return "SATURDAY" ;
-        } else if ("sunday".contains(dayOfWeek)) {
-            return "SUNDAY" ;
+        if (Constants.DAY_1.contains(dayOfWeek)) {
+        	dayOfWeek = Constants.DAY_1;
+        } else if (Constants.DAY_2.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_2;
+        } else if (Constants.DAY_3.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_3;
+        } else if (Constants.DAY_4.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_4;
+        } else if (Constants.DAY_5.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_5;
+        } else if (Constants.DAY_6.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_6;
+        } else if (Constants.DAY_7.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_7;
         } else {
             throw new InvalidDateFormatException(dayOfWeek);
         }
+        return dayOfWeek.toUpperCase();
     }
 
 	

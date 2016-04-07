@@ -7,8 +7,6 @@ import common.TaskObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,12 +29,6 @@ import parser.Constants.TaskType;
  *
  */
 public class DateTimeParser {
-	
-	private int _startTime = -1;
-	private int _endTime = -1;
-	private int _startDate = -1;
-	private int _endDate = -1;
-	
 	private LocalDate startDate = LocalDate.MAX;
 	private LocalDate endDate = LocalDate.MAX;
 	private LocalTime startTime = LocalTime.MAX;
@@ -49,7 +41,7 @@ public class DateTimeParser {
 	private LocalDateTime untilDateTime = LocalDateTime.MAX;
 	
 	private TaskObject TO = new TaskObject();
-	List<String> dtlist = new ArrayList<String>();
+	
 	TaskType tasktype;
 	
 	private static Logger logger = AtfLogger.getLogger();
@@ -143,16 +135,16 @@ public class DateTimeParser {
 		//separate stuff for different task types
 		switch(tasktype) {
 		case event :
-			String temp1 = "", temp2 = "";
+			String startOfEvent = "", endOfEvent = "";
 			Pattern split = Pattern.compile(" to ");
 			Matcher matcher = split.matcher(input);
 			if (matcher.find()) {
-				temp1 = getTrimmedString(input, 0, matcher.start());
-				temp2 = getTrimmedString(input, matcher.end(), input.length());
+				startOfEvent = getTrimmedString(input, 0, matcher.start());
+				endOfEvent = getTrimmedString(input, matcher.end(), input.length());
 			}
 			
-			separateDateTime(temp1, "start");
-			separateDateTime(temp2, "end");
+			separateDateTime(startOfEvent, "start");
+			separateDateTime(endOfEvent, "end");
 			break;
 		case recurring :
 			TO.setIsRecurring(true);
@@ -583,7 +575,6 @@ public class DateTimeParser {
 	 * 
 	 */
 	private void setDaysInWeek(String input) { //monday and tuesday ??
-		//wanna read using comma?
 		input = input.toLowerCase();
 		
 		if (input.contains("mon") || input.contains("monday")) {
@@ -649,26 +640,35 @@ public class DateTimeParser {
 	 */
 	private int getMultiplier(String forInput, String intervalInput) throws Exception {
 		forInput = getFormattedFrequency(forInput);
-		if (forInput.matches("DAILY") && intervalInput.matches("DAILY")) {
+		if (forInput.matches(Constants.FREQ_DAILY) 
+				&& intervalInput.matches(Constants.FREQ_DAILY)) {
 			return 1;
-		} else if (forInput.matches("WEEKLY") && intervalInput.matches("DAILY")) {
+		} else if (forInput.matches(Constants.FREQ_WEEKLY) 
+				&& intervalInput.matches(Constants.FREQ_DAILY)) {
 			return 7;
-		} else if (forInput.matches("MONTHLY") && intervalInput.matches("DAILY")) {
+		} else if (forInput.matches(Constants.FREQ_MONTHLY) 
+				&& intervalInput.matches(Constants.FREQ_DAILY)) {
 			return 31; //or 30?
-		} else if (forInput.matches("YEARLY") && intervalInput.matches("DAILY")) {
+		} else if (forInput.matches(Constants.FREQ_YEARLY) 
+				&& intervalInput.matches(Constants.FREQ_DAILY)) {
 			return 365;
-		} else if (forInput.matches("WEEKLY") && intervalInput.matches("WEEKLY")) {
+		} else if (forInput.matches(Constants.FREQ_WEEKLY) 
+				&& intervalInput.matches(Constants.FREQ_WEEKLY)) {
 			return 1;
-		} else if (forInput.matches("MONTHLY") && intervalInput.matches("WEEKLY")) {
+		} else if (forInput.matches(Constants.FREQ_MONTHLY) 
+				&& intervalInput.matches(Constants.FREQ_WEEKLY)) {
 			return 4;
-		} else if (forInput.matches("MONTHLY") && intervalInput.matches("MONTHLY")) {
+		} else if (forInput.matches(Constants.FREQ_MONTHLY) 
+				&& intervalInput.matches(Constants.FREQ_MONTHLY)) {
 			return 1;
-		} else if (forInput.matches("YEARLY") && intervalInput.matches("MONTHLY")) {
+		} else if (forInput.matches(Constants.FREQ_YEARLY) 
+				&& intervalInput.matches(Constants.FREQ_MONTHLY)) {
 			return 12;
-		} else if (forInput.matches("YEARLY") && intervalInput.matches("YEARLY")) {
+		} else if (forInput.matches(Constants.FREQ_YEARLY) 
+				&& intervalInput.matches(Constants.FREQ_YEARLY)) {
 			return 1;
 		} else {
-			throw new Exception("Invalid date input, recurrence larger than interval"); //improve engrish here 
+			throw new Exception("Invalid date input, recurrence larger than interval"); 
 		}
 		
 	}
@@ -701,60 +701,56 @@ public class DateTimeParser {
 	// Seventh Level of Abstraction
 	// ================================
 	
+	/**
+	 * This method returns corresponding date to a given number from 1 - 7.
+	 * 
+	 * @param index
+	 * 				number of the day in the week (1 - monday, 2 - tuesday, etc)
+	 * @return
+	 */
 	private String getDayInWeek(int index) {
 		if (index == 1) {
-			return "monday";
+			return Constants.DAY_1;
 		} else if (index == 2) {
-			return "tuesday";
+			return Constants.DAY_2;
 		} else if (index == 3) {
-			return "wednesday";
+			return Constants.DAY_3;
 		} else if (index == 4) {
-			return "thursday";
+			return Constants.DAY_4;
 		} else if (index == 5) {
-			return "friday";
+			return Constants.DAY_5;
 		} else if (index == 6) {
-			return "saturday";
+			return Constants.DAY_6;
 		} else if (index == 7) {
-			return "sunday";
+			return Constants.DAY_7;
 		} else {
 			return "";
 		}
 	}
 	
+	/**
+	 * This method returns the frequency type based on input.
+	 * 
+	 * @param frequency
+	 * 				frequency extracted from interval. non-null. e.g. years, days, etc.
+	 * @return
+	 */
 	private String getFormattedFrequency(String frequency) {
 		if (frequency.matches(Constants.REGEX_DAYS_TEXT)
 				|| frequency.matches("(week|wk)(s)?")) {
-			frequency = "WEEKLY";
+			frequency = Constants.FREQ_WEEKLY;
 		} else if (frequency.matches("(year|yr)(s)?")) {
-			frequency = "YEARLY";
-		} else if (frequency.matches("(hour|hr)(s)?")) {
-			frequency = "HOURLY";
+			frequency = Constants.FREQ_YEARLY;
 		} else if (frequency.matches(Constants.REGEX_MONTHS_TEXT) 
 				|| frequency.matches("(month|mth)(s)?")) {
-			frequency = "MONTHLY";
+			frequency = Constants.FREQ_MONTHLY;
 		} else if (frequency.matches("(day)(s)?")) {
-			frequency = "DAILY";
+			frequency = Constants.FREQ_DAILY;
 		}
 		return frequency;
 	}
 	
 	//getters!!!!
-	public int getStartDate() {
-		return _startDate;
-	}
-	
-	public int getEndDate() {
-		return _endDate;
-	}
-	
-	public int getStartTime() {
-		return _startTime;
-	}
-	
-	public int getEndTime() {
-		return _endTime;
-	}
-	
 	public LocalDateTime getStartDateTime() {
 		return startDateTime;
 	}

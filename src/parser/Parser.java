@@ -238,7 +238,7 @@ public class Parser {
 			TO.setStartDateTime(LocalDateTime.MAX);
 			TO.setEndDateTime(LocalDateTime.MAX);
 		} else {
-			command = command.substring(command.indexOf(" ")+1);
+			command = command.replaceFirst(Constants.REGEX_PARSER_SEARCH, "").trim();
 			TO = SP.process(command);
 			CO.setIndex(SP.getIndex());
 		}

@@ -39,6 +39,14 @@ public class SearchProcessorTest {
 		assertEquals(8, SP.getIndex());
 	}
 	
+	/*case 3: searching for completed tasks*/
+	@Test
+	public void testD() throws Exception {
+		TO = SP.process("next monday");
+		assertEquals("", TO.getTitle());
+		assertEquals("2016-04-11T23:59:59.999999999", TO.getStartDateTime().toString());
+	}
+	
 	private void reset() {
 		SP.resetAll();
 	}
