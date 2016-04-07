@@ -261,7 +261,6 @@ public class DateTimeParser {
 			logger.log(Level.INFO, "Time format NOT found");
 			_date = input;
 		}
-	
 		processParallel(DP, TP, _date, _time);
 		setDateTime(type, DP, TP);
 	}

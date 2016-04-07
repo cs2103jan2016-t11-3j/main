@@ -184,9 +184,10 @@ public class Parser {
 		CO.setCommandType(Constants.INDEX_EDIT);
 		boolean isEditAllRecurring = false;
 		
-		if (command.toLowerCase().startsWith("edit all")) {
+		if (command.toLowerCase().startsWith("edit all") 
+				|| command.toLowerCase().startsWith("update all")) {
 			System.out.println(command);
-			command = command.replaceFirst("(?i)(edit all)", "").trim();
+			command = command.replaceFirst("(?i)((edit|update) all)", "").trim();
 			isEditAllRecurring = true;
 		} else {
 			command = command.replaceFirst(Constants.REGEX_PARSER_EDIT, "").trim();

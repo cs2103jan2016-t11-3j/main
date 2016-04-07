@@ -369,12 +369,12 @@ public class ParserTest {
 	//--Test searching relative date without search keyword
 	@Test
 	public void testSearch9() throws Exception {
-		Parser tempParser = new Parser("next monday", 1);
+		Parser tempParser = new Parser("next fri", 1);
 		CommandObject cmd = new CommandObject();
 		cmd = tempParser.run();
 		assertEquals("", cmd.getTaskObject().getTitle());
 		assertEquals(2, cmd.getCommandType());
-		assertEquals("2016-04-11T23:59:59.999999999", cmd.getTaskObject().getStartDateTime().toString());
+		assertEquals("2016-04-15T23:59:59.999999999", cmd.getTaskObject().getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, cmd.getTaskObject().getEndDateTime());
 		reset();
 	}
