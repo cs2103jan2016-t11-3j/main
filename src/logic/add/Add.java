@@ -9,6 +9,7 @@ import storage.*;
 import common.*;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.time.DateTimeException;
@@ -97,25 +98,34 @@ public class Add {
 				saveToStorage();
 				createOutput();
 			} catch (DateTimeException e) {
+				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
 				logger.log(Level.WARNING, "date within input task is invalid");
 			} catch (NullPointerException e) {
+				removeInternallyAddedTask();
 				e.printStackTrace();
 				output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
 				logger.log(Level.WARNING, "tried to retrieve an unavailable object");
 			} catch (RecurrenceException e) {
+				removeInternallyAddedTask();
 				String exceptionMessage = e.getRecurrenceExceptionMessage();
 				output.add(exceptionMessage);
 				logger.log(Level.WARNING, "task added has invalid recurrence properties");
 			} catch (AddException e) {
+				removeInternallyAddedTask();
 				if (e.getIsRecurring() && e.getCategory().equals(CATEGORY_FLOATING)) {
 					output.add(MESSAGE_ADD_EXCEPTION + " " + MESSAGE_ADD_FLOATING_RECURRING);
 				} else {
 					output.add(MESSAGE_ADD_EXCEPTION);
 				}
 				logger.log(Level.WARNING, e.getMessage());
+			} catch (InvalidPathException e) {
+				removeInternallyAddedTask();
+				output.add(MESSAGE_FAIL + MESSAGE_LOAD_EXCEPTION_IFP);
+				logger.log(Level.WARNING, "invalid file path");
+				
 			} catch (Exception e) {
-				e.printStackTrace();
+				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL);
 				logger.log(Level.WARNING, "task does not have a valid category");
 			}
@@ -421,6 +431,7 @@ public class Add {
 		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
+			addedExternal = true;
 			logger.log(Level.INFO, "added task to external file storage");
 		} catch (NoSuchFileException e) {
 			// TODO Auto-generated catch block
@@ -430,10 +441,9 @@ public class Add {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			output.add(MESSAGE_REQUEST_SAVE_LOCATION);
 			logger.log(Level.WARNING, "did not manage to add task externally, IO exception");
 		}
-		addedExternal = true;
-
 	}
 
 	/****************************************************************************/
@@ -491,6 +501,16 @@ public class Add {
 		text = text.substring(0, text.length() - 2);
 		text = text.concat(". ");
 		return text;
+	}
+	
+	private void removeInternallyAddedTask() {
+		if (addedInternal) {
+			for (int i = 0; i < taskList.size(); i++) {
+				if (taskList.get(i).getTaskId() == task.getTaskId()) {
+					taskList.remove(i);
+				}
+			}
+		}
 	}
 
 	/***************************************************************************/
