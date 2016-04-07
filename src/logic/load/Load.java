@@ -46,7 +46,6 @@ public class Load {
 
 	private void obtainFilePath(String command) {
 		filePath = command.substring(STARTING_INDEX);
-		System.out.println(filePath);
 	}
 
 	public ArrayList<String> run() {
@@ -87,6 +86,7 @@ public class Load {
 	
 	private void createOutput() {
 		if (loadCommand == LOAD_FROM) {
+			System.out.println(filePath);
 			output.add(String.format(MESSAGE_LOAD_SUCCESS, filePath));
 		} else {
 			if (loadCommand == LOAD_BACKUP) {
