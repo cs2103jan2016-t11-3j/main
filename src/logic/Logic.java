@@ -100,15 +100,15 @@ public class Logic {
 			output.add(exceptionMessage);
 			logger.log(Level.WARNING, "unable to update recurrences");
 		} catch (FileNotFoundException e) {
-			output.add(MESSAGE_LOAD_EXCEPTION_FNF);
+			output.add(MESSAGE_LOAD_EXCEPTION_FNF + ". " + MESSAGE_LOAD_BACKUP);
 			logger.log(Level.WARNING,
 					"unable to read information from external file storage, file not found");
 		} catch (IOException e) {
-			output.add(MESSAGE_LOAD_EXCEPTION_IO);
+			output.add(MESSAGE_LOAD_EXCEPTION_IO + ". " + MESSAGE_LOAD_BACKUP);
 			logger.log(Level.WARNING,
 					"unable to read information from external file storage, general IO exception");
 		} catch (JsonSyntaxException e) {
-			output.add(MESSAGE_LOAD_EXCEPTION_JSON);
+			output.add(MESSAGE_LOAD_EXCEPTION_JSON + ". " + MESSAGE_LOAD_BACKUP);
 			logger.log(Level.WARNING,
 					"unable to read information from external file storage, Json syntax error");
 		}

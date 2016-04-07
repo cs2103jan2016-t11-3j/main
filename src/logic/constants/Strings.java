@@ -163,6 +163,13 @@ public class Strings {
 	public static final String MESSAGE_LOAD_EXCEPTION_IO = "Error reading information from external file storage";
 	public static final String MESSAGE_LOAD_EXCEPTION_FNF = "Saved storage file not found";
 	public static final String MESSAGE_LOAD_EXCEPTION_JSON = "Error interpreting information from external file storage";
+	public static final String MESSAGE_LOAD_EXCEPTION_IFP = "Invalid file path used";
+	public static final String MESSAGE_LOAD_BACKUP = "Please key in \"load backup\" to load the backup file";
+	
+	// Load Constants
+	public static final String KEYWORD_FROM = "from ";
+	public static final String KEYWORD_BACKUP = "backup";
+	public static final String MESSAGE_LOAD_SUCCESS = "Loaded file from: ";
 
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";

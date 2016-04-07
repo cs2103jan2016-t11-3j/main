@@ -8,6 +8,7 @@ import logic.delete.Delete;
 import logic.display.Display;
 import logic.edit.Edit;
 import logic.help.Help;
+import logic.load.Load;
 import logic.mark.Done;
 import logic.mark.Incomplete;
 import logic.mark.Mark;
@@ -145,6 +146,9 @@ public class CommandFacade {
 				break;
 			case INDEX_OVERDUE:
 				overdueFunction();
+				break;
+			case INDEX_LOAD:
+				loadFunction();
 				break;
 			default:
 				printInvalidCommandMessage();
@@ -443,6 +447,15 @@ public class CommandFacade {
 				addToList(incomplete, undoList);
 			}
 		}
+	}
+	
+	private void loadFunction() {
+		Load load = new Load(taskObj);
+		setOutput(load.run());
+		setLastOutputTaskList(load.getLoadedTaskList());
+		setLastSearchedIndex(-1);
+		undoList.clear();
+		redoList.clear();
 	}
 
 	// ------------------------- OVERLOADED METHODS TO POPULATE UNDO/REDO LIST -------------------------

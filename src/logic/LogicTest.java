@@ -72,7 +72,7 @@ public class LogicTest {
 		logic.run("add event every friday from 1500hrs to 1800hrs for 6 weeks");
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Recurring Task added: event. ");
+		expectedOutput.add("Recurring task added: event. ");
 		
 		assertEquals(expectedOutput, logic.getOutput());
 		assertEquals(2, logic.getTaskList().size());
@@ -110,7 +110,7 @@ public class LogicTest {
 	
 	@Test // Test delete 3rd recurring time
 	public void testAH() {
-		logic.run("add run every day by 7pm until 30 April");
+		logic.run("add run every day by 2359hrs until 30 April");
 		logic.run("view 1");
 		
 		int originalNumberOfOccurrences = logic.getTaskList().get(0).getTaskDateTimes().size();
