@@ -548,7 +548,11 @@ public class DateTimeParser {
 		} else if (input.contains("tonight")) {
 			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_6, "").trim(); //trim specially
 		} else if (input.contains("saturday") || input.contains("sat")) {
-			return input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_3, "").trim();
+			input = input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_3, "").trim();
+			if (input.startsWith("at")) {
+				return input.replaceFirst("at", "").trim();
+			}
+			return input;
 		} else if (input.contains("mon") || input.contains("monday")) {
 			input = input.replaceAll(Constants.REGEX_TASK_IDENTIFIER_4, "").trim();
 			if (input.startsWith("on")) {
