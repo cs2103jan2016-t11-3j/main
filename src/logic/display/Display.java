@@ -32,7 +32,7 @@ public class Display {
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<TaskObject> outputTaskList = new ArrayList<TaskObject>();
 	private ArrayList<String> output = new ArrayList<String>();
-	protected int lastSearchedIndex;
+	protected int lastSearchedIndex = -1;
 	
 	public Display() {
 		
@@ -51,7 +51,6 @@ public class Display {
 	 * @return output	Task list formatted for display in the GUI
 	 */
 	public ArrayList<String> run() {
-		output.add(MESSAGE_DISPLAYING_ALL_TASKS);
 		return this.display();
 	}
 
@@ -75,8 +74,10 @@ public class Display {
 	private ArrayList<String> display() {
 		if (taskList.isEmpty()) {
 			logger.log(Level.INFO, "Task list is empty");
-			outputEmptyMessage();
+			output.add(MESSAGE_EMPTY_LIST);
 		} else {
+			logger.log(Level.INFO, "Displaying all tasks");
+			output.add(MESSAGE_DISPLAYING_ALL_TASKS);
 			outputTaskList.addAll(taskList);
 			TimeOutput.setTimeOutputForGui(taskList);
 		}
@@ -84,8 +85,8 @@ public class Display {
 		return output;
 	}
 	
-	private void outputEmptyMessage() {
-		output.add(MESSAGE_EMPTY_LIST);
+	public ArrayList<String> getOutput() {
+		return output;
 	}
 	
 	public ArrayList<TaskObject> getLastOutputTaskList() {
