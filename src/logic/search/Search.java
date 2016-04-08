@@ -406,9 +406,9 @@ public class Search extends Display {
 
 		taskDateTimeOutput.clear();
 
-		output.add(String.format(MESSAGE_RECURRENCE_TIMINGS_DISPLAY, searchIndex));
 		taskDateTimeOutput.add(String.format(MESSAGE_TIMINGS_FOUND, foundTask.getTitle()));
 		if (foundTask.getIsRecurring()) {
+			output.add(String.format(MESSAGE_RECURRENCE_TIMINGS_DISPLAY, searchIndex));
 			try {
 				if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
 					for (int i = 0; i < foundTask.getTaskDateTimes().size(); i++) {
@@ -432,6 +432,7 @@ public class Search extends Display {
 				createErrorOutput(MESSAGE_INVALID_RECURRENCE);
 			}
 		} else {
+			output.add(String.format(MESSAGE_TIMING_DISPLAY, searchIndex));
 			if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
 				TimeOutput.setEventTimeOutput(foundTask);
 			} else {
@@ -465,7 +466,7 @@ public class Search extends Display {
 		output.add(message);
 	}
 
-	// FOR DEBUG
+	/* FOR DEBUG
 	private void printSearchInformation() {
 		System.out.println("search title = " + searchTitle);
 		System.out.println("search date = " + searchDate);
@@ -480,7 +481,7 @@ public class Search extends Display {
 		System.out.println("isSearchStatus = " + isSearchStatus);
 		System.out.println("isSearchIndex = " + isSearchIndex);
 		System.out.println();
-	}
+	}*/
 
 	// ------------------------- GETTERS -------------------------
 

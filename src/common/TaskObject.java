@@ -108,39 +108,17 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.endDateTime = endDateTime;
 		this.interval = interval;
 	}
+	
+	// Constructor for deleting all for recurring tasks
+	public TaskObject(String title) {
+		this.title = title;
+	}
 
 	// Constructor for dummyTask in searchByIndex
 	public TaskObject(LocalDateTime startDateTime, LocalDateTime endDateTime, Interval interval) {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.interval = interval;
-	}
-
-	// Constructor for AddTest
-	public TaskObject(String title, int taskId) {
-		this.title = title;
-		this.taskId = taskId;
-	}
-
-	// Constructor for deleting all for recurring tasks
-	public TaskObject(String title) {
-		this.title = title;
-	}
-
-	// Constructor for SearchTest - search-by-date for deadline
-	public TaskObject(LocalDateTime dateTime) {
-		this.startDateTime = dateTime;
-	}
-
-	// Constructor for SearchTest - search-by-time for event
-	public TaskObject(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-		this.startDateTime = startDateTime;
-		this.endDateTime = endDateTime;
-	}
-
-	// Constructor for SearchTest - search-by-category
-	public TaskObject(String category, String random) {
-		this.category = category;
 	}
 
 	// Constructor for undoing the deletion of one occurrence of a recurring task
@@ -152,6 +130,17 @@ public class TaskObject implements Comparable<TaskObject> {
 	// Constructor for undoing an addition of a recurring task
 	public TaskObject(boolean bool) {
 		this.isEditAll = bool;
+	}
+	
+	// Constructor for AddTest
+	public TaskObject(String title, int taskId) {
+		this.title = title;
+		this.taskId = taskId;
+	}
+
+	// Constructor for SearchTest - search-by-date for deadline
+	public TaskObject(LocalDateTime dateTime) {
+		this.startDateTime = dateTime;
 	}
 
 	// Empty constructor
