@@ -57,6 +57,8 @@ public class Strings {
 	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
 	public static final String MESSAGE_SINGLE_OCCURENCE_MISSING_ERROR = "Occurrence does not exist.";
+	public static final String MESSAGE_FILE_NOT_FOUND = "File to save information to is not found.";
+	public static final String MESSAGE_IO_EXCEPTION = "Unable to write tasks to storage file";
 
 	// Display Constants
 	public static final String MESSAGE_EMPTY_LIST = "Task list is empty.";
