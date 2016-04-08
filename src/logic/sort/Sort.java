@@ -1,12 +1,19 @@
 package logic.sort;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Logger;
 
+import common.AtfLogger;
 import common.TaskObject;
+import storage.FileStorage;
 
 public class Sort {
+	
+	private static Logger logger = AtfLogger.getLogger();
 
 	private ArrayList<TaskObject> taskList;
 	
@@ -31,8 +38,21 @@ public class Sort {
 			}
 		};
 		Collections.sort(taskList, dateComparator);
-		
+		saveExternal();
+		logger.info("sorted and saved list");
 		return taskList;
-
+	}
+	
+	private void saveExternal() {
+		try {
+		FileStorage storage = FileStorage.getInstance();
+		storage.save(taskList);
+		} catch (NoSuchFileException e) {
+			e.printStackTrace();
+			logger.warning("unable to save sorted list to external file");
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.warning("unable to save sorted list to external file");
+		}
 	}
 }
