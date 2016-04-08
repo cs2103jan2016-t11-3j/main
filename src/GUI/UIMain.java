@@ -30,13 +30,17 @@ public class UIMain extends Application {
 	static String input;
 	static ArrayList<TaskObject> taskList;
 	
+	/**
+	 * Starts and loads the program, shows the window.
+	 * Main window title set as AdultTaskFinder.
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 720, 500);
 		setStyle(scene);
-		window.setTitle("Adult TaskFinder");
+		window.setTitle("AdultTaskFinder");
 		window.setScene(scene);
 		window.show();
 	}
@@ -54,6 +58,10 @@ public class UIMain extends Application {
 		launch(args);
 	}
 	
+	/**
+	 * Called by MainController to pass input to logic for processing
+	 * @param input - user input from textfield
+	 */
 	public void passInput(String input) {
 		logic.run(input);
 	}
