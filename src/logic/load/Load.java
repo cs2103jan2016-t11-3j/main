@@ -15,8 +15,18 @@ import storage.FileStorage;
 import static logic.constants.Strings.*;
 import static logic.constants.Index.*;
 
+/**
+ * This class serves to load tasks from another source file other than the existing, default source file.
+ * There are two ways a load object could be run: <br>
+ * 1. Loading from a user defined directory <br>
+ * 2. Loading from a backup copy. This backup copy is saved internally within the program, and is saved in
+ * parallel with the original copy that the user has access to.
+ * 
+ * @author ChongYan
+ *
+ */
 public class Load {
-	
+
 	static Logger logger = AtfLogger.getLogger();
 
 	private TaskObject task;
@@ -48,6 +58,13 @@ public class Load {
 		filePath = command.substring(STARTING_INDEX);
 	}
 
+	/**
+	 * Main method within the Load class. Creates a FileStorage Object and accesses the storage component, and
+	 * attempts to retrieve all tasks from a set location.
+	 * 
+	 * @return ArrayList<String> containing output to be displayed to the user. Output varies according to the
+	 *         type of load command and also depends on whether it is successful.
+	 */
 	public ArrayList<String> run() {
 		try {
 			FileStorage storage = FileStorage.getInstance();
@@ -69,6 +86,22 @@ public class Load {
 		return output;
 	}
 
+	/**
+	 * Loads a file using the FileStorage object. Method determines whether the command is to load from a
+	 * user-defined location or from the backup, and proceeds to load the tasks.
+	 * 
+	 * @param storage
+	 *            FileStorage object which is used to access all stored information
+	 * @throws InvalidPathException
+	 *             Thrown when the file path given is invalid
+	 * @throws FileNotFoundException
+	 *             Thrown when the file does not exist at the given location
+	 * @throws JsonSyntaxException
+	 *             Thrown when the file at the given location has an invalid syntax and cannot be read by the
+	 *             library
+	 * @throws IOException
+	 *             General IO Exception in case of any unforeseen circumstances
+	 */
 	private void loadFile(FileStorage storage)
 			throws InvalidPathException, FileNotFoundException, JsonSyntaxException, IOException {
 		if (loadCommand == LOAD_FROM) {
@@ -84,7 +117,7 @@ public class Load {
 			}
 		}
 	}
-	
+
 	private void createOutput() {
 		if (loadCommand == LOAD_FROM) {
 			System.out.println(filePath);
@@ -95,7 +128,7 @@ public class Load {
 			}
 		}
 	}
-	
+
 	private void createErrorOutput(String message) {
 		output.clear();
 		output.add(message);

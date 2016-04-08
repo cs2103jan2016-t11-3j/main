@@ -84,13 +84,11 @@ public class Add {
 	 * @return output: ArrayList<String> - Contains all the output that the user will see
 	 */
 	public ArrayList<String> run() {
-		// Special processing to handle undoing the deletion of an occurrence of
-		// a recurring task
+		// Special processing to handle undoing the deletion of an occurrence of a recurring task
 		if (task.getIsContainingOnlyTaskDateTimes()) {
 			addSingleOccurrence();
 		} else {
 			assert (!task.getTitle().equals(""));
-			// setUpLogger();
 			try {
 				determineTaskCategory();
 				processTaskInformation();
@@ -212,6 +210,7 @@ public class Add {
 		Recurring.setAllRecurringEventTimes(task);
 	}
 
+//@@ author A0124636H
 	private void removeAnyDeletedOccurrences() {
 		ArrayList<LocalDateTimePair> deletedOccurrences = task.getDeletedTaskDateTimes();
 		LocalDateTimePair taskCurrentStartEndDateTime = new LocalDateTimePair(task.getStartDateTime(),
@@ -234,6 +233,7 @@ public class Add {
 		}
 	}
 
+//@@ author A0124052X
 	/***********************************************************************************/
 	/**
 	 * Checks if a deadline is overdue, modifies status if necessary, adds to taskList
