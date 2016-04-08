@@ -88,11 +88,9 @@ public class Load {
 	private void createOutput() {
 		if (loadCommand == LOAD_FROM) {
 			System.out.println(filePath);
-			System.out.println("Entered frm");
 			output.add(String.format(MESSAGE_LOAD_SUCCESS, "\n" + filePath));
 		} else {
 			if (loadCommand == LOAD_BACKUP) {
-				System.out.println("Entered bk");
 				output.add(String.format(MESSAGE_LOAD_SUCCESS, KEYWORD_BACKUP));
 			}
 		}
