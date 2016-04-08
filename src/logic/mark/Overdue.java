@@ -70,21 +70,12 @@ public class Overdue extends Mark {
 			// only for non-recurring tasks, recurring tasks have their own
 			// dedicated methods
 			if (!taskList.get(i).getIsRecurring()) {
-				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
+				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE) || taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 					if (!taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
 						isOverdue = performCheckOverdue(taskList.get(i));
 						if (isOverdue) {
 							taskList.get(i).setStatus(STATUS_OVERDUE);
-							logger.log(Level.INFO, "set status of non-recurring deadline to overdue");
-						}
-					}
-				}
-				if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
-					if (!taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
-						isOverdue = performCheckOverdue(taskList.get(i));
-						if (isOverdue) {
-							taskList.get(i).setStatus(STATUS_OVERDUE);
-							logger.log(Level.INFO, "set status of non-recurring event to overdue");
+							logger.log(Level.INFO, "set status of non-recurring task to overdue");
 						}
 					}
 				}

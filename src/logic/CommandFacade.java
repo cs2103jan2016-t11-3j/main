@@ -259,6 +259,8 @@ public class CommandFacade {
 	private void editFunction() {
 		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList, lastSearchedIndex);
 		setOutput(edit.run());
+		Incomplete.markAllIncompleteTasks(taskList);
+		Overdue.markAllOverdueTasks(taskList);
 		setLastOutputTaskList(taskList);
 
 		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
