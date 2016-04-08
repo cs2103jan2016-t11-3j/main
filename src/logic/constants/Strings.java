@@ -51,8 +51,8 @@ public class Strings {
 	public static final String MESSAGE_DELETED_ALL = "All tasks deleted.";
 	public static final String MESSAGE_COMPLETED_TASKS_DELETE = "All completed tasks deleted.";
 	public static final String MESSAGE_SINGLE_OCCURRENCE_DELETE = "Occurrence %1s deleted.";
-	public static final String MESSAGE_MOST_RECENT_OCCURRENCE_DELETE = "Most recent occurrence deleted.";
-	public static final String MESSAGE_ALL_OCCURRENCES_DELETE = "All occurrences deleted.";
+	public static final String MESSAGE_MOST_RECENT_OCCURRENCE_DELETE = "Most recent occurrence of task '%1s' deleted.";
+	public static final String MESSAGE_ALL_OCCURRENCES_DELETE = "All occurrences of task '%1s' deleted.";
 	public static final String MESSAGE_ONLY_ONE_OCCURRENCE_REMAINING = "Only one occurrence remaining. ";
 	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
@@ -128,6 +128,7 @@ public class Strings {
 	public static final String MESSAGE_SAVE_ERROR = "Error saving file to %1s";
 
 	// Search Constants
+	public static final String MESSAGE_SETTING_SEARCH_INFORMATION_ERROR = "Error setting search information.";
 	public static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	public static final String MESSAGE_SEARCH_PARAMETERS = "Displaying tasks for the search parameters:\n%1s";
 	public static final String MESSAGE_RECURRENCE_TIMINGS_DISPLAY = "Displaying recurrence timings for task %1s.";
@@ -167,7 +168,7 @@ public class Strings {
 	public static final String MESSAGE_LOAD_EXCEPTION_JSON = "Error interpreting information from external file storage";
 	public static final String MESSAGE_LOAD_EXCEPTION_IFP = "Invalid file path used";
 	public static final String MESSAGE_LOAD_BACKUP = "Please key in \"load backup\" to load the backup file";
-	
+
 	// Load Constants
 	public static final String KEYWORD_FROM = "from ";
 	public static final String KEYWORD_BACKUP = "backup";
@@ -176,11 +177,14 @@ public class Strings {
 	// Mark Exception constants
 	public static final String MESSAGE_MARK_EXCEPTION = "Error marking task: %1s.";
 	public static final String MESSAGE_MARK_EXCEPTION_SAME_STATUS = "Task already has status: %1s";
-	
+
 	// Add Exception constants
 	public static final String MESSAGE_ADD_EXCEPTION = "Error adding task to task list";
 	public static final String MESSAGE_ADD_FLOATING_RECURRING = "Task with no time cannot be set as a recurring task";
 
+	// Search Exception constants
+	public static final String MESSAGE_SEARCH_BY_DATE_REQUIRED_EXCEPTION = "Search by time requires a search by date as well.";
+	
 	// FOR PACKAGE-WIDE DEBUGGING PURPOSES
 	public static void printTaskObjectFields(TaskObject taskObj) {
 		System.out.println("title = " + taskObj.getTitle());

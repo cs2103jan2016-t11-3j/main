@@ -450,7 +450,7 @@ public class Delete {
 	
 	private void createOutput() {
 		if (isRecurringTask) {
-			tempOutput.add(String.format(MESSAGE_ALL_OCCURRENCES_DELETE));
+			tempOutput.add(String.format(MESSAGE_ALL_OCCURRENCES_DELETE, removedTaskName));
 		} else {
 			tempOutput.add(String.format(MESSAGE_DELETE, removedTaskName));
 		}
@@ -476,7 +476,7 @@ public class Delete {
 	
 	private void createSingleOccurrenceOutput() {
 		if (removedOccurrenceIndex == 1 && isRecurringTask) {
-			tempOutput.add(String.format(MESSAGE_MOST_RECENT_OCCURRENCE_DELETE));
+			tempOutput.add(String.format(MESSAGE_MOST_RECENT_OCCURRENCE_DELETE, removedTaskName));
 		} else {
 			tempOutput.add(String.format(MESSAGE_SINGLE_OCCURRENCE_DELETE, removedOccurrenceIndex));
 		}

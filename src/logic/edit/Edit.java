@@ -922,7 +922,7 @@ public class Edit {
 						if (originalStartTime.equals(LocalTime.MAX)) { 
 							outputTimeAddedForAllOccurrencesMessage();
 						} else {
-						outputTimeEditedForAllOccurrencesMessage();
+							outputTimeEditedForAllOccurrencesMessage();
 						}
 					} else {
 						if (originalStartTime.equals(LocalTime.MAX)) { 
