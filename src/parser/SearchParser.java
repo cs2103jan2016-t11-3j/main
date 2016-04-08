@@ -22,7 +22,7 @@ public class SearchParser extends CommandParser {
 	 * task, date or time and calls the appropriate function.
 	 * 
 	 * @param input
-	 * 				search command, non-null
+	 * 				string input for search command, non-null
 	 * 				
 	 */
 	public TaskObject process(String input) throws Exception {
@@ -49,7 +49,6 @@ public class SearchParser extends CommandParser {
 	 */
 	private void searchTaskDateTime(String input) throws Exception {
 		Pattern dateTimePattern = Pattern.compile(Constants.REGEX_SEARCH);
-		Pattern dayOnlyPattern = Pattern.compile(Constants.REGEX_DAYS_TEXT);
 		Matcher matcher = dateTimePattern.matcher(input);
 		
 		String identifier = null;
@@ -107,13 +106,10 @@ public class SearchParser extends CommandParser {
 		return input.replaceFirst(Constants.REGEX_PARSER_SEARCH, "").trim();
 	}
 	
+	//Getter for testing purpose
 	public String getTask() {
 		return _task;
 	}
-	
- 	public void resetAll() {
- 		_task = null;
- 	}
 
 	@Override
 	public int getIndex() {

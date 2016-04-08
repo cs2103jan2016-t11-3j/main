@@ -24,11 +24,9 @@ public class SearchProcessorTest {
 	public void testB() throws Exception {
 		TO = SP.process("search deadline");
 		assertEquals("deadline", TO.getCategory());
-		reset();
 		
 		TO = SP.process("search event");
 		assertEquals("event", TO.getCategory());
-		reset();
 	}
 	
 	/*case 3: searching for completed tasks*/
@@ -46,9 +44,4 @@ public class SearchProcessorTest {
 		assertEquals("", TO.getTitle());
 		assertEquals("2016-04-11T23:59:59.999999999", TO.getStartDateTime().toString());
 	}
-	
-	private void reset() {
-		SP.resetAll();
-	}
-
 }
