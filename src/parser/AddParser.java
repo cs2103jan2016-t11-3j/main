@@ -46,6 +46,7 @@ public class AddParser extends CommandParser {
 		
 		String identifier = null;
 		
+		//recognises date-time string and extracts to identifier
 		if (matcher.find()) {
 			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
 			input = getTrimmedString(input, 0, matcher.start());
@@ -59,7 +60,6 @@ public class AddParser extends CommandParser {
 		_task = input;
 	}
 
-	
 	private void setTaskObject() {
 		taskObject.setTitle(_task);
 		taskObject.setStatus("incomplete");
@@ -78,5 +78,4 @@ public class AddParser extends CommandParser {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

@@ -37,7 +37,6 @@ public class DateTimeProcessorTest {
 		TO = DTP.parse("every monday at 8am until 9 may", true);
 		assertEquals("2016-04-11T08:00", TO.getStartDateTime().toString());
 		assertEquals("2016-05-09T23:59:59.999999999", TO.getInterval().getUntil().toString());
-		DTP.reset();
 		TO.resetAttributes();
 	}
 	
@@ -62,8 +61,7 @@ public class DateTimeProcessorTest {
 	@Test
 	public void testE() throws Exception {
 		TO = DTP.parse("everyday", true);
-		assertEquals("2016-04-07T23:59:59.999999999", TO.getStartDateTime().toString());
-		DTP.reset();
+		assertEquals("2016-04-08T23:59:59.999999999", TO.getStartDateTime().toString());
 		TO.resetAttributes();
 	}
 	
