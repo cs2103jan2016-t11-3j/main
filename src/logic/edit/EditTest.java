@@ -29,34 +29,76 @@ public class EditTest {
 	private ArrayList<LocalDateTimePair> testTimings = new ArrayList<LocalDateTimePair>();
 	private ArrayList<LocalDateTimePair> testTimingsTwo = new ArrayList<LocalDateTimePair>();
 	
-	
 	private CommandObject testCommandObject;
 	private TaskObject testTaskObject;
-
+	
+	// Test tasks
+	TaskObject one = new TaskObject("Study hard for finals", 
+			LocalDateTime.of(LocalDate.parse("2016-05-25"), LocalTime.parse("09:00")), 
+			"deadline", "incomplete", 1);
+	TaskObject two = new TaskObject("Find internship in Germany", 
+			LocalDateTime.of(LocalDate.parse("2016-12-31"), LocalTime.parse("23:59")),
+			"deadline", "incomplete", 2);
+	TaskObject three = new TaskObject("Travel Eastern Europe", "floating", "incomplete", 3);
+	TaskObject four = new TaskObject("CS2106 lecture", 
+			LocalDateTime.of(LocalDate.parse("2016-12-01"), LocalTime.parse("14:00")),
+			LocalDateTime.of(LocalDate.parse("2017-05-04"), LocalTime.parse("16:00")), 
+			"event", "incomplete", 4);
+	TaskObject five = new TaskObject("CS2103 v0.2", 
+			LocalDateTime.of(LocalDate.parse("2017-03-24"), LocalTime.parse("19:00")), 
+			"deadline", "incomplete", 5);
+	TaskObject six = new TaskObject("SSS1207 CA2", 
+			LocalDateTime.of(LocalDate.parse("2016-03-31"), LocalTime.parse("23:59")), 
+			"deadline", "incomplete", 6);
+	TaskObject seven = new TaskObject("Spring break", 
+			LocalDateTime.of(LocalDate.parse("2001-01-11"), LocalTime.parse("00:00")),
+			LocalDateTime.of(LocalDate.parse("2016-05-06"), LocalTime.parse("23:59")), 
+			"event", "incomplete", 7);
+	TaskObject eight = new TaskObject("Overseas paradise", 
+			LocalDateTime.of(LocalDate.parse("2012-01-31"), LocalTime.parse("22:24")), 
+			LocalDateTime.of(LocalDate.parse("2013-11-29"), LocalTime.parse("17:00")), 
+			"event", "complete", 8);
+	TaskObject nine = new TaskObject("Hiking trip", 
+			LocalDateTime.of(LocalDate.parse("2014-07-11"), LocalTime.parse("16:00")), 
+			LocalDateTime.of(LocalDate.parse("2016-07-15"), LocalTime.parse("17:00")), 
+			"event", "incomplete", 9);
+	TaskObject ten = new TaskObject("Confinement", 
+			LocalDateTime.of(LocalDate.parse("2012-02-14"), LocalTime.parse("08:00")),
+			LocalDateTime.of(LocalDate.parse("2012-02-21"), LocalTime.parse("12:00")), 
+			"event", "incomplete", 10);
+	TaskObject eleven = new TaskObject("CS2107 presentation", "floating", "incomplete", 11);
+	TaskObject twelve = new TaskObject("Europe trip", "floating", "incomplete", 12);
+	
 	@Test // Populate the task list
 	public void populate() {
-	
-		testList.add(new TaskObject("Study hard for finals", LocalDateTime.of(LocalDate.parse("2016-05-25"), LocalTime.parse("09:00")),
-				"deadline", "incomplete", 1));
-		testList.add(new TaskObject("Find internship in Germany", LocalDateTime.of(LocalDate.parse("2016-12-31"), LocalTime.parse("23:59")),
-				"deadline", "incomplete", 2));
-		testList.add(new TaskObject("Travel Eastern Europe", "floating", "incomplete", 3));
-		testList.add(new TaskObject("CS2106 lecture", LocalDateTime.of(LocalDate.parse("2016-12-01"), LocalTime.parse("14:00")),
-				LocalDateTime.of(LocalDate.parse("2017-05-04"), LocalTime.parse("16:00")), "event", "incomplete", 4));
-		testList.add(new TaskObject("CS2103 v0.2", LocalDateTime.of(LocalDate.parse("2017-03-24"), LocalTime.parse("19:00")), "deadline", "incomplete", 5));
-		testList.add(new TaskObject("SSS1207 CA2", LocalDateTime.of(LocalDate.parse("2016-03-31"), LocalTime.parse("23:59")), "deadline", "incomplete", 6));
-		testList.add(new TaskObject("Spring break", LocalDateTime.of(LocalDate.parse("2001-01-11"), LocalTime.parse("00:00")),
-				LocalDateTime.of(LocalDate.parse("2016-05-06"), LocalTime.parse("23:59")), "event", "incomplete", 7));
-		testList.add(new TaskObject("Overseas paradise", LocalDateTime.of(LocalDate.parse("2012-01-31"), LocalTime.parse("22:24")), 
-				LocalDateTime.of(LocalDate.parse("2013-11-29"), LocalTime.parse("17:00")), "event", "complete", 8));
-		testList.add(new TaskObject("Hiking trip", LocalDateTime.of(LocalDate.parse("2014-07-11"), LocalTime.parse("16:00")), 
-				LocalDateTime.of(LocalDate.parse("2016-07-15"), LocalTime.parse("17:00")), "event", "incomplete", 9));
-		testList.add(new TaskObject("Confinement", LocalDateTime.of(LocalDate.parse("2012-02-14"), LocalTime.parse("08:00")),
-				LocalDateTime.of(LocalDate.parse("2012-02-21"), LocalTime.parse("12:00")), "event", "incomplete", 10));
 		
+		// To populate the taskDateTimes array based on the start and end date time
+		one.addToTaskDateTimes();
+		two.addToTaskDateTimes();
+		three.addToTaskDateTimes();
+		four.addToTaskDateTimes();
+		five.addToTaskDateTimes();
+		six.addToTaskDateTimes();
+		seven.addToTaskDateTimes();
+		eight.addToTaskDateTimes();
+		nine.addToTaskDateTimes();
+		ten.addToTaskDateTimes();
+		eleven.addToTaskDateTimes();
+		twelve.addToTaskDateTimes();
+		
+		testList.add(one);
+		testList.add(two);
+		testList.add(three);
+		testList.add(four);
+		testList.add(five);
+		testList.add(six);
+		testList.add(seven);
+		testList.add(eight);
+		testList.add(nine);
+		testList.add(ten);
 		// Tests for editing between categories
-		testList.add(new TaskObject("CS2107 presentation", "floating", "incomplete", 11));
-		testList.add(new TaskObject("Europe trip", "floating", "incomplete", 12));
+		testList.add(eleven);
+		testList.add(twelve);
 		
 		// Tests for editing recurrence events
 		LocalDateTime startOne = LocalDateTime.of(LocalDate.parse("2016-03-25"), LocalTime.parse("16:00"));
@@ -72,9 +114,9 @@ public class EditTest {
 		testTimings.add(new LocalDateTimePair(startThree, endThree));
 		testTimings.add(new LocalDateTimePair(startFour, endFour));
 		
-		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 13, true, testTimings));
-		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 14, true, testTimings));
-		testList.add(new TaskObject("CS2103 lecture", startOne, endFour, "event", "incomplete", 15, true, testTimings));
+		testList.add(new TaskObject("CS2103 lecture", startOne, endOne, "event", "incomplete", 13, true, testTimings));
+		testList.add(new TaskObject("CS2103 lecture", startOne, endOne, "event", "incomplete", 14, true, testTimings));
+		testList.add(new TaskObject("CS2103 lecture", startOne, endOne, "event", "incomplete", 15, true, testTimings));
 
 		LocalDateTime startFive = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("21:00"));
 		LocalDateTime endFive = LocalDateTime.of(LocalDate.parse("2016-04-08"), LocalTime.parse("23:00"));
@@ -87,9 +129,9 @@ public class EditTest {
 		testTimingsTwo.add(new LocalDateTimePair(startSix, endSix));
 		testTimingsTwo.add(new LocalDateTimePair(startSeven, endSeven));
 		
-		testList.add(new TaskObject("Soccer match", startFive, endSeven, "event", "incomplete", 16, true, testTimingsTwo));
-		testList.add(new TaskObject("Soccer match", startFive, endSeven, "event", "incomplete", 17, true, testTimingsTwo));
-		testList.add(new TaskObject("Soccer match", startFive, endSeven, "event", "incomplete", 18, true, testTimingsTwo));
+		testList.add(new TaskObject("Soccer match", startFive, endFive, "event", "incomplete", 16, true, testTimingsTwo));
+		testList.add(new TaskObject("Soccer match", startFive, endFive, "event", "incomplete", 17, true, testTimingsTwo));
+		testList.add(new TaskObject("Soccer match", startFive, endFive, "event", "incomplete", 18, true, testTimingsTwo));
 		
 	}
 	
@@ -115,7 +157,9 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Title edited from 'Hiking trip' to 'Reservist'. Start date edited from '2014-07-11' to '2016-07-11'. Start time edited from '16:00' to '10:00'.");
+		correctOutput.add("Title edited from 'Hiking trip' to 'Reservist'. \n"
+				+ "Start date edited from '2014-07-11' to '2016-07-11'. \n"
+				+ "Start time edited from '16:00' to '10:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -129,7 +173,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Date edited from '2017-03-24' to '2016-03-24'. Time edited from '19:00' to '11:00'.");
+		correctOutput.add("Date edited from '2017-03-24' to '2016-03-24'. \n"
+				+ "Time edited from '19:00' to '11:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -173,7 +218,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Start date edited from '2016-12-01' to '2016-04-01'. End date edited from '2017-05-04' to '2016-04-01'.");
+		correctOutput.add("Start date edited from '2016-12-01' to '2016-04-01'. \n"
+				+ "End date edited from '2017-05-04' to '2016-04-01'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -201,7 +247,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Title edited from 'Overseas paradise' to 'Army'. Start time edited from '22:24' to '10:00'.");
+		correctOutput.add("Title edited from 'Overseas paradise' to 'Army'. \n"
+				+ "Start time edited from '22:24' to '10:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -228,7 +275,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Title edited from 'Spring break' to 'AY2016/17 Sem 2'. Start date edited from '2001-01-11' to '2016-01-11'.");
+		correctOutput.add("Title edited from 'Spring break' to 'AY2016/17 Sem 2'. \n"
+				+ "Start date edited from '2001-01-11' to '2016-01-11'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -243,8 +291,11 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Title edited from 'Confinement' to 'HK trip'. Start date edited from '2012-02-14' to '2016-01-05'. " + 
-				"Start time edited from '08:00' to '14:00'. End date edited from '2012-02-21' to '2016-01-09'. End time edited from '12:00' to '13:00'.");
+		correctOutput.add("Title edited from 'Confinement' to 'HK trip'. \n"
+				+ "Start date edited from '2012-02-14' to '2016-01-05'. \n" 
+				+ "Start time edited from '08:00' to '14:00'. \n"
+				+ "End date edited from '2012-02-21' to '2016-01-09'. \n"
+				+ "End time edited from '12:00' to '13:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -258,7 +309,7 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Added date '2016-04-18' to task 'CS2107 presentation'. "
+		correctOutput.add("Added date '2016-04-18' to task 'CS2107 presentation'. \n"
 				+ "Added time '09:00' to task 'CS2107 presentation'.");
 		
 		String actualCategory = testEdit.getEditTask().getCategory();
@@ -278,9 +329,9 @@ public class EditTest {
 				
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("Added start date '2016-06-18' to task 'Europe trip'. "
-				+ "Added start time '10:00' to task 'Europe trip'. "
-				+ "Added end date '2016-08-08' to task 'Europe trip'. "
+		correctOutput.add("Added start date '2016-06-18' to task 'Europe trip'. \n"
+				+ "Added start time '10:00' to task 'Europe trip'. \n"
+				+ "Added end date '2016-08-08' to task 'Europe trip'. \n"
 				+ "Added end time '20:00' to task 'Europe trip'.");
 		
 		String actualCategory = testEdit.getEditTask().getCategory();
@@ -438,7 +489,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("All start dates edited to '2016-03-31'. All start times edited to '08:00'.");
+		correctOutput.add("All start dates edited to '2016-03-31'. \n"
+				+ "All start times edited to '08:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -467,7 +519,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("All end dates edited to '2016-12-31'. All end times edited to '22:22'.");
+		correctOutput.add("All end dates edited to '2016-12-31'. \n"
+				+ "All end times edited to '22:22'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();
@@ -497,7 +550,8 @@ public class EditTest {
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, -1);
 		actualOutput = testEdit.run();
-		correctOutput.add("All start dates edited to '2011-11-11'. All end dates edited to '2011-11-11'.");
+		correctOutput.add("All start dates edited to '2011-11-11'. \n"
+				+ "All end dates edited to '2011-11-11'.");
 		
 		assertEquals(actualOutput, correctOutput);
 		correctOutput.clear();

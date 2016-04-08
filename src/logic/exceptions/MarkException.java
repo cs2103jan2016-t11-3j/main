@@ -12,7 +12,7 @@ public class MarkException extends Exception {
 		
 	}
 	
-	public MarkException (TaskObject task) {
+	public MarkException(TaskObject task) {
 		super(String.format(MESSAGE_MARK_EXCEPTION, String.format(MESSAGE_MARK_EXCEPTION_SAME_STATUS, task.getStatus())));
 	}
 	

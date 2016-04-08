@@ -150,6 +150,10 @@ public class TaskObject implements Comparable<TaskObject> {
 
 	// ------------------------------------ USEFUL METHODS ------------------------------------
 
+	public void addToTaskDateTimes() {
+		taskDateTimes.add(new LocalDateTimePair(startDateTime, endDateTime));
+	}
+	
 	public void addToTaskDateTimes(LocalDateTimePair pair) {
 		this.taskDateTimes.add(pair);
 	}
@@ -170,7 +174,11 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.startDateTime = taskDateTimes.get(0).getStartDateTime();
 		this.endDateTime = taskDateTimes.get(0).getEndDateTime();
 	}
-
+	
+	public void updateTaskDateTimesArray() {
+		taskDateTimes.set(0, new LocalDateTimePair(startDateTime, endDateTime));
+	}
+	
 	public void addToDeletedTaskDateTimes(LocalDateTimePair deletedOccurrence) {
 		this.deletedTaskDateTimes.add(deletedOccurrence);
 	}
