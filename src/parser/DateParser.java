@@ -1,9 +1,9 @@
 //@@author A0125003A
 package parser;
 
+import java.time.format.DateTimeFormatter;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -21,49 +21,6 @@ import parser.exceptions.InvalidDateFormatException;
  */
 
 public class DateParser {
-	
-	// possible words that the user may input.
-	private static final String MONTH_1_1 = "january";
-	private static final String MONTH_1_2 = "jan";
-	private static final String MONTH_2_1 = "february";
-	private static final String MONTH_2_2 = "feb";
-	private static final String MONTH_3_1 = "march";
-	private static final String MONTH_3_2 = "mar";
-	private static final String MONTH_4_1 = "april";
-	private static final String MONTH_4_2 = "apr";
-	private static final String MONTH_5_1 = "may";
-	private static final String MONTH_6_1 = "june";
-	private static final String MONTH_6_2 = "jun";
-	private static final String MONTH_7_1 = "july";
-	private static final String MONTH_7_2 = "jul";
-	private static final String MONTH_8_1 = "august";
-	private static final String MONTH_8_2 = "aug";
-	private static final String MONTH_9_1 = "september";
-	private static final String MONTH_9_2 = "sept";
-	private static final String MONTH_10_1 = "october";
-	private static final String MONTH_10_2 = "oct";
-	private static final String MONTH_11_1 = "november";
-	private static final String MONTH_11_2 = "nov";
-	private static final String MONTH_12_1 = "december";
-	private static final String MONTH_12_2 = "dec";
-	
-	//corresponding integer value for each month.
-	private static final int VALUE_JAN = 1;
-	private static final int VALUE_FEB = 2;
-	private static final int VALUE_MAR = 3;
-	private static final int VALUE_APR = 4;
-	private static final int VALUE_MAY = 5;
-	private static final int VALUE_JUN = 6;
-	private static final int VALUE_JUL = 7;
-	private static final int VALUE_AUG = 8;
-	private static final int VALUE_SEPT = 9;
-	private static final int VALUE_OCT = 10;
-	private static final int VALUE_NOV = 11;
-	private static final int VALUE_DEC = 12;
-	
-	//changeable default year.
-	private static final int DEFAULT_YEAR = 2016;
-	
 	private int day = -1;
 	private int month = -1;
 	private int year = -1;
@@ -75,7 +32,8 @@ public class DateParser {
 	/**
 	 * This method takes in a string input returns LocalDate to the datetimeparser.
 	 * 
-	 * @param input    date string that is in the format.
+	 * @param input    
+	 * 				date string that is in the format.
 	 * @throws Exception 
 	 */
 	public void parseDate(String input) throws Exception {
@@ -101,14 +59,13 @@ public class DateParser {
         return input.toLowerCase().trim();
     }
 	
-
     /**
 	 * This method further processes the input from date-time-parser.
 	 * 
 	 * format types include
-	 * 1. Month spelled out:    3rd june 2013 - 4th june 2014
-	 * 2. "slash" format:     4/5-5/6
-	 * 3. incomplete format:  3 - 6 june 2015
+	 * 1. dd-Month-yyyy format:  3rd june 2013 
+	 * 2. ddmmyyy format:        4/5-5/6
+	 * 3. relative date format:  next monday
 	 * 
 	 * @param input
 	 * 				date input from user, not null.
@@ -125,9 +82,8 @@ public class DateParser {
 	
 	/**
 	 * This method sets the LocalDate for the object by cleaning up minor format differences
-	 * and forming yyyyMMdd string
-	 * 
-	 * passes date in string format to setDateObject method for setting the LocalDate value
+	 * and forming yyyyMMdd string. It passes date in string format to setDateObject method 
+	 * for setting the LocalDate value
 	 * @throws Exception 
 	 */
 	private void setDates() throws Exception {
@@ -136,8 +92,9 @@ public class DateParser {
 		if (year < 100 && year != -1) {
 			year = 2000 + year;
 		} else if (year == -1) {
-			year = DEFAULT_YEAR;
+			year = Constants.DEFAULT_YEAR;
 		}
+		
 		if (day > 31 || month > 12) {
 			throw new Exception("Invalid Date");
 		} else if (day != -1 && month != -1 && year != -1) {
@@ -182,11 +139,9 @@ public class DateParser {
             setMonth(input);
             input = removeMonth(input);
             splitStringAndProcess(input);
-        }
-	    else if (isRelative(input)) { 
+        } else if (isRelative(input)) { 
             processRelativeDate(input);
-        }
-	    else {
+        } else {
 	        throw new InvalidDateFormatException(input);
 	    }
     }
@@ -227,7 +182,7 @@ public class DateParser {
     
     //this method checks if the date is in dd/mm/yy format.
   	private boolean hasSymbolSeparator(String input) {
-  		if(input.contains("/") || input.contains(".") || input.contains("-") ) {
+  		if (input.contains("/") || input.contains(".") || input.contains("-") ) {
   			return true;
   		} else {
   			return false;
@@ -250,6 +205,7 @@ public class DateParser {
 			int tempInt = Integer.parseInt(temp);
 			list.add(tempInt);
 		}
+		
 		if (list.size() != 1) {
 			day = list.get(0);
 			month = list.get(1);
@@ -260,7 +216,6 @@ public class DateParser {
 		} else {
 			throw new Exception("Invalid Date");
 		}
-		
 	}
     
 	/**
@@ -277,8 +232,6 @@ public class DateParser {
 		Matcher matcher = dateTimePattern.matcher(input);
 		return matcher.find();
 	}
-	
-	
 	
 	//this method will allocate relevant integer to month variable.
 	private void setMonth(String input) {
@@ -300,10 +253,12 @@ public class DateParser {
 		ArrayList<String> templist = new ArrayList<String>();
 		int _day = -1, _year = -1;
 		input = preprocess(input);
+		
 		for (String temp : input.split("\\s+")) {
 			temp = temp.replaceAll("[a-zA-Z]+", "");
 			templist.add(temp);
 		}
+		
 		//set the day n year according to the filled elements of the array.
 		if (templist.size() == 2) {
 			_day = Integer.parseInt(templist.get(0));
@@ -325,7 +280,7 @@ public class DateParser {
 	 * 				true,if the date string is a relative date.
 	 */
 	private boolean isRelative(String input) {
-		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT) 
+		if (input.matches(Constants.REGEX_RELATIVE_DATE_ALL) || input.matches(Constants.REGEX_DAYS_TEXT)
 				|| input.matches(Constants.REGEX_RECURRING_INTERVAL_EVERYDAY)) {
 			return true;
 		} else {
@@ -347,7 +302,7 @@ public class DateParser {
 				dateObject = LocalDate.now();
 		} else if (input.matches(Constants.REGEX_RELATIVE_DATE_1)) {
 				dateObject = LocalDate.now().plusDays(1);
-		} else if (input.matches("("+"(next )"+ Constants.REGEX_DAYS_TEXT+")")) { // GOT PROBLEM
+		} else if (input.matches("("+"(next )"+ Constants.REGEX_DAYS_TEXT+")")) {
 			setDateNextWeek(input);
 		} else if (input.matches("("+"(this )"+ Constants.REGEX_DAYS_TEXT+")")) {
 			setDateThisWeek(input);
@@ -370,30 +325,30 @@ public class DateParser {
 	 */
 	private int setMonthInDateProcessor(String month) {
 		month = month.toLowerCase();
-		if (month == MONTH_1_1 || month.contains(MONTH_1_2)) {
-			return VALUE_JAN;
-		} else if (month == MONTH_2_1 || month.contains(MONTH_2_2)) {
-			return VALUE_FEB;
-		} else if (month == MONTH_3_1 || month.contains(MONTH_3_2)) {
-			return VALUE_MAR;
-		} else if (month == MONTH_4_1 || month.contains(MONTH_4_2)) {
-			return VALUE_APR;
-		} else if (month.contains(MONTH_5_1)) {
-			return VALUE_MAY;
-		} else if (month == MONTH_6_1 || month.contains(MONTH_6_2)) {
-			return VALUE_JUN;
-		} else if (month == MONTH_7_1 || month.contains(MONTH_7_2)) {
-			return VALUE_JUL;
-		} else if (month == MONTH_8_1 || month.contains(MONTH_8_2)) {
-			return VALUE_AUG;
-		} else if (month == MONTH_9_1 || month.contains(MONTH_9_2)) {
-			return VALUE_SEPT;
-		} else if (month == MONTH_10_1 || month.contains(MONTH_10_2)) {
-			return VALUE_OCT;
-		} else if (month == MONTH_11_1 || month.contains(MONTH_11_2)) {
-			return VALUE_NOV;
-		} else if (month == MONTH_12_1 || month.contains(MONTH_12_2)) {
-			return VALUE_DEC;
+		if (month.contains(Constants.MONTH_1_1) || month.contains(Constants.MONTH_1_2)) {
+			return Constants.VALUE_JAN;
+		} else if (month.contains(Constants.MONTH_2_1) || month.contains(Constants.MONTH_2_2)) {
+			return Constants.VALUE_FEB;
+		} else if (month.contains(Constants.MONTH_3_1) || month.contains(Constants.MONTH_3_2)) {
+			return Constants.VALUE_MAR;
+		} else if (month.contains(Constants.MONTH_4_1) || month.contains(Constants.MONTH_4_2)) {
+			return Constants.VALUE_APR;
+		} else if (month.contains(Constants.MONTH_5_1)) {
+			return Constants.VALUE_MAY;
+		} else if (month.contains(Constants.MONTH_6_1) || month.contains(Constants.MONTH_6_2)) {
+			return Constants.VALUE_JUN;
+		} else if (month.contains(Constants.MONTH_7_1) || month.contains(Constants.MONTH_7_2)) {
+			return Constants.VALUE_JUL;
+		} else if (month.contains(Constants.MONTH_8_1) || month.contains(Constants.MONTH_8_2)) {
+			return Constants.VALUE_AUG;
+		} else if (month.contains(Constants.MONTH_9_1) || month.contains(Constants.MONTH_9_2)) {
+			return Constants.VALUE_SEPT;
+		} else if (month.contains(Constants.MONTH_10_1) || month.contains(Constants.MONTH_10_2)) {
+			return Constants.VALUE_OCT;
+		} else if (month.contains(Constants.MONTH_11_1) || month.contains(Constants.MONTH_11_2)) {
+			return Constants.VALUE_NOV;
+		} else if (month.contains(Constants.MONTH_12_1) || month.contains(Constants.MONTH_12_2)) {
+			return Constants.VALUE_DEC;
 		} else {
 			return -1;
 		}
@@ -426,7 +381,7 @@ public class DateParser {
         dateObject = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(input)));
         int set = dateObject.getDayOfWeek().getValue();
         int now = LocalDate.now().getDayOfWeek().getValue();
-        if(set > now ) {
+        if (set > now ) {
             dateObject = dateObject.plusWeeks(1);
         }
 	}
@@ -444,7 +399,7 @@ public class DateParser {
 		input = processDayOfWeek(input);
 		int set = DayOfWeek.valueOf(input).getValue();
         int now = LocalDate.now().getDayOfWeek().getValue();
-        if(set < now ) {
+        if (set < now ) {
         	dateObject = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.valueOf(input)));
             //throw new Exception(input + " is over this week. Did you mean next " + input + "?");
         } else if (set > now) {
@@ -474,25 +429,25 @@ public class DateParser {
 	 */
 	private String processDayOfWeek(String dayOfWeek) throws InvalidDateFormatException {
         dayOfWeek = preprocess(dayOfWeek);
-        if ("monday".contains(dayOfWeek)) {
-            return "MONDAY" ;
-        } else if ("tuesday".contains(dayOfWeek)) {
-            return "TUESDAY" ;
-        } else if ("wednesday".contains(dayOfWeek)) {
-            return "WEDNESDAY" ;
-        } else if ("thursday".contains(dayOfWeek)) {
-            return "THURSDAY" ;
-        } else if ("friday".contains(dayOfWeek)) {
-            return "FRIDAY" ;
-        } else if ("saturday".contains(dayOfWeek)) {
-            return "SATURDAY" ;
-        } else if ("sunday".contains(dayOfWeek)) {
-            return "SUNDAY" ;
+        if (Constants.DAY_1.contains(dayOfWeek)) {
+        	dayOfWeek = Constants.DAY_1;
+        } else if (Constants.DAY_2.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_2;
+        } else if (Constants.DAY_3.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_3;
+        } else if (Constants.DAY_4.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_4;
+        } else if (Constants.DAY_5.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_5;
+        } else if (Constants.DAY_6.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_6;
+        } else if (Constants.DAY_7.contains(dayOfWeek)) {
+        	dayOfWeek =  Constants.DAY_7;
         } else {
             throw new InvalidDateFormatException(dayOfWeek);
         }
+        return dayOfWeek.toUpperCase();
     }
-
 	
 	/**
 	 * Getter method for testing purposes

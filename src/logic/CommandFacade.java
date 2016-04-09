@@ -8,12 +8,14 @@ import logic.delete.Delete;
 import logic.display.Display;
 import logic.edit.Edit;
 import logic.help.Help;
+import logic.load.Load;
 import logic.mark.Done;
 import logic.mark.Incomplete;
 import logic.mark.Mark;
 import logic.mark.Overdue;
 import logic.save.Save;
 import logic.search.Search;
+import logic.sort.Sort;
 import logic.undoredo.UndoRedo;
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
@@ -110,6 +112,8 @@ public class CommandFacade {
 		if (!redoList.isEmpty() && isListOperation(commandType) && !isUndoAction && !isRedoAction) {
 			redoList.clear();
 		}
+		
+		sortFunction();
 
 		switch (commandType) {
 			case INDEX_ADD:
@@ -145,6 +149,9 @@ public class CommandFacade {
 				break;
 			case INDEX_OVERDUE:
 				overdueFunction();
+				break;
+			case INDEX_LOAD:
+				loadFunction();
 				break;
 			default:
 				printInvalidCommandMessage();
@@ -194,6 +201,12 @@ public class CommandFacade {
 //@@author A0124636H
 	// ----------------------- FUNCTIONS -------------------------
 
+	private void sortFunction() {
+		Sort sort = new Sort(taskList);
+		sort.run();
+		setLastOutputTaskList(taskList);
+	}
+	
 	/**
 	 * Calls Add function, which adds the task to the task list and writes it to storage. It then adds the
 	 * reverse CommandObject to the undo list or the redo list.
@@ -255,6 +268,8 @@ public class CommandFacade {
 	private void editFunction() {
 		Edit edit = new Edit(commandObj, lastOutputTaskList, taskList, lastSearchedIndex);
 		setOutput(edit.run());
+		Incomplete.markAllIncompleteTasks(taskList);
+		Overdue.markAllOverdueTasks(taskList);
 		setLastOutputTaskList(taskList);
 
 		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
@@ -371,7 +386,7 @@ public class CommandFacade {
 	 * Calls the Exit function, which exits the program
 	 */
 	private void exitFunction() {
-		Exit exit = new Exit();
+		Exit exit = new Exit(taskList);
 		exit.run();
 	}
 
@@ -443,6 +458,16 @@ public class CommandFacade {
 				addToList(incomplete, undoList);
 			}
 		}
+	}
+	
+	private void loadFunction() {
+		Load load = new Load(taskObj);
+		setOutput(load.run());
+		setLastOutputTaskList(load.getLoadedTaskList());
+		setTaskList(load.getLoadedTaskList());
+		setLastSearchedIndex(-1);
+		undoList.clear();
+		redoList.clear();
 	}
 
 	// ------------------------- OVERLOADED METHODS TO POPULATE UNDO/REDO LIST -------------------------

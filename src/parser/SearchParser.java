@@ -22,7 +22,7 @@ public class SearchParser extends CommandParser {
 	 * task, date or time and calls the appropriate function.
 	 * 
 	 * @param input
-	 * 				search command, non-null
+	 * 				string input for search command, non-null
 	 * 				
 	 */
 	public TaskObject process(String input) throws Exception {
@@ -68,7 +68,6 @@ public class SearchParser extends CommandParser {
 		setTaskObject();
 	}
 	
-	
 	private boolean isSearchByStatus(String input) {
 		return input.matches("(?i)(done|completed)");
 	}
@@ -107,17 +106,13 @@ public class SearchParser extends CommandParser {
 		return input.replaceFirst(Constants.REGEX_PARSER_SEARCH, "").trim();
 	}
 	
+	//Getter for testing purpose
 	public String getTask() {
 		return _task;
 	}
-	
- 	public void resetAll() {
- 		_task = null;
- 	}
 
 	@Override
 	public int getIndex() {
 		return index;
 	}
-	
 }

@@ -9,7 +9,7 @@ import static logic.constants.Strings.*;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
-public class RecurrenceException extends Exception{
+public class RecurrenceException extends Exception {
 
 	private int taskId = -1;
 	private String title = "";

@@ -20,7 +20,7 @@ public class TimeParser {
 	
 	/**
 	 * This method takes in the user's input from add/edit/search parser, checks if empty
-	 * and processes it into 
+	 * and processes it into a LocalTime variable.
 	 * 
 	 *@param input  
 	 *				time input from user. null input results in nothing being done
@@ -153,13 +153,12 @@ public class TimeParser {
 		}
 		return _time;
 	}
-
-	
 	
 	/**
 	 * Getter method for test in JUnit environment.
 	 * 
-	 * @return LocalTime variable
+	 * @return 
+	 * 				LocalTime variable
 	 */
 	public LocalTime getTimeObject() {
 		return timeObject;

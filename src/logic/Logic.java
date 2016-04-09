@@ -10,6 +10,7 @@ import logic.exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.DateTimeException;
@@ -99,16 +100,19 @@ public class Logic {
 			}
 			output.add(exceptionMessage);
 			logger.log(Level.WARNING, "unable to update recurrences");
+		} catch (InvalidPathException e) {
+			logger.warning("invalid file path provided");
+			output.add(MESSAGE_LOAD_EXCEPTION_IFP + ". " + MESSAGE_LOAD_BACKUP);
 		} catch (FileNotFoundException e) {
-			output.add(MESSAGE_LOAD_EXCEPTION_FNF);
+			output.add(MESSAGE_LOAD_EXCEPTION_FNF + ". " + MESSAGE_LOAD_BACKUP);
 			logger.log(Level.WARNING,
 					"unable to read information from external file storage, file not found");
 		} catch (IOException e) {
-			output.add(MESSAGE_LOAD_EXCEPTION_IO);
+			output.add(MESSAGE_LOAD_EXCEPTION_IO + ". " + MESSAGE_LOAD_BACKUP);
 			logger.log(Level.WARNING,
 					"unable to read information from external file storage, general IO exception");
 		} catch (JsonSyntaxException e) {
-			output.add(MESSAGE_LOAD_EXCEPTION_JSON);
+			output.add(MESSAGE_LOAD_EXCEPTION_JSON + ". " + MESSAGE_LOAD_BACKUP);
 			logger.log(Level.WARNING,
 					"unable to read information from external file storage, Json syntax error");
 		}
@@ -279,7 +283,7 @@ public class Logic {
 	 *             General exception for failing to read a file, will be caught and processed by Logic
 	 *             constructor
 	 */
-	private void loadTaskList() throws FileNotFoundException, JsonSyntaxException, IOException {
+	private void loadTaskList() throws InvalidPathException, FileNotFoundException, JsonSyntaxException, IOException {
 		FileStorage storage = FileStorage.getInstance();
 		taskList = storage.load();
 		setLastOutputTaskList(taskList);

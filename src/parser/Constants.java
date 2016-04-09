@@ -24,6 +24,7 @@ public class Constants {
     public static final String REGEX_PARSER_EXIT = "(?i)^(exit|quit)";
     public static final String REGEX_PARSER_DONE = "(?i)^(done|(complete)(d)?|(finish)(ed)?)";
     public static final String REGEX_PARSER_NOTDONE = "(?i)^(undone|incomplete)";
+    public static final String REGEX_PARSER_LOAD = "(?i)^(load)";
     
     /*--------------------Command Index----------------------------------------------------------*/
 	public static final int INDEX_ADD = 1;
@@ -37,6 +38,60 @@ public class Constants {
 	public static final int INDEX_HELP = 9;	
 	public static final int INDEX_DONE = 10;
 	public static final int INDEX_NOTDONE = 11;
+	public static final int INDEX_LOAD = 12;
+	
+	/*--------------------Month Value------------------------------------------------------------*/
+	public static final int VALUE_JAN = 1;
+	public static final int VALUE_FEB = 2;
+	public static final int VALUE_MAR = 3;
+	public static final int VALUE_APR = 4;
+	public static final int VALUE_MAY = 5;
+	public static final int VALUE_JUN = 6;
+	public static final int VALUE_JUL = 7;
+	public static final int VALUE_AUG = 8;
+	public static final int VALUE_SEPT = 9;
+	public static final int VALUE_OCT = 10;
+	public static final int VALUE_NOV = 11;
+	public static final int VALUE_DEC = 12;
+	
+	/*--------------------Month String ----------------------------------------------------------*/
+	public static final String MONTH_1_1 = "january";
+	public static final String MONTH_1_2 = "jan";
+	public static final String MONTH_2_1 = "february";
+	public static final String MONTH_2_2 = "feb";
+	public static final String MONTH_3_1 = "march";
+	public static final String MONTH_3_2 = "mar";
+	public static final String MONTH_4_1 = "april";
+	public static final String MONTH_4_2 = "apr";
+	public static final String MONTH_5_1 = "may";
+	public static final String MONTH_6_1 = "june";
+	public static final String MONTH_6_2 = "jun";
+	public static final String MONTH_7_1 = "july";
+	public static final String MONTH_7_2 = "jul";
+	public static final String MONTH_8_1 = "august";
+	public static final String MONTH_8_2 = "aug";
+	public static final String MONTH_9_1 = "september";
+	public static final String MONTH_9_2 = "sept";
+	public static final String MONTH_10_1 = "october";
+	public static final String MONTH_10_2 = "oct";
+	public static final String MONTH_11_1 = "november";
+	public static final String MONTH_11_2 = "nov";
+	public static final String MONTH_12_1 = "december";
+	public static final String MONTH_12_2 = "dec";
+	
+	public static final String DAY_1 = "monday";
+	public static final String DAY_2 = "tuesday";
+	public static final String DAY_3 = "wednesday";
+	public static final String DAY_4 = "thursday";
+	public static final String DAY_5 = "friday";
+	public static final String DAY_6 = "saturday";
+	public static final String DAY_7 = "sunday";
+	
+	public static final String FREQ_DAILY = "DAILY";
+	public static final String FREQ_WEEKLY = "WEEKLY";
+	public static final String FREQ_MONTHLY = "MONTHLY";
+	public static final String FREQ_YEARLY = "YEARLY";
+	
 	
 	public enum TaskType {
         floating, deadline, event, recurring;
@@ -156,7 +211,14 @@ public class Constants {
     /*--------------------SEARCH DateTime Identifier Expression----------------------------------*/
     public static final String REGEX_EDIT_STARTEND = "(?i)(start|end)";
     public static final String REGEX_SEARCH = "(" + REGEX_FINAL + "|"
-    		+ REGEX_DATETIME_FORMAT + ")$";
+    		+ REGEX_DATETIME_FORMAT + "|" + REGEX_DAYS_TEXT + ")";
     public static final String REGEX_SEARCH2 = "(" + REGEX_RECURRING_INTERVAL + "|"+ REGEX_FINAL + "|"
     		+ "(" + REGEX_DATETIME_FORMAT  + "( " + REGEX_EDIT_STARTEND + ")?)"+ ")$";
+
+	//changeable default year.
+	public static final int DEFAULT_YEAR = 2016;
+
+	
+
+	
 }

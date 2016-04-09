@@ -21,8 +21,8 @@ import javafx.stage.Stage;
 
 /**
  * Controls the HelpPopup to allow access to help manual
- * Help topic displayed sorted by command type, ie. add, view, delete...
- * Display topic changes with left/right arrowkeys pressed
+ * Help topic displayed sorted by command type: Add, Search, Edit, Delete, Undo, Save, Exit.
+ * Display topic changes with left/right arrowkeys pressed.
  * Popup closes with Esc pressed
  * 
  * @author Seow Hwee
@@ -61,10 +61,22 @@ public class HelpPopupController implements Initializable {
 		setPageNumber();
 	}
 	
+	private void setHelpContent() {
+		topicLabel.setText(displayList.get(0));
+		helpText.clear();
+		for (int i = 1; i < displayList.size(); i++) {
+			helpText.appendText(displayList.get(i) + "\n");
+		}
+	}
+	
 	private void setPageNumber() {
 		pageNumber.setText(page + "/7");
 	}
-
+	
+	/**
+	 * Closes the help pop-up window
+	 * @param event - Enter key pressed
+	 */
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ESCAPE) {
@@ -72,6 +84,12 @@ public class HelpPopupController implements Initializable {
 		}
 	}
 	
+	/**
+	 * Allows Help Pop-up Content to change with press of left/right arrow key.
+	 * Help displayed switches between topics with each press.
+	 * 
+	 * @param event - left or right arrow key pressed
+	 */
 	@FXML
 	public void handleArrowPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.RIGHT && page < 7) {
@@ -83,15 +101,12 @@ public class HelpPopupController implements Initializable {
 		displayList = MainController.getHelpList(page);	
 		setDisplay();
 	}
-	
-	private void setHelpContent() {
-		topicLabel.setText(displayList.get(0));
-		helpText.clear();
-		for (int i = 1; i < displayList.size(); i++) {
-			helpText.appendText(displayList.get(i) + "\n");
-		}
-	}
 
+	/**
+	 * Called by MainController to activate help pop-up.
+	 * Function starts and shows the help pop-up window.
+	 * @throws Exception unable to load fxml file
+	 */
 	public void startHelp() throws IOException {		
 		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
 		Scene helpScene = new Scene(help);
@@ -109,6 +124,5 @@ public class HelpPopupController implements Initializable {
 		String css = url.toExternalForm(); 
 		scene.getStylesheets().add(css);
 	}
-	
 
 }

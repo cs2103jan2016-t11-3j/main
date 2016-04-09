@@ -30,13 +30,17 @@ public class UIMain extends Application {
 	static String input;
 	static ArrayList<TaskObject> taskList;
 	
+	/**
+	 * Starts and loads the program, shows the window.
+	 * Main window title set as AdultTaskFinder.
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
 		Parent root = FXMLLoader.load(getClass().getResource("TaskWindow.fxml"));
 		Scene scene = new Scene(root, 720, 500);
 		setStyle(scene);
-		window.setTitle("Adult TaskFinder");
+		window.setTitle("AdultTaskFinder");
 		window.setScene(scene);
 		window.show();
 	}
@@ -54,16 +58,19 @@ public class UIMain extends Application {
 		launch(args);
 	}
 	
-	//not used
-	public ArrayList<TaskObject> getTaskList() {
-		taskList = logic.getTaskList();
-		return taskList;
-	}
-
+	/**
+	 * Called by MainController to pass input to logic for processing
+	 * @param input - user input from textfield
+	 */
 	public void passInput(String input) {
 		logic.run(input);
 	}
 	
+	/**
+	 * Called by MainController to get feedback message to display in feedback box.
+	 * Output size = 0 indicates feedback message stored.  
+	 * @return output.get(0)
+	 */
 	public String getMessage() {	
 		ArrayList<String> output = logic.getOutput();
 		assert output != null: "Output = null, check logic output message";
@@ -74,6 +81,10 @@ public class UIMain extends Application {
 		return "";
 	}
 
+	/**
+	 * Called by MainController to get last output task list to display in table view.
+	 * @return logic.getLastOutputTaskList();
+	 */
 	public ArrayList<TaskObject> getLastOutputTaskList() {
 		taskList = logic.getLastOutputTaskList();
 		
@@ -84,6 +95,7 @@ public class UIMain extends Application {
 	
 	/**
 	 * Called by MainController to get output generated after processing user input.
+	 * Used mainly to obtain help manual.
 	 * @return logic.getOutput()
 	 */
 	public ArrayList<String> getOutput() {

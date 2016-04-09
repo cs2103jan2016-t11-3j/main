@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 
 public class AddParser extends CommandParser {
-	private TaskObject TO = new TaskObject();
+	private TaskObject taskObject = new TaskObject();
 	
 	/**
 	 * This method will take in the command and allocate the correct information
@@ -29,7 +29,7 @@ public class AddParser extends CommandParser {
 	public TaskObject process(String input) throws Exception {
 		setTask(input);
 		setTaskObject();
-		return TO;
+		return taskObject;
 	}
 	
 	/**
@@ -46,6 +46,7 @@ public class AddParser extends CommandParser {
 		
 		String identifier = null;
 		
+		//recognises date-time string and extracts to identifier
 		if (matcher.find()) {
 			identifier = getTrimmedString(input ,matcher.start(), matcher.end());
 			input = getTrimmedString(input, 0, matcher.start());
@@ -53,16 +54,15 @@ public class AddParser extends CommandParser {
 		
 		if (identifier != null) {
 			DateTimeParser dtp = new DateTimeParser();
-			TO = dtp.parse(identifier, true);
+			taskObject = dtp.parse(identifier, true);
         }
 		
 		_task = input;
 	}
 
-	
 	private void setTaskObject() {
-		TO.setTitle(_task);
-		TO.setStatus("incomplete");
+		taskObject.setTitle(_task);
+		taskObject.setStatus("incomplete");
 	}
  	
  	
@@ -78,5 +78,4 @@ public class AddParser extends CommandParser {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

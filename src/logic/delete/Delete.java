@@ -189,6 +189,10 @@ public class Delete {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
 		} catch (IndexOutOfBoundsException e) {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
+		} catch (NoSuchFileException e) {
+			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_FILE_NOT_FOUND);
+		} catch (IOException e) {
+			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_IO_EXCEPTION);
 		}
 		
 		concatenateOutput();
@@ -201,8 +205,10 @@ public class Delete {
 	 * Main method driving the quick delete function. Checks if the top of the
 	 * undoList contains a CommandObject with a delete command, and proceeds to
 	 * remove the task if it is the case.
+	 * @throws IOException 
+	 * @throws NoSuchFileException 
 	 */
-	private void runQuickDelete() throws NullPointerException, IndexOutOfBoundsException {
+	private void runQuickDelete() throws NullPointerException, IndexOutOfBoundsException, NoSuchFileException, IOException {
 		if (undoList.isEmpty()) {
 			createErrorOutput();
 		} else if (undoList.peek().getCommandType() == INDEX_DELETE) {
@@ -224,7 +230,7 @@ public class Delete {
 	}
 	
 	// Deletes all completed tasks from the task list
-	private void runDeleteCompletedTasks() {
+	private void runDeleteCompletedTasks() throws NoSuchFileException, IOException {
 		for (int i = 0; i < taskList.size(); i++) {
 			System.out.println(taskList.get(i).getTitle() + " " + taskList.get(i).getStatus());
 			if (taskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
@@ -240,7 +246,7 @@ public class Delete {
 //@@author A0124636H
 	
 	// Clears everything - task list, undo list, redo list and the storage file
-	private void runDeleteAll() {
+	private void runDeleteAll() throws NoSuchFileException, IOException {
 		taskList.clear();
 		undoList.clear();
 		redoList.clear();
@@ -251,7 +257,7 @@ public class Delete {
 		createDeletedAllOutput();
 	}
 	
-	private void processDeleteForSingleOccurrence() {
+	private void processDeleteForSingleOccurrence() throws NoSuchFileException, NullPointerException, IOException {
 		if (removedTask.getTaskDateTimes().size() > 1){
 			runSingleOccurrenceDelete();
 		} else { // if there is only 1 occurrence left, delete the entire task
@@ -263,7 +269,7 @@ public class Delete {
 //@@author A0124052X
 	
 	// Delete is handled differently if it is a recurring task
-	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException {
+	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException, NoSuchFileException, IOException {
 		assert (!taskList.isEmpty());
 		
 		hasDeletedInternal = deleteInternal();
@@ -282,7 +288,7 @@ public class Delete {
 //@@author A0124636H
 	
 	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
-	private void runSingleOccurrenceDelete() throws NullPointerException {
+	private void runSingleOccurrenceDelete() throws NullPointerException, NoSuchFileException, IOException {
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
 			originalRecurrenceTimings.addAll(taskDateTimes);
@@ -364,12 +370,13 @@ public class Delete {
 	
 //@@author A0124052X
 
-	private boolean deleteExternal() {
+	private boolean deleteExternal() throws NoSuchFileException, IOException{
 		FileStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
 			logger.log(Level.INFO, "Storage file replaced");
 		} catch (NoSuchFileException e) {
+			
 			// TODO Auto-generated catch block
 			// Ask user to specify new location or use default location
 			e.printStackTrace();
@@ -443,7 +450,7 @@ public class Delete {
 	
 	private void createOutput() {
 		if (isRecurringTask) {
-			tempOutput.add(String.format(MESSAGE_ALL_OCCURRENCES_DELETE));
+			tempOutput.add(String.format(MESSAGE_ALL_OCCURRENCES_DELETE, removedTaskName));
 		} else {
 			tempOutput.add(String.format(MESSAGE_DELETE, removedTaskName));
 		}
@@ -469,7 +476,7 @@ public class Delete {
 	
 	private void createSingleOccurrenceOutput() {
 		if (removedOccurrenceIndex == 1 && isRecurringTask) {
-			tempOutput.add(String.format(MESSAGE_MOST_RECENT_OCCURRENCE_DELETE));
+			tempOutput.add(String.format(MESSAGE_MOST_RECENT_OCCURRENCE_DELETE, removedTaskName));
 		} else {
 			tempOutput.add(String.format(MESSAGE_SINGLE_OCCURRENCE_DELETE, removedOccurrenceIndex));
 		}

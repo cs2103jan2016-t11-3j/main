@@ -58,7 +58,7 @@ public class FileStorage implements IStorage {
 
     @Override
     public ArrayList<TaskObject> load() 
-            throws FileNotFoundException, IOException , JsonSyntaxException {
+            throws InvalidPathException, FileNotFoundException, IOException , JsonSyntaxException {
         String filePath = null;
         try {
             filePath = FilePath.getPath();

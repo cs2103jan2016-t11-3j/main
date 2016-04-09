@@ -1,18 +1,24 @@
 //@@author A0125003A
 package parser;
 
+import common.AtfLogger;
 import common.CommandObject;
 import common.TaskObject;
 
 import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 /**
+ * This class takes in the user's input and processes it, identifying the command type
+ * and details of the command to exeucute.
+ *  
  * This class will be the only class from the parser component which interacts
  * with the logic. Logic will initialise a parser object with the command and 
- * unique taskID and call run().
+ * unique taskID and call run(). 
  * 
  * Parser will call the relevant method to process the command which the user has input. 
  * 
@@ -23,10 +29,9 @@ public class Parser {
 	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
-    //command object. setType, setIndex, setTask, setDate, setTime, setPath
-	
+	private static Logger logger = AtfLogger.getLogger();
 	private String _command;
-	private int _taskId;	// ADDED TASKID VARIABLE 
+	private int _taskId;
 	
 	/**
 	 * This is the general constructor for testing purposes.
@@ -45,7 +50,7 @@ public class Parser {
 	 */
 	public Parser(String command, int taskId) {
 		_command = command;
-		_taskId = taskId;	// ADDED INITIALISATION FOR TASKID
+		_taskId = taskId;
 	}
 	
 	/**
@@ -76,12 +81,15 @@ public class Parser {
 		command = command.trim();
 		
 		if (isMatch(Constants.REGEX_PARSER_EXIT, command)) {
+			logger.log(Level.INFO, "Exit command called.");
 			CO.setCommandType(Constants.INDEX_EXIT);
 		} else if (isMatch(Constants.REGEX_PARSER_HELP, command)) {
 			parseHelp(command);
 		} else if (isMatch(Constants.REGEX_PARSER_UNDO, command)) {
+			logger.log(Level.INFO, "Undo command called.");
 			CO.setCommandType(Constants.INDEX_UNDO);
 		} else if (isMatch(Constants.REGEX_PARSER_REDO, command)) {
+			logger.log(Level.INFO, "Redo command called.");
 			CO.setCommandType(Constants.INDEX_REDO);
 		} else if (isMatch(Constants.REGEX_PARSER_EDIT, command)) {
 			parseEdit(command);
@@ -97,11 +105,12 @@ public class Parser {
 			parseNotDone(command);
 		} else if (isMatch(Constants.REGEX_PARSER_SEARCH, command)) {
 			parseSearch(command);
+		} else if (isMatch(Constants.REGEX_PARSER_LOAD, command)) {
+			parseLoad(command);
 		} else {
 			parseSearch(command);
 		}
   	}
-	
 	
 	// ================================
 	// First Level of Abstraction
@@ -113,36 +122,36 @@ public class Parser {
 		return matcher.find();
 	}
 	
-	
 	/**
-	 * This method returns help index to CommandObject when the
+	 * This method returns help index to CommandObject and a search term if present.
 	 *  
 	 * @param command
-	 * 				string input that represents a help command
+	 * 				string input that represents a help command.
 	 */
 	private void parseHelp(String command) {
+		logger.log(Level.INFO, "Help command called.");
 		CO.setCommandType(Constants.INDEX_HELP);
 		command = command.replaceFirst("(?i)(help )", "");
 		TO.setTitle(command);
 		CO.setTaskObject(TO);
 	}
 	
-	
 	/**
-	 * This method sets command type and index of the task to be marked as done
+	 * This method sets command type and index of the task to be marked as done.
 	 * 
 	 * @param  command
-	 * 				string input that represent a done command
+	 * 				string input that represent a done command.
 	 */
 	private void parseDone(String command) {
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
+			logger.log(Level.INFO, "Done command called.");
 			CO.setCommandType(Constants.INDEX_DONE);
 			command = command.substring(temp + 1);
-			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
+			logger.log(Level.INFO, "Search command called.");
 			CO.setCommandType(Constants.INDEX_SEARCH);
 			TO.setStatus("completed");
 			CO.setTaskObject(TO);
@@ -150,17 +159,17 @@ public class Parser {
 	}
 	
 	/**
-	 * This method sets command type and index of task to be marked as incomplete
+	 * This method sets command type and index of task to be marked as incomplete.
 	 * 
 	 * @param command
-	 * 				string input that represents a notdone command
+	 * 				string input that represents a not-done command.
 	 */
 	private void parseNotDone(String command) {
+		logger.log(Level.INFO, "Not-done command called.");
 		int temp = command.indexOf(" ");
 		if (temp != -1) {
 			CO.setCommandType(Constants.INDEX_NOTDONE);
 			command = command.substring(temp + 1);
-			//taskObject.setTitle(command);  --> can remove this after logic passes the tests
 			temp = Integer.parseInt(command);
 			CO.setIndex(temp);	
 		} else {
@@ -170,21 +179,22 @@ public class Parser {
 		}
 	}
 	
-	
 	/**
-	 * This method sets command type, index of task to edit and parts of the task to edit
+	 * This method sets command type, index of task to edit and attributes to edit.
 	 * 
 	 * @param command   
-	 * 				user's input for the system, such as "edit 5 6pm start" 
+	 * 				user's input for the system, such as "edit 5 6pm start".
 	 * @throws Exception 
 	 */
 	private void parseEdit(String command) throws Exception {
+		logger.log(Level.INFO, "Edit command called.");
 		CO.setCommandType(Constants.INDEX_EDIT);
 		boolean isEditAllRecurring = false;
 		
-		if (command.toLowerCase().startsWith("edit all")) {
+		if (command.toLowerCase().startsWith("edit all") 
+				|| command.toLowerCase().startsWith("update all")) {
 			System.out.println(command);
-			command = command.replaceFirst("(?i)(edit all)", "").trim();
+			command = command.replaceFirst("(?i)((edit|update) all)", "").trim();
 			isEditAllRecurring = true;
 		} else {
 			command = command.replaceFirst(Constants.REGEX_PARSER_EDIT, "").trim();
@@ -203,13 +213,14 @@ public class Parser {
 	}
 	
 	/**
-	 * This method sets command type and creates task object with details keyed in by user
+	 * This method sets command type and creates task object with details keyed in by user.
 	 * 
 	 * @param command   
-	 * 				string input that represents an add command
+	 * 				string input that represents an add command.
 	 * @throws Exception 
 	 */
 	private void parseAdd(String command) throws Exception {
+		logger.log(Level.INFO, "Add command called.");
 		CO.setCommandType(Constants.INDEX_ADD);
 		CommandParser AP = new AddParser();
 		command = command.replaceFirst(Constants.REGEX_PARSER_ADD, "").trim();
@@ -221,13 +232,14 @@ public class Parser {
 	
 	/**
 	 * This method sets command type and creates task object with details entered by user 
-	 * for search purpose
+	 * for search purpose.
 	 * 
 	 * @param command   
-	 * 				string input that represents a search command
+	 * 				string input that represents a search command.
 	 * @throws Exception 
 	 */
 	private void parseSearch(String command) throws Exception {
+		logger.log(Level.INFO, "Search command called.");
 		CO.setCommandType(Constants.INDEX_SEARCH);
 		CommandParser SP = new SearchParser();
 
@@ -236,7 +248,7 @@ public class Parser {
 			TO.setStartDateTime(LocalDateTime.MAX);
 			TO.setEndDateTime(LocalDateTime.MAX);
 		} else {
-			command = command.substring(command.indexOf(" ")+1);
+			command = command.replaceFirst(Constants.REGEX_PARSER_SEARCH, "").trim();
 			TO = SP.process(command);
 			CO.setIndex(SP.getIndex());
 		}
@@ -244,13 +256,14 @@ public class Parser {
 	}
 	
 	/**
- 	 * This method sets command type for delete commands 
+ 	 * This method sets command type for delete commands and keyword "all" if included.
  	 * 
  	 * @param command 
- 	 * 				user's input as a string for deleting
+ 	 * 				user's input as a string for deleting.
  	 * @throws Exception 
  	 */
 	private void parseDelete(String command) throws Exception {
+		logger.log(Level.INFO, "Delete command called.");
  		CO.setCommandType(Constants.INDEX_DELETE);
  		int index;
  		index = extractDeleteIndex(command);
@@ -265,13 +278,14 @@ public class Parser {
  	}
 	
 	/**
- 	 * This method sets command type for command object and returns file path
+ 	 * This method sets command type for command object and returns file path.
  	 * 
  	 * @param command 
- 	 * 				string input that represents a save command 
+ 	 * 				string input that represents a save command.
  	 * @throws Exception 
  	 */
 	private void parseSave(String command) throws Exception {
+		logger.log(Level.INFO, "Save command called.");
  		CO.setCommandType(Constants.INDEX_SAVE);
  		String newString;
  		int index = command.indexOf(" ") + 1;
@@ -282,8 +296,34 @@ public class Parser {
  		} else {
  			throw new Exception("Filepath missing");
  		}
- 		
  	}
+	
+	/**
+	 * This method sets command type for command object and specifies type of load, 
+	 * (1) backup or (2) specific file.
+	 * 
+	 * @param command
+	 * 					user input with load command. non-null.
+	 * @throws Exception
+	 */
+	private void parseLoad(String command) throws Exception {
+		logger.log(Level.INFO, "Load command called.");
+		CO.setCommandType(Constants.INDEX_LOAD);
+ 		String newString;
+ 		int index = command.indexOf(" ") + 1;
+ 		
+ 		if (command.length() > index) {
+ 			if (command.contains("backup")) {
+ 				newString = "backup";
+ 			} else {
+ 				newString = command.substring(index);
+ 			}
+ 	 		TO.setTitle(newString);
+ 	 		CO.setTaskObject(TO);	
+ 		} else {
+ 			throw new Exception("Filepath missing");
+ 		}
+	}
 	
 	// ================================
 	// Second Level of Abstraction
@@ -291,11 +331,11 @@ public class Parser {
 	
 	private void setCategory() {
 		if (isFloating()) {
-			TO.setCategory("floating");
+			TO.setCategory(Constants.TaskType.floating.toString());
 		} else if (isDeadline()) {
-			TO.setCategory("deadline");
+			TO.setCategory(Constants.TaskType.deadline.toString());
 		}  else {
-			TO.setCategory("event"); //edited mistake here
+			TO.setCategory(Constants.TaskType.event.toString());
 		}
 	}
 	
@@ -318,35 +358,30 @@ public class Parser {
 
  	
  	/**
- 	 * This method returns the number that is after the delete command as an integer
+ 	 * This method returns the number that is after the delete command as an integer.
  	 * 
  	 * @param command
- 	 * 				string input that represents a delete command
+ 	 * 				string input that represents a delete command.
  	 * @throws Exception 
  	 */
 	private int extractDeleteIndex(String command) throws Exception {		
  		String newString;
- 		if (command.indexOf(" ") == -1) {	// if it is a delete command with no specified index
- 			return -1; //quick delete
- 		} else if (command.replaceFirst("delete","").trim().matches("(?i)(all)")) { //delete all
+ 		if (command.indexOf(" ") == -1) {
+ 			//quick delete
+ 			return -1; 
+ 		} else if (command.replaceFirst(Constants.REGEX_PARSER_DELETE, "").trim().matches("(?i)(all)")) {
  			TO.setIsEditAll(true); 
  			return 0;
- 		} else if (command.replaceFirst("delete","").trim().matches("(?i)(done)")) { //delete done
+ 		} else if (command.replaceFirst(Constants.REGEX_PARSER_DELETE, "").trim().matches("(?i)(done)")) {
  			return 0;
- 		} else { //delete with index
+ 		} else {
 	 		int index = command.indexOf(" ") + 1;
 	 		newString = command.substring(index).replaceAll("[a-zA-Z]+", "").trim();
- 		}
- 		//implementation for delete particular recurring/all recurring
- 		//delete 2 this ?
- 		//delete 2 all ?
- 		
+ 		} 		
 	 	return Integer.parseInt(newString);
  	}
-
  	
- 	
- 	//all the getters for testing purposes
+ 	//All the getters for testing purposes.
  	
  	public int getCommandType() {
  		return CO.getCommandType();

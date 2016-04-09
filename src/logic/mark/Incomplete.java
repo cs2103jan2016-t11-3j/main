@@ -51,8 +51,8 @@ public class Incomplete extends Mark {
 		}
 		return output;
 	}
-	
-//@@author A0124636H
+
+	// @@author A0124636H
 
 	@Override
 	protected boolean changeStatus() {
@@ -83,7 +83,7 @@ public class Incomplete extends Mark {
 						task.setStatus(STATUS_OVERDUE);
 						logger.log(Level.INFO, "Status changed to \'overdue\'");
 					}
-					
+
 				}
 
 				return true;
@@ -95,6 +95,30 @@ public class Incomplete extends Mark {
 	private void createOutput() {
 		String text = String.format(MESSAGE_INCOMPLETE, taskName);
 		output.add(text);
+	}
+
+	// ==============================================================================
+	/**
+	 * Checks all tasks with status overdue on whether they are actually incomplete. Called after performing
+	 * an edit function.
+	 * 
+	 * @param taskList
+	 *            List of tasks stored in AdultTaskFinder
+	 */
+	public static void markAllIncompleteTasks(ArrayList<TaskObject> taskList) {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (!taskList.get(i).getIsRecurring()) {
+				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)
+						|| taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
+					if (taskList.get(i).getStatus().equals(STATUS_OVERDUE)) {
+						if (taskList.get(i).getStartDateTime().isAfter(LocalDateTime.now())) {
+							taskList.get(i).setStatus(STATUS_INCOMPLETE);
+							logger.info("marked a non recurring overdue task as incomplete");
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

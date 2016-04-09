@@ -3,7 +3,6 @@ package parser;
 
 import common.TaskObject;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +16,6 @@ import java.util.regex.Pattern;
  * @author sylvesterchin
  */
 public class EditParser extends CommandParser {
-	
-	private ArrayList<String> list = new ArrayList<String>();
 
 	private TaskObject TO = new TaskObject();
 
@@ -64,7 +61,7 @@ public class EditParser extends CommandParser {
 	
 	/**
 	 * This method will convert instruction into string array list
-	 * and remove the "edit" and number
+	 * and remove the "edit" and number.
 	 * 
 	 * @param input
 	 * 				string for edit command. non-null.
@@ -81,10 +78,10 @@ public class EditParser extends CommandParser {
 	
 	/**
 	 * This method will re-form the command that the user input
-	 * without "edit" and the index number
+	 * without "edit" and the index number.
 	 * 
 	 * @param input
-	 * 				string input for editing. non null
+	 * 				string input for editing. non null.
 	 * 				
 	 */
 	private String cleanString(String input) { //remove the number
@@ -95,7 +92,7 @@ public class EditParser extends CommandParser {
 		return input;
 	}
 
-	
+	//Getter methods for testing purposes
 	public String getTask() {
 		return _task;
 	}
@@ -112,6 +109,9 @@ public class EditParser extends CommandParser {
 		return _endDateTime;
 	}
 	
+	/**
+	 * This method returns index of task to be edited to parser, 
+	 */
 	public int getIndex() {
 		return _index;
 	}

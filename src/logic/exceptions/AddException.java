@@ -4,7 +4,7 @@ package logic.exceptions;
 import common.TaskObject;
 import static logic.constants.Strings.*;
 
-public class AddException extends Exception{
+public class AddException extends Exception {
 	
 	private boolean isRecurring;
 	private String category;

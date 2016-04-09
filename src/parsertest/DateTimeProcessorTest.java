@@ -37,7 +37,6 @@ public class DateTimeProcessorTest {
 		TO = DTP.parse("every monday at 8am until 9 may", true);
 		assertEquals("2016-04-11T08:00", TO.getStartDateTime().toString());
 		assertEquals("2016-05-09T23:59:59.999999999", TO.getInterval().getUntil().toString());
-		DTP.reset();
 		TO.resetAttributes();
 	}
 	
@@ -54,7 +53,7 @@ public class DateTimeProcessorTest {
         assertEquals(1 ,TO.getInterval().getByDayArray()[5]);
         assertEquals(0 ,TO.getInterval().getByDayArray()[6]);
         assertEquals(0 ,TO.getInterval().getByDayArray()[7]);
-        assertEquals("2016-04-11T08:00", TO.getStartDateTime().toString());
+        assertEquals("2016-04-08T08:00", TO.getStartDateTime().toString());
         assertEquals(10, TO.getInterval().getCount());
 	}
 	
@@ -62,8 +61,7 @@ public class DateTimeProcessorTest {
 	@Test
 	public void testE() throws Exception {
 		TO = DTP.parse("everyday", true);
-		assertEquals("2016-04-05T23:59:59.999999999", TO.getStartDateTime().toString());
-		DTP.reset();
+		assertEquals("2016-04-08T23:59:59.999999999", TO.getStartDateTime().toString());
 		TO.resetAttributes();
 	}
 	
@@ -74,5 +72,11 @@ public class DateTimeProcessorTest {
         assertEquals("+999999999-12-31T19:00", TO.getStartDateTime().toString());
 	}
 
+	/*case 7: test for recurring date with start date in next week*/
+	@Test
+	public void testG() throws Exception {
+		TO = DTP.parse("every monday and wed", true);
+        assertEquals("2016-04-11T23:59:59.999999999", TO.getStartDateTime().toString());
+	}
 
 }

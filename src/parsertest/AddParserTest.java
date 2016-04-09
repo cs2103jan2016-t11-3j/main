@@ -1,6 +1,9 @@
+//@@author A0125003A
 package parsertest;
 
-import static org.junit.Assert.*;
+
+
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +38,7 @@ public class AddParserTest {
 		
 		//Basic Details
 		assertEquals("buy eggs", TO.getTitle());
-		assertEquals("2016-04-06T19:13", TO.getStartDateTime().toString());
+		assertEquals("2016-04-08T19:13", TO.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
 		assertEquals("incomplete", TO.getStatus());
 	}
@@ -49,8 +52,8 @@ public class AddParserTest {
 		
 		//Basic Details
 		assertEquals("bdae partee", TO.getTitle());
-		assertEquals("2016-04-06T09:00", TO.getStartDateTime().toString());
-		assertEquals("2016-04-06T22:00", TO.getEndDateTime().toString());
+		assertEquals("2016-04-08T09:00", TO.getStartDateTime().toString());
+		assertEquals("2016-04-08T22:00", TO.getEndDateTime().toString());
 		assertEquals("incomplete", TO.getStatus());
 	}
 	
@@ -61,7 +64,7 @@ public class AddParserTest {
 		
 		//Basic Details
 		assertEquals("dota time", TO.getTitle());
-		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals("2016-04-07T23:00", TO.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
 		assertEquals("incomplete", TO.getStatus());
 		
@@ -78,7 +81,7 @@ public class AddParserTest {
 		
 		//Basic Details
 		assertEquals("dota time", TO.getTitle());
-		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals("2016-04-07T23:00", TO.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
 		assertEquals("incomplete", TO.getStatus());
 
@@ -95,7 +98,7 @@ public class AddParserTest {
 		
 		//Basic Details
 		assertEquals("dota time", TO.getTitle());
-		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals("2016-04-07T23:00", TO.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
 		assertEquals("incomplete", TO.getStatus());
 
@@ -112,12 +115,12 @@ public class AddParserTest {
 		
 		//Basic Details
 		assertEquals("dota time", TO.getTitle());
-		assertEquals("2016-04-05T23:00", TO.getStartDateTime().toString());
+		assertEquals("2016-04-07T23:59:59.999999999", TO.getStartDateTime().toString());
 		assertEquals(LocalDateTime.MAX, TO.getEndDateTime());
 		assertEquals("incomplete", TO.getStatus());
 		
 		//Interval Details
-		assertEquals("2016-05-09T23:59:59.999999999", TO.getInterval().getUntil().toString());
+		assertEquals("+999999999-12-31T23:59:59.999999999", TO.getInterval().getUntil().toString());
 		assertEquals("DAILY", TO.getInterval().getFrequency());
 		assertEquals(1, TO.getInterval().getTimeInterval());
 	}
