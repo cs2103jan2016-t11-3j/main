@@ -44,8 +44,6 @@ public class AssertHelper {
                 actualTaskDataList.add(line);
             }
             fileReader.close();
-        } catch (FileNotFoundException e) {
-            //blocked by assertEquals for file Exist
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,8 +62,6 @@ public class AssertHelper {
                 actualTaskDataList.add(line);
             }
             fileReader.close();
-        } catch (FileNotFoundException e) {
-            //blocked by assertEquals for file Exist
         } catch (IOException e) {
             e.printStackTrace();
         }
