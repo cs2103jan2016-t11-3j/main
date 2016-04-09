@@ -101,6 +101,7 @@ public class DateTimeParser {
 					&& task.toString().equals(Constants.TaskType.deadline.toString())) {
 				startDate = LocalDate.now();
 			}
+			
 			if (task.toString().equals(Constants.TaskType.event.toString()) 
 					&& endDate.equals(LocalDate.MAX)) { 
 				if (startDate.equals(LocalDate.MAX)) {
@@ -108,6 +109,12 @@ public class DateTimeParser {
 				}
 				endDate = startDate;
 			}
+			
+			if (startTime.isAfter(endTime)) {
+				System.out.println("hi");
+				endDate = endDate.plusDays(1);
+			}
+			
 			if (task.toString() == "event") {
 				endDateTime = LocalDateTime.of(endDate, endTime);
 			}
