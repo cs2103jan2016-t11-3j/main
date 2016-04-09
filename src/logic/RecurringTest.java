@@ -35,8 +35,8 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 07, 14, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 07, 16, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 14, 14, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 14, 16, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
@@ -72,8 +72,8 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 03, 31, 14, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 01, 16, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 14, 14, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 15, 16, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
@@ -145,8 +145,8 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 01, 15, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 01, 16, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 10, 15, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 10, 16, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
@@ -309,8 +309,8 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 01, 16, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 01, 18, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 15, 16, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 15, 18, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
