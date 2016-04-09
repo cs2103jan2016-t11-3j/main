@@ -44,7 +44,6 @@ public class Incomplete extends Mark {
 		isChanged = changeStatus();
 		if (isChanged) {
 			saveToFile();
-			createOutput();
 			logger.log(Level.INFO, "marked task as incomplete");
 		} else {
 			createErrorOutput(MESSAGE_MARK_INCOMPLETE_ERROR);
@@ -78,9 +77,11 @@ public class Incomplete extends Mark {
 				} catch (NullPointerException e) {
 					if (task.getStartDateTime().isAfter(LocalDateTime.now())) {
 						task.setStatus(STATUS_INCOMPLETE);
+						createOutput(STATUS_INCOMPLETE);
 						logger.log(Level.INFO, "Status changed to \'incomplete\'");
 					} else {
 						task.setStatus(STATUS_OVERDUE);
+						createOutput(STATUS_OVERDUE);
 						logger.log(Level.INFO, "Status changed to \'overdue\'");
 					}
 
@@ -92,9 +93,14 @@ public class Incomplete extends Mark {
 		return false;
 	}
 
-	private void createOutput() {
-		String text = String.format(MESSAGE_INCOMPLETE, taskName);
-		output.add(text);
+	private void createOutput(String status) {
+		if (status.equals(STATUS_INCOMPLETE)) {
+			String text = String.format(MESSAGE_INCOMPLETE, taskName);
+			output.add(text);
+		} else if (status.equals(STATUS_OVERDUE)) {
+			String text = String.format(MESSAGE_INCOMPLETE_OVERDUE, taskName);
+			output.add(text);
+		}
 	}
 
 	// ==============================================================================

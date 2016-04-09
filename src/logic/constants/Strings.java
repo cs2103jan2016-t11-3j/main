@@ -118,6 +118,7 @@ public class Strings {
 	public static final String MESSAGE_MARK_OVERDUE_ERROR = "Error marking task as overdue";
 	public static final String MESSAGE_INCOMPLETE = "Task: '%1s' is marked as incomplete";
 	public static final String MESSAGE_OVERDUE = "Task: '%1s' is marked as overdue";
+	public static final String MESSAGE_INCOMPLETE_OVERDUE = "Task: %1s cannot be marked as incomplete as it is overdue";
 
 	// Save Constants
 	public static final String MESSAGE_SAVE_TO = "Tasks have been, and will continue to be saved to %1s";
