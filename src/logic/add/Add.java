@@ -121,7 +121,7 @@ public class Add {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL + MESSAGE_LOAD_EXCEPTION_IFP);
 				logger.log(Level.WARNING, "invalid file path");
-				
+
 			} catch (Exception e) {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL);
@@ -210,7 +210,7 @@ public class Add {
 		Recurring.setAllRecurringEventTimes(task);
 	}
 
-//@@ author A0124636H
+	// @@ author A0124636H
 	private void removeAnyDeletedOccurrences() {
 		ArrayList<LocalDateTimePair> deletedOccurrences = task.getDeletedTaskDateTimes();
 		LocalDateTimePair taskCurrentStartEndDateTime = new LocalDateTimePair(task.getStartDateTime(),
@@ -233,7 +233,7 @@ public class Add {
 		}
 	}
 
-//@@ author A0124052X
+	// @@ author A0124052X
 	/***********************************************************************************/
 	/**
 	 * Checks if a deadline is overdue, modifies status if necessary, adds to taskList
@@ -352,7 +352,7 @@ public class Add {
 		if (newEnd.isEqual(currentStart)) {
 			return false;
 		}
-		
+
 		if (!currentStart.isBefore(newStart)) {
 			if (!currentStart.isAfter(newEnd)) {
 				return true;
@@ -375,7 +375,7 @@ public class Add {
 		}
 		return false;
 	}
-	
+
 	private void processFloatingDetails() throws AddException {
 		if (task.getIsRecurring()) {
 			AddException e = new AddException(task);
@@ -388,8 +388,8 @@ public class Add {
 	 * Group of functions for addition of task
 	 */
 
-//@@author A0124636H
-	
+	// @@author A0124636H
+
 	// For processing undo of deletion of a single occurrence
 	private void addSingleOccurrence() {
 		ArrayList<LocalDateTimePair> timings = task.getTaskDateTimes();
@@ -408,8 +408,8 @@ public class Add {
 
 	}
 
-//@@author A0124052X
-	
+	// @@author A0124052X
+
 	private void addTask() throws NullPointerException {
 		int originalSize = taskList.size();
 		int newSize = originalSize + 1;
@@ -455,23 +455,21 @@ public class Add {
 		if (addedInternal && addedExternal) {
 			String title = task.getTitle().concat(". ");
 			String text;
-			
+
 			text = concatenateTitleOutput(title);
 			text = concatenateOverdueOutput(text);
 			if (isClash) {
 				text = concatenateClashOutput(text);
 			}
-			
+
 			output.add(text);
 			logger.log(Level.INFO, "output created successfully");
-		} else {
-			if (output.isEmpty()) {
-				output.add(MESSAGE_FAIL);
-				logger.log(Level.WARNING, "task was not added, failure output created");
-			}
+		} else if (output.isEmpty()) {
+			output.add(MESSAGE_FAIL);
+			logger.log(Level.WARNING, "task was not added, failure output created");
 		}
 	}
-	
+
 	private String concatenateTitleOutput(String title) {
 		String text;
 		if (task.getIsRecurring()) {
@@ -483,7 +481,7 @@ public class Add {
 		}
 		return text;
 	}
-	
+
 	private String concatenateOverdueOutput(String text) {
 		if (isOverdue) {
 			text = text.concat(MESSAGE_ADD_OVERDUE);
@@ -502,7 +500,7 @@ public class Add {
 		text = text.concat(". ");
 		return text;
 	}
-	
+
 	private void removeInternallyAddedTask() {
 		if (addedInternal) {
 			for (int i = 0; i < taskList.size(); i++) {

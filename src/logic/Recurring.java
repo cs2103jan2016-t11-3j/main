@@ -93,15 +93,13 @@ public class Recurring {
 		if (status.equals(STATUS_OVERDUE)) {
 			updateEventToOverdue(task, taskList, status);
 			logger.log(Level.INFO, "updated status of event " + task.getTitle() + " to " + status);
+		} else if (status.equals(STATUS_COMPLETED)) {
+			updateEventToCompleted(task, taskList, status);
+			logger.log(Level.INFO, "updated status of event " + task.getTitle() + " to " + status);
 		} else {
-			if (status.equals(STATUS_COMPLETED)) {
-				updateEventToCompleted(task, taskList, status);
-				logger.log(Level.INFO, "updated status of event " + task.getTitle() + " to " + status);
-			} else {
-				logger.log(Level.WARNING, "unable to update status of event");
-				RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
-				throw e;
-			}
+			logger.log(Level.WARNING, "unable to update status of event");
+			RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
+			throw e;
 		}
 	}
 
@@ -280,12 +278,10 @@ public class Recurring {
 
 		if (!interval.getUntil().equals(LocalDateTime.MAX)) {
 			setTimingsBasedOnUntil(task, eventDateTime, interval);
+		} else if (interval.getCount() != -1) {
+			setTimingsBasedOnCounts(task, eventDateTime, interval, interval.getCount());
 		} else {
-			if (interval.getCount() != -1) {
-				setTimingsBasedOnCounts(task, eventDateTime, interval, interval.getCount());
-			} else {
-				setTimingsBasedOnCounts(task, eventDateTime, interval, RECURRENCE_CONSTANT_COUNT);
-			}
+			setTimingsBasedOnCounts(task, eventDateTime, interval, RECURRENCE_CONSTANT_COUNT);
 		}
 
 		// In case of funny recurrences where no timings get added
@@ -319,12 +315,10 @@ public class Recurring {
 
 		if (!interval.getUntil().isEqual(LocalDateTime.MAX)) {
 			setTimingsBasedOnUntil(task, deadlineDateTime, interval);
+		} else if (interval.getCount() != -1) {
+			setTimingsBasedOnCounts(task, deadlineDateTime, interval, interval.getCount());
 		} else {
-			if (interval.getCount() != -1) {
-				setTimingsBasedOnCounts(task, deadlineDateTime, interval, interval.getCount());
-			} else {
-				setTimingsBasedOnCounts(task, deadlineDateTime, interval, RECURRENCE_CONSTANT_COUNT);
-			}
+			setTimingsBasedOnCounts(task, deadlineDateTime, interval, RECURRENCE_CONSTANT_COUNT);
 		}
 
 		// In case of funny recurrences where no timings get added
@@ -385,14 +379,12 @@ public class Recurring {
 			throws RecurrenceException {
 		if (status.equals(STATUS_OVERDUE)) {
 			updateDeadlineToOverdue(task, taskList, status);
+		} else if (status.equals(STATUS_COMPLETED)) {
+			updateDeadlineToCompleted(task, taskList, status);
 		} else {
-			if (status.equals(STATUS_COMPLETED)) {
-				updateDeadlineToCompleted(task, taskList, status);
-			} else {
-				logger.log(Level.WARNING, "unable to update status of deadline");
-				RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
-				throw e;
-			}
+			logger.log(Level.WARNING, "unable to update status of deadline");
+			RecurrenceException e = new RecurrenceException(MESSAGE_RECURRENCE_EXCEPTION_INVALID_STATUS);
+			throw e;
 		}
 		logger.log(Level.INFO, "updated status of deadline " + task.getTitle() + " to " + status);
 	}
@@ -581,24 +573,18 @@ public class Recurring {
 			Interval interval, int count) throws RecurrenceException {
 		int[] byDayArray = interval.getByDayArray();
 
-		if (byDayArray[0] == 0) {
-			for (int i = 0; i < count; i++) {
-				task.addToTaskDateTimes(timePair);
-				timePair = setNextTimePair(interval, timePair);
-			}
-		} else {
+		if (byDayArray[0] == 1) {
 			if (count != -1) {
 				// Updates the number of counts to reflect effects of byDay
 				int countMultiplier = retrieveMultiplier(byDayArray);
 				count = count * countMultiplier;
-				task.setInterval(interval);
-			}
-			for (int i = 0; i < count; i++) {
-				task.addToTaskDateTimes(timePair);
-				timePair = setNextTimePair(interval, timePair);
 			}
 		}
-		logger.log(Level.INFO, "Added recurring times for specified number of counts");
+		for (int i = 0; i < count; i++) {
+			task.addToTaskDateTimes(timePair);
+			timePair = setNextTimePair(interval, timePair);
+		}
+		logger.log(Level.INFO,"Added recurring times for specified number of counts");
 	}
 
 	private static LocalDateTimePair setNextTimePair(Interval interval, LocalDateTimePair timePair)
@@ -620,14 +606,18 @@ public class Recurring {
 	}
 
 	/**
-	 * Adds the time interval between recurrences to the current start date time and end date time, 
-	 * forming the next set of timings for the next occurrence.
+	 * Adds the time interval between recurrences to the current start date time and end date time, forming
+	 * the next set of timings for the next occurrence.
 	 * 
-	 * @param interval Interval object which contains the details of the recurrence
-	 * @param startDateTime LocalDateTime which indicates the current startDateTime
-	 * @param endDateTime LocalDateTime which indicates the current endDateTime
+	 * @param interval
+	 *            Interval object which contains the details of the recurrence
+	 * @param startDateTime
+	 *            LocalDateTime which indicates the current startDateTime
+	 * @param endDateTime
+	 *            LocalDateTime which indicates the current endDateTime
 	 * @return LocalDateTimePair containing a new set of timings for the task
-	 * @throws RecurrenceException thrown when there is no valid frequency
+	 * @throws RecurrenceException
+	 *             thrown when there is no valid frequency
 	 */
 	private static LocalDateTimePair obtainNextTime(Interval interval, LocalDateTime startDateTime,
 			LocalDateTime endDateTime) throws RecurrenceException {
