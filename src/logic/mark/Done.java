@@ -16,8 +16,8 @@ import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
 /**
- * Creates a Done object, which is a Mark object. However, it specifically
- * changes the status of the target task to "done".
+ * Creates a Done object, which is a Mark object. However, it specifically changes the status of the target
+ * task to "done".
  * 
  * @author ChongYan
  *
@@ -28,8 +28,7 @@ public class Done extends Mark {
 	 * Constuctor for a Done object.
 	 * 
 	 * @param commandObj
-	 *            - Contains information on the task to be changed, not the task
-	 *            to be changed
+	 *            - Contains information on the task to be changed, not the task to be changed
 	 * @param taskList
 	 *            - Contains all existing tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
@@ -46,11 +45,10 @@ public class Done extends Mark {
 	}
 
 	/**
-	 * Main method of the Done class, which facilitates the toggling of a task's
-	 * status to "completed", before setting an output of ArrayList
-	 * <String> describing the changes made to that specific task. <br>
-	 * If the task marked as completed is a recurring task, it will be handled
-	 * differently and this will be dealt with by the methods in Recurring.
+	 * Main method of the Done class, which facilitates the toggling of a task's status to "completed", before
+	 * setting an output of ArrayList <String> describing the changes made to that specific task. <br>
+	 * If the task marked as completed is a recurring task, it will be handled differently and this will be
+	 * dealt with by the methods in Recurring.
 	 * 
 	 * @return output: ArrayList<String>
 	 */
@@ -76,8 +74,8 @@ public class Done extends Mark {
 		output.add(text);
 	}
 
-//@@author A0124636H
-	
+	// @@author A0124636H
+
 	protected boolean changeStatus() {
 		try {
 			for (int i = 0; i < taskList.size(); i++) {
@@ -112,8 +110,8 @@ public class Done extends Mark {
 			return false;
 		}
 	}
-	
-//@@author A0124052X
+
+	// @@author A0124052X
 
 	// On top of this, consider implementation for event
 	private void changeStatusForRecurringTask(TaskObject task) {
@@ -131,8 +129,11 @@ public class Done extends Mark {
 	private void changeStatusForRecurringDeadline(TaskObject task) {
 		try {
 			Recurring.updateDeadline(task, taskList, STATUS_COMPLETED);
-			int splitTaskId = findSplitTaskId();
-			setMostRecentlyMarkedTaskId(splitTaskId);
+			// At the last recurrence, task will be set to be non-recurring
+			if (task.getIsRecurring()) {
+				int splitTaskId = findSplitTaskId();
+				setMostRecentlyMarkedTaskId(splitTaskId);
+			}
 		} catch (RecurrenceException e) {
 			String exceptionMessage = e.getRecurrenceExceptionMessage();
 			createErrorOutput(exceptionMessage);
@@ -142,14 +143,17 @@ public class Done extends Mark {
 	private void changeStatusForRecurringEvent(TaskObject task) {
 		try {
 			Recurring.updateEvent(task, taskList, STATUS_COMPLETED);
-			int splitTaskId = findSplitTaskId();
-			setMostRecentlyMarkedTaskId(splitTaskId);
+			// At the last recurrence, task will be set to non-recurring
+			if (task.getIsRecurring()) {
+				int splitTaskId = findSplitTaskId();
+				setMostRecentlyMarkedTaskId(splitTaskId);
+			}
 		} catch (RecurrenceException e) {
 			String exceptionMessage = e.getRecurrenceExceptionMessage();
 			createErrorOutput(exceptionMessage);
 		}
 	}
-	
+
 	private int findSplitTaskId() {
 		int id = -1;
 		for (int i = 0; i < taskList.size(); i++) {

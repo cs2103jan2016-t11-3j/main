@@ -148,6 +148,7 @@ public class Recurring {
 
 		if (task.getTaskDateTimes().size() == 1) {
 			task.setStatus(status);
+			task.setIsRecurring(false);
 			logger.log(Level.WARNING, "handled one date time left but not caught in the method calling this");
 		} else {
 			splitTaskFromRecurringEvent(taskName, eventTimePair.getStartDateTime(),
@@ -390,6 +391,7 @@ public class Recurring {
 		String taskName = task.getTitle();
 
 		if (task.getTaskDateTimes().size() == 1) {
+			task.setIsRecurring(false);
 			task.setStatus(status);
 			logger.log(Level.WARNING,
 					"handled one date time left but not caught in method which called this");
