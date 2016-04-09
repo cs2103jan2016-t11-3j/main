@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import common.AtfLogger;
 import common.TaskObject;
 import storage.FileStorage;
+import storage.IStorage;
 
 public class Exit {
 
@@ -26,7 +27,7 @@ public class Exit {
 	}
 
 	public void saveToExternalFile() {
-		FileStorage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
 			logger.info("saved tasks before exiting");

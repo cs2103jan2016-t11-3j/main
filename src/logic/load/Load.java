@@ -12,6 +12,8 @@ import com.google.gson.JsonSyntaxException;
 import common.AtfLogger;
 import common.TaskObject;
 import storage.FileStorage;
+import storage.IStorage;
+
 import static logic.constants.Strings.*;
 import static logic.constants.Index.*;
 
@@ -67,7 +69,7 @@ public class Load {
 	 */
 	public ArrayList<String> run() {
 		try {
-			FileStorage storage = FileStorage.getInstance();
+			IStorage storage = FileStorage.getInstance();
 			loadFile(storage);
 			logger.info("obtained task list from alternative storage");
 		} catch (InvalidPathException e) {
@@ -102,7 +104,7 @@ public class Load {
 	 * @throws IOException
 	 *             General IO Exception in case of any unforeseen circumstances
 	 */
-	private void loadFile(FileStorage storage)
+	private void loadFile(IStorage storage)
 			throws InvalidPathException, FileNotFoundException, JsonSyntaxException, IOException {
 		if (loadCommand == LOAD_FROM) {
 			loadedTaskList = storage.load(filePath);

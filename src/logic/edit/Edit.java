@@ -3,6 +3,7 @@
 package logic.edit;
 
 import storage.FileStorage;
+import storage.IStorage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -813,7 +814,7 @@ public class Edit {
 	// Saves the updated file to Storage
 	private void saveExternal() {
 		try {
-			FileStorage storage = FileStorage.getInstance();
+			IStorage storage = FileStorage.getInstance();
 			storage.save(taskList);
 			LOGGER.log(Level.INFO, "Storage file updated");
 		} catch (IOException e) {

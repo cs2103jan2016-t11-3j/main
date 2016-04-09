@@ -371,7 +371,7 @@ public class Delete {
 //@@author A0124052X
 
 	private boolean deleteExternal() throws NoSuchFileException, IOException{
-		FileStorage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.save(taskList);
 			logger.log(Level.INFO, "Storage file replaced");

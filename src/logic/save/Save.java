@@ -88,7 +88,7 @@ public class Save {
 	}
 
 	private void saveTo() {
-		FileStorage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.changeSaveLocation(newFilePath);
 			storage.save(taskList);
@@ -109,7 +109,7 @@ public class Save {
 	}
 
 	private void saveAs() {
-		FileStorage storage = FileStorage.getInstance();
+		IStorage storage = FileStorage.getInstance();
 		try {
 			storage.createCopy(newFilePath, "filecopy.txt");
 			isSaved = true;
