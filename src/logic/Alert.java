@@ -29,7 +29,8 @@ public class Alert {
 				if (taskList.get(i).getStartDateTime().toLocalDate().isEqual(LocalDate.now())) {
 					if (!taskList.get(i).getStatus().equals("completed")) {
 						String time = createEventAlertTime(taskList.get(i));
-						taskInformation = String.format(MESSAGE_INFORMATION_EVENT, taskList.get(i).getTitle(), time);
+						taskInformation = String.format(MESSAGE_INFORMATION_EVENT, taskList.get(i).getTitle(),
+								time);
 						alertOutput.add(taskInformation);
 						hasEvent = true;
 					}
@@ -47,7 +48,8 @@ public class Alert {
 				if (taskList.get(i).getStartDateTime().toLocalDate().isEqual(LocalDate.now())) {
 					if (!taskList.get(i).getStatus().equals("completed")) {
 						String time = createDeadlineAlertTime(taskList.get(i).getStartDateTime());
-						taskInformation = String.format(MESSAGE_INFORMATION_DEADLINE, taskList.get(i).getTitle(), time);
+						taskInformation = String.format(MESSAGE_INFORMATION_DEADLINE,
+								taskList.get(i).getTitle(), time);
 						alertOutput.add(taskInformation);
 						hasDeadline = true;
 					}
@@ -91,13 +93,11 @@ public class Alert {
 			// with end time
 			if (!task.getEndDateTime().toLocalTime().equals(LocalTime.MAX)) {
 				endTime = "to " + task.getEndDateTime().toLocalTime().toString() + " ";
-			} else {
+			} else if (startTime.equals("")) {
 				// without end time
-				if (startTime.equals("")) {
-					startTime = "not specified ";
-				} else {
-					startTime = "from " + startTime + "today ";
-				}
+				startTime = "not specified ";
+			} else {
+				startTime = "from " + startTime + "today ";
 			}
 		} else {
 			endDate = task.getEndDateTime().toLocalDate().format(shortFormatter) + " ";

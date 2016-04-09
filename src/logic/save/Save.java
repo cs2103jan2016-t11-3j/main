@@ -129,20 +129,16 @@ public class Save {
 			if (saveCommand == 1) {
 				text = String.format(MESSAGE_SAVE_TO, newFilePath);
 				output.add(text);
-			} else {
-				if (saveCommand == 2) {
-					text = String.format(MESSAGE_SAVE_AS, newFilePath);
-					output.add(text);
-				}
+			} else if (saveCommand == 2) {
+				text = String.format(MESSAGE_SAVE_AS, newFilePath);
+				output.add(text);
 			}
+		} else if (saveCommand == 0) {
+			text = String.format(MESSAGE_SAVE_INVALID);
+			output.add(text);
 		} else {
-			if (saveCommand == 0) {
-				text = String.format(MESSAGE_SAVE_INVALID);
-				output.add(text);
-			} else {
-				text = String.format(MESSAGE_SAVE_ERROR, newFilePath);
-				output.add(text);
-			}
+			text = String.format(MESSAGE_SAVE_ERROR, newFilePath);
+			output.add(text);
 		}
 		logger.log(Level.INFO, "created output");
 	}

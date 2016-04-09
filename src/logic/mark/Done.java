@@ -118,11 +118,9 @@ public class Done extends Mark {
 		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
 			logger.log(Level.INFO, "about to mark a recurring deadline as completed");
 			changeStatusForRecurringDeadline(task);
-		} else {
-			if (task.getCategory().equals(CATEGORY_EVENT)) {
-				logger.log(Level.INFO, "about to mark a recurring event as completed");
-				changeStatusForRecurringEvent(task);
-			}
+		} else if (task.getCategory().equals(CATEGORY_EVENT)) {
+			logger.log(Level.INFO, "about to mark a recurring event as completed");
+			changeStatusForRecurringEvent(task);
 		}
 	}
 

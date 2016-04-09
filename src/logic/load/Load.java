@@ -47,12 +47,10 @@ public class Load {
 		if (command.startsWith(KEYWORD_FROM)) {
 			loadCommand = LOAD_FROM;
 			obtainFilePath(command);
+		} else if (command.startsWith(KEYWORD_BACKUP)) {
+			loadCommand = LOAD_BACKUP;
 		} else {
-			if (command.startsWith(KEYWORD_BACKUP)) {
-				loadCommand = LOAD_BACKUP;
-			} else {
-				logger.warning("Load Command is invalid");
-			}
+			logger.warning("Load Command is invalid");
 		}
 	}
 
@@ -109,14 +107,12 @@ public class Load {
 		if (loadCommand == LOAD_FROM) {
 			loadedTaskList = storage.load(filePath);
 			createOutput();
+		} else if (loadCommand == LOAD_BACKUP) {
+			loadedTaskList = storage.loadBackup();
+			createOutput();
 		} else {
-			if (loadCommand == LOAD_BACKUP) {
-				loadedTaskList = storage.loadBackup();
-				createOutput();
-			} else {
-				IOException e = new IOException("Invalid command");
-				throw e;
-			}
+			IOException e = new IOException("Invalid command");
+			throw e;
 		}
 	}
 
@@ -124,10 +120,8 @@ public class Load {
 		if (loadCommand == LOAD_FROM) {
 			System.out.println(filePath);
 			output.add(String.format(MESSAGE_LOAD_SUCCESS, "\n" + filePath));
-		} else {
-			if (loadCommand == LOAD_BACKUP) {
-				output.add(String.format(MESSAGE_LOAD_SUCCESS, KEYWORD_BACKUP));
-			}
+		} else if (loadCommand == LOAD_BACKUP) {
+			output.add(String.format(MESSAGE_LOAD_SUCCESS, KEYWORD_BACKUP));
 		}
 	}
 
