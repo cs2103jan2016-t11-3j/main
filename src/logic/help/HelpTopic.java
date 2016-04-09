@@ -67,12 +67,5 @@ public class HelpTopic {
 	public ArrayList<String> getDetails() {
 		return details;
 	}
-	
-	public void setTopicNumber(int _number) {
-		number = _number;
-	}
-	
-	public void setTopicName(String _name) {
-		name = _name;
-	}
+
 }

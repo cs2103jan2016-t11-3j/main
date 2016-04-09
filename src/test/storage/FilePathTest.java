@@ -1,13 +1,14 @@
+//@@author A0080510X
+
 package test.storage;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +21,6 @@ import storage.Constants;
 
 public class FilePathTest extends storage.FilePath {
 
-    private static final String SAVE_FILE_NAME = Constants.FILENAME_SAVEINFO;
     private static final String DATA_FILE_NAME = Constants.FILENAME_DATA;
 
     @Before
@@ -63,7 +63,6 @@ public class FilePathTest extends storage.FilePath {
         writeSaveDir(saveDir);
         String actualFilePath = getPath();
         String expectedFilePath = Paths.get(saveDir, DATA_FILE_NAME).toString();
-        Path path = Paths.get(saveDir , SAVE_FILE_NAME);
         assertEquals("Returned file Path", expectedFilePath , actualFilePath);
     }
 

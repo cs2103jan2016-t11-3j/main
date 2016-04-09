@@ -22,8 +22,8 @@ public class FilePath {
     /**
      * Changes the default directory location to store the data file to the provided path.
      * <p>
-     * @param directory Location of new directory to contain data file for saved tasks
-     * @throws IOException Error saving new directory
+     * @param directory Location of new directory to contain data file for saved tasks.
+     * @throws IOException Error saving new directory.
      */
     protected static void changePreferedDirectory(String directory) throws IOException {
         Logger logger = AtfLogger.getLogger();
@@ -41,7 +41,7 @@ public class FilePath {
      * <p>
      * @return String of path of the file containing saved tasks.
      * @throws FileNotFound No existing preferred directory specified.
-     * @throws IOException Error reading file containing default path
+     * @throws IOException Error reading file containing default path.
      */
     protected static String getPath() throws FileNotFoundException , IOException {
         String directory = readPreferedDirectory();
@@ -52,11 +52,6 @@ public class FilePath {
         return path.toString();
     }
     
-    /**
-     * 
-     * @param directory
-     * @throws InvalidPathException
-     */
     protected static boolean directoryValid(String directory)  {
         if (directory == null) {
             return false;
@@ -68,10 +63,6 @@ public class FilePath {
         return true;
     }
 
-    /**
-     * Checks if the specified filePath is writable and readable.  
-     * @param filePath or path of file to check
-     */
     protected static boolean pathValid(String filePath) {
         Path path = Paths.get(filePath);
         return Files.isReadable(path) && Files.isWritable(path);

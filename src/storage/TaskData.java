@@ -8,13 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -26,6 +21,13 @@ import com.google.gson.reflect.TypeToken;
 import common.AtfLogger;
 import common.TaskObject;
 
+
+/**
+ * TaskData contains methods for writing tasks onto disk and for loading tasks from disk.
+ * Tasks stored on the disk will be represented in Json.
+ * 
+ * @@author A0080510X
+ */
 public class TaskData {
 
     private static final String NEW_LINE = "\n";
@@ -33,11 +35,12 @@ public class TaskData {
     /**
      * Creates a file at the specified path containing details of the tasks to be stored.
      * If existing file at the specified path is present, it will be overwritten.
-     * The taskObjects will written to the file in json format.
+     * The taskObjects will serialized and stored as Json representation in the file.
      * <p>
-     * @param taskList An ArrayList containing all the taskObjects
-     * @param filePath The file path to create the file
-     * @throws IOException Error writing to specified path
+     * @param taskList An <code>ArrayList</code> containing all the task objects to be
+     * stored into the file.
+     * @param filePath The file path of the file to be created.
+     * @throws IOException Error writing to specified path.
      */
     protected static void writeTasks(ArrayList<TaskObject> taskList, String filePath) 
             throws IOException {
@@ -54,14 +57,17 @@ public class TaskData {
     }
     
     /**
-     * Reads the specified file and creates taskObjects from the task information stored in the file.
-     * The task information needs to be stored in json format in the file.
+     * Reads from the file at the specified filePath and creates taskObjects 
+     * by deserializing the tasks stored in the file.
+     * The specified file must contains tasks serialized in Json format.
      * <p>
      * @param filePath The path of the file containing the stored tasks information.
-     * @return
-     * @throws FileNotFoundException The specified file path does not exist
-     * @throws IOException Error reading from existing file
-     * @throws JsonSyntaxException File format not compatible with existing format
+     * @return An <code>ArrayList</code> containing all the task objects that are 
+     * read from the file. 
+     * @throws FileNotFoundException The specified file path does not exist.
+     * @throws IOException Error reading from existing file.
+     * @throws JsonSyntaxException Error converting file contents to task objects. 
+     * The file does not contain tasks that are correctly represented in Json.
      */
     static ArrayList<TaskObject> readTasks(String filePath) 
             throws FileNotFoundException, IOException, JsonSyntaxException {

@@ -27,10 +27,8 @@ public class AtfLogger {
                 fileHandler = new FileHandler(storage.Constants.FILEPATH_LOGFILE.toString(),
                                               true);
             } catch (SecurityException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             logger.addHandler(fileHandler);

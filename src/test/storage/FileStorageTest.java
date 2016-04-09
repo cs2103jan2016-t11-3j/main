@@ -1,6 +1,5 @@
-/**
- * 
- */
+//@@author A0080510X
+
 package test.storage;
 
 import static org.junit.Assert.assertEquals;
@@ -40,6 +39,12 @@ public class FileStorageTest {
     public static ArrayList<TaskObject> taskList1 = new ArrayList<TaskObject>();
     public static ArrayList<TaskObject> taskList2 = new ArrayList<TaskObject>();
     public static String moveDir = Paths.get(Constants.ATF_DIRECTORY).toString();
+    static Path defaultFilePath = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.FILENAME_DATA);
+    static Path copyFilePath = Paths.get(moveDir , "test.txt");
+    static Path copyFilePath2 = Paths.get(moveDir , "test(1).txt");
+    static Path moveFilePath = Paths.get(moveDir , Constants.FILENAME_DATA);
+    
+    
     IStorage storage = FileStorage.getInstance();
     
     @BeforeClass
@@ -59,12 +64,10 @@ public class FileStorageTest {
     }
 
     private static void deleteInfo() throws IOException {
-        Path path1 = Paths.get(Constants.DEFAULT_DIRECTORY, Constants.FILENAME_DATA);
-        Path path2 = Paths.get(moveDir , "test");
-        Path path3 = Paths.get(moveDir , Constants.FILENAME_DATA);
-        Files.deleteIfExists(path1);
-        Files.deleteIfExists(path2);
-        Files.deleteIfExists(path3);
+        Files.deleteIfExists(defaultFilePath);
+        Files.deleteIfExists(copyFilePath);
+        Files.deleteIfExists(moveFilePath);
+        Files.deleteIfExists(copyFilePath2);
         Files.deleteIfExists(Constants.FILEPATH_DEFAULT_SAVE);
     }
 
@@ -81,7 +84,7 @@ public class FileStorageTest {
      */
     @After
     public void tearDown() throws Exception {
-        deleteInfo();
+        //deleteInfo();
     }
 
     /**
@@ -132,8 +135,20 @@ public class FileStorageTest {
         IStorage storage = FileStorage.getInstance();
         storage.save(taskList1);
         storage.createCopy(moveDir, "test");
-        String path = Paths.get(moveDir, "test").toString();
+        String path = Paths.get(moveDir, "test.txt").toString();
         ArrayList<TaskObject> actualTaskList = storage.load(path);
+        AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList1 , actualTaskList);
+    }
+    
+    @Test
+    public void testCreateDuplicateCopyLoadFrom() throws IOException {
+        IStorage storage = FileStorage.getInstance();
+        storage.save(taskList1);
+        storage.createCopy(moveDir, "test");
+        String savedPath = storage.createCopy(moveDir, "test");
+        String path = Paths.get(moveDir, "test(1).txt").toString();
+        ArrayList<TaskObject> actualTaskList = storage.load(path);
+        assertEquals("Saved path", copyFilePath2.toString(), savedPath);
         AssertHelper.assertTaskListEquals("CreateCopyLoadFrom" , taskList1 , actualTaskList);
     }
 
