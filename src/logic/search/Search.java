@@ -432,7 +432,7 @@ public class Search extends Display {
 				createErrorOutput(MESSAGE_INVALID_RECURRENCE);
 			}
 		} else {
-			output.add(String.format(MESSAGE_TIMING_DISPLAY, searchIndex));
+			output.add(String.format(MESSAGE_NO_RECURRENCE_TIMING_DISPLAY, searchIndex));
 			if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
 				TimeOutput.setEventTimeOutput(foundTask);
 			} else {

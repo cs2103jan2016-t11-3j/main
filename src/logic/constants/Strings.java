@@ -130,7 +130,7 @@ public class Strings {
 	public static final String MESSAGE_NO_RESULTS_FOUND = "No results found for the specified parameters.";
 	public static final String MESSAGE_SEARCH_PARAMETERS = "Displaying tasks for the search parameters:\n%1s";
 	public static final String MESSAGE_RECURRENCE_TIMINGS_DISPLAY = "Displaying recurrence timings for task %1s.";
-	public static final String MESSAGE_TIMING_DISPLAY = "Displaying timing for task %1s.";
+	public static final String MESSAGE_NO_RECURRENCE_TIMING_DISPLAY = "Task %1s has no recurrence timings to be displayed.";
 	public static final String MESSAGE_TIMINGS_FOUND = "Timings for %1s:";
 	public static final String MESSAGE_TASK_INDEX_NOT_FOUND_ERROR = "No such task index found.";
 
