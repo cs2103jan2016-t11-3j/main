@@ -8,6 +8,7 @@ import common.CommandObject;
 import common.LocalDateTimePair;
 import common.TaskObject;
 import logic.Recurring;
+import logic.exceptions.DeleteException;
 import logic.exceptions.RecurrenceException;
 import logic.timeOutput.TimeOutput;
 
@@ -157,11 +158,7 @@ public class Delete {
 		assert (!taskList.isEmpty());
 
 		try {
-			System.out.println("Delete:160 - COMMANDOBJ INDEX = " + commandObj.getIndex());
-			
-			if (commandObj.getIndex() == -1) {
-				runQuickDelete();
-			} else if (commandObj.getIndex() == 0) {
+			if (commandObj.getIndex() == 0) {
 				if (commandObj.getTaskObject().getStatus().equals("completed")) {
 					runDeleteCompletedTasks();
 				} else {
@@ -176,17 +173,15 @@ public class Delete {
 				} else {
 					setDeleteInformationForNormalDelete();
 					
-					if (isRecurringTask) {
-						if (commandObj.getTaskObject().getIsEditAll()) {	
-							runNormalDelete();	// deletes entire task
-						} else {
-							processDeleteForSingleOccurrence();
-						}
+					if (isRecurringTask && !commandObj.getTaskObject().getIsEditAll()) {
+						processDeleteForSingleOccurrence();
 					} else {
 						runNormalDelete();
 					}
 				}
 			}
+		} catch (DeleteException e) {
+			tempOutput.add(e.getDeleteExceptionMessage());
 		} catch (NullPointerException e) {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
 		} catch (IndexOutOfBoundsException e) {
@@ -195,7 +190,7 @@ public class Delete {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_FILE_NOT_FOUND);
 		} catch (IOException e) {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_IO_EXCEPTION);
-		}
+		} 
 		
 		concatenateOutput();
 		return output;
@@ -203,34 +198,6 @@ public class Delete {
 	
 //@@author A0124052X
 
-	/**
-	 * Main method driving the quick delete function. Checks if the top of the
-	 * undoList contains a CommandObject with a delete command, and proceeds to
-	 * remove the task if it is the case.
-	 * @throws IOException 
-	 * @throws NoSuchFileException 
-	 */
-	private void runQuickDelete() throws NullPointerException, IndexOutOfBoundsException, NoSuchFileException, IOException {
-		if (undoList.isEmpty()) {
-			createErrorOutput();
-		} else if (undoList.peek().getCommandType() == INDEX_DELETE) {
-			assert (!taskList.isEmpty());
-			
-			setDeleteInformationForQuickDelete();
-			hasDeletedInternal = deleteInternal();
-			hasDeletedExternal = deleteExternal();
-			
-			if (hasDeletedInternal && hasDeletedExternal) {
-				createOutput();
-				logger.log(Level.INFO, "Quick delete executed");
-			} else {
-				createErrorOutput();
-			}
-		} else {
-			createQuickDeleteUnavailableErrorOutput();
-		}
-	}
-	
 	// Deletes all completed tasks from the task list
 	private void runDeleteCompletedTasks() throws NoSuchFileException, IOException {
 		for (int i = 0; i < taskList.size(); i++) {
@@ -268,27 +235,6 @@ public class Delete {
 		}
 	}
 	
-//@@author A0124052X
-	
-	// Delete is handled differently if it is a recurring task
-	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException, NoSuchFileException, IOException {
-		assert (!taskList.isEmpty());
-		
-		hasDeletedInternal = deleteInternal();
-		
-		if (hasDeletedInternal) {
-			hasDeletedExternal = deleteExternal();
-			if (hasDeletedExternal) {
-				createOutput();
-				logger.log(Level.INFO, "Normal delete executed");
-			}
-		} else {
-			createErrorOutput();
-		}
-	}
-	
-//@@author A0124636H
-	
 	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
 	private void runSingleOccurrenceDelete() throws NullPointerException, NoSuchFileException, IOException {
 		try {
@@ -321,6 +267,23 @@ public class Delete {
 	}
 	
 //@@author A0124052X
+	
+	// Delete is handled differently if it is a recurring task
+	private void runNormalDelete() throws NullPointerException, IndexOutOfBoundsException, NoSuchFileException, IOException {
+		assert (!taskList.isEmpty());
+		
+		hasDeletedInternal = deleteInternal();
+		
+		if (hasDeletedInternal) {
+			hasDeletedExternal = deleteExternal();
+			if (hasDeletedExternal) {
+				createOutput();
+				logger.log(Level.INFO, "Normal delete executed");
+			}
+		} else {
+			createErrorOutput();
+		}
+	}
 
 	private boolean deleteInternal() {
 		try {
@@ -331,6 +294,25 @@ public class Delete {
 			return false;
 		}
 	}
+	
+
+	private boolean deleteExternal() throws NoSuchFileException, IOException{
+		IStorage storage = FileStorage.getInstance();
+		try {
+			storage.save(taskList);
+			logger.log(Level.INFO, "Storage file replaced");
+		} catch (NoSuchFileException e) {
+			
+			// TODO Auto-generated catch block
+			// Ask user to specify new location or use default location
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+		
 	
 //@@author A0124636H
 	
@@ -370,38 +352,18 @@ public class Delete {
 		removedTask.updateStartAndEndDateTimes();
 	}
 	
-//@@author A0124052X
-
-	private boolean deleteExternal() throws NoSuchFileException, IOException{
-		IStorage storage = FileStorage.getInstance();
-		try {
-			storage.save(taskList);
-			logger.log(Level.INFO, "Storage file replaced");
-		} catch (NoSuchFileException e) {
-			
-			// TODO Auto-generated catch block
-			// Ask user to specify new location or use default location
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
 	// ----------------------- SETTING DELETE INFORMATION -----------------------
 	
-	private void checkIfDeleteSingleOccurrence() {
+	private void checkIfDeleteSingleOccurrence() throws DeleteException {
+		if (commandObj.getIndex() == -1) {
+			DeleteException e = new DeleteException(commandObj.getIndex());
+			throw e;
+		}
+		
 		if (lastSearchedIndex != -1) {
 			isDeleteSingleOccurrence = true;
 			removedOccurrenceIndex = commandObj.getIndex();
 		}
-	}
-	
-	private void setDeleteInformationForQuickDelete() {
-		removedTaskIndex = taskList.size() - 1;
-		removedTask = taskList.get(removedTaskIndex);
-		removedTaskName = removedTask.getTitle();
 	}
 	
 	private void setDeleteInformationForSingleOccurrenceDelete() {
@@ -462,12 +424,6 @@ public class Delete {
 		removedTask = null;
 		tempOutput.add(MESSAGE_DELETE_ERROR);
 	}
-
-	private void createQuickDeleteUnavailableErrorOutput() {
-		removedTask = null;
-		tempOutput.add(MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR);
-	}
-	
 	private void createCompletedTasksDeletedOutput() {
 		tempOutput.add(MESSAGE_COMPLETED_TASKS_DELETE);
 	}

@@ -54,7 +54,6 @@ public class Strings {
 	public static final String MESSAGE_MOST_RECENT_OCCURRENCE_DELETE = "Most recent occurrence of task '%1s' deleted.";
 	public static final String MESSAGE_ALL_OCCURRENCES_DELETE = "All occurrences of task '%1s' deleted.";
 	public static final String MESSAGE_ONLY_ONE_OCCURRENCE_REMAINING = "Only one occurrence remaining. ";
-	public static final String MESSAGE_QUICK_DELETE_UNAVAILABLE_ERROR = "Quick delete unavailable.";
 	public static final String MESSAGE_INDEX_OUT_OF_BOUNDS = "Requested index does not exist";
 	public static final String MESSAGE_SINGLE_OCCURENCE_MISSING_ERROR = "Occurrence does not exist.";
 	public static final String MESSAGE_FILE_NOT_FOUND = "File to save information to is not found.";
@@ -159,6 +158,9 @@ public class Strings {
 	public static final String MESSAGE_ADD_EXCEPTION = "Error adding task to task list";
 	public static final String MESSAGE_ADD_FLOATING_RECURRING = "Task with no time cannot be set as a recurring task";
 
+	// Delete Exception constants
+	public static final String MESSAGE_NO_INDEX_SPECIFIED_EXCEPTION = "Please specify a task index to delete.";
+	
 	// Edit Exception constants
 	public static final String MESSAGE_EDIT_EXCEPTION = "Error editing %1s. ";
 	
