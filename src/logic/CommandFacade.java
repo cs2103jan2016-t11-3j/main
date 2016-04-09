@@ -49,6 +49,7 @@ public class CommandFacade {
 	private int commandType;
 	private TaskObject taskObj;
 	private int index;
+	private int sortedIndex = -1; // stores the index of the task after sorting
 	private int lastSearchedIndex; // stores the index of the last recurring task searched
 
 	private int lastCompletedTaskId; // stores task id of task most recently marked completed
@@ -97,23 +98,12 @@ public class CommandFacade {
 	 */
 	public void run() {
 
-		// FOR TESTING
-		// System.out.println("isUndoAction = " + isUndoAction + ", undo size =
-		// "
-		// + undoList.size() + ", redo size = " + redoList.size());
-		// System.out.println("commandObj command type = " +
-		// commandObj.getCommandType());
-		//printTaskObjectFields(taskObj);
-		// System.out.println("commandObj index = " + commandObj.getIndex());
-		// System.out.println();
+		//printTaskObjectFields(taskObj); // FOR DEBUGGING
 
-		// Clears the redo stack if it is a new command which modifies the task
-		// list
+		// Clears the redo stack if it is a new command which modifies the task list
 		if (!redoList.isEmpty() && isListOperation(commandType) && !isUndoAction && !isRedoAction) {
 			redoList.clear();
 		}
-		
-		sortFunction();
 
 		switch (commandType) {
 			case INDEX_ADD:
@@ -147,9 +137,6 @@ public class CommandFacade {
 			case INDEX_INCOMPLETE:
 				incompleteFunction();
 				break;
-			case INDEX_OVERDUE:
-				overdueFunction();
-				break;
 			case INDEX_LOAD:
 				loadFunction();
 				break;
@@ -160,6 +147,7 @@ public class CommandFacade {
 
 		// method which filters lastOutputTaskList to hide completed tasks
 		filterLastOutputTaskList();
+		
 	}
 
 //@@author A0124052X
@@ -201,12 +189,6 @@ public class CommandFacade {
 //@@author A0124636H
 	// ----------------------- FUNCTIONS -------------------------
 
-	private void sortFunction() {
-		Sort sort = new Sort(taskList);
-		sort.run();
-		setLastOutputTaskList(taskList);
-	}
-	
 	/**
 	 * Calls Add function, which adds the task to the task list and writes it to storage. It then adds the
 	 * reverse CommandObject to the undo list or the redo list.
@@ -216,6 +198,7 @@ public class CommandFacade {
 		setOutput(add.run());
 		setLastOutputTaskList(taskList);
 		boolean isAddSingleOccurrence = add.getIsAddSingleOccurrence();
+		sortFunction();
 
 		if (isUndoAction) {
 			addToList(commandObj, isAddSingleOccurrence, redoList);
@@ -246,6 +229,7 @@ public class CommandFacade {
 		setTaskDateTimeOutput(search.getTaskDateTimeOutput());
 	}
 
+	// Called after delete/edit of an occurrence so that the sidebar remains open and is updated
 	private void searchFunction(CommandObject cmdObjToRunSearchByIndex) {
 		Search search = new Search(cmdObjToRunSearchByIndex, taskList, lastOutputTaskList);
 		search.run();
@@ -271,7 +255,8 @@ public class CommandFacade {
 		Incomplete.markAllIncompleteTasks(taskList);
 		Overdue.markAllOverdueTasks(taskList);
 		setLastOutputTaskList(taskList);
-
+		sortFunction();
+		
 		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
 		callSearchByIndexToUpdateSidebar(edit.getIsEditSingleOccurrence());
 
@@ -290,20 +275,22 @@ public class CommandFacade {
 	private void deleteFunction() {
 		// 4 things to track
 		TaskObject removedTask = new TaskObject();
-		LocalDateTimePair removedOccurrenceTiming = new LocalDateTimePair(); // will be filled if it is a
-																				// single-occurrence-delete
+		// will be filled if it is a single-occurrence-delete
+		LocalDateTimePair removedOccurrenceTiming = new LocalDateTimePair(); 
 		Integer removedOccurrenceIndex = Integer.valueOf(-1);
 		Boolean isDeleteAll = false;
-		Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quadruple = new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>();
+		Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean> quadruple = 
+				new Quadruple<TaskObject, LocalDateTimePair, Integer, Boolean>();
 
-		if (index == -1) { // no task specified
+		/*if (index == -1) { // no task specified
 			quadruple = quickDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex,
 					isDeleteAll);
-		} else {
+		} else {*/
 			quadruple = normalDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex,
 					isDeleteAll);
-		}
+		
 
+		sortFunction();
 		isDeleteAll = quadruple.getFourth();
 		if (!isDeleteAll) {
 			processUndoForDelete(quadruple.getFirst(), quadruple.getSecond(), quadruple.getThird());
@@ -409,6 +396,7 @@ public class CommandFacade {
 		Done done = new Done(commandObj, taskList, lastOutputTaskList);
 		setOutput(done.run());
 		setLastOutputTaskList(taskList);
+		sortFunction();
 		setLastSearchedIndex(-1);
 
 		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
@@ -422,9 +410,9 @@ public class CommandFacade {
 		lastCompletedTaskId = done.getMostRecentlyMarkedTaskId();
 	}
 
-	/**
+	/*
 	 * Calls the Overdue function, which marks a specified task as overdue.
-	 */
+	 *
 	private void overdueFunction() {
 		Overdue overdue = new Overdue(commandObj, taskList, lastOutputTaskList);
 		setOutput(overdue.run());
@@ -439,7 +427,7 @@ public class CommandFacade {
 			}
 		}
 		
-	}
+	}*/
 
 	/**
 	 * Calls the Incomplete function, which marks a specified task as overdue.
@@ -448,11 +436,11 @@ public class CommandFacade {
 		Incomplete incomplete = new Incomplete(commandObj, taskList, lastOutputTaskList);
 		setOutput(incomplete.run());
 		setLastOutputTaskList(taskList);
+		sortFunction();
 		setLastSearchedIndex(-1);
 		
 		if (incomplete.getTaskIdToMark() != -1) {
 			if (isUndoAction) {
-				System.out.println("CommandFacade:383 - Adding to redoList");
 				addToList(incomplete, redoList);
 			} else {
 				addToList(incomplete, undoList);
@@ -469,6 +457,13 @@ public class CommandFacade {
 		undoList.clear();
 		redoList.clear();
 	}
+	
+	private void sortFunction() {
+		Sort sort = new Sort(taskList);
+		sort.run();
+		setLastOutputTaskList(taskList);
+	}
+	
 
 	// ------------------------- OVERLOADED METHODS TO POPULATE UNDO/REDO LIST -------------------------
 
@@ -484,25 +479,18 @@ public class CommandFacade {
 		assert (commandType == INDEX_ADD);
 
 		CommandObject newCommandObj = new CommandObject();
+		sortedIndex = getNewIndexLocationOfTask(commandObj.getTaskObject().getTaskId());
+		System.out.println("CommandFacade:483 - SORTED INDEX = " + sortedIndex);
 
 		if (isAddSingleOccurrence) { // it is addition of a single occurrence
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
 
 		} else {
-			if (index == -1) { // if task was previously added to the end of the list
-				if (commandObj.getTaskObject().getIsRecurring()) {
-					// isEditAll set to 'true'
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), taskList.size());
-				} else {
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), taskList.size());
-				}
-			} else { // if task was previously added to a pre-determined location in the list
-				if (commandObj.getTaskObject().getIsRecurring()) {
-					// isEditAll set to 'true'
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), index);
-				} else {
-					newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index);
-				}
+			if (commandObj.getTaskObject().getIsRecurring()) {
+				// isEditAll set to 'true'
+				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(true), sortedIndex);
+			} else {
+				newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), sortedIndex);
 			}
 		}
 
@@ -540,7 +528,7 @@ public class CommandFacade {
 						removedOccurrenceIndex, index);
 			} else {
 				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming,
-						removedOccurrenceIndex, lastSearchedIndex);
+						removedOccurrenceIndex, index);
 			}
 		}
 
@@ -561,14 +549,15 @@ public class CommandFacade {
 
 		TaskObject originalTask = editOriginal.getOriginalTask();
 		originalTask.setIsEditAll(editOriginal.getIsEditAll());
-		int editTaskIndex = editOriginal.getEditTaskIndex();
 		int editOccurrenceIndex = editOriginal.getEditOccurrenceIndex();
+		sortedIndex = getNewIndexLocationOfTask(originalTask.getTaskId());
+
 
 		CommandObject newCommandObj = new CommandObject();
 		if (editOccurrenceIndex == -1) {
-			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editTaskIndex);
+			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, sortedIndex);
 		} else {
-			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editOccurrenceIndex, editTaskIndex);
+			newCommandObj = new CommandObject(INDEX_EDIT, originalTask, editOccurrenceIndex, sortedIndex);
 		}
 		list.push(newCommandObj);
 	}
@@ -585,28 +574,33 @@ public class CommandFacade {
 		CommandObject newCommandObj = new CommandObject();
 
 		TaskObject originalTask = mark.getOriginalTask();
+		sortedIndex = getNewIndexLocationOfTask(originalTask.getTaskId());
 		int commandIndex = getCommandIndex(mark.getStatusToChange());
-		if (commandIndex != 0) {
-			newCommandObj.setCommandType(commandIndex);
-			newCommandObj.setTaskObject(originalTask);
-			newCommandObj.setIndex(index);
-		}
+		assert (commandIndex == INDEX_COMPLETE || commandIndex == INDEX_INCOMPLETE);
+		
+
+		newCommandObj.setCommandType(commandIndex);
+		newCommandObj.setTaskObject(originalTask);
+		newCommandObj.setIndex(sortedIndex);
 
 		list.push(newCommandObj);
+	}
+	
+	private int getNewIndexLocationOfTask(int searchTaskId) {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getTaskId() == searchTaskId) {
+				return i+1;
+			}
+		}
+		return -1;
 	}
 
 	// Returns the appropriate command index depending on the previous status
 	private int getCommandIndex(String prevStatus) {
-		if (prevStatus.equals("overdue")) {
-			return INDEX_OVERDUE;
-		} else {
-			if (prevStatus.equals("completed")) {
-				return INDEX_COMPLETE;
-			} else {
-				if (prevStatus.equals("incomplete")) {
-					return INDEX_INCOMPLETE;
-				}
-			}
+		if (prevStatus.equals("completed")) {
+			return INDEX_COMPLETE;
+		} else if (prevStatus.equals("incomplete")) {
+			return INDEX_INCOMPLETE;
 		}
 		return -1;
 	}
@@ -620,7 +614,7 @@ public class CommandFacade {
 	 */
 	private boolean isListOperation(int command) {
 		return command == INDEX_ADD || command == INDEX_EDIT || command == INDEX_DELETE
-				|| command == INDEX_COMPLETE || command == INDEX_OVERDUE || command == INDEX_INCOMPLETE;
+				|| command == INDEX_COMPLETE || command == INDEX_INCOMPLETE;
 	}
 
 	private void callSearchByIndexToUpdateSidebar(boolean bool) {
@@ -664,6 +658,10 @@ public class CommandFacade {
 
 	public CommandObject getCommandObject() {
 		return commandObj;
+	}
+	
+	public int getSortedIndex() {
+		return sortedIndex;
 	}
 
 	public int getLastSearchedIndex() {

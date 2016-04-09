@@ -71,6 +71,7 @@ public class Logic {
 	private ArrayList<TaskObject> lastOutputTaskList = new ArrayList<TaskObject>();
 	// Stores the index of the last task searched
 	private int lastSearchedIndex = -1;
+	private int sortedIndex = -1;
 
 	/**
 	 * Constructor called by UI only upon starting up. Loads all existing tasks and checks each task to see
@@ -358,6 +359,7 @@ public class Logic {
 		setOutput(commandFacade.getOutput());
 		setTaskDateTimeOutput(commandFacade.getTaskDateTimeOutput());
 		setLastSearchedIndex(commandFacade.getLastSearchedIndex());
+		setSortedIndex(commandFacade.getSortedIndex());
 		/*
 		 * if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
 		 * setLastSearchedIndex(commandFacade.getLastSearchedIndex()); } else { setLastSearchedIndex(-1); }
@@ -393,6 +395,10 @@ public class Logic {
 	public int getLastSearchedIndex() {
 		return lastSearchedIndex;
 	}
+	
+	public int getSortedIndex() {
+		return sortedIndex;
+	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {
 		this.taskList = taskList;
@@ -416,6 +422,10 @@ public class Logic {
 
 	public void setLastSearchedIndex(int lastSearchedIndex) {
 		this.lastSearchedIndex = lastSearchedIndex;
+	}
+	
+	public void setSortedIndex(int sortedIndex) {
+		this.sortedIndex = sortedIndex;
 	}
 
 	public void setUserInput(String newUserInput) {

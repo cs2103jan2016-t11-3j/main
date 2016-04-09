@@ -157,6 +157,8 @@ public class Delete {
 		assert (!taskList.isEmpty());
 
 		try {
+			System.out.println("Delete:160 - COMMANDOBJ INDEX = " + commandObj.getIndex());
+			
 			if (commandObj.getIndex() == -1) {
 				runQuickDelete();
 			} else if (commandObj.getIndex() == 0) {

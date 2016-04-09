@@ -38,6 +38,14 @@ public class CommandObject {
 		return taskObj;
 	}
 	
+	public int getIndex() {
+		return index;
+	}
+
+	public int getLastSearchedIndex() {
+		return lastSearchedIndex;
+	}
+
 	public void setCommandType(int newCommandType) {
 		this.commandType = newCommandType;
 	}
@@ -46,16 +54,8 @@ public class CommandObject {
 		this.taskObj = newTaskObject;
 	}
 
-	public int getIndex() {
-		return index;
-	}
-
 	public void setIndex(int index) {
 		this.index = index;
-	}
-	
-	public int getLastSearchedIndex() {
-		return lastSearchedIndex;
 	}
 	
 	public void setLastSearchedIndex(int lastSearchedIndex) {
