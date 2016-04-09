@@ -69,6 +69,7 @@ public abstract class Mark {
 	protected int taskIdToMark = -1; // The intended task ID user wants to mark
 	protected int mostRecentlyMarkedTaskId = -1; 
 	// The task ID of the task most recently marked complete, which is split task for recurring
+	protected int command;
 
 	protected TaskObject markTaskObj = new TaskObject();
 	protected int index = -1;
@@ -93,6 +94,7 @@ public abstract class Mark {
 		this.index = commandObj.getIndex();
 		this.taskList = taskList;
 		this.lastOutputTaskList = lastOutputTaskList;
+		this.command = commandObj.getCommandType();
 	}
 
 	public abstract ArrayList<String> run();
@@ -105,8 +107,16 @@ public abstract class Mark {
 			taskIdToMark = lastOutputTaskList.get(index).getTaskId();
 			logger.log(Level.INFO, "valid task ID obtained");
 		} else {
-			createErrorOutput(MESSAGE_MARK_DONE_ERROR);
+			processError();
 			logger.log(Level.WARNING, "invalid task ID obtained");
+		}
+	}
+	
+	private void processError() {
+		if (command == INDEX_COMPLETE) {
+			createErrorOutput(MESSAGE_MARK_DONE_ERROR);
+		} else if (command == INDEX_INCOMPLETE) {
+			createErrorOutput(MESSAGE_MARK_INCOMPLETE_ERROR);
 		}
 	}
 

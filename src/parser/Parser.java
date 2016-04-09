@@ -85,7 +85,7 @@ public class Parser {
 			CO.setCommandType(Constants.INDEX_EXIT);
 		} else if (isMatch(Constants.REGEX_PARSER_HELP, command)) {
 			parseHelp(command);
-		} else if (isMatch(Constants.REGEX_PARSER_UNDO, command)) {
+		} else if (command.equals(Constants.REGEX_PARSER_UNDO)) {
 			logger.log(Level.INFO, "Undo command called.");
 			CO.setCommandType(Constants.INDEX_UNDO);
 		} else if (isMatch(Constants.REGEX_PARSER_REDO, command)) {

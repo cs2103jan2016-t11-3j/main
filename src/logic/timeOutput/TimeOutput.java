@@ -61,13 +61,11 @@ public class TimeOutput {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getCategory().equals(CATEGORY_EVENT)) {
 				setEventTimeOutput(taskList.get(i));
+			} else if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
+				setDeadlineTimeOutput(taskList.get(i));
 			} else {
-				if (taskList.get(i).getCategory().equals(CATEGORY_DEADLINE)) {
-					setDeadlineTimeOutput(taskList.get(i));
-				} else {
-					taskList.get(i).setTimeOutputString("");
-					// No time displayed for floating tasks
-				}
+				taskList.get(i).setTimeOutputString("");
+				// No time displayed for floating tasks
 			}
 		}
 	}
@@ -138,24 +136,18 @@ public class TimeOutput {
 		if (end[0].equals(start[0])) { // If start date == end date
 			formattedString = String.format(DISPLAY_TIME_EVENT_3, start[1], end[1], end[0]);
 			// End Date will not be printed
-		} else {
-			if (!end[1].equals("") && !start[1].equals("")) {
-				// if both start and end time exist
-				formattedString = String.format(DISPLAY_TIME_EVENT_1, start[1], start[0], end[1], end[0]);
-				// End Date will be printed
-			} else {
-				if (end[1].equals("")) { // if end time does not exist
-					if (start[1].equals("")) { // if start time does not exist
-						formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
-					} else { // if start time exists
-						formattedString = String.format(DISPLAY_TIME_EVENT_4, start[1], start[0], end[0]);
-					}
-				} else { // if end time exists
-					if (start[1].equals("")) { // if start time does not exist
-						formattedString = String.format(DISPLAY_TIME_EVENT_5, start[0], end[1], end[0]);
-					}
-				}
+		} else if (!end[1].equals("") && !start[1].equals("")) {
+			// if both start and end time exist
+			formattedString = String.format(DISPLAY_TIME_EVENT_1, start[1], start[0], end[1], end[0]);
+			// End Date will be printed
+		} else if (end[1].equals("")) { // if end time does not exist
+			if (start[1].equals("")) { // if start time does not exist
+				formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
+			} else { // if start time exists
+				formattedString = String.format(DISPLAY_TIME_EVENT_4, start[1], start[0], end[0]);
 			}
+		} else if (start[1].equals("")) { // if start time does not exist and end time exists
+			formattedString = String.format(DISPLAY_TIME_EVENT_5, start[0], end[1], end[0]);
 		}
 		return formattedString;
 	}
@@ -236,22 +228,19 @@ public class TimeOutput {
 		if (isInTheSameWeek) {
 			dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 			dateString = dayOfWeek + " " + date.format(shortFormatter);
-		} else {
-			// only applies for ending date of events
-			if (isEndDate) {
-				boolean isInTheNextWeek = checkIfInTheNextWeek(date);
-				if (isInTheNextWeek) {
-					// event end date in next week: e.g. next Monday 28/03
-					dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-					dateString = "next " + dayOfWeek + " " + date.format(shortFormatter);
-				} else {
-					// event end date not in next week: e.g. 19/04
-					dateString = date.format(shortFormatter);
-				}
+		} else if (isEndDate) { // only applies for ending date of events
+			boolean isInTheNextWeek = checkIfInTheNextWeek(date);
+			if (isInTheNextWeek) {
+				// event end date in next week: e.g. next Monday 28/03
+				dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+				dateString = "next " + dayOfWeek + " " + date.format(shortFormatter);
 			} else {
-				// event start date, deadline date: e.g. 19/04/16
-				dateString = date.format(formatter);
+				// event end date not in next week: e.g. 19/04
+				dateString = date.format(shortFormatter);
 			}
+		} else {
+			// event start date, deadline date: e.g. 19/04/16
+			dateString = date.format(formatter);
 		}
 		return dateString;
 	}
@@ -291,10 +280,8 @@ public class TimeOutput {
 	public static void setTaskTimeOutput(TaskObject task) {
 		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
 			setDeadlineTimeOutput(task);
-		} else {
-			if (task.getCategory().equals(CATEGORY_EVENT)) {
-				setEventTimeOutput(task);
-			}
+		} else if (task.getCategory().equals(CATEGORY_EVENT)) {
+			setEventTimeOutput(task);
 		}
 	}
 }
