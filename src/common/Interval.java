@@ -6,6 +6,13 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * A class for storing relevant information about a task's recurrence. 
+ * Only accessed and used in the TaskObject if the task is recurring.
+ * 
+ * @author ChongYan
+ *
+ */
 public class Interval implements Comparator<Interval> {
 
 	public final String FREQ_HOURLY = "HOURLY";

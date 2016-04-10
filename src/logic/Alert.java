@@ -12,6 +12,12 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
+/**
+ * [UNUSED] Class which generates output for a popup during startup displaying all tasks due today.
+ * 
+ * @author ChongYan
+ *
+ */
 public class Alert {
 
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YY");

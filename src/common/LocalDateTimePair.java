@@ -4,6 +4,13 @@ package common;
 
 import java.time.LocalDateTime;
 
+/**
+ * A pair class for LocalDateTime to store sets of timings for tasks. 
+ * A deadline will have its endDateTime set to LocalDateTime.MAX.
+ * 
+ * @author ChongYan
+ *
+ */
 public class LocalDateTimePair {
 	
 	private LocalDateTime startDateTime;
