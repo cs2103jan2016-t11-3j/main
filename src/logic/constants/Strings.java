@@ -164,6 +164,7 @@ public class Strings {
 	
 	// Edit Exception constants
 	public static final String MESSAGE_EDIT_EXCEPTION = "Error editing %1s. ";
+	public static final String MESSAGE_EDIT_END_TIME_WITHOUT_START_TIME_EXCEPTION = "Unable to edit end time without an existing start time.";
 	
 	// Load Exception constants
 	public static final String MESSAGE_LOAD_EXCEPTION_IO = "Error reading information from external file storage";
