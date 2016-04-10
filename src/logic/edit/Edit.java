@@ -394,6 +394,7 @@ public class Edit {
 				isEditTitle = false;
 			}
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editTitle");
 			e = new EditException("title");
 			throw e;
 		}
@@ -419,6 +420,7 @@ public class Edit {
 			isEditStartDateForAllOccurrences = true;
 			isEditStartTimeForAllOccurrences = true;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editStartDateAndTimeForAllOccurrences");
 			e = new EditException("start date and time for all occurrences");
 			throw e;
 		}
@@ -450,8 +452,10 @@ public class Edit {
 				editStartTime(task);
 			}
 		} catch (EditException e) {
+			logger.log(Level.INFO, "EditException thrown in method editStartDateAndTime");
 			throw e;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editStartDateAndTime");
 			e = new EditException("start date and time");
 			throw e;
 		}
@@ -480,6 +484,7 @@ public class Edit {
 			logger.log(Level.INFO, "Start dates edited for all occurrences of recurring task");
 			isEditStartDateForAllOccurrences = true;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editStartDateForAllOccurrences");
 			e = new EditException("start date for all occurrences");
 			throw e;
 		}
@@ -507,8 +512,10 @@ public class Edit {
 				isEditStartDate = false;
 			}
 		} catch (EditException e) {
+			logger.log(Level.INFO, "EditException thrown in method editStartDate");
 			throw e;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editStartDate");
 			e = new EditException("start date");
 			throw e;
 		}
@@ -542,6 +549,7 @@ public class Edit {
 			logger.log(Level.INFO, "Start times edited for all occurrences of recurring task");
 			isEditStartTimeForAllOccurrences = true;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editStartTimeForAllOccurrences");
 			e = new EditException("start time for all occurrences");
 			throw e;
 		}
@@ -575,8 +583,10 @@ public class Edit {
 				isEditStartTime = false;
 			}
 		} catch (EditException e) {
+			logger.log(Level.INFO, "EditException thrown in method editStartTime");
 			throw e;
 		}catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editStartTime");
 			e = new EditException("start time");
 			throw e;
 		}
@@ -602,6 +612,7 @@ public class Edit {
 			isEditEndDateForAllOccurrences = true;
 			isEditEndTimeForAllOccurrences = true;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editEndDateAndTimeForAllOccurrences");
 			e = new EditException("end date and time for all occurrences");
 			throw e;
 		}
@@ -625,6 +636,7 @@ public class Edit {
 				editEndTime(task);
 			}
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editEndDateAndTime");
 			e = new EditException("end date and time");
 			throw e;
 		}
@@ -652,6 +664,7 @@ public class Edit {
 			logger.log(Level.INFO, "End dates edited for all occurrences of recurring task");
 			isEditEndDateForAllOccurrences = true;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editEndDateForAllOccurrences");
 			e = new EditException("end date for all occurrences");
 			throw e;
 		}
@@ -671,6 +684,7 @@ public class Edit {
 				isEditEndDate = false;
 			}
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editEndDate");
 			e = new EditException("end date");
 			throw e;
 		}
@@ -705,13 +719,14 @@ public class Edit {
 			logger.log(Level.INFO, "End times edited for all occurrences of recurring task");
 			isEditEndTimeForAllOccurrences = true;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editEndTimeForAllOccurrences");
 			e = new EditException("end time for all occurrences");
 			throw e;
 		}
 	}
 
 	// Edit the end time of both the TaskObject and the first occurrence in the ArrayList.
-	private void editEndTime(TaskObject task) throws Exception {
+	private void editEndTime(TaskObject task) throws EditException, Exception {
 		LocalDateTimePair taskDateTimeFirst = task.getTaskDateTimes().get(0); 
 		setOriginalEndDateAndTime(task);
 		
@@ -722,6 +737,8 @@ public class Edit {
 		}
 		
 		try {
+			checkForInvalidDateTimeEdit(task);
+			
 			// If the original end date is null, i.e. it is a floating task which is being edited to another
 			// category, then the date will be default to the start date.
 			if (originalEndDate.equals(LocalDate.MAX)) {
@@ -735,7 +752,11 @@ public class Edit {
 			} else {
 				isEditEndTime = false;
 			}
+		} catch (EditException e) {
+			logger.log(Level.INFO, "EditException thrown in method editEndTime");
+			throw e;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editEndTime");
 			e = new EditException("end time");
 			throw e;
 		}
@@ -753,8 +774,10 @@ public class Edit {
 				isEditInterval = false;
 			}
 		} catch (RecurrenceException e) {
+			logger.log(Level.INFO, "RecurrenceException thrown in method editInterval");
 			throw e;
 		} catch (Exception e) {
+			logger.log(Level.INFO, "Exception thrown in method editInterval");
 			e = new EditException("interval");
 			throw e;
 		}
@@ -775,7 +798,7 @@ public class Edit {
 		} else {
 			endDateTime = task.getEndDateTime();
 		}
-		
+
 		if (isEditStartDate && isEditStartTime && 
 				(LocalDateTime.of(editStartDate, editStartTime).isAfter(endDateTime))) {
 			isEditStartDate = false;
@@ -791,6 +814,13 @@ public class Edit {
 		} else if (!isEditStartDate && isEditStartTime &&
 				(LocalDateTime.of(task.getStartDateTime().toLocalDate(), editStartTime).isAfter(endDateTime))) {
 			isEditStartTime = false;
+			isEditEndTime = false;
+			throw new EditException(LocalDateTime.MAX);
+		} else if (!isEditStartDate && !!isEditStartTime &&
+				(task.getStartDateTime().isAfter(endDateTime))) {
+			isEditStartDate = false;
+			isEditStartTime = false;
+			isEditEndDate = false;
 			isEditEndTime = false;
 			throw new EditException(LocalDateTime.MAX);
 		}
@@ -910,7 +940,7 @@ public class Edit {
 		TimeOutput.setTaskTimeOutput(editTask);
 	}
 
-	// FOR DEBUGGING
+	/* FOR DEBUGGING
 	private void checkEditInformation() {
 		System.out.println("isEditTitle = " + isEditTitle);
 		System.out.println("isEditStartDate = " + isEditStartDate);
@@ -923,7 +953,7 @@ public class Edit {
 		System.out.println("isRecurringTask = " + isRecurringTask);
 		System.out.println("isEditAll = " + isEditAll);
 		System.out.println("isEditSingleOccurrence = " + isEditSingleOccurrence);
-	}
+	}*/
 
 	// ------------------------- OUTPUT MESSAGES -------------------------
 
@@ -933,6 +963,7 @@ public class Edit {
 	 * date/time so the output should be 'added' instead of 'edited'.
 	 */
 	private void setOutput() {
+		logger.log(Level.INFO, "Setting edit output");
 		//checkEditInformation();
 
 		if (!isEditSingleOccurrence) {
