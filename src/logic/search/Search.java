@@ -366,24 +366,21 @@ public class Search extends Display {
 	private void searchByIndex() {
 		assert (searchIndex > 0 && searchIndex <= lastOutputTaskList.size());
 
-		boolean isFound = false;
 		try {
 			int taskIdToSearch = lastOutputTaskList.get(searchIndex - 1).getTaskId();
-			isFound = findTaskWithIndex(taskIdToSearch);
+			findTaskWithIndex(taskIdToSearch);
 		} catch (IndexOutOfBoundsException e) {
 			createErrorOutput(MESSAGE_TASK_INDEX_NOT_FOUND_ERROR);
 		}
 	}
 
-	private boolean findTaskWithIndex(int taskIdToSearch) {
+	private void findTaskWithIndex(int taskIdToSearch) throws IndexOutOfBoundsException{
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getTaskId() == taskIdToSearch) {
 				TaskObject foundTask = taskList.get(i);
 				setOutput(foundTask);
-				return true;
 			}
 		}
-		return false;
 	}
 
 	// ------------------------- GENERATING OUTPUT -------------------------
