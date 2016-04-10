@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
+import common.AtfLogger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,10 +34,16 @@ import javafx.stage.Stage;
 
 public class HelpPopupController implements Initializable {
 
-	static Stage helpStage = new Stage();
-	static ArrayList<String> displayList = MainController.getHelpList(1);
-	static int page = 1;
+	public static final String MESSAGE_INVALID_STYLESHEET = "Error: HelpStyle.css stylesheet not found.";
+	private static final String MESSAGE_NODE_NOT_INJECTED = 
+			"fx:id=\"%1$s\" was not injected: check your FXML file 'HelpPopup.fxml'.";
 
+	private static Stage helpStage = new Stage();
+	private static ArrayList<String> displayList = MainController.getHelpList(1);
+	private static int page = 1;
+
+	private static Logger logger = AtfLogger.getLogger();
+	
 	@FXML
 	private VBox helpPane;
 	@FXML
@@ -54,19 +62,24 @@ public class HelpPopupController implements Initializable {
 	 * @throws IOException
 	 *             unable to load fxml file
 	 */
-	public void startHelp() throws IOException {
-		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
-		Scene helpScene = new Scene(help);
-		helpStage.setScene(helpScene);
-
-		setStyle(helpScene);
-		helpStage.show();
+	public void startHelp() {
+		Parent help;
+		try {
+			help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
+			Scene helpScene = new Scene(help);
+			helpStage.setScene(helpScene);
+			setStyle(helpScene);
+			helpStage.show();
+		} catch (IOException e) {
+			logger.warning("unable to load HelpPopup.fxml file");
+			e.printStackTrace();
+		}
 	}
 
 	private void setStyle(Scene scene) {
 		URL url = this.getClass().getResource("HelpStyle.css");
 		if (url == null) {
-			System.out.println("Error: HelpStyle.css stylesheet not found.");
+			System.out.println(MESSAGE_INVALID_STYLESHEET);
 		}
 		String css = url.toExternalForm();
 		scene.getStylesheets().add(css);
@@ -75,14 +88,10 @@ public class HelpPopupController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		assert helpText != null : "fx:id=\"helpText\" was not injected: "
-				+ "check your FXML file 'HelpPopup.fxml'.";
-		assert helpPane != null : "fx:id=\"helpPane\" was not injected: "
-				+ "check your FXML file 'HelpPopup.fxml'.";
-		assert pageNumber != null : "fx:id=\"pageNumber\" was not injected: "
-				+ "check your FXML file 'HelpPopup.fxml'.";
-		assert topicLabel != null : "fx:id=\"topicLabel\" was not injected: "
-				+ "check your FXML file 'HelpPopup.fxml'.";
+		assert helpText != null : String.format(MESSAGE_NODE_NOT_INJECTED, "helpText");
+		assert helpPane != null : String.format(MESSAGE_NODE_NOT_INJECTED, "helpPane");
+		assert pageNumber != null : String.format(MESSAGE_NODE_NOT_INJECTED, "pageNumber");
+		assert topicLabel != null : String.format(MESSAGE_NODE_NOT_INJECTED, "topicLabel");
 
 		setDisplay();
 	}

@@ -75,53 +75,6 @@ public class MainController implements Initializable {
 	@FXML
 	private Label programName;
 
-	/**
-	 * Handles enter pressed by reading input in textfield and process input.
-	 * 
-	 * @param event
-	 *            - Enter pressed
-	 * @throws IOException
-	 */
-	@FXML
-	// reads input on enter
-	public void handleEnterPressed(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.ENTER) {
-			readInput();
-			passInput();
-			clearTextField();
-			hideSidePanel();
-			feedbackUser();
-		}
-	}
-
-	private void hideSidePanel() {
-		if ((!_input.startsWith("edit")) && !_input.startsWith("delete")) {
-			sidePanel.setVisible(false);
-		} else {
-			fillSidebar();
-		}
-	}
-
-	/**
-	 * Handles when F1 pressed by activating help. Handles when Esc pressed by
-	 * closing program.
-	 * 
-	 * @param event
-	 *            - F1 or Esc Pressed
-	 * @throws IOException
-	 */
-	@FXML
-	public void handleKeyPressed(KeyEvent event) throws IOException {
-		if (event.getCode() == KeyCode.F1) {
-			HelpPopupController popupController = new HelpPopupController();
-			popupController.startHelp();
-		}
-
-		if (event.getCode() == KeyCode.ESCAPE) {
-			System.exit(0);
-		}
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -148,6 +101,46 @@ public class MainController implements Initializable {
 		display(); // start program with all tasks in table
 
 	}
+	
+	//--------------------------- HANDLE KEYS PRESSED METHODS -----------------------------
+	/**
+	 * Handles enter pressed by reading input in textfield and process input.
+	 * 
+	 * @param event
+	 *            - Enter pressed
+	 * @throws IOException
+	 */
+	@FXML
+	// reads input on enter
+	public void handleEnterPressed(KeyEvent event) throws IOException {
+		if (event.getCode() == KeyCode.ENTER) {
+			readInput();
+			passInput();
+			clearTextField();
+			hideSidePanel();
+			feedbackUser();
+		}
+	}
+
+	/**
+	 * Handles when F1 pressed by activating help. Handles when Esc pressed by
+	 * closing program.
+	 * 
+	 * @param event
+	 *            - F1 or Esc Pressed
+	 * @throws IOException
+	 */
+	@FXML
+	public void handleKeyPressed(KeyEvent event) throws IOException {
+		if (event.getCode() == KeyCode.F1) {
+			HelpPopupController popupController = new HelpPopupController();
+			popupController.startHelp();
+		}
+
+		if (event.getCode() == KeyCode.ESCAPE) {
+			System.exit(0);
+		}
+	}
 
 	// ---------------------- SIDE PANEL METHODS ------------------------------
 
@@ -171,6 +164,14 @@ public class MainController implements Initializable {
 				};
 			}
 		});
+	}
+
+	private void hideSidePanel() {
+		if ((!_input.startsWith("edit")) && !_input.startsWith("delete")) {
+			sidePanel.setVisible(false);
+		} else {
+			fillSidebar();
+		}
 	}
 	
 	private void sidePanelAnimation() {
@@ -211,9 +212,10 @@ public class MainController implements Initializable {
 			_UI.passInput(_input);
 		}
 	}
-
+	
+	// clears textfield after each input
 	private void clearTextField() {
-		userInput.clear(); // clears textfield after each input
+		userInput.clear(); 
 	}
 
 	private void feedbackUser() {
@@ -223,8 +225,8 @@ public class MainController implements Initializable {
 			fillSidebar();
 			sidePanelAnimation();
 		}
-		displayMessage(); // print feedback message
-		display(); // refreshes table after every command
+		displayMessage(); 
+		display();
 		setSelectionFocus();
 	}
 
@@ -237,6 +239,7 @@ public class MainController implements Initializable {
 		return false;
 	}
 	
+	//shows feedback message in feedback box
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
@@ -245,6 +248,7 @@ public class MainController implements Initializable {
 
 	//----------------------------- TASK TABLEVIEW METHODS -------------------------------
 	
+	//fills taskTable with outputTaskList
 	private void display() {
 		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());
 		fillTable(taskData);
@@ -257,6 +261,7 @@ public class MainController implements Initializable {
 		taskTable.setItems(taskData);
 	}
 
+	//fill index column
 	private void populateIndex() {
 		indexColumn.setCellFactory(col -> new TableCell<TaskObject, String>() {
 			@Override
@@ -271,6 +276,7 @@ public class MainController implements Initializable {
 		});
 	}
 
+	//fill all table columns except index Column
 	private void populateColumns() {
 		taskColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("Title"));
 		statusColumn.setCellValueFactory(new PropertyValueFactory<TaskObject, String>("status"));
@@ -282,6 +288,7 @@ public class MainController implements Initializable {
 		colourCode();
 	}
 
+	//highlight rows of tasks according to their status
 	private void colourCode() {
 		statusColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
@@ -312,6 +319,11 @@ public class MainController implements Initializable {
 	}
 
 	private void tableWrapText() {
+		taskNameWrapText();
+		timeWrapText();
+	}
+
+	private void taskNameWrapText() {
 		taskColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
@@ -331,7 +343,9 @@ public class MainController implements Initializable {
 				return cell;
 			}
 		});
+	}
 
+	private void timeWrapText() {
 		timeColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
@@ -355,34 +369,50 @@ public class MainController implements Initializable {
 
 	private void setSelectionFocus() {
 		if (_input.startsWith("add")) {
-			int sortIndex = _UI.getAddSortedIndex();
-			taskTable.scrollTo(sortIndex - 1);
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					taskTable.getSelectionModel().select(sortIndex - 1);
-				}
-			});
+			
+			focusToAddedTask();
+			
 		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")
 				|| !_input.startsWith("filter") || !_input.startsWith("display") 
 				|| _input.startsWith("search") || !_input.startsWith("list")) 
 				&& sidePanel.isVisible() == false) {
-
-			String[] input = _input.split(" ");
-			if (input.length > 1) {
-				try {
-					int index = Integer.parseInt(input[1]);
-					taskTable.scrollTo(index - 1);
-					taskTable.getSelectionModel().select(index - 1);
-				} catch (NumberFormatException e) {
-
-				}
-			}
+			
+			focusToEditedOrViewedTask();
+			
 		} else if (sidePanel.isVisible() == false) {
-			taskTable.getSelectionModel().clearSelection();
+			
+			clearFocus();
+			
 		}
 	}
 
+	private void focusToAddedTask() {
+		int sortIndex = _UI.getAddSortedIndex();
+		taskTable.scrollTo(sortIndex - 1);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				taskTable.getSelectionModel().select(sortIndex - 1);
+			}
+		});
+	}
+
+	private void focusToEditedOrViewedTask() {
+		String[] input = _input.split(" ");
+		if (input.length > 1) {
+			try {
+				int index = Integer.parseInt(input[1]);
+				taskTable.scrollTo(index - 1);
+				taskTable.getSelectionModel().select(index - 1);
+			} catch (NumberFormatException e) {
+
+			}
+		}
+	}
+
+	private void clearFocus() {
+		taskTable.getSelectionModel().clearSelection();
+	}
 
 	//-------------------------- GETTERS -----------------------------
 	/**
@@ -420,7 +450,8 @@ public class MainController implements Initializable {
 		}
 		return _UI.getOutput();
 	}
-
+	
+	//gets tasklist to be displayed in table
 	private ArrayList<TaskObject> getOutputTaskList() {
 		return _UI.getLastOutputTaskList();
 	}
