@@ -370,6 +370,33 @@ public class LogicTest {
 		expectedOutput.add("Loaded file from:\n" + directory + "\\filecopy.txt.txt");
 	}
 	
+	@Test // test save to
+	public void testBC() {
+		Path path = Paths.get(".\\atf_files");
+		String directory = path.toString();
+		logic.run("save to " + directory);
+		
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Tasks have been, and will continue to be saved to " + directory);
+		assertEquals(expectedOutput, logic.getOutput());
+		
+		// to use original working directory again
+		path = Paths.get(".");
+		directory = path.toString();
+		logic.run(directory);
+	}
+	
+	@Test // failed save to
+	public void testBD() {
+		Path path = Paths.get("\\atk_files");
+		String directory = path.toString();
+		logic.run("save to " + directory);
+		
+		ArrayList<String> expectedOutput = new ArrayList<String> ();
+		expectedOutput.add("Error saving file to " + directory);
+		assertEquals(expectedOutput, logic.getOutput());
+	}
+	
 	@Test // failed load
 	public void testZZ() {
 		logic.run("load from blahblahblah");

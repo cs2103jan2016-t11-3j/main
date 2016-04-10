@@ -76,51 +76,46 @@ public class Save {
 	 * @return ArrayList<String> containing an output message indicating the success or failure of operation
 	 */
 	public ArrayList<String> run() {
-		if (saveCommand == 1) {
-			saveTo();
-		} else {
-			if (saveCommand == 2) {
-				saveAs();
+		try {
+			if (saveCommand == 1) {
+				saveTo();
+			} else {
+				if (saveCommand == 2) {
+					saveAs();
+				}
 			}
+		} catch (NoSuchFileException e) {
+			e.printStackTrace();
+			output.add(String.format(MESSAGE_SAVE_ERROR, newFilePath));
+			logger.log(Level.WARNING, "unable to save file to new location");
+		} catch (IOException e) {
+			e.printStackTrace();
+			output.add(String.format(MESSAGE_SAVE_ERROR, newFilePath));
+			logger.log(Level.WARNING, "unable to save file to new location");
+		} catch (InvalidPathException e) {
+			e.printStackTrace();
+			output.add(String.format(MESSAGE_SAVE_ERROR, newFilePath));
+			logger.log(Level.WARNING, "unable to save file to new location");
 		}
-		createOutput();
+		if (output.isEmpty()) {
+			createOutput();
+		}
 		return output;
 	}
 
-	private void saveTo() {
+	private void saveTo() throws InvalidPathException, IOException, NoSuchFileException {
 		IStorage storage = FileStorage.getInstance();
-		try {
-			storage.changeSaveLocation(newFilePath);
-			storage.save(taskList);
-			logger.log(Level.INFO, "File saved to new location");
-		} catch (NoSuchFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.log(Level.WARNING, "unable to save file to new location");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.log(Level.WARNING, "unable to save file to new location");
-		} catch (InvalidPathException e) {
-			e.printStackTrace();
-			logger.log(Level.WARNING, "unable to save file to new location");
-		}
+		storage.changeSaveLocation(newFilePath);
+		storage.save(taskList);
+		logger.log(Level.INFO, "File saved to new location");
 		isSaved = true;
 	}
 
-	private void saveAs() {
+	private void saveAs() throws InvalidPathException, IOException, NoSuchFileException {
 		IStorage storage = FileStorage.getInstance();
-		try {
-			storage.createCopy(newFilePath, "filecopy.txt");
-			isSaved = true;
-			logger.log(Level.INFO, "File copy created in the same directory");
-		} catch (InvalidPathException e) {
-			e.printStackTrace();
-			logger.log(Level.WARNING, "unable to save file to new location");
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.log(Level.WARNING, "unable to save file to new location");
-		}
+		storage.createCopy(newFilePath, "filecopy.txt");
+		isSaved = true;
+		logger.log(Level.INFO, "File copy created in the same directory");
 	}
 
 	private void createOutput() {
