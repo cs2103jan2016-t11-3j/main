@@ -103,7 +103,7 @@ public class MainController implements Initializable {
 
 	/**
 	 * Handles when F1 pressed by activating help. 
-	 * Handles then Esc pressed by closing program.
+	 * Handles when Esc pressed by closing program.
 	 * @param event - F1 or Esc Pressed
 	 * @throws IOException
 	 */
@@ -113,6 +113,7 @@ public class MainController implements Initializable {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
 		}
+		
 		if (event.getCode() == KeyCode.ESCAPE) {
 			System.exit(0);
 		}
@@ -187,11 +188,12 @@ public class MainController implements Initializable {
 
 	private void setSelectionFocus() {
 		if (_input.startsWith("add")) {
-			taskTable.scrollTo(taskTable.getItems().size() - 1);
+			int sortIndex  = _UI.getAddSortedIndex();
+			taskTable.scrollTo(sortIndex - 1);
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					taskTable.getSelectionModel().select(taskTable.getItems().size() - 1);
+					taskTable.getSelectionModel().select(sortIndex - 1);
 				}
 			});
 		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")

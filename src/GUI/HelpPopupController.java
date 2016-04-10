@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -62,11 +63,15 @@ public class HelpPopupController implements Initializable {
 	}
 	
 	private void setHelpContent() {
+
 		topicLabel.setText(displayList.get(0));
 		helpText.clear();
+		
 		for (int i = 1; i < displayList.size(); i++) {
 			helpText.appendText(displayList.get(i) + "\n");
 		}
+		
+		Platform.runLater(() -> helpText.setScrollTop(Double.MIN_VALUE));
 	}
 	
 	private void setPageNumber() {
@@ -105,7 +110,7 @@ public class HelpPopupController implements Initializable {
 	/**
 	 * Called by MainController to activate help pop-up.
 	 * Function starts and shows the help pop-up window.
-	 * @throws Exception unable to load fxml file
+	 * @throws IOException unable to load fxml file
 	 */
 	public void startHelp() throws IOException {		
 		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));

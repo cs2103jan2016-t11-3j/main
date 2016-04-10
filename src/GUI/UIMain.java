@@ -103,6 +103,14 @@ public class UIMain extends Application {
 	}
 	
 	/**
+	 * Called by MainController to get index of added task for focus. 
+	 * @return logic.getSortedIndex()
+	 */
+	public int getAddSortedIndex() {
+		return logic.getSortedIndex();
+	}
+	
+	/**
 	 * Called by MainController to obtain array list of task timings.
 	 * @return logic.getTaskDateTimeOutput() 
 	 */
