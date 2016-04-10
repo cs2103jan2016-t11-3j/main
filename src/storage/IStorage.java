@@ -56,7 +56,7 @@ public interface IStorage {
 
     /**
      * <p>
-     * @param directory
+     * @param directory The new preferred directory to store the task data file.
      * @throws IOException Error writing to specified directory
      * @throws InvalidPathException The specified directory cannot be used
      */
@@ -65,9 +65,8 @@ public interface IStorage {
     /**
      * Load from specified path.
      * 
-     * @param directory
-     * @param filePath The filePath of the datafile to be read.
-     * @return
+     * @param filePath The filePath of the data file to be read.
+     * @return The list of tasks read from the data file.
      * @throws InvalidPathException The specified path is invalid.
      * @throws IOException Error reading from file.
      * @throws FileNotFoundException No file found at the specified path.
@@ -78,7 +77,7 @@ public interface IStorage {
     
     /**
      * Load from backup file.
-     * @return
+     * @return The list of tasks read from the backup file.
      * @throws InvalidPathException The specified path is invalid.
      * @throws IOException Error reading from file.
      * @throws FileNotFoundException No file found at the specified path.
