@@ -448,7 +448,6 @@ public class CommandFacade {
 
 		CommandObject newCommandObj = new CommandObject();
 		sortedIndex = getNewIndexLocationOfTask(commandObj.getTaskObject().getTaskId());
-		System.out.println("CommandFacade:483 - SORTED INDEX = " + sortedIndex);
 
 		if (isAddSingleOccurrence) { // it is addition of a single occurrence
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
@@ -481,7 +480,7 @@ public class CommandFacade {
 		assert (commandType == INDEX_DELETE);
 
 		CommandObject newCommandObj = new CommandObject();
-
+	
 		/*
 		 * 2 types of delete: 
 		 * 1. delete task 
@@ -491,8 +490,13 @@ public class CommandFacade {
 			newCommandObj = new CommandObject(INDEX_ADD, removedTask, index);
 		} else {
 			TaskObject taskObjWithRemovedOccurrenceTiming = new TaskObject(removedOccurrenceTiming);
-			newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming,
+			if (lastSearchedIndex != -1) { // to ensure that the occurrence is added to the correct task
+				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming,
+						removedOccurrenceIndex, lastSearchedIndex);
+			} else {
+				newCommandObj = new CommandObject(INDEX_ADD, taskObjWithRemovedOccurrenceTiming,
 						removedOccurrenceIndex, index);
+			}
 		}
 
 		list.push(newCommandObj);
