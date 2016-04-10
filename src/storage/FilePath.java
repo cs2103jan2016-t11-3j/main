@@ -46,10 +46,10 @@ public class FilePath {
      * the directory containing the program unless another directory has been defined.
      * <p>
      * @return String of path of the file containing saved tasks.
-     * @throws FileNotFound No existing preferred directory specified.
+     * @throws InvalidPathException Specified preferred directory is invalid.
      * @throws IOException Error reading file containing default path.
      */
-    protected static String getPath() throws FileNotFoundException , IOException {
+    protected static String getPath() throws InvalidPathException , IOException {
         String directory = readPreferedDirectory();
         if (!directoryValid(directory)) {
             throw new InvalidPathException(directory, "Cannot be used");

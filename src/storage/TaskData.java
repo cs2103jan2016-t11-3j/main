@@ -26,7 +26,7 @@ import common.TaskObject;
  * TaskData contains methods for writing tasks onto disk and for loading tasks from disk.
  * Tasks stored on the disk will be represented in Json.
  * 
- * @@author A0080510X
+ * @author Hang
  */
 public class TaskData {
 
