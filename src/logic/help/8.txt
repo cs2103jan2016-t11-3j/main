@@ -1,3 +1,8 @@
-Undo the last command
+Delete an existing event/task
 
-Enter “undo”. This automatically restores the state of the task scheduler to what it was before the last command was entered. Do note that the “undo” command can only undo up to 3 actions before the most recent action.
+Deletes the corresponding task in the numbered list of displayed tasks. 
+
+With the precondition that the list of events/tasks is displayed after a number, enter the command “delete” followed by the number of the selected event/task on the display. This deletes the task corresponding to the number displayed
+
+Usage Examples:
+delete 1	Deletes the task currently displayed at slot number 1
