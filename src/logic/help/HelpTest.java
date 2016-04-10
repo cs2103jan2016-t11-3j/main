@@ -48,16 +48,13 @@ public class HelpTest {
 		try {
 			File fakeFile = new File("");
 			String path = fakeFile.getAbsolutePath(); // To obtain working directory
-			File file = new File(path + FILE_PATH + "helpfile.txt");
+			File file = new File(path + FILE_PATH + "1.txt");
 			FileReader fileReader = new FileReader(file);
 			BufferedReader reader = new BufferedReader(fileReader);
 			text = reader.readLine();
-			while (text != null && i < toDisp.size()) {
-				System.out.println(toDisp.get(i));
-				assertEquals(text, outContent.toString());
-				i++;
-				text = reader.readLine();
-			}
+			System.out.println(toDisp.get(i));
+			assertEquals(text, "Adding an Event/Deadline/Floating task");
+			i++;
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();

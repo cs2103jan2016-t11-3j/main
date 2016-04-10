@@ -135,7 +135,7 @@ public class RecurringTest {
 		TaskObject task = new TaskObject("Go to gym", LocalDateTime.of(2016, 03, 17, 15, 00),
 				LocalDateTime.of(2016, 03, 17, 16, 00), "event", "incomplete", 5);
 		task.setIsRecurring(true);
-		Interval interval = new Interval("DAILY", 3, 10, "");
+		Interval interval = new Interval("DAILY", 14, 10, "");
 		task.setInterval(interval);
 
 		LocalDateTimePair pair = new LocalDateTimePair(task.getStartDateTime(), task.getEndDateTime());
@@ -145,8 +145,8 @@ public class RecurringTest {
 		testArray.add(task);
 		Recurring.updateRecurringEvents(testArray);
 
-		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 10, 15, 00);
-		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 10, 16, 00);
+		LocalDateTime nextStartDateTime = LocalDateTime.of(2016, 04, 14, 15, 00);
+		LocalDateTime nextEndDateTime = LocalDateTime.of(2016, 04, 14, 16, 00);
 
 		assertEquals(nextStartDateTime, testArray.get(0).getStartDateTime());
 		assertEquals(nextEndDateTime, testArray.get(0).getEndDateTime());
