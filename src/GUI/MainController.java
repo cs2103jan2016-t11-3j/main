@@ -103,9 +103,8 @@ public class MainController implements Initializable {
 
 	/**
 	 * Handles when F1 pressed by activating help. 
-	 * Handles when F3 pressed by sorting displayed list.
-	 * Handles then Esc pressed by closing program.
-	 * @param event - F1 or F3 or Esc Pressed
+	 * Handles when Esc pressed by closing program.
+	 * @param event - F1 or Esc Pressed
 	 * @throws IOException
 	 */
 	@FXML
@@ -114,10 +113,7 @@ public class MainController implements Initializable {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
 		}
-		if (event.getCode() == KeyCode.F3) {
-			_UI.setSortByDate();
-			display();
-		}
+		
 		if (event.getCode() == KeyCode.ESCAPE) {
 			System.exit(0);
 		}
@@ -140,7 +136,6 @@ public class MainController implements Initializable {
 		assert sidePanel != null : "fx:id=\"sidePanel\" was not injected: check your FXML file 'TaskWindow.fxml'.";
 		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'TaskWindow.fxml'.";
 
-		_UI.setSortByDate();
 		manageSidePanel();
 		setWrapText(); // for sideBarList
 		displayMessage();
@@ -170,8 +165,6 @@ public class MainController implements Initializable {
 		if (_input.startsWith("help")) {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
-		} else if (_input.startsWith("sort")) {
-			_UI.setSortByDate();
 		} else {
 			_UI.passInput(_input);
 		}
@@ -195,11 +188,12 @@ public class MainController implements Initializable {
 
 	private void setSelectionFocus() {
 		if (_input.startsWith("add")) {
-			taskTable.scrollTo(taskTable.getItems().size() - 1);
+			int sortIndex  = _UI.getAddSortedIndex();
+			taskTable.scrollTo(sortIndex - 1);
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					taskTable.getSelectionModel().select(taskTable.getItems().size() - 1);
+					taskTable.getSelectionModel().select(sortIndex - 1);
 				}
 			});
 		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")

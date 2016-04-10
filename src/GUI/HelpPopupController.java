@@ -105,7 +105,7 @@ public class HelpPopupController implements Initializable {
 	/**
 	 * Called by MainController to activate help pop-up.
 	 * Function starts and shows the help pop-up window.
-	 * @throws Exception unable to load fxml file
+	 * @throws IOException unable to load fxml file
 	 */
 	public void startHelp() throws IOException {		
 		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));

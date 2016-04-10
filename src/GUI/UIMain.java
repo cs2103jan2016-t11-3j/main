@@ -103,10 +103,11 @@ public class UIMain extends Application {
 	}
 	
 	/**
-	 * Called by MainController to sort the list displayed in tableview according to time.
+	 * Called by MainController to get index of added task for focus. 
+	 * @return logic.getSortedIndex()
 	 */
-	public void setSortByDate() {
-		logic.sortOutputByDate();
+	public int getAddSortedIndex() {
+		return logic.getSortedIndex();
 	}
 	
 	/**
