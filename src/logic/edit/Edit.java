@@ -141,6 +141,9 @@ public class Edit {
 		updateGuiDisplay();
 
 		setOutput();
+		for (int i = 0; i < output.size(); i++) {
+			System.out.println("OUTPUT = " + output.get(i));
+		}
 		return output;
 	}
 
@@ -940,7 +943,7 @@ public class Edit {
 		TimeOutput.setTaskTimeOutput(editTask);
 	}
 
-	/* FOR DEBUGGING
+	// FOR DEBUGGING
 	private void checkEditInformation() {
 		System.out.println("isEditTitle = " + isEditTitle);
 		System.out.println("isEditStartDate = " + isEditStartDate);
@@ -953,7 +956,7 @@ public class Edit {
 		System.out.println("isRecurringTask = " + isRecurringTask);
 		System.out.println("isEditAll = " + isEditAll);
 		System.out.println("isEditSingleOccurrence = " + isEditSingleOccurrence);
-	}*/
+	}
 
 	// ------------------------- OUTPUT MESSAGES -------------------------
 
@@ -964,7 +967,7 @@ public class Edit {
 	 */
 	private void setOutput() {
 		logger.log(Level.INFO, "Setting edit output");
-		//checkEditInformation();
+		checkEditInformation();
 
 		if (!isEditSingleOccurrence) {
 			if (isEditTitle) {

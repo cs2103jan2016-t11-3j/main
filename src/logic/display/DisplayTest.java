@@ -46,7 +46,6 @@ public class DisplayTest {
 		Display displayTest = new Display();
 		displayTest.runSpecificList(testList);
 		
-		assertEquals("Displaying all tasks.", displayTest.getOutput().get(0));
 		assertEquals(3, displayTest.getLastOutputTaskList().size());
 		assertEquals(-1, displayTest.getLastSearchedIndex());
 	}

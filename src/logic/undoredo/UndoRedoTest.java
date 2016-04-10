@@ -18,6 +18,7 @@ import common.TaskObject;
 import logic.Logic;
 
 import static logic.constants.Index.*;
+import static logic.constants.Strings.*;
 import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -39,6 +40,7 @@ public class UndoRedoTest {
 		
 		TaskObject origTaskThree = new TaskObject("CS2103 Finals", LocalDateTime.of(LocalDate.parse("2016-04-25"), LocalTime.parse("07:00")),
 				LocalDateTime.of(LocalDate.parse("2016-04-25"), LocalTime.parse("11:00")), "event", "incomplete", 3);
+		origTaskThree.updateTaskDateTimesArray();
 		TaskObject editTaskThree = new TaskObject("CS2103 Finals", LocalDateTime.of(LocalDate.parse("2016-04-25"), LocalTime.parse("09:00")),
 				LocalDateTime.of(LocalDate.parse("2016-04-25"), LocalTime.parse("11:00")), "event", "incomplete", 3);
 		CommandObject cmdThree = new CommandObject(INDEX_EDIT, editTaskThree, 1);
@@ -58,7 +60,7 @@ public class UndoRedoTest {
 		Logic logic = undoRedo.getUndo().getLogic();
 		ArrayList<String> actualOutput = logic.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: CS2106 Assignment 1");
+		expectedOutput.add("Task added: CS2106 Assignment 1. Task added is overdue.");
 		
 		assertEquals(expectedOutput, actualOutput);
 		assertEquals(2, logic.getTaskList().size());
@@ -122,7 +124,7 @@ public class UndoRedoTest {
 		Logic logic = undoRedo.getRedo().getLogic();
 		ArrayList<String> actualOutput = logic.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String>();
-		expectedOutput.add("Task added: CS2106 Assignment 1");
+		expectedOutput.add("Task added: CS2106 Assignment 1. Task added is overdue.");
 		
 		assertEquals(expectedOutput, actualOutput);
 		assertEquals(2, logic.getTaskList().size());

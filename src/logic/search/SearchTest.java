@@ -240,9 +240,7 @@ public class SearchTest {
 		testSearch.run();
 		
 		assertEquals(2, testSearch.getTaskDateTimeOutput().size());
-		assertEquals("Displaying timing for task 2.", testSearch.getOutput().get(0));
-		assertEquals("Timings for Army:", testSearch.getTaskDateTimeOutput().get(0));
-		assertEquals("1. from 12:00 on 31/01/12 \nto 12:00 on 29/11/13", testSearch.getTaskDateTimeOutput().get(1));
+		assertEquals("Task 2 has no recurrence timings to be displayed.", testSearch.getOutput().get(0));
 		
 	}
 	
@@ -253,9 +251,7 @@ public class SearchTest {
 		testSearch.run();
 		
 		assertEquals(2, testSearch.getTaskDateTimeOutput().size());
-		assertEquals("Displaying timing for task 5.", testSearch.getOutput().get(0));
-		assertEquals("Timings for SSS1207 CA2:", testSearch.getTaskDateTimeOutput().get(0));
-		assertEquals("1. by 16:00 on 31/03/16", testSearch.getTaskDateTimeOutput().get(1));
+		assertEquals("Task 5 has no recurrence timings to be displayed.", testSearch.getOutput().get(0));
 		
 	}
 

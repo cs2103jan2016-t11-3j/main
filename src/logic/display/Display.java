@@ -51,7 +51,9 @@ public class Display {
 	 * @return output	Task list formatted for display in the GUI
 	 */
 	public ArrayList<String> run() {
-		output.add(MESSAGE_DISPLAYING_ALL_TASKS);
+		if (!taskList.isEmpty()) {
+			output.add(MESSAGE_DISPLAYING_ALL_TASKS);
+		}
 		return this.display();
 	}
 

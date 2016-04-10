@@ -70,7 +70,7 @@ public class DeleteTest {
 		assertEquals(expectedOutput, actualOutput);
 	}
 	
-	/* For all QUICK Delete **************************************************/
+	/* For all QUICK Delete **************************************************
 	@Test
 	//Failed Quick delete test(One try)
 	public void testQuickFail() {
@@ -126,7 +126,7 @@ public class DeleteTest {
 		expectedOutput.add(secondExpectedOutput);
 		
 		assertEquals(expectedOutput, actualOutput);
-	}
+	}*/
 
 //@@author A0124636H
 	
@@ -142,7 +142,7 @@ public class DeleteTest {
 		actualOutput = deleteAll.run();
 		
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("All tasks deleted.");
+		expectedOutput.add("All tasks deleted. Undo and redo lists are cleared.");
 		
 		assertEquals(expectedOutput, actualOutput);
 	}
@@ -197,8 +197,8 @@ public class DeleteTest {
 		delete.run();
 		
 		ArrayList<String> actualOutput = delete.getOutput();
-		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("Most recent occurrence deleted.");
+		ArrayList<String> expectedOutput = new ArrayList<String>();
+		expectedOutput.add("Most recent occurrence of task 'CS2103 lecture' deleted.");
 		
 		// check if it is the correct occurrence that has been removed
 		LocalDateTimePair removedTaskOccurrenceDetails = delete.getRemovedTaskOccurrenceDetails();
@@ -207,7 +207,7 @@ public class DeleteTest {
 		assertEquals(start.toString(), "2016-03-25T16:00");
 		assertEquals(end.toString(), "2016-03-25T18:00");
 		
-		assertEquals(expectedOutput, actualOutput);
+		assertEquals(expectedOutput.get(0), actualOutput.get(1));
 		assertEquals(3, delete.getRemovedTask().getTaskDateTimes().size()); // new size of arrlist after first occurrence is removed
 	}
 	
@@ -231,7 +231,7 @@ public class DeleteTest {
 		
 		ArrayList<String> actualOutput = delete.getOutput();
 		ArrayList<String> expectedOutput = new ArrayList<String> ();
-		expectedOutput.add("All occurrences deleted.");
+		expectedOutput.add("Only one occurrence remaining. All occurrences of task 'Soccer match' deleted.");
 		
 		assertEquals(expectedOutput, actualOutput);
 		assertEquals(1, delete.getTaskList().size());

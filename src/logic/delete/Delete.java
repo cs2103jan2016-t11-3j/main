@@ -59,16 +59,13 @@ public class Delete {
 
 	private TaskObject removedTask = new TaskObject(); // Task that is removed
 	private int removedTaskIndex = -1; // Stores the position of the task to be removed in the taskList
-	private int removedOccurrenceIndex = 1; // Stores the index of the timings to be removed (Only for
-											// recurrence and single occurrence delete)
-	private ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>(); // stores
-																											// the
-																											// original
-																											// timings
-	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair(); // Stores the details of
-																						// the removed
-																						// occurrence of the
-																						// task
+	// Stores the index of the timings to be removed (Only for recurrence and single occurrence delete)
+	private int removedOccurrenceIndex = 1;
+	// Stores the original timings
+	private ArrayList<LocalDateTimePair> originalRecurrenceTimings = new ArrayList<LocalDateTimePair>(); 
+	// Stores the details of the removed occurrence of the task
+	private LocalDateTimePair removedTaskOccurrenceDetails = new LocalDateTimePair();
+	
 	// Actual name of the task which is to be deleted
 	private String removedTaskName = "";
 	// Actual task ID of the task requested to be deleted
@@ -83,7 +80,7 @@ public class Delete {
 	private ArrayList<String> output = new ArrayList<String>();
 	private Deque<CommandObject> undoList = new ArrayDeque<CommandObject>();
 	private Deque<CommandObject> redoList = new ArrayDeque<CommandObject>();
-	private int lastSearchedIndex;
+	private int lastSearchedIndex = -1;
 
 	// Internal checkers
 	private boolean isDeleteSingleOccurrence = false;
@@ -164,7 +161,7 @@ public class Delete {
 				}
 			} else {
 				checkIfDeleteSingleOccurrence();
-
+				
 				if (isDeleteSingleOccurrence) {
 					setDeleteInformationForSingleOccurrenceDelete();
 					processDeleteForSingleOccurrence(); // deletes a single occurrence of recurring task
@@ -236,6 +233,7 @@ public class Delete {
 
 	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
 	private void runSingleOccurrenceDelete() throws NullPointerException, NoSuchFileException, IOException {
+		System.out.println("Single occurrence delete running");
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
 			originalRecurrenceTimings.addAll(taskDateTimes);
@@ -320,6 +318,7 @@ public class Delete {
 					addTimingsOfOverdueTaskBackToOriginalTask(removedTask, overdueTask);
 					taskList.remove(i);
 					isFoundSimiliarTask = true;
+					logger.log(Level.INFO, "Split overdue task removed");
 				}
 				i--;
 			}
@@ -357,6 +356,8 @@ public class Delete {
 		removedTaskIndex = lastSearchedIndex - 1;
 		removedTask = lastOutputTaskList.get(removedTaskIndex);
 		removedTaskName = removedTask.getTitle();
+
+		logger.log(Level.INFO, "Set delete information for single occurrence de;ete");
 	}
 
 	// @@author A0124052X

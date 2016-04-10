@@ -71,6 +71,10 @@ public class UndoRedo {
 		return redoList;
 	}
 	
+	public ArrayList<String> getOutput() {
+		return output;
+	}
+	
 	public Undo getUndo() {
 		return undo;
 	}
