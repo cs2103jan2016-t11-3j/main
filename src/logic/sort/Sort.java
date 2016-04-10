@@ -31,7 +31,7 @@ public class Sort {
 					return o2.getStatus().compareTo(o1.getStatus());
 				} else if (!o1.getStartDateTime().equals(o2.getStartDateTime())) {
 					return o1.getStartDateTime().compareTo(o2.getStartDateTime());
-				} else if (o1.getEndDateTime().equals(o2.getEndDateTime())) {
+				} else if (!o1.getEndDateTime().equals(o2.getEndDateTime())) {
 					return o1.getEndDateTime().compareTo(o2.getEndDateTime());
 				} else {	
 					return o1.getTitle().compareTo(o2.getTitle());
