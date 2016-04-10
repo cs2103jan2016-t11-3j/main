@@ -114,7 +114,7 @@ public class Constants {
 
     /*--------------------Regular Expressions for Time-------------------------------------------*/
 	public static final String REGEX_TIME_HHMM = "(?i)[0-2][0-9][.-:]?[0-5][\\d]([h]([r][s]?))";
-    public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])"; 
+    public static final String REGEX_TIME_AMPM = "((?i)0?[1-9]|1[0-2])[.-:]?([0-5][0-9])?[ -:]?([a|p][m])";
     	//has to have am or pm, dont care!
     	//removed space btw HH and MM . added fullstop btw hh n mm
     public static final String REGEX_TIME_ATTRIBUTES = "(?i)(sec|second)(s)?|" 
@@ -216,9 +216,5 @@ public class Constants {
     		+ "(" + REGEX_DATETIME_FORMAT  + "( " + REGEX_EDIT_STARTEND + ")?)"+ ")$";
 
 	//changeable default year.
-	public static final int DEFAULT_YEAR = 2016;
-
-	
-
-	
+	public static final int DEFAULT_YEAR = 2016;	
 }
