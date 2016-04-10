@@ -21,22 +21,22 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * Controls the HelpPopup to allow access to help manual
- * Help topic displayed sorted by command type: Add, Search, Edit, Delete, Undo, Save, Exit.
- * Display topic changes with left/right arrowkeys pressed.
- * Popup closes with Esc pressed
+ * Controls the HelpPopup to allow access to help manual Help topic displayed
+ * sorted by command type: Add, Search, Edit, Delete, Undo, Save, Exit. Display
+ * topic changes with left/right arrowkeys pressed. Popup closes with Esc
+ * pressed
  * 
  * @author Seow Hwee
  *
  */
 
 public class HelpPopupController implements Initializable {
-	
+
 	static Stage helpStage = new Stage();
 	static ArrayList<String> displayList = MainController.getHelpList(1);
 	static int page = 1;
-	
-	@FXML 
+
+	@FXML
 	private VBox helpPane;
 	@FXML
 	private TextArea helpText;
@@ -44,43 +44,93 @@ public class HelpPopupController implements Initializable {
 	private Label topicLabel;
 	@FXML
 	private Label pageNumber;
+
 	
+	// ----------------------------- START HELP WINDOW ----------------------------
+	/**
+	 * Called by MainController to activate help pop-up. Function starts and
+	 * shows the help pop-up window.
+	 * 
+	 * @throws IOException
+	 *             unable to load fxml file
+	 */
+	public void startHelp() throws IOException {
+		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
+		Scene helpScene = new Scene(help);
+		helpStage.setScene(helpScene);
+
+		setStyle(helpScene);
+		helpStage.show();
+	}
+
+	private void setStyle(Scene scene) {
+		URL url = this.getClass().getResource("HelpStyle.css");
+		if (url == null) {
+			System.out.println("Error: HelpStyle.css stylesheet not found.");
+		}
+		String css = url.toExternalForm();
+		scene.getStylesheets().add(css);
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		assert helpText != null : "fx:id=\"helpText\" was not injected: check your FXML file 'HelpPopup.fxml'.";
-	    assert helpPane != null : "fx:id=\"helpPane\" was not injected: check your FXML file 'HelpPopup.fxml'.";
-	    assert pageNumber != null : "fx:id=\"pageNumber\" was not injected: check your FXML file 'HelpPopup.fxml'.";
-	    assert topicLabel != null : "fx:id=\"topicLabel\" was not injected: check your FXML file 'HelpPopup.fxml'.";
+		assert helpText != null : "fx:id=\"helpText\" was not injected: "
+				+ "check your FXML file 'HelpPopup.fxml'.";
+		assert helpPane != null : "fx:id=\"helpPane\" was not injected: "
+				+ "check your FXML file 'HelpPopup.fxml'.";
+		assert pageNumber != null : "fx:id=\"pageNumber\" was not injected: "
+				+ "check your FXML file 'HelpPopup.fxml'.";
+		assert topicLabel != null : "fx:id=\"topicLabel\" was not injected: "
+				+ "check your FXML file 'HelpPopup.fxml'.";
 
 		setDisplay();
 	}
+
+	// -------------------------- SET HELP CONTENT METHODS ----------------------------
 
 	private void setDisplay() {
 		setHelpContent();
 		setPageNumber();
 	}
-	
-	private void setHelpContent() {
 
-		topicLabel.setText(displayList.get(0));
-		helpText.clear();
-		
-		for (int i = 1; i < displayList.size(); i++) {
-			helpText.appendText(displayList.get(i) + "\n");
-		}
-		
-		Platform.runLater(() -> helpText.setScrollTop(Double.MIN_VALUE));
+	private void setHelpContent() {
+		setTopicName();
+		clearPrevText();
+		setCurrText();
+		setHelpScrollTop();
 	}
-	
+
 	private void setPageNumber() {
 		pageNumber.setText(page + "/7");
 	}
-	
+
+	private void setTopicName() {
+		topicLabel.setText(displayList.get(0));
+	}
+
+	private void clearPrevText() {
+		helpText.clear();
+	}
+
+	private void setCurrText() {
+		for (int i = 1; i < displayList.size(); i++) {
+			helpText.appendText(displayList.get(i) + "\n");
+		}
+	}
+
+	private void setHelpScrollTop() {
+		Platform.runLater(() -> helpText.setScrollTop(Double.MIN_VALUE));
+	}
+
+	// ------------------------------ HANDLE KEYS PRESSED METHODS
+	// ----------------------------
+
 	/**
 	 * Closes the help pop-up window
-	 * @param event - Enter key pressed
+	 * 
+	 * @param event
+	 *            - Enter key pressed
 	 */
 	@FXML
 	public void handleEscPressed(KeyEvent event) {
@@ -88,12 +138,13 @@ public class HelpPopupController implements Initializable {
 			helpStage.close();
 		}
 	}
-	
+
 	/**
 	 * Allows Help Pop-up Content to change with press of left/right arrow key.
 	 * Help displayed switches between topics with each press.
 	 * 
-	 * @param event - left or right arrow key pressed
+	 * @param event
+	 *            - left or right arrow key pressed
 	 */
 	@FXML
 	public void handleArrowPressed(KeyEvent event) {
@@ -101,33 +152,10 @@ public class HelpPopupController implements Initializable {
 			page++;
 		}
 		if (event.getCode() == KeyCode.LEFT && page > 1) {
-			page--;		
+			page--;
 		}
-		displayList = MainController.getHelpList(page);	
+		displayList = MainController.getHelpList(page);
 		setDisplay();
-	}
-
-	/**
-	 * Called by MainController to activate help pop-up.
-	 * Function starts and shows the help pop-up window.
-	 * @throws IOException unable to load fxml file
-	 */
-	public void startHelp() throws IOException {		
-		Parent help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
-		Scene helpScene = new Scene(help);
-		helpStage.setScene(helpScene);
-		
-		setStyle(helpScene);
-		helpStage.show();
-	}
-	
-	private void setStyle(Scene scene) {
-		URL url = this.getClass().getResource("HelpStyle.css");
-		if (url == null) {	
-			System.out.println("Error: HelpStyle.css stylesheet not found.");       
-		}
-		String css = url.toExternalForm(); 
-		scene.getStylesheets().add(css);
 	}
 
 }
