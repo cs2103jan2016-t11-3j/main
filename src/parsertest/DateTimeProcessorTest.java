@@ -28,7 +28,7 @@ public class DateTimeProcessorTest {
 	public void testB() throws Exception {
 		TO = DTP.parse("from 11 jan 9am to next fri 10am", true);
 		assertEquals("2016-01-11T09:00", TO.getStartDateTime().toString());
-		assertEquals("2016-04-15T10:00", TO.getEndDateTime().toString());
+		assertEquals("2016-04-22T10:00", TO.getEndDateTime().toString());
 	}
 	
 	/*case 3: reading recurring event with termination date*/
@@ -44,24 +44,24 @@ public class DateTimeProcessorTest {
 	//test for multiple day input
 	@Test
 	public void testD() throws Exception {
-		TO = DTP.parse("every monday, wednesday and friday at 8am for 10 weeks", true);
+		TO = DTP.parse("every friday, sat and sun at 8am for 10 weeks", true);
         assertEquals(10 ,TO.getInterval().getCount());
-        assertEquals(1 ,TO.getInterval().getByDayArray()[1]);
+        assertEquals(0 ,TO.getInterval().getByDayArray()[1]);
         assertEquals(0 ,TO.getInterval().getByDayArray()[2]);
-        assertEquals(1 ,TO.getInterval().getByDayArray()[3]);
+        assertEquals(0 ,TO.getInterval().getByDayArray()[3]);
         assertEquals(0 ,TO.getInterval().getByDayArray()[4]);
         assertEquals(1 ,TO.getInterval().getByDayArray()[5]);
-        assertEquals(0 ,TO.getInterval().getByDayArray()[6]);
-        assertEquals(0 ,TO.getInterval().getByDayArray()[7]);
-        assertEquals("2016-04-08T08:00", TO.getStartDateTime().toString());
+        assertEquals(1 ,TO.getInterval().getByDayArray()[6]);
+        assertEquals(1 ,TO.getInterval().getByDayArray()[7]);
+        assertEquals("2016-04-15T08:00", TO.getStartDateTime().toString());
         assertEquals(10, TO.getInterval().getCount());
 	}
 	
 	/*case 5: reading "everyday"*/
 	@Test
 	public void testE() throws Exception {
-		TO = DTP.parse("everyday", true);
-		assertEquals("2016-04-08T23:59:59.999999999", TO.getStartDateTime().toString());
+		TO = DTP.parse("every friday", true);
+		assertEquals("2016-04-15T23:59:59.999999999", TO.getStartDateTime().toString());
 		TO.resetAttributes();
 	}
 	

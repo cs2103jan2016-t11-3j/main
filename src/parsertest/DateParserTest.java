@@ -39,7 +39,7 @@ public class DateParserTest {
 	@Test
 	public void testD() throws Exception {
 		DP.parseDate("next friday");
-		assertEquals("2016-04-15", DP.getDateObject().toString());
+		assertEquals("2016-04-22", DP.getDateObject().toString());
 		reset();
 	}
 	
@@ -62,8 +62,8 @@ public class DateParserTest {
 	/*case 7: reading relative dates*/
 	@Test
 	public void testG() throws Exception {
-		DP.parseDate("everyday");
-		assertEquals("2016-04-07", DP.getDateObject().toString());
+		DP.parseDate("sat");
+		assertEquals("2016-04-16", DP.getDateObject().toString());
 		reset();
 		
 		DP.parseDate("today");
