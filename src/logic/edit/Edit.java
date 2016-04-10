@@ -835,12 +835,16 @@ public class Edit {
 
 		if (newStartDateTime.equals(LocalDateTime.MAX) && newEndDateTime.equals(LocalDateTime.MAX)) {
 			editTask.setCategory(CATEGORY_FLOATING);
-		} else {
-			if (newEndDateTime.equals(LocalDateTime.MAX)) {
-				editTask.setCategory(CATEGORY_DEADLINE);
-			} else {
-				editTask.setCategory(CATEGORY_EVENT);
+			if (editTask.getStatus().equals(STATUS_OVERDUE)) { // for corner cases - floating task cannot be overdue
+				editTask.setStatus(STATUS_INCOMPLETE);
 			}
+			logger.log(Level.INFO, "Updating category to floating");
+		} else if (newEndDateTime.equals(LocalDateTime.MAX)) {
+			editTask.setCategory(CATEGORY_DEADLINE);
+			logger.log(Level.INFO, "Updating category to deadline");
+		} else {
+			editTask.setCategory(CATEGORY_EVENT);
+			logger.log(Level.INFO, "Updating category to event");
 		}
 	}
 

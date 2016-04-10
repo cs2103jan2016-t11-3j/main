@@ -144,6 +144,10 @@ public class CommandFacade {
 				printInvalidCommandMessage();
 				break;
 		}
+		
+		for (int i = 0; i < output.size(); i++) {
+			System.out.println(output.get(i));
+		}
 
 		// method which filters lastOutputTaskList to hide completed tasks
 		filterLastOutputTaskList();

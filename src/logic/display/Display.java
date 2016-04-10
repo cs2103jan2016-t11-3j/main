@@ -51,6 +51,7 @@ public class Display {
 	 * @return output	Task list formatted for display in the GUI
 	 */
 	public ArrayList<String> run() {
+		output.add(MESSAGE_DISPLAYING_ALL_TASKS);
 		return this.display();
 	}
 
@@ -76,8 +77,7 @@ public class Display {
 			logger.log(Level.INFO, "Task list is empty");
 			output.add(MESSAGE_EMPTY_LIST);
 		} else {
-			logger.log(Level.INFO, "Displaying all tasks");
-			output.add(MESSAGE_DISPLAYING_ALL_TASKS);
+			logger.log(Level.INFO, "Displaying tasks");
 			outputTaskList.addAll(taskList);
 			TimeOutput.setTimeOutputForGui(taskList);
 		}
