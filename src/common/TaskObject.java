@@ -174,9 +174,14 @@ public class TaskObject implements Comparable<TaskObject> {
 		this.startDateTime = taskDateTimes.get(0).getStartDateTime();
 		this.endDateTime = taskDateTimes.get(0).getEndDateTime();
 	}
-	
+
+	// Updates the first occurrence in the taskDateTimes array
 	public void updateTaskDateTimesArray() {
-		taskDateTimes.set(0, new LocalDateTimePair(startDateTime, endDateTime));
+		if (taskDateTimes.isEmpty()) {
+			addToTaskDateTimes();
+		} else {
+			taskDateTimes.set(0, new LocalDateTimePair(startDateTime, endDateTime));
+		}
 	}
 	
 	public void addToDeletedTaskDateTimes(LocalDateTimePair deletedOccurrence) {

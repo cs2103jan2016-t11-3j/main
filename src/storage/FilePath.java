@@ -17,6 +17,12 @@ import java.util.logging.Logger;
 
 import common.AtfLogger;
 
+/**
+ * The FilePath class manages the path for storing and retrieving tasks.
+ * 
+ * @author Hang
+ *
+ */
 public class FilePath {
 
     /**
@@ -51,7 +57,20 @@ public class FilePath {
         Path path = Paths.get(directory, Constants.FILENAME_DATA);
         return path.toString();
     }
-    
+
+    /**
+     * Sets the save location to the default if the save location has not been specified. 
+     * The location where the data files created by the program will be set 
+     * to the working directory containing the program. If the save location has already
+     * been specified, it will not be changed. 
+     * @throws IOException Error creating the file containing the save location
+     */
+    protected static void initializeDefaultSave() throws IOException {
+        if(!Files.exists(Constants.FILEPATH_DEFAULT_SAVE)) {
+            changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
+        }
+    }
+
     protected static boolean directoryValid(String directory)  {
         if (directory == null) {
             return false;
@@ -67,20 +86,7 @@ public class FilePath {
         Path path = Paths.get(filePath);
         return Files.isReadable(path) && Files.isWritable(path);
     }
-
-    /**
-     * Sets the save location to the default if the save location has not been specified. 
-     * The location where the data files created by the program will be set 
-     * to the working directory containing the program. If the save location has already
-     * been specified, it will not be changed. 
-     * @throws IOException Error creating the file containing the save location
-     */
-    static void initializeDefaultSave() throws IOException {
-        if(!Files.exists(Constants.FILEPATH_DEFAULT_SAVE)) {
-            changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
-        }
-    }
-
+    
     private static String readPreferedDirectory() throws FileNotFoundException, IOException  {
         BufferedReader fileReader = new BufferedReader(
                 new FileReader (Constants.FILEPATH_SAVEINFO.toString()));

@@ -8,44 +8,49 @@ import java.io.InputStreamReader;
 
 public class HelpTopic {
 
-	// File Path
-	public static String FILE_PATH = "/src/logic/help/";
+	public static String HELP_RESOURCES_PATH = "/src/logic/help/";
 	
-	// Attributes of the HelpTopic class
-	private int number = 0;
-	private String name = "";
+	private int topicNumber = 0;
+	private String topicName = "";
 	private ArrayList<String> details = new ArrayList<String> ();
 	
-	// Constructors
-	public HelpTopic() {
-		
-	}
-	
-	public HelpTopic(int _number) {
+	/**
+	 * Constructs the HelpTopic Object of the specified topic number. Initializes
+	 * the private attributes of topicNumber, topicName and the details. These
+	 * attributes can be read using the getter functions.
+	 * @param topic The topic number of the HelpTopic to be constructed.
+	 */
+	public HelpTopic(int topic) {
 		String num;
-		number = _number;
-		num = Integer.toString(number);
-		String topicFile = constructFile(num);
-		readFile(topicFile);
+		topicNumber = topic;
+		num = Integer.toString(topicNumber);
+		String topicResource = getResourcePath(num);
+		details = readResource(topicResource);
 	}
 	
-	public String constructFile(String num) {
-		String helpFilePath = num + ".txt";
-		return helpFilePath;
+	private String getResourcePath(String num) {
+		String helpResourcePath = num + ".txt";
+		return helpResourcePath;
 	}
-	// Helper function for constructor
-	public void readFile(String topicFile) {
-	    InputStream is = this.getClass().getResourceAsStream(topicFile);
+
+	/**
+	 * Reads the help content from the specified topicFile resource.
+	 * @param topicResource Name of the help resource to read from.
+	 * @return content The contents of the helpTopic read.
+	 */
+	private ArrayList<String> readResource(String topicResource) {
+	    ArrayList<String> content = new ArrayList<String> ();
+	    InputStream is = this.getClass().getResourceAsStream(topicResource);
 	    if (is == null) {
-	        return;
+	        return content;
 	    }
 	    String text = "";
 		try { 
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			name = reader.readLine();
+			topicName = reader.readLine();
 			text = reader.readLine();
 			while (text != null) {
-				details.add(text);
+				content.add(text);
 				text = reader.readLine();
 			}
 			reader.close();
@@ -53,15 +58,16 @@ public class HelpTopic {
 			e.printStackTrace();
 			System.exit(1);
 		}
+        return content;
 	}
 	
 	// Getters and setters
 	public int getTopicNumber() {
-		return number;
+		return topicNumber;
 	}
 	
 	public String getTopicName() {
-		return name;
+		return topicName;
 	}
 	
 	public ArrayList<String> getDetails() {
