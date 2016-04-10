@@ -4,6 +4,7 @@ package logic.exceptions;
 import common.TaskObject;
 import static logic.constants.Strings.*;
 
+@SuppressWarnings("serial")
 public class AddException extends Exception {
 	
 	private boolean isRecurring;

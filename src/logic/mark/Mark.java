@@ -2,7 +2,6 @@
 
 package logic.mark;
 
-import logic.*;
 import logic.exceptions.MarkException;
 import storage.FileStorage;
 import storage.IStorage;

@@ -2,7 +2,6 @@
 
 package logic.timeOutput;
 
-import logic.*;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,9 +15,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import common.TaskObject;
-import common.Interval;
 
-import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
 public class TimeOutput {

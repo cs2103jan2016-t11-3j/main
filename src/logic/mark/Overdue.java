@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 
 import common.CommandObject;
 import common.TaskObject;
-import logic.Logic;
 
-import static logic.constants.Index.*;
 import static logic.constants.Strings.*;
 
 public class Overdue extends Mark {

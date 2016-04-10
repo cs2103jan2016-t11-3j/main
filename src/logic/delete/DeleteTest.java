@@ -2,7 +2,6 @@
 
 package logic.delete;
 
-import logic.*;
 import static logic.constants.Index.*;
 
 import static org.junit.Assert.*;

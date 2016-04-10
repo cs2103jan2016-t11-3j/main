@@ -2,8 +2,6 @@
 
 package logic.display;
 
-import logic.*;
-
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
