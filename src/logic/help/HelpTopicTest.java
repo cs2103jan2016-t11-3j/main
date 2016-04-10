@@ -8,7 +8,7 @@ public class HelpTopicTest {
 
 	@Test
 	public void testHelpTopicConstructor() {
-		String name = "1.	Adding a new event/floating task: ";
+		String name = "Adding an Event/Deadline/Floating task";
 		HelpTopic test = new HelpTopic(1);
 		assertEquals(name, test.getTopicName());
 	}

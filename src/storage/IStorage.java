@@ -11,6 +11,11 @@ import com.google.gson.JsonSyntaxException;
 
 import common.TaskObject;
 
+/**
+ * Interface Defining all the APIs for the storage component.
+ * @author Hang
+ *
+ */
 public interface IStorage {
 
     /**

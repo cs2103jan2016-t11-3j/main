@@ -16,6 +16,11 @@ import com.google.gson.JsonSyntaxException;
 
 import common.TaskObject;
 
+/**
+ * Implementation of the APIs of the Storage component.
+ * @author Hang
+ *
+ */
 public class FileStorage implements IStorage {
 
     private static FileStorage instance = null;
