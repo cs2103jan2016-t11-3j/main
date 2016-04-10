@@ -425,7 +425,7 @@ public class Edit {
 	}
 
 	// Edit the start date and time of both the TaskObject and the first occurrence in the ArrayList.
-	private void editStartDateAndTime(TaskObject task) throws Exception {
+	private void editStartDateAndTime(TaskObject task) throws EditException, Exception {
 		LocalDateTimePair taskDateTimeFirst = new LocalDateTimePair();
 		try {
 			taskDateTimeFirst = task.getTaskDateTimes().get(0);
@@ -435,6 +435,8 @@ public class Edit {
 		}
 		
 		try {
+			checkForInvalidDateTimeEdit(task);
+			
 			if (!originalStartDate.isEqual(editStartDate) && !originalStartTime.equals(editStartTime)) {
 				task.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
 				task.updateTaskDateTimesArray();
@@ -447,6 +449,8 @@ public class Edit {
 				isEditStartDate = false;
 				editStartTime(task);
 			}
+		} catch (EditException e) {
+			throw e;
 		} catch (Exception e) {
 			e = new EditException("start date and time");
 			throw e;
@@ -482,7 +486,7 @@ public class Edit {
 	}
 
 	// Edit the start date of both the TaskObject and the first occurrence in the ArrayList.
-	private void editStartDate(TaskObject task) throws Exception {
+	private void editStartDate(TaskObject task) throws EditException, Exception {
 		LocalDateTimePair taskDateTimeFirst = new LocalDateTimePair();
 		try {
 			taskDateTimeFirst = task.getTaskDateTimes().get(0);
@@ -492,6 +496,8 @@ public class Edit {
 		}
 		
 		try {
+			checkForInvalidDateTimeEdit(task);
+
 			if (!originalStartDate.isEqual(editStartDate)) {
 				task.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
 				task.updateTaskDateTimesArray();
@@ -500,6 +506,8 @@ public class Edit {
 			} else {
 				isEditStartDate = false;
 			}
+		} catch (EditException e) {
+			throw e;
 		} catch (Exception e) {
 			e = new EditException("start date");
 			throw e;
@@ -540,7 +548,7 @@ public class Edit {
 	}
 
 	// Edit the start time of both the TaskObject and the first occurrence in the ArrayList.
-	private void editStartTime(TaskObject task) throws Exception {
+	private void editStartTime(TaskObject task) throws EditException, Exception {
 		LocalDateTimePair taskDateTimeFirst = new LocalDateTimePair();
 		try {
 			taskDateTimeFirst = task.getTaskDateTimes().get(0);
@@ -548,8 +556,10 @@ public class Edit {
 		} catch (Exception e) {
 			// there is no previous start date/time
 		}
-		
+
 		try {
+			checkForInvalidDateTimeEdit(task);
+			
 			// If the original start date is null, i.e. it is a floating task which is being edited to another 
 			// category, then the date will be default to today.
 			if (originalStartDate.equals(LocalDate.MAX)) {
@@ -564,7 +574,9 @@ public class Edit {
 			} else {
 				isEditStartTime = false;
 			}
-		} catch (Exception e) {
+		} catch (EditException e) {
+			throw e;
+		}catch (Exception e) {
 			e = new EditException("start time");
 			throw e;
 		}
@@ -749,6 +761,40 @@ public class Edit {
 	}
 	
 	// ------------------------- OTHER METHODS -------------------------
+	
+	// Checks if the new start date/time is after the current or the edit end date/time
+	private void checkForInvalidDateTimeEdit(TaskObject task) throws EditException {
+		LocalDateTime endDateTime;
+		
+		if (isEditEndDate && isEditEndTime) {
+			endDateTime  = LocalDateTime.of(editEndDate, editEndTime);
+		} else if (isEditEndDate && !isEditEndTime) {
+			endDateTime = LocalDateTime.of(editEndDate, task.getEndDateTime().toLocalTime());
+		} else if (!isEditEndDate && isEditEndTime) {
+			endDateTime = LocalDateTime.of(task.getEndDateTime().toLocalDate(), editEndTime);
+		} else {
+			endDateTime = task.getEndDateTime();
+		}
+		
+		if (isEditStartDate && isEditStartTime && 
+				(LocalDateTime.of(editStartDate, editStartTime).isAfter(endDateTime))) {
+			isEditStartDate = false;
+			isEditStartTime = false;
+			isEditEndDate = false;
+			isEditEndTime = false;
+			throw new EditException(LocalDateTime.MAX);
+		} else if (isEditStartDate && !isEditStartTime &&
+				(LocalDateTime.of(editStartDate, task.getStartDateTime().toLocalTime()).isAfter(endDateTime))) {
+			isEditStartDate = false;
+			isEditEndDate = false;
+			throw new EditException(LocalDateTime.MAX);
+		} else if (!isEditStartDate && isEditStartTime &&
+				(LocalDateTime.of(task.getStartDateTime().toLocalDate(), editStartTime).isAfter(endDateTime))) {
+			isEditStartTime = false;
+			isEditEndTime = false;
+			throw new EditException(LocalDateTime.MAX);
+		}
+	}
 	
 	/*
 	 * Compares the categories of the task to be edited and the edit data. If the edit data category is not

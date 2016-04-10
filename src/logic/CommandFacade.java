@@ -144,10 +144,6 @@ public class CommandFacade {
 				printInvalidCommandMessage();
 				break;
 		}
-		
-		for (int i = 0; i < output.size(); i++) {
-			System.out.println(output.get(i));
-		}
 
 		// method which filters lastOutputTaskList to hide completed tasks
 		filterLastOutputTaskList();
@@ -522,7 +518,6 @@ public class CommandFacade {
 		originalTask.setIsEditAll(editOriginal.getIsEditAll());
 		int editOccurrenceIndex = editOriginal.getEditOccurrenceIndex();
 		sortedIndex = getNewIndexLocationOfTask(originalTask.getTaskId());
-
 
 		CommandObject newCommandObj = new CommandObject();
 		if (editOccurrenceIndex == -1) {

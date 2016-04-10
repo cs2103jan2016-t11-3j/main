@@ -324,7 +324,7 @@ public class Logic {
 		commandFacade.run();
 		updateLists(commandFacade);
 
-		System.out.println("Last searched index = " + lastSearchedIndex);
+		//System.out.println("Last searched index = " + lastSearchedIndex);
 	}
 
 	// Retrieves the updated lists from the CommandFacade class and updates the
@@ -338,6 +338,7 @@ public class Logic {
 		setTaskDateTimeOutput(commandFacade.getTaskDateTimeOutput());
 		setLastSearchedIndex(commandFacade.getLastSearchedIndex());
 		setSortedIndex(commandFacade.getSortedIndex());
+		System.out.println("Logic:341 - SORTED INDEX = " + commandFacade.getSortedIndex());
 		/*
 		 * if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
 		 * setLastSearchedIndex(commandFacade.getLastSearchedIndex()); } else { setLastSearchedIndex(-1); }
