@@ -40,12 +40,13 @@ import javafx.util.Duration;
  * @author Seow Hwee
  *
  */
-
 public class MainController implements Initializable {
 
-	static String _input;
-	static UIMain _UI = new UIMain();
-	ArrayList<TaskObject> taskList = _UI.getLastOutputTaskList();
+	private static final String MESSAGE_NODE_NOT_INJECTED = 
+			"fx:id=\"%1$s\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+	
+	private static String _input;
+	private static UIMain _UI = new UIMain();
 
 	@FXML
 	private static BorderPane layout;
@@ -76,7 +77,9 @@ public class MainController implements Initializable {
 
 	/**
 	 * Handles enter pressed by reading input in textfield and process input.
-	 * @param event - Enter pressed
+	 * 
+	 * @param event
+	 *            - Enter pressed
 	 * @throws IOException
 	 */
 	@FXML
@@ -93,18 +96,18 @@ public class MainController implements Initializable {
 
 	private void hideSidePanel() {
 		if ((!_input.startsWith("edit")) && !_input.startsWith("delete")) {
-
 			sidePanel.setVisible(false);
-
 		} else {
 			fillSidebar();
 		}
 	}
 
 	/**
-	 * Handles when F1 pressed by activating help. 
-	 * Handles when Esc pressed by closing program.
-	 * @param event - F1 or Esc Pressed
+	 * Handles when F1 pressed by activating help. Handles when Esc pressed by
+	 * closing program.
+	 * 
+	 * @param event
+	 *            - F1 or Esc Pressed
 	 * @throws IOException
 	 */
 	@FXML
@@ -113,7 +116,7 @@ public class MainController implements Initializable {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
 		}
-		
+
 		if (event.getCode() == KeyCode.ESCAPE) {
 			System.exit(0);
 		}
@@ -122,31 +125,54 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		assert taskColumn != null : "fx:id=\"taskColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert taskDateList != null : "fx:id=\"taskDateList\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert taskTable != null : "fx:id=\"taskTable\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert layout != null : "fx:id=\"layout\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert recurTitle != null : "fx:id=\"recurTitle\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert timeColumn != null : "fx:id=\"timeColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert indexColumn != null : "fx:id=\"indexColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert statusColumn != null : "fx:id=\"statusColumn\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert programName != null : "fx:id=\"programName\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert feedbackMessage != null : "fx:id=\"feedbackMessage\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert userInput != null : "fx:id=\"userInput\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert sidePanel != null : "fx:id=\"sidePanel\" was not injected: check your FXML file 'TaskWindow.fxml'.";
-		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'TaskWindow.fxml'.";
+		assert layout != null : String.format(MESSAGE_NODE_NOT_INJECTED, "layout");
+		assert programName != null : String.format(MESSAGE_NODE_NOT_INJECTED, "programName");
+		
+		assert sidePanel != null : String.format(MESSAGE_NODE_NOT_INJECTED, "sidePanel");
+		assert taskDateList != null : String.format(MESSAGE_NODE_NOT_INJECTED, "taskDateList");
+		assert recurTitle != null : String.format(MESSAGE_NODE_NOT_INJECTED, "recurTitle");
+
+		assert taskTable != null : String.format(MESSAGE_NODE_NOT_INJECTED, "taskTable");
+		assert indexColumn != null : String.format(MESSAGE_NODE_NOT_INJECTED, "indexColumn");
+		assert taskColumn != null : String.format(MESSAGE_NODE_NOT_INJECTED, "taskColumn");
+		assert statusColumn != null : String.format(MESSAGE_NODE_NOT_INJECTED, "statusColumn");
+		assert timeColumn != null : String.format(MESSAGE_NODE_NOT_INJECTED, "timeColumn");
+
+		assert feedbackBox != null : String.format(MESSAGE_NODE_NOT_INJECTED, "feedbackBox");
+		assert feedbackMessage != null : String.format(MESSAGE_NODE_NOT_INJECTED, "feedbackMessage");
+		assert userInput != null : String.format(MESSAGE_NODE_NOT_INJECTED, "userInput");
 
 		manageSidePanel();
-		setWrapText(); // for sideBarList
+		sidebarWrapText(); // for sideBarList
 		displayMessage();
 		display(); // start program with all tasks in table
 
 	}
 
+	// ---------------------- SIDE PANEL METHODS ------------------------------
+
 	private void manageSidePanel() {
 		sidePanel.managedProperty().bind(sidePanel.visibleProperty());
 	}
 
+	private void sidebarWrapText() {
+		taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+			@Override
+			public ListCell<String> call(final ListView<String> list) {
+				return new ListCell<String>() {
+					{
+						Text text = new Text();
+						text.wrappingWidthProperty().bind(taskDateList.widthProperty());
+						text.textProperty().bind(itemProperty());
+
+						setPrefWidth(0);
+						setGraphic(text);
+					}
+				};
+			}
+		});
+	}
+	
 	private void sidePanelAnimation() {
 		TranslateTransition openNav = new TranslateTransition(new Duration(300), sidePanel);
 		openNav.setToX(0);
@@ -154,9 +180,25 @@ public class MainController implements Initializable {
 		if (sidePanel.getTranslateX() != 0) {
 			openNav.play();
 		}
-
+	}
+	
+	private void fillSidebar() {
+		taskDateList.getItems().clear();
+		try {
+			ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
+			
+			recurTitle.setText(recurringTimes.get(0));
+			recurringTimes.remove(0);
+			ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
+			
+			taskDateList.getItems().clear();
+			taskDateList.setItems(items);
+		} catch (NullPointerException e) {
+			
+		}		
 	}
 
+	//----------------------- USER INPUT AND FEEDBACK METHODS ---------------------------------
 	private void readInput() {
 		_input = userInput.getText();
 	}
@@ -175,48 +217,18 @@ public class MainController implements Initializable {
 	}
 
 	private void feedbackUser() {
-		setSelectionFocus();
+		
 		if (isRecurringDateRequest()) {
 			sidePanel.setVisible(true);
 			fillSidebar();
 			sidePanelAnimation();
 		}
-
 		displayMessage(); // print feedback message
 		display(); // refreshes table after every command
-	}
-
-	private void setSelectionFocus() {
-		if (_input.startsWith("add")) {
-			int sortIndex  = _UI.getAddSortedIndex();
-			taskTable.scrollTo(sortIndex - 1);
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					taskTable.getSelectionModel().select(sortIndex - 1);
-				}
-			});
-		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")
-				|| !_input.startsWith("filter") || !_input.startsWith("display") || _input.startsWith("search")
-				|| !_input.startsWith("list")) && sidePanel.isVisible() == false) {
-
-			String[] input = _input.split(" ");
-			if (input.length > 1) {
-				try {
-					int index = Integer.parseInt(input[1]);
-					taskTable.scrollTo(index - 1);
-					taskTable.getSelectionModel().select(index - 1);
-				} catch (NumberFormatException e) {
-
-				}
-			}
-		} else if (sidePanel.isVisible() == false) {
-			taskTable.getSelectionModel().clearSelection();
-		}
+		setSelectionFocus();
 	}
 
 	private boolean isRecurringDateRequest() {
-
 		if (_UI.getOutput().size() > 0) {
 			if (_UI.getOutput().get(0).startsWith("Displaying recurrence")) {
 				return true;
@@ -224,70 +236,18 @@ public class MainController implements Initializable {
 		}
 		return false;
 	}
-
-	private void fillSidebar() {
-		taskDateList.getItems().clear();
-		try {
-			ArrayList<String> recurringTimes = _UI.getTaskDateOutput();
-
-			recurTitle.setText(recurringTimes.get(0));
-			recurringTimes.remove(0);
-			ObservableList<String> items = FXCollections.observableArrayList(recurringTimes);
-
-			taskDateList.getItems().clear();
-			taskDateList.setItems(items);
-		} catch (NullPointerException e) {
-
-		}
-
-	}
-
+	
 	private void displayMessage() {
 		feedbackMessage.setText(_UI.getMessage());
 		feedbackBox.getChildren().clear();
 		feedbackBox.getChildren().add(feedbackMessage);
 	}
 
+	//----------------------------- TASK TABLEVIEW METHODS -------------------------------
+	
 	private void display() {
 		ObservableList<TaskObject> taskData = FXCollections.observableArrayList(getOutputTaskList());
 		fillTable(taskData);
-	}
-	
-	/**
-	 * Called by HelpPopupController to retrieve content in help manual for display.
-	 * 
-	 * @param i - index to indicate which section of help manual to retrieve
-	 * @return _UI.getOutput: returns ArrayList<String> from different sections of help manual
-	 */
-	public static ArrayList<String> getHelpList(int i) {
-		switch (i) {
-		case 1:
-			_UI.passInput("help Add");
-			break;
-		case 2:
-			_UI.passInput("help Search");
-			break;
-		case 3:
-			_UI.passInput("help Edit");
-			break;
-		case 4:
-			_UI.passInput("help Delete");
-			break;
-		case 5:
-			_UI.passInput("help Undo");
-			break;
-		case 6:
-			_UI.passInput("help save");
-			break;
-		case 7:
-			_UI.passInput("help Exit");
-			break;
-		}
-		return _UI.getOutput();
-	}
-
-	private ArrayList<TaskObject> getOutputTaskList() {
-		return _UI.getLastOutputTaskList();
 	}
 
 	private void fillTable(ObservableList<TaskObject> taskData) {
@@ -318,7 +278,7 @@ public class MainController implements Initializable {
 	}
 
 	private void setCellProperty() {
-		wrapText();
+		tableWrapText();
 		colourCode();
 	}
 
@@ -351,7 +311,7 @@ public class MainController implements Initializable {
 
 	}
 
-	private void wrapText() {
+	private void tableWrapText() {
 		taskColumn.setCellFactory(new Callback<TableColumn<TaskObject, String>, TableCell<TaskObject, String>>() {
 			@Override
 			public TableCell<TaskObject, String> call(TableColumn<TaskObject, String> param) {
@@ -393,22 +353,76 @@ public class MainController implements Initializable {
 		});
 	}
 
-	private void setWrapText() {
-		taskDateList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-			@Override
-			public ListCell<String> call(final ListView<String> list) {
-				return new ListCell<String>() {
-					{
-						Text text = new Text();
-						text.wrappingWidthProperty().bind(taskDateList.widthProperty());
-						text.textProperty().bind(itemProperty());
+	private void setSelectionFocus() {
+		if (_input.startsWith("add")) {
+			int sortIndex = _UI.getAddSortedIndex();
+			taskTable.scrollTo(sortIndex - 1);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					taskTable.getSelectionModel().select(sortIndex - 1);
+				}
+			});
+		} else if ((_input.startsWith("edit") || _input.startsWith("view") || _input.startsWith("find")
+				|| !_input.startsWith("filter") || !_input.startsWith("display") 
+				|| _input.startsWith("search") || !_input.startsWith("list")) 
+				&& sidePanel.isVisible() == false) {
 
-						setPrefWidth(0);
-						setGraphic(text);
-					}
-				};
+			String[] input = _input.split(" ");
+			if (input.length > 1) {
+				try {
+					int index = Integer.parseInt(input[1]);
+					taskTable.scrollTo(index - 1);
+					taskTable.getSelectionModel().select(index - 1);
+				} catch (NumberFormatException e) {
+
+				}
 			}
-		});
+		} else if (sidePanel.isVisible() == false) {
+			taskTable.getSelectionModel().clearSelection();
+		}
+	}
+
+
+	//-------------------------- GETTERS -----------------------------
+	/**
+	 * Called by HelpPopupController to retrieve content in help manual for
+	 * display.
+	 * 
+	 * @param i
+	 *            - index to indicate which section of help manual to retrieve
+	 * @return _UI.getOutput: returns ArrayList<String> from different sections
+	 *         of help manual
+	 */
+	public static ArrayList<String> getHelpList(int i) {
+		switch (i) {
+		case 1:
+			_UI.passInput("help Add");
+			break;
+		case 2:
+			_UI.passInput("help Search");
+			break;
+		case 3:
+			_UI.passInput("help Edit");
+			break;
+		case 4:
+			_UI.passInput("help Delete");
+			break;
+		case 5:
+			_UI.passInput("help Undo");
+			break;
+		case 6:
+			_UI.passInput("help save");
+			break;
+		case 7:
+			_UI.passInput("help Exit");
+			break;
+		}
+		return _UI.getOutput();
+	}
+
+	private ArrayList<TaskObject> getOutputTaskList() {
+		return _UI.getLastOutputTaskList();
 	}
 
 }
