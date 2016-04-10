@@ -103,13 +103,6 @@ public class UIMain extends Application {
 	}
 	
 	/**
-	 * Called by MainController to sort the list displayed in tableview according to time.
-	 */
-	public void setSortByDate() {
-		logic.sortOutputByDate();
-	}
-	
-	/**
 	 * Called by MainController to obtain array list of task timings.
 	 * @return logic.getTaskDateTimeOutput() 
 	 */

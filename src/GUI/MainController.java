@@ -103,9 +103,8 @@ public class MainController implements Initializable {
 
 	/**
 	 * Handles when F1 pressed by activating help. 
-	 * Handles when F3 pressed by sorting displayed list.
 	 * Handles then Esc pressed by closing program.
-	 * @param event - F1 or F3 or Esc Pressed
+	 * @param event - F1 or Esc Pressed
 	 * @throws IOException
 	 */
 	@FXML
@@ -113,10 +112,6 @@ public class MainController implements Initializable {
 		if (event.getCode() == KeyCode.F1) {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
-		}
-		if (event.getCode() == KeyCode.F3) {
-			_UI.setSortByDate();
-			display();
 		}
 		if (event.getCode() == KeyCode.ESCAPE) {
 			System.exit(0);
@@ -140,7 +135,6 @@ public class MainController implements Initializable {
 		assert sidePanel != null : "fx:id=\"sidePanel\" was not injected: check your FXML file 'TaskWindow.fxml'.";
 		assert feedbackBox != null : "fx:id=\"feedbackBox\" was not injected: check your FXML file 'TaskWindow.fxml'.";
 
-		_UI.setSortByDate();
 		manageSidePanel();
 		setWrapText(); // for sideBarList
 		displayMessage();
@@ -170,8 +164,6 @@ public class MainController implements Initializable {
 		if (_input.startsWith("help")) {
 			HelpPopupController popupController = new HelpPopupController();
 			popupController.startHelp();
-		} else if (_input.startsWith("sort")) {
-			_UI.setSortByDate();
 		} else {
 			_UI.passInput(_input);
 		}
