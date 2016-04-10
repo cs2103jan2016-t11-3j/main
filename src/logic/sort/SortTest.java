@@ -77,8 +77,6 @@ import static org.junit.Assert.*;
     	   Sort testSort = new Sort(testList);
     	   ArrayList<TaskObject> actualOutput = testSort.run();
     	   
-    	   System.out.println(actualOutput);
-    	   
     	   ArrayList<TaskObject> correctOutput = new ArrayList<TaskObject>();
     	   
     	   correctOutput.add(taskFour);
@@ -91,7 +89,6 @@ import static org.junit.Assert.*;
     	   correctOutput.add(taskSeven);
     	   correctOutput.add(taskSix);
     	   
-    	   System.out.println(correctOutput);
     	   assertEquals(actualOutput,correctOutput);
     	   correctOutput.clear();
        }
