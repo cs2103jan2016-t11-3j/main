@@ -433,6 +433,7 @@ public class Search extends Display {
 			}
 		} else {
 			output.add(String.format(MESSAGE_NO_RECURRENCE_TIMING_DISPLAY, searchIndex));
+			searchIndex = -1; // if it is a non-recurring task, the sidebar will not appear
 			if (foundTask.getCategory().equals(CATEGORY_EVENT)) {
 				TimeOutput.setEventTimeOutput(foundTask);
 			} else {
