@@ -71,7 +71,7 @@ public class LogicTest {
 	
 	@Test // Test add recurring
 	public void testAE() {
-		logic.run("add event every friday from 1500hrs to 1800hrs for 6 weeks");
+		logic.run("add event every saturday from 1500hrs to 1800hrs for 6 weeks");
 		
 		ArrayList<String> expectedOutput = new ArrayList<String>();
 		expectedOutput.add("Recurring task added: event. ");
@@ -130,9 +130,9 @@ public class LogicTest {
 	
 	@Test // test search for title
 	public void testAI() {
-		logic.run("add CS2103 lecture every friday from 4pm to 6pm until 1 May");
+		logic.run("add CS2103 lecture every saturday from 4pm to 6pm until 1 May");
 		logic.run("add assignment 1 by 30/4 4pm");
-		logic.run("add IE2100 lecture every saturday from 1pm to 2pm");
+		logic.run("add IE2100 lecture every saturday from 7pm to 9pm");
 		
 		assertEquals(5, logic.getTaskList().size());
 		

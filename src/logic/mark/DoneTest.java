@@ -214,10 +214,10 @@ public class DoneTest {
 		int newTimingCount = task.getTaskDateTimes().size();
 		
 		// Number of timings in the task should decrease by 1
-		assertTrue (newTimingCount + 1 == originalTimingCount);
+		assertEquals (newTimingCount + 1, originalTimingCount);
 		
 		// Number of tasks should increase by 1
-		assertTrue (taskList.size() == 4);
+		assertEquals (4, taskList.size());
 		
 		// Recurring task with >1 timings should always have incomplete status
 		System.out.println(task.getStatus());
@@ -225,10 +225,6 @@ public class DoneTest {
 		
 		expectedOutput.add("Task: 'event 1' marked as completed");
 		assertEquals(expectedOutput, actualOutput);
-		
-		// No change in number of tasks
-		System.out.println(taskList.size());
-		assertTrue(taskList.size() == 3);
 		
 		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
 			String line = TimeOutput.setEventTimeOutput(task.getTaskDateTimes().get(i).getStartDateTime(), task.getTaskDateTimes().get(i).getEndDateTime());
@@ -334,9 +330,9 @@ public class DoneTest {
 		expectedOutput.add("Task: 'event 1' marked as completed");
 		assertEquals(expectedOutput, actualOutput);
 		
-		// No change in number of tasks
+		// Number of tasks increase by 1
 		System.out.println(taskList.size());
-		assertTrue(taskList.size() == 3);
+		assertTrue(taskList.size() == 4);
 		
 		for (int i = 0; i < task.getTaskDateTimes().size(); i++) {
 			String line = TimeOutput.setEventTimeOutput(task.getTaskDateTimes().get(i).getStartDateTime(), task.getTaskDateTimes().get(i).getEndDateTime());
