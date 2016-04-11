@@ -70,7 +70,13 @@ public class FilePath {
             changePreferedDirectory(Constants.DEFAULT_DIRECTORY);
         }
     }
-
+    
+    /**
+     * Checks if the specified directory is usable for writing and reading data from.
+     * @param directory
+     * @return <li><code>true</code> If the directory can be used.
+     * <li><code>false</code> If the specified directory cannot be used.
+     */
     protected static boolean directoryValid(String directory)  {
         if (directory == null) {
             return false;
@@ -83,6 +89,9 @@ public class FilePath {
     }
 
     protected static boolean pathValid(String filePath) {
+        if (filePath == null) {
+            return false;
+        }
         Path path = Paths.get(filePath);
         return Files.isReadable(path) && Files.isWritable(path);
     }

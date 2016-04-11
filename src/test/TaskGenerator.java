@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
+/**
+ * This class helps to create a list of unique dummy tasks for testing.
+ * @author Hang
+ *
+ */
 public class TaskGenerator {
     public static Integer taskId = 0;
 

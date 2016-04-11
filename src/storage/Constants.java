@@ -33,7 +33,7 @@ public final class Constants {
     
     /**
      * These constants define the names and path of the file containing the user specified 
-     * prefered save directory.
+     * preferred save directory.
      */
     public static final String FILENAME_SAVEINFO = "saveInfo.txt";
     public static final Path FILEPATH_SAVEINFO = Paths.get(ATF_DIRECTORY, FILENAME_SAVEINFO);

@@ -44,14 +44,14 @@ public class HelpTopic {
 	    if (is == null) {
 	        return content;
 	    }
-	    String text = "";
+	    String textLine = "";
 		try { 
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			topicName = reader.readLine();
-			text = reader.readLine();
-			while (text != null) {
-				content.add(text);
-				text = reader.readLine();
+			//topicName = reader.readLine();
+			textLine = reader.readLine();
+			while (textLine != null) {
+				content.add(textLine);
+				textLine = reader.readLine();
 			}
 			reader.close();
 		} catch (Exception e) {

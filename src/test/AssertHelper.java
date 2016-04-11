@@ -8,6 +8,11 @@ import java.util.ArrayList;
 
 import common.TaskObject;
 
+/**
+ * This class contains methods to help compare taskObjects.
+ * @author Hang
+ *
+ */
 public class AssertHelper {
 
     public static void assertTaskEquals(String testDescription, TaskObject task1, TaskObject task2) {
