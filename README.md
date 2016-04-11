@@ -12,7 +12,6 @@ very easy to schedule recurring tasks, and edit them if there are any changes.
 - Parser Package
 - UI Package
 
-## [User Guide](https://drive.google.com/open?id=0B-m9WaP5K2KHNHVyY3JYVFFRdHM)
+## [User Guide](https://drive.google.com/open?id=0B-uh0M3ExsgNRFlrR3FQcnQ5T2M)
 
-## [Developer Guide]
-In the midst of updating, please check again in the near future
+## [Developer Guide] (https://drive.google.com/open?id=0B-uh0M3ExsgNYVFEZTJObDluN0E)
