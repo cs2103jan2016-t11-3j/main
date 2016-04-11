@@ -4,7 +4,6 @@ package parser;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-
 /**
  * This class's job is to identify the correct time from a user's string input.
  * It recognises time in 2 main formats, hh:mm and hh:mm AM/PM. 

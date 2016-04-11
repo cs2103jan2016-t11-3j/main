@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
  *
  */
 public class Parser {
-	
 	public CommandObject CO = new CommandObject();
 	public TaskObject TO = new TaskObject();
 	private static Logger logger = AtfLogger.getLogger();
