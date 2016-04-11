@@ -1,5 +1,4 @@
-Exiting the programme
+Edit title
+Enter an edit command, followed by an index number and the new title.
 
-Enter “exit” or “quit”. 
-
-Data will automatically be saved to default file location before exiting.
+- edit/update <index number> <new title>

@@ -1,6 +1,4 @@
-Change default save location
+Search by status
+Enter a search command, followed by a search status. It is only possible to view completed tasks.
 
-Enter “save to” followed by the path to set a new default save location
-
-Usage Examples:
-save to C:\Program Files	Sets TaskFinder to, by default, save files containing task information at the folder Program Files in C:
+- search/view/find/filter/display  completed/done

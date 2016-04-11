@@ -1,0 +1,6 @@
+Delete a task
+Enter a delete command, followed by an index number. 
+
+If you are currently viewing the recurrence timings of a task, the occurrence at this index number will be deleted. If the task at this index number is a recurring task, only the first occurrence will be deleted.
+
+- delete <index number>

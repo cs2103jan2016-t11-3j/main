@@ -1,0 +1,4 @@
+Delete all tasks
+Enter a delete command and the keyword “all”. 
+
+- delete all

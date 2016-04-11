@@ -1,0 +1,4 @@
+Redo an action
+Enter the redo command. This reverts the last action that had been undone.
+
+- redo

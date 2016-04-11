@@ -1,14 +1,4 @@
-Searching
-Enter <search keyword>
-Enter <“view”/“find”/“search”/“display”/"filter"> <search keyword> 
-The program will display a list of events/tasks that matches the search terms, sorted in order of time.
+Add an event task
+Enter “add”, followed by the title of the task, a start date and/or time and an end date and/or time.
 
-Enter <“view”/“find”/“search”/“display”/"filter">
-The program displays all events/tasks, sorted in order of time.
-
-Usage Examples: 
-view dinner	
-Searches and displays all tasks, events and deadlines including the word “dinner”, non case-sensitive.
-
-view Project	
-Searches and displays all tasks, events and deadlines including the word “Project”, non case-sensitive.
+- add <task title> from <date time> to <date time>

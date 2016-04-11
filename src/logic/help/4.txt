@@ -1,17 +1,18 @@
-Viewing/Searching for existing tasks by due date or event time
+Add a recurring task
+Enter “add”, followed by the title of the task, an interval, an optional date/time and an optional termination condition.
 
-Enter any of the following: “view”, “find”, “search”, “display”, “list”, followed by the date or time.
+The syntax for the individual components is:
+(a)	Interval
+	- every <optional number of times> <frequency> 
+	- Frequency refers to any day of the week, “days”, “weeks”, “months” and “years”
+(b)	Termination condition
+	i.	until <date time>
+	ii.	for <number of times> <frequency>
+		- Frequency refers to “times”, “days”, “weeks”, “months” and “years”
 
-The program will display all events/tasks due before the date or time, sorted in order of time. 
+If there is no specified termination condition, the task is known as an infinitely recurring task. 
+The program will maintain a maximum of 10 occurrences for the task based on the interval.
 
-To display all events/tasks due after the date or time, enter any of the following commands: “view”, “find”, “search”, “display”, “list”, followed by “after” and the date or time.
+If there is no specified start date, it will be default to today’s date.
 
-Usage Examples:
-view Friday		
-Searches and displays all tasks, events and deadlines which are due by the nearest upcoming Friday in the future.
-
-view next week		
-Searches and displays all tasks, events and deadlines which are due by the Sunday of the next week.
-
-view after next week	
-Searches and displays all tasks, events and deadlines which are due after the Sunday of the next week.
+- add <task title> <interval> <optional date time> <optional termination condition>

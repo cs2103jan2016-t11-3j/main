@@ -1,26 +1,6 @@
-Edit an existing event/task
-Enter <“edit”> <ordered number of selected event/task displayed> <new description for task> <new time/date>
-Enter <“edit”> <ordered number of selected event/task displayed> <new description for task>
-Enter <“edit”> <ordered number of selected event/task displayed> <new time/date>
+Search by date
+Enter a search command, followed by a search date. 
 
-Note that if there is no command after the number of the selected task, no changes will be made.
-Note that the type of task will automatically update itself according to the format of the time being edited.
+The date can be the exact date or a relative date (e.g. next Thursday).  If there is no year specified, it is default to the current year.
 
-Usage Examples:
-edit 1 Dinner with John		
-Edits the task currently displayed at slot number 1 such that the task description now is “Dinner with John”
-
-edit 5 complete assignment 2	
-Edits the task currently displayed at slot number 5 such that the task description now is “complete assignment 2”
-
-edit 3				
-Nothing happens
-
-edit 2 time 8pm - 9pm	
-Edits the task currently displayed at slot number 2 to become an event, from 8pm to 9pm today
-
-edit 2 date 27/2/16	
-Edits the task currently displayed at slot number 2 to become a deadline, with the due date on 27/2/2016
-
-edit 2 date		
-Removes all deadlines, timings for the task currently displayed at slot number 2. This task becomes a floating task.
+- search/view/find/filter/display <search date>
