@@ -13,7 +13,7 @@
 
 <VBox fx:id="helpPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleArrowPressed" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.HelpPopupController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#handleEscPressed" text="Help Manual" textAlignment="CENTER" textFill="#5e412f">
+      <Label fx:id="manualTitle" alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#handleEscPressed" text="Help Manual" textAlignment="CENTER" textFill="#5e412f">
          <padding>
             <Insets left="10.0" top="10.0" />
          </padding>
@@ -21,7 +21,7 @@
             <Font name="Agency FB Bold" size="30.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" prefHeight="22.0" prefWidth="644.0" text="&lt;Left&gt;/&lt;Right&gt; arrow key to change topic, &lt;Esc&gt; to close Manual">
+      <Label fx:id="userGuideText" alignment="CENTER" prefHeight="22.0" prefWidth="644.0" text="&lt;Left&gt;/&lt;Right&gt; arrow key to change topic, &lt;Esc&gt; to close Manual">
          <font>
             <Font name="Agency FB" size="18.0" />
          </font>
