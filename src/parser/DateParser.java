@@ -25,6 +25,12 @@ public class DateParser {
 	private int month = -1;
 	private int year = -1;
 	private int date = -1;
+	private int standardDateLength = 8;
+	private int yearMultiplier = 10000;
+	private int monthMultiplier = 100;
+	private int monthLimit = 12;
+	private int dayLimit = 31;
+	private int yearFormatter = 2000;
 	
 	private String dateString;
 	private LocalDate dateObject = LocalDate.MAX;
@@ -90,15 +96,15 @@ public class DateParser {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 		
 		if (year < 100 && year != -1) {
-			year = 2000 + year;
+			year = yearFormatter + year;
 		} else if (year == -1) {
 			year = Constants.DEFAULT_YEAR;
 		}
 		
-		if (day > 31 || month > 12) {
+		if (day > dayLimit || month > monthLimit) {
 			throw new Exception("Invalid Date");
 		} else if (day != -1 && month != -1 && year != -1) {
-			date = day + month * 100 + year * 10000;
+			date = day + month * monthMultiplier + year * yearMultiplier;
 		}
 		
 		dateString = Integer.toString(date); //now insert the damn dashes
@@ -157,7 +163,7 @@ public class DateParser {
 	 * 				e.g. 2014-05-29
 	 */
 	private String addDashes(String input) {
-		if (input.length() == 8) {
+		if (input.length() == standardDateLength) {
 			String year, month, day;
 			year = input.substring(0,4);
 			month = input.substring(4,6);

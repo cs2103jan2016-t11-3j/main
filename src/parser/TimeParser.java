@@ -13,9 +13,6 @@ import java.time.format.DateTimeFormatter;
  */
 public class TimeParser {
 	private int time = -1;
-	private String timeString = "";
-	private LocalTime timeObject = LocalTime.MAX;
-	
 	private int pmConverter = 1200;
 	private int makeInvalid = 9999;
 	private int timeFormatter = 100;
@@ -26,6 +23,8 @@ public class TimeParser {
 	private int amLowerLimit = 1159;
 	private int amUpperLimit = 1260;
 	private int invalidLimit = 1259;	
+	private String timeString = "";
+	private LocalTime timeObject = LocalTime.MAX;
 	
 	/**
 	 * This method takes in the user's input from add/edit/search parser, checks if empty
