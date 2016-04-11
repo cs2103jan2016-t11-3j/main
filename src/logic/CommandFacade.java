@@ -150,43 +150,6 @@ public class CommandFacade {
 		
 	}
 
-//@@author A0124052X
-	
-	// hides completed tasks if command is not "view done"
-	private void filterLastOutputTaskList() {
-		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == -1)
-				&& (taskObj.getStatus().equals(STATUS_COMPLETED))) {
-			return;
-		} else {
-			filterOutCompletedTasks();
-			if (commandType == INDEX_COMPLETE) {
-				addRecentlyCompletedTask();
-			}
-		}
-	}
-
-	private void filterOutCompletedTasks() {
-		ArrayList<TaskObject> newLastOutputTaskList = new ArrayList<TaskObject>();
-		for (int i = 0; i < lastOutputTaskList.size(); i++) {
-			if (!lastOutputTaskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
-				newLastOutputTaskList.add(lastOutputTaskList.get(i));
-			}
-		}
-		setLastOutputTaskList(newLastOutputTaskList);
-	}
-
-	private void addRecentlyCompletedTask() {
-		ArrayList<TaskObject> newLastOutputTaskList = this.lastOutputTaskList;
-		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() == lastCompletedTaskId) {
-				newLastOutputTaskList.add(taskList.get(i));
-			}
-		}
-		setLastOutputTaskList(newLastOutputTaskList);
-	}
-
-	
-//@@author A0124636H
 	// ----------------------- FUNCTIONS -------------------------
 
 	/**
@@ -208,10 +171,8 @@ public class CommandFacade {
 		setLastSearchedIndex(-1);
 	}
 
-	/**
-	 * This method checks for the presence of a search keyword in TaskObject. If there is a keyword, search
-	 * function will be called. If there is no keyword, display function will be called.
-	 */
+	// This method checks for the presence of a search keyword in TaskObject. If there is a keyword, search
+	// function will be called. If there is no keyword, display function will be called.
 	private void checkDisplayOrSearch() {
 		if (taskObj.isSearchKeywordPresent() || commandObj.getIndex() != -1) {
 			searchFunction();
@@ -220,7 +181,9 @@ public class CommandFacade {
 		}
 	}
 
-	// Calls Search function which outputs only the tasks that match the search keyword.
+	/**
+	 * Calls Search function which outputs only the tasks that match the search keyword.
+	 */
 	private void searchFunction() {
 		Search search = new Search(commandObj, taskList, lastOutputTaskList);
 		setOutput(search.run());
@@ -237,7 +200,9 @@ public class CommandFacade {
 		setTaskDateTimeOutput(search.getTaskDateTimeOutput());
 	}
 
-	// Calls Display function which outputs the entire task list.
+	/**
+	 * Calls Display function which outputs the entire task list.
+	 */
 	private void displayFunction() {
 		Display display = new Display(taskList);
 		setOutput(display.run());
@@ -300,8 +265,7 @@ public class CommandFacade {
 		}
 	}
 
-	// Checks that removedTask is not null, then adds the corresponding CommandObject to the
-	// undo list or the redo list
+	// Checks that removedTask is not null, then adds the corresponding CommandObject to the undo/redo list
 	private void processUndoForDelete(TaskObject removedTask, LocalDateTimePair removedOccurrenceTiming,
 			Integer removedOccurrenceIndex) {
 		assert (!removedTask.isNull());
@@ -338,7 +302,7 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Calls the Exit function, which exits the program
+	 * Calls the Exit function, which exits the program.
 	 */
 	private void exitFunction() {
 		Exit exit = new Exit(taskList);
@@ -358,7 +322,7 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Calls the Done function, which marks a specified task as done.
+	 * Calls the Done function, which marks a specified task as completed.
 	 */
 	private void doneFunction() {
 		Done done = new Done(commandObj, taskList, lastOutputTaskList);
@@ -378,27 +342,8 @@ public class CommandFacade {
 		lastCompletedTaskId = done.getMostRecentlyMarkedTaskId();
 	}
 
-	/*
-	 * Calls the Overdue function, which marks a specified task as overdue.
-	 *
-	private void overdueFunction() {
-		Overdue overdue = new Overdue(commandObj, taskList, lastOutputTaskList);
-		setOutput(overdue.run());
-		setLastOutputTaskList(taskList);
-		setLastSearchedIndex(-1);
-		
-		if (overdue.getTaskIdToMark() != -1) {
-			if (isUndoAction) {
-				addToList(overdue, redoList);
-			} else {
-				addToList(overdue, undoList);
-			}
-		}
-		
-	}*/
-
 	/**
-	 * Calls the Incomplete function, which marks a specified task as overdue.
+	 * Calls the Incomplete function, which marks a specified task as incomplete.
 	 */
 	private void incompleteFunction() {
 		Incomplete incomplete = new Incomplete(commandObj, taskList, lastOutputTaskList);
@@ -416,6 +361,9 @@ public class CommandFacade {
 		}
 	}
 	
+	/**
+	 * Calls the Load function, which loads the task list from a backup file or a specified file.
+	 */
 	private void loadFunction() {
 		Load load = new Load(taskObj);
 		setOutput(load.run());
@@ -426,6 +374,10 @@ public class CommandFacade {
 		redoList.clear();
 	}
 	
+	/**
+	 * Calls the Sort function, which sorts the task list according to status, then start date/time, then
+	 * end date/time, then title.
+	 */
 	private void sortFunction() {
 		Sort sort = new Sort(taskList);
 		sort.run();
@@ -451,7 +403,6 @@ public class CommandFacade {
 
 		if (isAddSingleOccurrence) { // it is addition of a single occurrence
 			newCommandObj = new CommandObject(INDEX_DELETE, new TaskObject(), index, lastSearchedIndex);
-
 		} else {
 			if (commandObj.getTaskObject().getIsRecurring()) {
 				// isEditAll set to 'true'
@@ -529,7 +480,7 @@ public class CommandFacade {
 	}
 
 	/**
-	 * Constructs a CommandObject for either "done", "incomplete" or "overdue" and pushes it into the list.
+	 * Constructs a CommandObject for either "complete" or "incomplete" and pushes it into the list.
 	 * 
 	 * @param mark
 	 *            Mark object which performed the modification to the task list
@@ -552,6 +503,7 @@ public class CommandFacade {
 		list.push(newCommandObj);
 	}
 	
+	// Returns the new index of the task with the specified task ID in the sorted list
 	private int getNewIndexLocationOfTask(int searchTaskId) {
 		for (int i = 0; i < taskList.size(); i++) {
 			if (taskList.get(i).getTaskId() == searchTaskId) {
@@ -570,6 +522,45 @@ public class CommandFacade {
 		}
 		return -1;
 	}
+
+//@@author A0124052X
+	// ------------------------- METHODS FOR FILTERING THE DISPLAYED LIST -------------------------
+	
+	// hides completed tasks if command is not "view done"
+	private void filterLastOutputTaskList() {
+		if ((commandType == INDEX_SEARCH_DISPLAY) && (index == -1)
+				&& (taskObj.getStatus().equals(STATUS_COMPLETED))) {
+			return;
+		} else {
+			filterOutCompletedTasks();
+			if (commandType == INDEX_COMPLETE) {
+				addRecentlyCompletedTask();
+			}
+		}
+	}
+
+	private void filterOutCompletedTasks() {
+		ArrayList<TaskObject> newLastOutputTaskList = new ArrayList<TaskObject>();
+		for (int i = 0; i < lastOutputTaskList.size(); i++) {
+			if (!lastOutputTaskList.get(i).getStatus().equals(STATUS_COMPLETED)) {
+				newLastOutputTaskList.add(lastOutputTaskList.get(i));
+			}
+		}
+		setLastOutputTaskList(newLastOutputTaskList);
+	}
+
+	private void addRecentlyCompletedTask() {
+		ArrayList<TaskObject> newLastOutputTaskList = this.lastOutputTaskList;
+		for (int i = 0; i < taskList.size(); i++) {
+			if (taskList.get(i).getTaskId() == lastCompletedTaskId) {
+				newLastOutputTaskList.add(taskList.get(i));
+			}
+		}
+		setLastOutputTaskList(newLastOutputTaskList);
+	}
+
+//@@author A0124636H
+	// ---------------------------- OTHER METHODS ----------------------------
 
 	/**
 	 * Determines if the command involves editing of a task in the list.
@@ -595,7 +586,7 @@ public class CommandFacade {
 		output.clear();
 		output.add(MESSAGE_INVALID_COMMAND);
 	}
-
+	
 	// ------------------------- GETTERS AND SETTERS -------------------------
 
 	public int getCommandType() {
