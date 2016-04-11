@@ -819,7 +819,7 @@ public class Edit {
 			isEditStartTime = false;
 			isEditEndTime = false;
 			throw new EditException(LocalDateTime.MAX);
-		} else if (!isEditStartDate && !!isEditStartTime &&
+		} else if (!isEditStartDate && !isEditStartTime &&
 				(task.getStartDateTime().isAfter(endDateTime))) {
 			isEditStartDate = false;
 			isEditStartTime = false;
