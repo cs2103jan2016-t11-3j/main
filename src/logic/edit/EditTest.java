@@ -568,13 +568,13 @@ public class EditTest {
 	@Test // Test edit for single occurrence - edit start date and time of 2nd occurrence
 	public void testTA() {
 		// 1st assert - check output
-		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2017-12-01"), LocalTime.parse("09:00"));
+		LocalDateTime testStartDateTime = LocalDateTime.of(LocalDate.parse("2007-12-01"), LocalTime.parse("09:00"));
 		testTaskObject = new TaskObject("", testStartDateTime, "", "", -1, false, new ArrayList<>());
 		testCommandObject = new CommandObject(INDEX_EDIT, testTaskObject, 2);
 		
 		Edit testEdit = new Edit(testCommandObject, testList, testList, 19);
 		actualOutput = testEdit.run();
-		correctOutput.add("Start date of occurrence 2 edited from '2011-11-11' to '2017-12-01'. \n" 
+		correctOutput.add("Start date of occurrence 2 edited from '2011-11-11' to '2007-12-01'. \n" 
 				+ "Start time of occurrence 2 edited from '08:00' to '09:00'.");
 		
 		assertEquals(actualOutput, correctOutput);
@@ -584,7 +584,7 @@ public class EditTest {
 		TaskObject editedTask = testEdit.getEditTask();
 		ArrayList<LocalDateTimePair> actualTimings = editedTask.getTaskDateTimes();
 		LocalDateTime actualSecondTimingStart = actualTimings.get(1).getStartDateTime();
-		LocalDateTime correctSecondTimingStart = LocalDateTime.of(LocalDate.parse("2017-12-01"), LocalTime.parse("09:00"));
+		LocalDateTime correctSecondTimingStart = LocalDateTime.of(LocalDate.parse("2007-12-01"), LocalTime.parse("09:00"));
 		
 		assertEquals(actualSecondTimingStart, correctSecondTimingStart);
 	}
