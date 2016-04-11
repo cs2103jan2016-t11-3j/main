@@ -71,6 +71,7 @@ public abstract class Mark {
 
 	protected TaskObject markTaskObj = new TaskObject();
 	protected int index = -1;
+	protected boolean isExceptionThrown = false;
 
 	public Mark() {
 
@@ -189,6 +190,10 @@ public abstract class Mark {
 		return index;
 	}
 
+	public boolean getIsExceptionThrown() {
+		return isExceptionThrown;
+	}
+	
 	public void setMarkIndex(int index) {
 		this.index = index;
 	}

@@ -1,6 +1,6 @@
 //@@author A0080510X
 
-package test.storage;
+package Test.storage;
 
 import static org.junit.Assert.assertEquals;
 

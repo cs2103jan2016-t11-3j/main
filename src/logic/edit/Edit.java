@@ -74,6 +74,7 @@ public class Edit {
 	private int lastSearchedIndex;
 	private ArrayList<String> tempOutput = new ArrayList<String>();
 	private ArrayList<String> output = new ArrayList<String>();
+	private boolean isExceptionThrown = false;
 
 	private TaskObject originalTask = new TaskObject(); // original task info; for undo purposes
 	private ArrayList<LocalDateTimePair> originalTimings = new ArrayList<LocalDateTimePair>(); 	// for undo
@@ -187,6 +188,7 @@ public class Edit {
 		} catch (NullPointerException e) {
 			logger.log(Level.WARNING, "Error setting edit information");
 			tempOutput.add(MESSAGE_SETTING_EDIT_INFO_ERROR);
+			isExceptionThrown = true;
 		}
 	}
 
@@ -263,6 +265,7 @@ public class Edit {
 			isEditStartTimeOccurrence = false;
 			isEditEndDateOccurrence = false;
 			isEditEndTimeOccurrence = false;
+			isExceptionThrown = true;
 		}
 	}
 	
@@ -319,8 +322,10 @@ public class Edit {
 			}
 		} catch (RecurrenceException e) {
 			tempOutput.add(e.getRecurrenceExceptionMessage());
+			isExceptionThrown = true;
 		} catch (Exception e) {
 			tempOutput.add(e.getMessage());
+			isExceptionThrown = true;
 		}
 
 	}
@@ -1374,4 +1379,9 @@ public class Edit {
 	public boolean getIsEditSingleOccurrence() {
 		return isEditSingleOccurrence;
 	}
+
+	public boolean getIsExceptionThrown() {
+		return isExceptionThrown;
+	}
+	
 }

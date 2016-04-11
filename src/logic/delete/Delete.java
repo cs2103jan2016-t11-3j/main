@@ -87,6 +87,7 @@ public class Delete {
 	private boolean isDeleteAll = false;
 	private boolean hasDeletedInternal = false;
 	private boolean hasDeletedExternal = false;
+	private boolean isExceptionThrown = false;
 
 	// Constructors
 	public Delete() {
@@ -177,14 +178,19 @@ public class Delete {
 			}
 		} catch (DeleteException e) {
 			tempOutput.add(e.getDeleteExceptionMessage());
+			isExceptionThrown = true;
 		} catch (NullPointerException e) {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_NULL_POINTER);
+			isExceptionThrown = true;
 		} catch (IndexOutOfBoundsException e) {
 			tempOutput.add(MESSAGE_DELETE_ERROR + MESSAGE_INDEX_OUT_OF_BOUNDS);
+			isExceptionThrown = true;
 		} catch (NoSuchFileException e) {
 			tempOutput.add(MESSAGE_REQUEST_SAVE_LOCATION);
+			isExceptionThrown = true;
 		} catch (IOException e) {
 			tempOutput.add(MESSAGE_REQUEST_SAVE_LOCATION);
+			isExceptionThrown = true;
 		}
 
 		concatenateOutput();
@@ -249,6 +255,7 @@ public class Delete {
 					Recurring.updateInfiniteRecurrence(removedTask);
 				} catch (RecurrenceException e) {
 					output.add(String.format(MESSAGE_RECURRENCE_EXCEPTION, removedTask.getTitle()));
+					isExceptionThrown = true;
 				}
 			}
 
@@ -259,6 +266,7 @@ public class Delete {
 			}
 		} catch (IndexOutOfBoundsException e) {
 			createSingleOccurrenceMissingErrorOutput();
+			isExceptionThrown = true;
 		}
 	}
 
@@ -289,6 +297,7 @@ public class Delete {
 			checkForOverdueTask();
 			return true;
 		} catch (NullPointerException e) {
+			isExceptionThrown = true;
 			return false;
 		}
 	}
@@ -494,6 +503,10 @@ public class Delete {
 
 	public boolean getIsDeleteSingleOccurrence() {
 		return isDeleteSingleOccurrence;
+	}
+	
+	public boolean getIsExceptionThrown() {
+		return isExceptionThrown;
 	}
 
 	public void setTaskList(ArrayList<TaskObject> taskList) {

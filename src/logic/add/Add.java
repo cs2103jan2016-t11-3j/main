@@ -43,7 +43,8 @@ public class Add {
 	private ArrayList<TaskObject> taskList;
 	private ArrayList<String> output = new ArrayList<String>();
 	private ArrayList<TaskObject> clashedTasks = new ArrayList<TaskObject>();
-
+	private boolean isExceptionThrown = false;
+	
 	private boolean isAddSingleOccurrence = false;
 	private boolean isEvent = false;
 	private boolean isDeadline = false;
@@ -98,16 +99,19 @@ public class Add {
 			} catch (DateTimeException e) {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL + MESSAGE_INVALID_TIME);
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, "date within input task is invalid");
 			} catch (NullPointerException e) {
 				removeInternallyAddedTask();
 				e.printStackTrace();
 				output.add(MESSAGE_FAIL + MESSAGE_NULL_POINTER);
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, "tried to retrieve an unavailable object");
 			} catch (RecurrenceException e) {
 				removeInternallyAddedTask();
 				String exceptionMessage = e.getRecurrenceExceptionMessage();
 				output.add(exceptionMessage);
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, "task added has invalid recurrence properties");
 			} catch (AddException e) {
 				removeInternallyAddedTask();
@@ -116,22 +120,27 @@ public class Add {
 				} else {
 					output.add(MESSAGE_ADD_EXCEPTION);
 				}
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, e.getMessage());
 			} catch (InvalidPathException e) {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL + MESSAGE_LOAD_EXCEPTION_IFP);
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, "invalid file path");
 			} catch (NoSuchFileException e) {
 				e.printStackTrace();
-				logger.log(Level.WARNING, "did not manage to add task externally, invalid file");
 				output.add(MESSAGE_REQUEST_SAVE_LOCATION);
+				isExceptionThrown = true;
+				logger.log(Level.WARNING, "did not manage to add task externally, invalid file");
 			} catch (IOException e) {
 				e.printStackTrace();
 				output.add(MESSAGE_REQUEST_SAVE_LOCATION);
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, "did not manage to add task externally, IO exception");
 			} catch (Exception e) {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL);
+				isExceptionThrown = true;
 				logger.log(Level.WARNING, "task does not have a valid category");
 			}
 		}
@@ -551,6 +560,10 @@ public class Add {
 		return isAddSingleOccurrence;
 	}
 
+	public boolean getIsExceptionThrown() {
+		return isExceptionThrown;
+	}
+	
 	public ArrayList<TaskObject> getClashedTasks() {
 		return clashedTasks;
 	}

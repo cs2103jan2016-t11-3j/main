@@ -161,12 +161,15 @@ public class CommandFacade {
 		setOutput(add.run());
 		setLastOutputTaskList(taskList);
 		boolean isAddSingleOccurrence = add.getIsAddSingleOccurrence();
+		boolean isExceptionThrown = add.getIsExceptionThrown();
 		sortFunction();
 
-		if (isUndoAction) {
-			addToList(commandObj, isAddSingleOccurrence, redoList);
-		} else {
-			addToList(commandObj, isAddSingleOccurrence, undoList);
+		if (!isExceptionThrown) {
+			if (isUndoAction) {
+				addToList(commandObj, isAddSingleOccurrence, redoList);
+			} else {
+				addToList(commandObj, isAddSingleOccurrence, undoList);
+			}
 		}
 		setLastSearchedIndex(-1);
 	}
@@ -220,15 +223,18 @@ public class CommandFacade {
 		Incomplete.markAllIncompleteTasks(taskList);
 		Overdue.markAllOverdueTasks(taskList);
 		setLastOutputTaskList(taskList);
+		boolean isExceptionThrown = edit.getIsExceptionThrown();
 		sortFunction();
 		
 		// if it was a single occurrence that was edited, call search-by-index to update the sidebar
 		callSearchByIndexToUpdateSidebar(edit.getIsEditSingleOccurrence());
 
-		if (isUndoAction) {
-			addToList(edit, redoList);
-		} else {
-			addToList(edit, undoList);
+		if (!isExceptionThrown) {
+			if (isUndoAction) {
+				addToList(edit, redoList);
+			} else {
+				addToList(edit, undoList);
+			}
 		}
 	}
 
@@ -258,9 +264,10 @@ public class CommandFacade {
 		removedOccurrenceTiming = delete.getRemovedTaskOccurrenceDetails();
 		removedOccurrenceIndex = delete.getRemovedOccurrenceIndex();
 		isDeleteAll = delete.getIsDeleteAll();
+		boolean isExceptionThrown = delete.getIsExceptionThrown();
 		
 		sortFunction();
-		if (!isDeleteAll) {
+		if (!isDeleteAll && !isExceptionThrown) {
 			processUndoForDelete(removedTask, removedOccurrenceTiming, removedOccurrenceIndex);
 		}
 	}
@@ -330,8 +337,9 @@ public class CommandFacade {
 		setLastOutputTaskList(taskList);
 		sortFunction();
 		setLastSearchedIndex(-1);
-
-		if (done.getTaskIdToMark() != -1) { // If successfully marked as done
+		boolean isExceptionThrown = done.getIsExceptionThrown();
+		
+		if (!isExceptionThrown && done.getTaskIdToMark() != -1) { // If successfully marked as done
 			if (isUndoAction) {
 				addToList(done, redoList);
 			} else {
@@ -351,8 +359,9 @@ public class CommandFacade {
 		setLastOutputTaskList(taskList);
 		sortFunction();
 		setLastSearchedIndex(-1);
+		boolean isExceptionThrown = incomplete.getIsExceptionThrown();
 		
-		if (incomplete.getTaskIdToMark() != -1) {
+		if (!isExceptionThrown && incomplete.getTaskIdToMark() != -1) {
 			if (isUndoAction) {
 				addToList(incomplete, redoList);
 			} else {
