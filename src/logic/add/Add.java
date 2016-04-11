@@ -121,7 +121,14 @@ public class Add {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL + MESSAGE_LOAD_EXCEPTION_IFP);
 				logger.log(Level.WARNING, "invalid file path");
-
+			} catch (NoSuchFileException e) {
+				e.printStackTrace();
+				logger.log(Level.WARNING, "did not manage to add task externally, invalid file");
+				output.add(MESSAGE_REQUEST_SAVE_LOCATION);
+			} catch (IOException e) {
+				e.printStackTrace();
+				output.add(MESSAGE_REQUEST_SAVE_LOCATION);
+				logger.log(Level.WARNING, "did not manage to add task externally, IO exception");
 			} catch (Exception e) {
 				removeInternallyAddedTask();
 				output.add(MESSAGE_FAIL);
@@ -131,6 +138,9 @@ public class Add {
 		return output;
 	}
 
+	// ==========================================================================
+	// First Level of Abstraction
+	// ==========================================================================
 	private void determineTaskCategory() {
 		if (task.getCategory().equals(CATEGORY_EVENT)) {
 			this.isEvent = true;
@@ -147,6 +157,11 @@ public class Add {
 	 * Control flow to determine adding process for each type of task
 	 * 
 	 * @throws Exception
+	 *             for any general exception
+	 * @throws RecurrenceException
+	 *             when there are problems adding recurrences to a task
+	 * @throws AddException
+	 *             when a floating task has a date time
 	 */
 	private void processTaskInformation() throws Exception, RecurrenceException, AddException {
 		if (isEvent) {
@@ -173,10 +188,60 @@ public class Add {
 		}
 	}
 
+	private void addTask() throws NullPointerException {
+		int originalSize = taskList.size();
+		int newSize = originalSize + 1;
+		if (index != -1) { // must add at a specific point
+			taskList.add(index - 1, task);
+		} else {
+			taskList.add(task);
+		}
+
+		if (taskList.size() == newSize) {
+			addedInternal = true;
+			logger.log(Level.INFO, "added task to internal taskList");
+		} else {
+			logger.log(Level.WARNING, "failed to add task");
+		}
+	}
+
+	private void saveToStorage() throws NoSuchFileException, IOException {
+		IStorage storage = FileStorage.getInstance();
+		storage.save(taskList);
+		addedExternal = true;
+		logger.log(Level.INFO, "added task to external file storage");
+	}
+
+	private void createOutput() {
+		if (addedInternal && addedExternal) {
+			String title = task.getTitle().concat(". ");
+			String text;
+
+			text = concatenateTitleOutput(title);
+			text = concatenateOverdueOutput(text);
+			if (isClash) {
+				text = concatenateClashOutput(text);
+			}
+
+			output.add(text);
+			logger.log(Level.INFO, "output created successfully");
+		} else if (output.isEmpty()) {
+			output.add(MESSAGE_FAIL);
+			logger.log(Level.WARNING, "task was not added, failure output created");
+		}
+	}
+
+	// ==========================================================================
+	// Second Level of Abstraction
+	// ==========================================================================
+
 	/*****************************************************************************/
 	/**
 	 * Checks for clashes between events (including recurrent times) and adds to taskList Also creates all
 	 * dates and times for recurrent tasks
+	 * 
+	 * @throws RecurrenceException
+	 *             if task is recurring but has a problem with setting all recurring times
 	 */
 	private void processEventDetails() throws RecurrenceException {
 		this.isOverdue = checkIfOverdue();
@@ -196,10 +261,41 @@ public class Add {
 	}
 
 	/**
+	 * Checks if a deadline is overdue, modifies status if necessary, adds to taskList
+	 */
+	private void processDeadlineDetails() throws RecurrenceException {
+		this.isOverdue = checkIfOverdue();
+		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
+		if (task.getIsRecurring()) {
+			addRecurringDeadlineTimes(task);
+		}
+		if (isOverdue) {
+			if (task.getIsRecurring()) {
+				Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
+			} else {
+				setTaskStatus(isOverdue);
+			}
+		}
+	}
+
+	private void processFloatingDetails() throws AddException {
+		if (task.getIsRecurring()) {
+			AddException e = new AddException(task);
+			throw e;
+		}
+	}
+
+	// ============================================================================
+	// Lower Levels of Abstraction
+	// ============================================================================
+
+	/**
 	 * Copies startDateTime and endDateTime to taskDateTimes
 	 * 
 	 * @param startDateTime
+	 *            LocalDateTime start date and time of event
 	 * @param endDateTime
+	 *            LocalDateTime end date and time of event
 	 */
 	private void copyToTaskDateTimeList(LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		LocalDateTimePair pair = new LocalDateTimePair(startDateTime, endDateTime);
@@ -209,6 +305,11 @@ public class Add {
 	private void addRecurringEventTimes() throws RecurrenceException {
 		Recurring.setAllRecurringEventTimes(task);
 	}
+	
+	private void addRecurringDeadlineTimes(TaskObject task) throws RecurrenceException {
+		Recurring.setAllRecurringDeadlineTimes(task);
+	}
+
 
 	// @@ author A0124636H
 	private void removeAnyDeletedOccurrences() {
@@ -234,29 +335,6 @@ public class Add {
 	}
 
 	// @@ author A0124052X
-	/***********************************************************************************/
-	/**
-	 * Checks if a deadline is overdue, modifies status if necessary, adds to taskList
-	 */
-	private void processDeadlineDetails() throws RecurrenceException {
-		this.isOverdue = checkIfOverdue();
-		copyToTaskDateTimeList(task.getStartDateTime(), task.getEndDateTime());
-		if (task.getIsRecurring()) {
-			addRecurringDeadlineTimes(task);
-		}
-		if (isOverdue) {
-			if (task.getIsRecurring()) {
-				Recurring.updateDeadline(task, taskList, STATUS_OVERDUE);
-			} else {
-				setTaskStatus(isOverdue);
-			}
-		}
-	}
-
-	private void addRecurringDeadlineTimes(TaskObject task) throws RecurrenceException {
-		Recurring.setAllRecurringDeadlineTimes(task);
-	}
-
 	/**
 	 * Throws Exception if time input is invalid. Deadline to be added has a valid date and time in its
 	 * TaskObject <br>
@@ -281,11 +359,6 @@ public class Add {
 		}
 		logger.log(Level.INFO, "toggled a task's status if applicable");
 	}
-
-	/*********************************************************************************/
-	/**
-	 * Group of functions checking for clashes between events.
-	 */
 
 	// Checks with incomplete, overdue events for clashes
 	private void checkIfEventsClash() throws NullPointerException {
@@ -376,13 +449,6 @@ public class Add {
 		return false;
 	}
 
-	private void processFloatingDetails() throws AddException {
-		if (task.getIsRecurring()) {
-			AddException e = new AddException(task);
-			throw e;
-		}
-	}
-
 	/********************************************************************************/
 	/**
 	 * Group of functions for addition of task
@@ -409,67 +475,6 @@ public class Add {
 	}
 
 	// @@author A0124052X
-
-	private void addTask() throws NullPointerException {
-		int originalSize = taskList.size();
-		int newSize = originalSize + 1;
-		if (index != -1) { // must add at a specific point
-			taskList.add(index - 1, task);
-		} else {
-			taskList.add(task);
-		}
-
-		if (taskList.size() == newSize) {
-			addedInternal = true;
-			logger.log(Level.INFO, "added task to internal taskList");
-		} else {
-			logger.log(Level.WARNING, "failed to add task");
-		}
-	}
-
-	private void saveToStorage() {
-		IStorage storage = FileStorage.getInstance();
-		try {
-			storage.save(taskList);
-			addedExternal = true;
-			logger.log(Level.INFO, "added task to external file storage");
-		} catch (NoSuchFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.log(Level.WARNING, "did not manage to add task externally, invalid file");
-			output.add(MESSAGE_REQUEST_SAVE_LOCATION);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			output.add(MESSAGE_REQUEST_SAVE_LOCATION);
-			logger.log(Level.WARNING, "did not manage to add task externally, IO exception");
-		}
-	}
-
-	/****************************************************************************/
-	/**
-	 * Group of functions for creating output.
-	 */
-
-	private void createOutput() {
-		if (addedInternal && addedExternal) {
-			String title = task.getTitle().concat(". ");
-			String text;
-
-			text = concatenateTitleOutput(title);
-			text = concatenateOverdueOutput(text);
-			if (isClash) {
-				text = concatenateClashOutput(text);
-			}
-
-			output.add(text);
-			logger.log(Level.INFO, "output created successfully");
-		} else if (output.isEmpty()) {
-			output.add(MESSAGE_FAIL);
-			logger.log(Level.WARNING, "task was not added, failure output created");
-		}
-	}
-
 	private String concatenateTitleOutput(String title) {
 		String text;
 		if (task.getIsRecurring()) {
