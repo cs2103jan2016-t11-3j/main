@@ -266,6 +266,9 @@ public class Edit {
 			isEditEndDateOccurrence = false;
 			isEditEndTimeOccurrence = false;
 			isExceptionThrown = true;
+		} catch (EditException e) {
+			tempOutput.add(e.getMessage());
+			isExceptionThrown = true;
 		}
 	}
 	
@@ -333,7 +336,9 @@ public class Edit {
 	// ------------------------- EDIT METHODS -------------------------
 
 	// For editing of recurrence timing
-	private void editRespectiveOccurrences(LocalDateTimePair timing) {
+	private void editRespectiveOccurrences(LocalDateTimePair timing) throws EditException {
+		checkForInvalidDateTimeEdit(timing.getStartDateTime(), timing.getEndDateTime());
+		
 		if (isEditStartDateOccurrence && isEditStartTimeOccurrence) {
 			timing.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
 			if (originalStartDate.equals(editStartDate)) {
@@ -437,7 +442,7 @@ public class Edit {
 		}
 		
 		try {
-			checkForInvalidDateTimeEdit(task);
+			checkForInvalidDateTimeEdit(task.getStartDateTime(), task.getEndDateTime());
 			
 			if (!originalStartDate.isEqual(editStartDate) && !originalStartTime.equals(editStartTime)) {
 				task.setStartDateTime(LocalDateTime.of(editStartDate, editStartTime));
@@ -501,7 +506,7 @@ public class Edit {
 		}
 		
 		try {
-			checkForInvalidDateTimeEdit(task);
+			checkForInvalidDateTimeEdit(task.getStartDateTime(), task.getEndDateTime());
 
 			if (!originalStartDate.isEqual(editStartDate)) {
 				task.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
@@ -566,7 +571,7 @@ public class Edit {
 		}
 
 		try {
-			checkForInvalidDateTimeEdit(task);
+			checkForInvalidDateTimeEdit(task.getStartDateTime(), task.getEndDateTime());
 
 			// If the original start date is null, i.e. it is a floating task which is being edited to another 
 			// category, then the date will be default to today.
@@ -743,7 +748,7 @@ public class Edit {
 				originalEndDate = task.getStartDateTime().toLocalDate();
 			}
 
-			checkForInvalidDateTimeEdit(task, originalEndDate);
+			checkForInvalidDateTimeEdit(task.getStartDateTime(), LocalDateTime.of(originalEndDate, editEndTime));
 	
 			if (!originalEndTime.equals(editEndTime)) {
 				task.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
@@ -785,55 +790,64 @@ public class Edit {
 	
 	// ------------------------- OTHER METHODS -------------------------
 	
-	// Checks if the new start date/time is after the current or the edit end date/time
-	private void checkForInvalidDateTimeEdit(TaskObject task) throws EditException {
-		LocalDateTime endDateTime;
-		
-		if (isEditEndDate && isEditEndTime) {
-			endDateTime  = LocalDateTime.of(editEndDate, editEndTime);
-		} else if (isEditEndDate && !isEditEndTime) {
-			endDateTime = LocalDateTime.of(editEndDate, task.getEndDateTime().toLocalTime());
-		} else if (!isEditEndDate && isEditEndTime) {
-			endDateTime = LocalDateTime.of(task.getEndDateTime().toLocalDate(), editEndTime);
-		} else {
-			endDateTime = task.getEndDateTime();
-		}
-
-		if (isEditStartDate && isEditStartTime && 
-				(LocalDateTime.of(editStartDate, editStartTime).isAfter(endDateTime))) {
-			isEditStartDate = false;
-			isEditStartTime = false;
-			isEditEndDate = false;
-			isEditEndTime = false;
-			throw new EditException(LocalDateTime.MAX);
-		} else if (isEditStartDate && !isEditStartTime &&
-				(LocalDateTime.of(editStartDate, task.getStartDateTime().toLocalTime()).isAfter(endDateTime))) {
-			isEditStartDate = false;
-			isEditEndDate = false;
-			throw new EditException(LocalDateTime.MAX);
-		} else if (!isEditStartDate && isEditStartTime &&
-				(LocalDateTime.of(task.getStartDateTime().toLocalDate(), editStartTime).isAfter(endDateTime))) {
-			isEditStartTime = false;
-			isEditEndTime = false;
-			throw new EditException(LocalDateTime.MAX);
-		} else if (!isEditStartDate && !isEditStartTime &&
-				(task.getStartDateTime().isAfter(endDateTime))) {
-			isEditStartDate = false;
-			isEditStartTime = false;
-			isEditEndDate = false;
-			isEditEndTime = false;
-			throw new EditException(LocalDateTime.MAX);
-		}
-	}
 	
-	// Only called by editEndTime
-	private void checkForInvalidDateTimeEdit(TaskObject task, LocalDate originalEndDate) throws EditException {
-		assert (isEditEndTime = true);
+	// Checks if the new start date/time is after the current or the edit end date/time
+	private void checkForInvalidDateTimeEdit(LocalDateTime currentStartDateTime, LocalDateTime currentEndDateTime) throws EditException {
+		LocalDateTime newEndDateTime;
 		
-		if (task.getStartDateTime().isAfter(LocalDateTime.of(originalEndDate, editEndTime))) {
+		if ((isEditEndDate && isEditEndTime) || 
+				(isEditEndDateOccurrence && isEditEndTimeOccurrence)) {
+			newEndDateTime  = LocalDateTime.of(editEndDate, editEndTime);
+		} else if ((isEditEndDate && !isEditEndTime) || 
+				(isEditEndDateOccurrence && !isEditEndTimeOccurrence)) {
+			newEndDateTime = LocalDateTime.of(editEndDate, currentEndDateTime.toLocalTime());
+		} else if ((!isEditEndDate && isEditEndTime) || 
+				(!isEditEndDateOccurrence && isEditEndTimeOccurrence)) {
+			newEndDateTime = LocalDateTime.of(currentEndDateTime.toLocalDate(), editEndTime);
+		} else {
+			newEndDateTime = currentEndDateTime;
+		}
+		
+		if (((isEditStartDate && isEditStartTime) || 
+				(isEditStartDateOccurrence && isEditStartTimeOccurrence)) && 
+				(LocalDateTime.of(editStartDate, editStartTime).isAfter(newEndDateTime))) {
+			isEditStartDate = false;
+			isEditStartTime = false;
+			isEditEndDate = false;
 			isEditEndTime = false;
+			isEditStartDateOccurrence = false;
+			isEditStartTimeOccurrence = false;
+			isEditEndDateOccurrence = false;
+			isEditEndTimeOccurrence = false;
+			throw new EditException(LocalDateTime.MAX);
+		} else if (((isEditStartDate && !isEditStartTime) ||
+				(isEditStartDateOccurrence && !isEditStartTimeOccurrence)) &&
+				(LocalDateTime.of(editStartDate, currentStartDateTime.toLocalTime()).isAfter(newEndDateTime))) {
+			isEditStartDate = false;
+			isEditEndDate = false;
+			isEditStartDateOccurrence = false;
+			isEditEndDateOccurrence = false;
+			throw new EditException(LocalDateTime.MAX);
+		} else if (((!isEditStartDate && isEditStartTime) ||
+				(!isEditStartDateOccurrence && isEditStartTimeOccurrence)) &&
+				(LocalDateTime.of(currentStartDateTime.toLocalDate(), editStartTime).isAfter(newEndDateTime))) {
+			isEditStartTimeOccurrence = false;
+			isEditEndTimeOccurrence = false;
+			throw new EditException(LocalDateTime.MAX);
+		} else if (((!isEditStartDate && !isEditStartTime) ||
+				(!isEditStartDateOccurrence && !isEditStartTimeOccurrence)) &&
+				(currentStartDateTime.isAfter(newEndDateTime))) {
+			isEditStartDate = false;
+			isEditStartTime = false;
+			isEditEndDate = false;
+			isEditEndTime = false;
+			isEditStartDateOccurrence = false;
+			isEditStartTimeOccurrence = false;
+			isEditEndDateOccurrence = false;
+			isEditEndTimeOccurrence = false;
 			throw new EditException(LocalDateTime.MAX);
 		}
+		
 	}
 	
 	/*
