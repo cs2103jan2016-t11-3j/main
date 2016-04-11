@@ -427,25 +427,88 @@ public class MainController implements Initializable {
 	public static ArrayList<String> getHelpList(int i) {
 		switch (i) {
 		case 1:
-			_UI.passInput("help Add");
+			_UI.passInput("help Add a floating task");
 			break;
 		case 2:
-			_UI.passInput("help Search");
+			_UI.passInput("help Add a deadline task");
 			break;
 		case 3:
-			_UI.passInput("help Edit");
+			_UI.passInput("help Add an event task");
 			break;
 		case 4:
-			_UI.passInput("help Delete");
+			_UI.passInput("help Add a recurring task");
 			break;
 		case 5:
-			_UI.passInput("help Undo");
+			_UI.passInput("help Search by title");
 			break;
 		case 6:
-			_UI.passInput("help save");
+			_UI.passInput("help Search by date");
 			break;
 		case 7:
-			_UI.passInput("help Exit");
+			_UI.passInput("help Search by date and time");
+			break;
+		case 8:
+			_UI.passInput("help Search by category");
+			break;
+		case 9:
+			_UI.passInput("help Search by status");
+			break;
+		case 10:
+			_UI.passInput("help Search by index");
+			break;
+		case 11:
+			_UI.passInput("help Edit title");
+			break;
+		case 12:
+			_UI.passInput("help Edit date");
+			break;
+		case 13:
+			_UI.passInput("help Edit time");
+			break;
+		case 14:
+			_UI.passInput("help Edit interval");
+			break;
+		case 15:
+			_UI.passInput("help Edit all occurrences of a recurring task");
+			break;
+		case 16:
+			_UI.passInput("help Delete a task");
+			break;
+		case 17:
+			_UI.passInput("help Delete all occurrences of a recurring task");
+			break;
+		case 18:
+			_UI.passInput("help Delete all tasks");
+			break;
+		case 19:
+			_UI.passInput("help Mark a task as completed");
+			break;
+		case 20:
+			_UI.passInput("help Mark a task as incomplete");
+			break;
+		case 21:
+			_UI.passInput("help Undo an action");
+			break;
+		case 22:
+			_UI.passInput("help Redo an action");
+			break;
+		case 23:
+			_UI.passInput("help Change a new default save location");
+			break;
+		case 24:
+			_UI.passInput("help Create a backup copy of the saved events/task");
+			break;
+		case 25:
+			_UI.passInput("help Load from a backup file");
+			break;
+		case 26:
+			_UI.passInput("help Load from a specific file");
+			break;
+		case 27:
+			_UI.passInput("help Access the user manual");
+			break;
+		case 28:
+			_UI.passInput("help Exiting the programme");
 			break;
 		}
 		return _UI.getOutput();

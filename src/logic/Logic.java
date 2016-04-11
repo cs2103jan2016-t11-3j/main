@@ -5,7 +5,7 @@ package logic;
 import parser.*;
 import storage.FileStorage;
 import logic.mark.*;
-import logic.timeOutput.*;
+import logic.timeoutput.*;
 import logic.exceptions.*;
 
 import java.io.FileNotFoundException;
@@ -52,6 +52,7 @@ import common.TaskObject;
  * @author ChongYan, RuiBin
  *
  */
+
 public class Logic {
 
 	static Logger logger = AtfLogger.getLogger();
@@ -83,6 +84,55 @@ public class Logic {
 		taskList = new ArrayList<TaskObject>();
 		undoList = new ArrayDeque<CommandObject>();
 		redoList = new ArrayDeque<CommandObject>();
+		runPreProcessingOfList();
+	}
+	
+//@@author A0124636H
+
+	/**
+	 * Constructor called by Undo/Redo. This is a secondary logic class which only performs one operation
+	 * before being deactivated.
+	 * 
+	 * @param taskList
+	 *            The default taskList storing all the tasks
+	 * @param undoList
+	 *            The deque of CommandObjects which stores all undo actions
+	 * @param redoList
+	 *            The deque of CommandObjects which stores all redo actions
+	 */
+	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList,
+			Deque<CommandObject> redoList) {
+		this.taskList = taskList;
+		this.undoList = undoList;
+		this.redoList = redoList;
+		this.lastOutputTaskList = taskList;
+	}
+
+	/**
+	 * Main processing component of AdultTaskFinder. All user inputs will be passed through this command,
+	 * where the internal logic of the software will process the command and react accordingly.
+	 * 
+	 * @param userInput
+	 *            String input that is obtained from UI component. 
+	 */
+	public void run(String userInput) {
+		try {
+			setUserInput(userInput);
+			CommandObject commandObj = callParser();
+			parseCommandObject(commandObj, false, false);
+			TimeOutput.setTimeOutputForGui(taskList);
+		} catch (Exception e) {
+			output.clear();
+			output.add(MESSAGE_FAILED_PROCESSING);
+		}
+	}
+	
+	// ---------------------------- INITIAL PRE-PROCESSING OF TASK LIST ----------------------------
+
+//@@author A0124052X
+	
+	// Called when the task list is first initialised on startup of the program
+	public void runPreProcessingOfList() {
 		try {
 			loadTaskList();
 			TimeOutput.setTimeOutputForGui(taskList);
@@ -120,14 +170,49 @@ public class Logic {
 		logger.info("Start logic");
 	}
 
-	private void removeFromTaskList(int taskId) {
-		for (int i = 0; i < taskList.size(); i++) {
-			if (taskList.get(i).getTaskId() == taskId) {
-				taskList.remove(i);
-			}
-		}
+	/**
+	 * Internal method which is called during the initialisation of Logic object. Purpose of this method is
+	 * to call storage and retrieve all existing task information from the external file source, if available
+	 * 
+	 * @throws FileNotFoundException
+	 *             Specific exception where file does not exist, will be caught and processed by Logic
+	 *             constructor
+	 * @throws JsonSyntaxException
+	 *             Specific exception where the Json Library is unable to read the external file, will be
+	 *             caught and processed by Logic constructor
+	 * @throws IOException
+	 *             General exception for failing to read a file, will be caught and processed by Logic
+	 *             constructor
+	 */
+	private void loadTaskList() throws 
+			InvalidPathException, FileNotFoundException, JsonSyntaxException, IOException {
+		FileStorage storage = FileStorage.getInstance();
+		taskList = storage.load();
+		setLastOutputTaskList(taskList);
 	}
 
+//@@author A0124636H
+		
+	// Sets the starting task ID value. This value should be larger than the current largest task ID 
+	// value in the task list so as to avoid overlap.
+	private void setStartingTaskId() {
+		int largestTaskId = 1;
+		for (int i = 0; i < taskList.size(); i++) {
+			int id = taskList.get(i).getTaskId();
+			if (id > largestTaskId) {
+				largestTaskId = id;
+			}
+		}
+		this.taskId = largestTaskId + 1;
+	}
+
+//@@author A0124052X
+
+	// Checks for overdue tasks at the start when the program is first run
+	private void checkOverdue() {
+		Overdue.markAllOverdueTasks(taskList);
+	}
+	
 	/**
 	 * Method which is only called during startup of AdultTaskFinder. Tasks are added to a "first output" task
 	 * list in the following order: <br>
@@ -203,92 +288,19 @@ public class Logic {
 		}
 		return true;
 	}
-	
-//@@author A0124636H
 
-	/**
-	 * Constructor called by Undo/Redo. This is a secondary logic class which only performs one operation
-	 * before being deactivated.
-	 * 
-	 * @param taskList
-	 *            The default taskList storing all the tasks
-	 * @param undoList
-	 *            The deque of CommandObjects which stores all undo actions
-	 * @param redoList
-	 *            The deque of CommandObjects which stores all redo actions
-	 */
-	public Logic(ArrayList<TaskObject> taskList, Deque<CommandObject> undoList,
-			Deque<CommandObject> redoList) {
-		this.taskList = taskList;
-		this.undoList = undoList;
-		this.redoList = redoList;
-		this.lastOutputTaskList = taskList;
-	}
-		
-//@@author A0124636H
-
-	/**
-	 * Main processing component of AdultTaskFinder. All user inputs will be passed through this command,
-	 * where the internal logic of the software will process the command and react accordingly.
-	 * 
-	 * @param userInput
-	 *            String input that is obtained from UI component. Cannot be empty.
-	 */
-	public void run(String userInput) {
-		try {
-			setUserInput(userInput);
-			CommandObject commandObj = callParser();
-			parseCommandObject(commandObj, false, false);
-			TimeOutput.setTimeOutputForGui(taskList);
-		} catch (Exception e) {
-			output.clear();
-			output.add(MESSAGE_FAILED_PROCESSING);
-		}
-	}
-
-//@@author A0124052X
-	
-	/**
-	 * Internal method which is called during the initialisation of Logic object. Purpose of this method is to
-	 * call storage and retrieve all existing task information from the external file source, if available
-	 * 
-	 * @throws FileNotFoundException
-	 *             Specific exception where file does not exist, will be caught and processed by Logic
-	 *             constructor
-	 * @throws JsonSyntaxException
-	 *             Specific exception where the Json Library is unable to read the external file, will be
-	 *             caught and processed by Logic constructor
-	 * @throws IOException
-	 *             General exception for failing to read a file, will be caught and processed by Logic
-	 *             constructor
-	 */
-	private void loadTaskList() throws InvalidPathException, FileNotFoundException, JsonSyntaxException, IOException {
-		FileStorage storage = FileStorage.getInstance();
-		taskList = storage.load();
-		setLastOutputTaskList(taskList);
-	}
-	
-	// Checks for overdue tasks at the start when the program is first run
-	private void checkOverdue() {
-		Overdue.markAllOverdueTasks(taskList);
-	}
-
-//@@author A0124636H
-	
-	// Sets the starting task ID value. This value should be larger than the
-	// current largest task ID value in the task list so as to avoid overlap.
-	private void setStartingTaskId() {
-		int largestTaskId = 1;
+	private void removeFromTaskList(int taskId) {
 		for (int i = 0; i < taskList.size(); i++) {
-			int id = taskList.get(i).getTaskId();
-			if (id > largestTaskId) {
-				largestTaskId = id;
+			if (taskList.get(i).getTaskId() == taskId) {
+				taskList.remove(i);
 			}
 		}
-
-		this.taskId = largestTaskId + 1;
 	}
-
+	
+//@@author A0124636H
+	
+	// ------------------------------- MAIN PROCESSING OF USER INPUT -------------------------------
+	
 	/**
 	 * Calls Parser to parse the user input.
 	 * 
@@ -308,8 +320,8 @@ public class Logic {
 	 * values from the CommandFacade class.
 	 * 
 	 * @param commandObj
-	 *            CommandObject obtained from parsing the user input, will be used in the CommandFacade object
-	 *            to process changes to AdultTaskFinder
+	 *            CommandObject obtained from parsing the user input, will be used in the CommandFacade
+	 *            object to process changes to AdultTaskFinder
 	 * @param isUndoAction
 	 *            Boolean variable denoting if the method is called as a result of an undo command
 	 * @param isRedoAction
@@ -323,12 +335,9 @@ public class Logic {
 				commandObj, isUndoAction, isRedoAction);
 		commandFacade.run();
 		updateLists(commandFacade);
-
-		//System.out.println("Last searched index = " + lastSearchedIndex);
 	}
 
-	// Retrieves the updated lists from the CommandFacade class and updates the
-	// corresponding lists in Logic
+	// Retrieves the updated lists from the CommandFacade class and updates the corresponding lists in Logic
 	private void updateLists(CommandFacade commandFacade) {
 		setTaskList(commandFacade.getTaskList());
 		setUndoList(commandFacade.getUndoList());
@@ -338,14 +347,9 @@ public class Logic {
 		setTaskDateTimeOutput(commandFacade.getTaskDateTimeOutput());
 		setLastSearchedIndex(commandFacade.getLastSearchedIndex());
 		setSortedIndex(commandFacade.getSortedIndex());
-		System.out.println("Logic:341 - SORTED INDEX = " + commandFacade.getSortedIndex());
-		/*
-		 * if (commandFacade.getCommandType() == INDEX_SEARCH_DISPLAY) {
-		 * setLastSearchedIndex(commandFacade.getLastSearchedIndex()); } else { setLastSearchedIndex(-1); }
-		 */
 	}
 
-	// ------------------------- GETTERS AND SETTERS -------------------------
+	// ---------------------------- GETTERS AND SETTERS ----------------------------
 
 	public ArrayList<TaskObject> getTaskList() {
 		return taskList;
@@ -414,5 +418,4 @@ public class Logic {
 	public void setTaskDateTimeOutput(ArrayList<String> taskDateTimeOutput) {
 		this.taskDateTimeOutput = taskDateTimeOutput;
 	}
-
 }

@@ -1,3 +1,7 @@
-Accessing user manual
+Edit date
+Enter an edit command, followed by an index number and the new date.
 
-Enter “help” to displays user manual/guide and “help” followed by a command to display additional information for the command
+If there is one date, the due date will be modified for deadline tasks while the start date will be modified for event tasks. If there are two dates, the start and end date for event tasks will be modified. 
+
+- edit/update <index number> <new date >
+- edit/update <index number> from <new start date> to <new end date>

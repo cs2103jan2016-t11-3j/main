@@ -55,8 +55,7 @@ public abstract class Mark {
 	 *            toggled
 	 */
 
-	protected TaskObject originalTask = new TaskObject(); // original task info;
-															// for undo purposes
+	protected TaskObject originalTask = new TaskObject(); // original task info for undo purposes
 	protected ArrayList<LocalDateTimePair> originalTimings = new ArrayList<LocalDateTimePair>();
 
 	protected TaskObject markedTask;
@@ -81,12 +80,11 @@ public abstract class Mark {
 	 * Generic constructor for all subclasses of Mark to be used.
 	 * 
 	 * @param taskObj
-	 *            - Contains information on the task to be changed, not the task
-	 *            to be changed
+	 *            - Contains information on the task to be changed, not the task to be changed
 	 * @param taskList
 	 *            - Contains all existing tasks in Adult TaskFinder
 	 * @param lastOutputTaskList
-	 *            - Contains the list of tasks which was last outputted
+	 *            - Contains the list of tasks which was last output
 	 */
 	public Mark(CommandObject commandObj, ArrayList<TaskObject> taskList,
 			ArrayList<TaskObject> lastOutputTaskList) {
@@ -98,8 +96,7 @@ public abstract class Mark {
 
 	public abstract ArrayList<String> run();
 
-	// May need to change if parser changes the way this command object is
-	// constructed
+	// May need to change if parser changes the way this command object is constructed
 	protected void obtainTaskId() {
 		index--;
 		if (index >= 0 && index < lastOutputTaskList.size()) {
@@ -166,7 +163,8 @@ public abstract class Mark {
 		logger.log(Level.INFO, "deleted split task from task list");
 	}
 
-	// Getter
+	// ---------------------------- GETTERS AND SETTERS ---------------------------- 
+	
 	public int getTaskIdToMark() {
 		return taskIdToMark;
 	}

@@ -1,6 +1,6 @@
 //@@author A0124052X
 
-package logic.timeOutput;
+package logic.timeoutput;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -66,7 +66,26 @@ public class TimeOutput {
 			}
 		}
 	}
+	
+	/**
+	 * Common method called by Delete and Edit to set the timeOutput for a task. Method basically contains
+	 * control statements to determine if it is a deadline or an event, and calls the relevant helper
+	 * functions to set the timeOutput
+	 * 
+	 * @param task
+	 *            Task whose timeOutput is to be modified
+	 */
+	public static void setTaskTimeOutput(TaskObject task) {
+		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
+			setDeadlineTimeOutput(task);
+		} else if (task.getCategory().equals(CATEGORY_EVENT)) {
+			setEventTimeOutput(task);
+		}
+	}
 
+	// ==================================================================================
+	// First Level of Abstraction
+	// ==================================================================================
 	/**
 	 * Helper method to setTimeOutputForGui, but also called individually by methods in Search and Recurring
 	 * to set the timeOutputString for a specific event without running through the entire task list. Format
@@ -128,27 +147,6 @@ public class TimeOutput {
 		return line;
 	}
 
-	private static String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException {
-		String formattedString = "";
-		if (end[0].equals(start[0])) { // If start date == end date
-			formattedString = String.format(DISPLAY_TIME_EVENT_3, start[1], end[1], end[0]);
-			// End Date will not be printed
-		} else if (!end[1].equals("") && !start[1].equals("")) {
-			// if both start and end time exist
-			formattedString = String.format(DISPLAY_TIME_EVENT_1, start[1], start[0], end[1], end[0]);
-			// End Date will be printed
-		} else if (end[1].equals("")) { // if end time does not exist
-			if (start[1].equals("")) { // if start time does not exist
-				formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
-			} else { // if start time exists
-				formattedString = String.format(DISPLAY_TIME_EVENT_4, start[1], start[0], end[0]);
-			}
-		} else if (start[1].equals("")) { // if start time does not exist and end time exists
-			formattedString = String.format(DISPLAY_TIME_EVENT_5, start[0], end[1], end[0]);
-		}
-		return formattedString;
-	}
-
 	/**
 	 * Helper method to setTimeOutputForGui, but also called individually by methods in Search and Recurring
 	 * to set the timeOutputString for a specific deadline without running through the entire task list.
@@ -191,6 +189,30 @@ public class TimeOutput {
 		return line;
 	}
 
+	// ==================================================================================
+	// Second Level of Abstraction
+	// ==================================================================================
+	private static String formatEventTimeOutput(String[] start, String[] end) throws NullPointerException {
+		String formattedString = "";
+		if (end[0].equals(start[0])) { // If start date == end date
+			formattedString = String.format(DISPLAY_TIME_EVENT_3, start[1], end[1], end[0]);
+			// End Date will not be printed
+		} else if (!end[1].equals("") && !start[1].equals("")) {
+			// if both start and end time exist
+			formattedString = String.format(DISPLAY_TIME_EVENT_1, start[1], start[0], end[1], end[0]);
+			// End Date will be printed
+		} else if (end[1].equals("")) { // if end time does not exist
+			if (start[1].equals("")) { // if start time does not exist
+				formattedString = String.format(DISPLAY_TIME_EVENT_2, start[0], end[0]);
+			} else { // if start time exists
+				formattedString = String.format(DISPLAY_TIME_EVENT_4, start[1], start[0], end[0]);
+			}
+		} else if (start[1].equals("")) { // if start time does not exist and end time exists
+			formattedString = String.format(DISPLAY_TIME_EVENT_5, start[0], end[1], end[0]);
+		}
+		return formattedString;
+	}
+	
 	private static String formatDeadlineTimeOutput(String[] start) throws NullPointerException {
 		String formattedString = "";
 		if (start[1].equals("")) {
@@ -203,6 +225,9 @@ public class TimeOutput {
 		return formattedString;
 	}
 
+	// =================================================================================
+	// Lower Levels of Abstraction
+	// =================================================================================
 	private static String[] createDateTimeArray(LocalDateTime dateTime, boolean isEndDate)
 			throws DateTimeException {
 		String[] timeArray = new String[2];
@@ -263,22 +288,6 @@ public class TimeOutput {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	/**
-	 * Common method called by Delete and Edit to set the timeOutput for a task. Method basically contains
-	 * control statements to determine if it is a deadline or an event, and calls the relevant helper
-	 * functions to set the timeOutput
-	 * 
-	 * @param task
-	 *            Task whose timeOutput is to be modified
-	 */
-	public static void setTaskTimeOutput(TaskObject task) {
-		if (task.getCategory().equals(CATEGORY_DEADLINE)) {
-			setDeadlineTimeOutput(task);
-		} else if (task.getCategory().equals(CATEGORY_EVENT)) {
-			setEventTimeOutput(task);
 		}
 	}
 }

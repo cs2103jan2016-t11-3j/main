@@ -1,0 +1,4 @@
+Access the user manual
+Enter the help command. This will open up the help manual.
+
+- help 

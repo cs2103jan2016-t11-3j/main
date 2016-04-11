@@ -34,10 +34,13 @@ import javafx.stage.Stage;
 
 public class HelpPopupController implements Initializable {
 
-	public static final String MESSAGE_INVALID_STYLESHEET = "Error: HelpStyle.css stylesheet not found.";
+	private static final String MESSAGE_INVALID_STYLESHEET = "Error: HelpStyle.css stylesheet not found.";
 	private static final String MESSAGE_NODE_NOT_INJECTED = 
 			"fx:id=\"%1$s\" was not injected: check your FXML file 'HelpPopup.fxml'.";
 
+	private static final int MAX_PAGE = 28;
+	private static final int MIN_PAGE = 1;
+	
 	private static Stage helpStage = new Stage();
 	private static ArrayList<String> displayList = MainController.getHelpList(1);
 	private static int page = 1;
@@ -52,6 +55,10 @@ public class HelpPopupController implements Initializable {
 	private Label topicLabel;
 	@FXML
 	private Label pageNumber;
+	@FXML
+	private Label userGuideText;
+	@FXML
+	private Label manualTitle;
 
 	
 	// ----------------------------- START HELP WINDOW ----------------------------
@@ -66,7 +73,7 @@ public class HelpPopupController implements Initializable {
 		Parent help;
 		try {
 			help = FXMLLoader.load(getClass().getResource("HelpPopup.fxml"));
-			Scene helpScene = new Scene(help);
+			Scene helpScene = new Scene(help,650,500);
 			helpStage.setScene(helpScene);
 			setStyle(helpScene);
 			helpStage.show();
@@ -92,6 +99,8 @@ public class HelpPopupController implements Initializable {
 		assert helpPane != null : String.format(MESSAGE_NODE_NOT_INJECTED, "helpPane");
 		assert pageNumber != null : String.format(MESSAGE_NODE_NOT_INJECTED, "pageNumber");
 		assert topicLabel != null : String.format(MESSAGE_NODE_NOT_INJECTED, "topicLabel");
+		assert userGuideText != null : String.format(MESSAGE_NODE_NOT_INJECTED, "userGuideText");
+		assert manualTitle != null : String.format(MESSAGE_NODE_NOT_INJECTED, "manualTitle");
 
 		setDisplay();
 	}
@@ -111,7 +120,7 @@ public class HelpPopupController implements Initializable {
 	}
 
 	private void setPageNumber() {
-		pageNumber.setText(page + "/7");
+		pageNumber.setText(page + "/" + MAX_PAGE);
 	}
 
 	private void setTopicName() {
@@ -157,10 +166,10 @@ public class HelpPopupController implements Initializable {
 	 */
 	@FXML
 	public void handleArrowPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.RIGHT && page < 7) {
+		if (event.getCode() == KeyCode.RIGHT && page < MAX_PAGE) {
 			page++;
 		}
-		if (event.getCode() == KeyCode.LEFT && page > 1) {
+		if (event.getCode() == KeyCode.LEFT && page > MIN_PAGE) {
 			page--;
 		}
 		displayList = MainController.getHelpList(page);

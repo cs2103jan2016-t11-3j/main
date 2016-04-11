@@ -1,0 +1,4 @@
+Edit all occurrences of a recurring task
+Enter an edit command, the keyword “all”, an index number and the new date/time. Do take note that only the date and time can be edited for occurrences.
+
+- edit/update all <index number> <new data>

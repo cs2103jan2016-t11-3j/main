@@ -53,7 +53,7 @@ public class HelpTest {
 			BufferedReader reader = new BufferedReader(fileReader);
 			text = reader.readLine();
 			System.out.println(toDisp.get(i));
-			assertEquals(text, "Adding an Event/Deadline/Floating task");
+			assertEquals(text, "Add a floating task");
 			i++;
 			reader.close();
 		} catch (IOException e) {

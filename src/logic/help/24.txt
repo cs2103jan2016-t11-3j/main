@@ -1,0 +1,4 @@
+Create a backup copy of the saved events/task
+Enter the “save as” command, followed by the filepath to save a copy of the saved events/tasks list into the selected location.
+
+- save as <filepath>

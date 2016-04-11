@@ -1,0 +1,4 @@
+Load from a specific file
+Enter a load command and a valid filepath. This loads the task list from the specified file.
+
+- load <filepath>

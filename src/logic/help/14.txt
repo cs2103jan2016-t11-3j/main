@@ -1,0 +1,6 @@
+Edit interval
+Enter an edit command, followed by an index number and the new interval.
+
+The syntax for editing the interval is ‘every <optional number of times> <frequency>’, where frequency refers to any day of the week, “days”, “weeks”, “months” and “years”.
+
+- edit/update <index number> <new interval>

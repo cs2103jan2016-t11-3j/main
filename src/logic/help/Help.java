@@ -24,7 +24,7 @@ public class Help {
 	public static final String MESSAGE_NO_TOPIC = "Sorry, the topic you requested is not available";
 
 	// Number of topics in user manual
-	private static final int MAX_TOPIC_NUMBER = 13;
+	private static final int MAX_TOPIC_NUMBER = 28;
 
 	// Attributes contained in the helpFunction class
 	private ArrayList<HelpTopic> manual = new ArrayList<HelpTopic>();

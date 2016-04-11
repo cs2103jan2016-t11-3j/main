@@ -10,7 +10,7 @@ import common.TaskObject;
 import logic.Recurring;
 import logic.exceptions.DeleteException;
 import logic.exceptions.RecurrenceException;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -154,7 +154,7 @@ public class Delete {
 
 		try {
 			if (commandObj.getIndex() == 0) {
-				if (commandObj.getTaskObject().getStatus().equals("completed")) {
+				if (commandObj.getTaskObject().getStatus().equals(STATUS_COMPLETED)) {
 					runDeleteCompletedTasks();
 				} else {
 					runDeleteAll();
@@ -233,7 +233,6 @@ public class Delete {
 
 	// Gets the array list of LocalDateTimePair from the task and removes the specified occurrence
 	private void runSingleOccurrenceDelete() throws NullPointerException, NoSuchFileException, IOException {
-		System.out.println("Single occurrence delete running");
 		try {
 			ArrayList<LocalDateTimePair> taskDateTimes = removedTask.getTaskDateTimes();
 			originalRecurrenceTimings.addAll(taskDateTimes);
@@ -286,6 +285,7 @@ public class Delete {
 	private boolean deleteInternal() {
 		try {
 			taskList.remove(removedTaskIndex);
+			logger.log(Level.INFO, "Task deleted from taskList");
 			checkForOverdueTask();
 			return true;
 		} catch (NullPointerException e) {

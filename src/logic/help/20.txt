@@ -1,0 +1,4 @@
+Mark a task as incomplete
+Enter a mark command representing “incomplete”, followed by an index number.
+
+- incomplete/undone <index number>

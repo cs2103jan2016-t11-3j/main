@@ -1,0 +1,8 @@
+Edit time
+Enter an edit command, followed by an index number and the new time.
+
+You can add a keyword “start” or “end” at the end to specify which time is to be edited. If there is no keyword specified, the start time will be edited by default. If you want to edit both start and end time, the “from … to … ” keyword is required.
+
+- edit/update <index number> <new time>
+- edit/update <index number> <new time> start/end
+- edit/update <index number> from <new start time> to <new end time>

@@ -1,0 +1,4 @@
+Exiting the programme
+Enter the exit command. The data will be automatically saved to the default file location before exiting.
+
+- exit/quit

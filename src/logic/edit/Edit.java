@@ -19,7 +19,7 @@ import common.TaskObject;
 import logic.Recurring;
 import logic.exceptions.EditException;
 import logic.exceptions.RecurrenceException;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import static logic.constants.Strings.*;
 
@@ -141,9 +141,6 @@ public class Edit {
 		updateGuiDisplay();
 
 		setOutput();
-		for (int i = 0; i < output.size(); i++) {
-			System.out.println("OUTPUT = " + output.get(i));
-		}
 		return output;
 	}
 
@@ -280,7 +277,6 @@ public class Edit {
 					editStartDateAndTimeForAllOccurrences(editTask);
 				} else {
 					editStartDateAndTime(editTask);
-	
 				}
 			} else {
 				if (isEditStartDate) {
@@ -289,8 +285,7 @@ public class Edit {
 					} else {
 						editStartDate(editTask);
 					}
-				}
-				if (isEditStartTime) {
+				} else if (isEditStartTime) {
 					if (isRecurringTask && isEditAll) {
 						editStartTimeForAllOccurrences(editTask);
 					} else {
@@ -311,8 +306,7 @@ public class Edit {
 					} else {
 						editEndDate(editTask);
 					}
-				}
-				if (isEditEndTime) {
+				} else if (isEditEndTime) {
 					if (isRecurringTask && isEditAll) {
 						editEndTimeForAllOccurrences(editTask);
 					} else {
@@ -350,8 +344,7 @@ public class Edit {
 				} else {
 					timing.setStartDateTime(LocalDateTime.of(editStartDate, originalStartTime));
 				}
-			}
-			if (isEditStartTimeOccurrence) {
+			} else if (isEditStartTimeOccurrence) {
 				if (originalStartTime.equals(editStartTime)) {
 					isEditStartTimeOccurrence = false;
 				} else {
@@ -374,8 +367,7 @@ public class Edit {
 				} else {
 					timing.setEndDateTime(LocalDateTime.of(editEndDate, originalEndTime));
 				}
-			}
-			if (isEditEndTimeOccurrence) {
+			} else if (isEditEndTimeOccurrence) {
 				if (originalEndTime.equals(editEndTime)) {
 					isEditEndTimeOccurrence = false;
 				} else {
@@ -819,7 +811,7 @@ public class Edit {
 			isEditStartTime = false;
 			isEditEndTime = false;
 			throw new EditException(LocalDateTime.MAX);
-		} else if (!isEditStartDate && !!isEditStartTime &&
+		} else if (!isEditStartDate && !isEditStartTime &&
 				(task.getStartDateTime().isAfter(endDateTime))) {
 			isEditStartDate = false;
 			isEditStartTime = false;
@@ -943,7 +935,7 @@ public class Edit {
 		TimeOutput.setTaskTimeOutput(editTask);
 	}
 
-	// FOR DEBUGGING
+	/* FOR DEBUGGING
 	private void checkEditInformation() {
 		System.out.println("isEditTitle = " + isEditTitle);
 		System.out.println("isEditStartDate = " + isEditStartDate);
@@ -956,7 +948,7 @@ public class Edit {
 		System.out.println("isRecurringTask = " + isRecurringTask);
 		System.out.println("isEditAll = " + isEditAll);
 		System.out.println("isEditSingleOccurrence = " + isEditSingleOccurrence);
-	}
+	}*/
 
 	// ------------------------- OUTPUT MESSAGES -------------------------
 
@@ -967,7 +959,7 @@ public class Edit {
 	 */
 	private void setOutput() {
 		logger.log(Level.INFO, "Setting edit output");
-		checkEditInformation();
+		//checkEditInformation();
 
 		if (!isEditSingleOccurrence) {
 			if (isEditTitle) {
