@@ -15,7 +15,17 @@ public class TimeParser {
 	private int time = -1;
 	private String timeString = "";
 	private LocalTime timeObject = LocalTime.MAX;
-		
+	
+	private int pmConverter = 1200;
+	private int makeInvalid = 9999;
+	private int timeFormatter = 100;
+	private int midnight = 2400;
+	private int standardTimeLength = 4;
+	private int pmLowerLimit = 2359;
+	private int pmUpperLimit = 2460;
+	private int amLowerLimit = 1159;
+	private int amUpperLimit = 1260;
+	private int invalidLimit = 1259;	
 	
 	/**
 	 * This method takes in the user's input from add/edit/search parser, checks if empty
@@ -73,7 +83,7 @@ public class TimeParser {
 			minute = Integer.toString(time);
 		}
 		
-		if ((minute.length() == 4 && time < 2400) || minute.matches("0000")) {
+		if ((minute.length() == standardTimeLength && time < midnight) || minute.matches("0000")) {
 			hour = minute.substring(0, 2);
 			minute = minute.substring(2);
 			timeString = hour + ":" + minute;
@@ -136,19 +146,19 @@ public class TimeParser {
 	 * @return
 	 */
 	private int timeConverter(boolean isPM, int _time) {
-		if (_time < 100) { //converts time to 4 digit format
-			_time = _time * 100;
+		if (_time < timeFormatter) { //converts time to 4 digit format
+			_time = _time * timeFormatter;
 		}
 		
 		if (isPM) { //converts timing to correct value
-			_time = _time + 1200;
-			if (_time > 2359 && _time < 2460 ) {
-				_time = _time - 1200;
+			_time = _time + pmConverter;
+			if (_time > pmLowerLimit && _time < pmUpperLimit ) {
+				_time = _time - pmConverter;
 			}
-		} else if (!isPM && _time > 1159 && _time < 1260) { //only for 12.xxam cases
-			_time = _time - 1200;
-		} else if (!isPM && _time > 1259) {
-			_time = _time + 9999; // anything more than 12.59am will be rendered invalid
+		} else if (!isPM && _time > amLowerLimit && _time < amUpperLimit) { //only for 12.xxam cases
+			_time = _time - pmConverter;
+		} else if (!isPM && _time > invalidLimit) {
+			_time = _time + makeInvalid; // anything more than 12.59am will be rendered invalid
 		}
 		return _time;
 	}
