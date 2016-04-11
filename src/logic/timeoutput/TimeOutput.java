@@ -1,6 +1,6 @@
 //@@author A0124052X
 
-package logic.timeOutput;
+package logic.timeoutput;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;

@@ -7,7 +7,7 @@ import java.util.logging.*;
 
 import common.AtfLogger;
 import common.TaskObject;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import static logic.constants.Strings.*;
 

@@ -10,7 +10,7 @@ import common.TaskObject;
 import logic.Recurring;
 import logic.exceptions.DeleteException;
 import logic.exceptions.RecurrenceException;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;

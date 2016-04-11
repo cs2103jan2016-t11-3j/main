@@ -9,7 +9,7 @@ import org.junit.FixMethodOrder;
 
 import common.*;
 import logic.*;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import static logic.constants.Index.*;
 import static logic.constants.Strings.*;

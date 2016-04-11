@@ -4,8 +4,7 @@ package logic.search;
 
 import logic.display.Display;
 import logic.exceptions.SearchException;
-import logic.timeOutput.TimeOutput;
-
+import logic.timeoutput.TimeOutput;
 import common.TaskObject;
 import common.CommandObject;
 

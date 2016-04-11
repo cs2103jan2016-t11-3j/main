@@ -19,7 +19,7 @@ import common.TaskObject;
 import logic.Recurring;
 import logic.exceptions.EditException;
 import logic.exceptions.RecurrenceException;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import static logic.constants.Strings.*;
 

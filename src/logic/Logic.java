@@ -5,7 +5,7 @@ package logic;
 import parser.*;
 import storage.FileStorage;
 import logic.mark.*;
-import logic.timeOutput.*;
+import logic.timeoutput.*;
 import logic.exceptions.*;
 
 import java.io.FileNotFoundException;
