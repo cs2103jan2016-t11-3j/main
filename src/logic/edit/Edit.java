@@ -141,9 +141,6 @@ public class Edit {
 		updateGuiDisplay();
 
 		setOutput();
-		for (int i = 0; i < output.size(); i++) {
-			System.out.println("OUTPUT = " + output.get(i));
-		}
 		return output;
 	}
 
