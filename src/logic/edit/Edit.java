@@ -798,35 +798,27 @@ public class Edit {
 		
 		if ((isEditStartDate && isEditStartTime) || 
 				(isEditStartDateOccurrence && isEditStartTimeOccurrence)) {
-			System.out.println("start 1st");
 			newStartDateTime  = LocalDateTime.of(editStartDate, editStartTime);
 		} else if ((isEditStartDate && !isEditStartTime) || 
 				(isEditStartDateOccurrence && !isEditStartTimeOccurrence)) {
-			System.out.println("start 2nd");
 			newStartDateTime = LocalDateTime.of(editStartDate, currentStartDateTime.toLocalTime());
 		} else if ((!isEditStartDate && isEditStartTime) || 
 				(!isEditStartDateOccurrence && isEditStartTimeOccurrence)) {
-			System.out.println("start 3rd");
 			newStartDateTime = LocalDateTime.of(currentStartDateTime.toLocalDate(), editStartTime);
 		} else {
-			System.out.println("start 4th");
 			newStartDateTime = currentStartDateTime;
 		}
 		
 		if ((isEditEndDate && isEditEndTime) || 
 				(isEditEndDateOccurrence && isEditEndTimeOccurrence)) {
-			System.out.println("1st");
 			newEndDateTime  = LocalDateTime.of(editEndDate, editEndTime);
 		} else if ((isEditEndDate && !isEditEndTime) || 
 				(isEditEndDateOccurrence && !isEditEndTimeOccurrence)) {
-			System.out.println("2nd");
 			newEndDateTime = LocalDateTime.of(editEndDate, currentEndDateTime.toLocalTime());
 		} else if ((!isEditEndDate && isEditEndTime) || 
 				(!isEditEndDateOccurrence && isEditEndTimeOccurrence)) {
-			System.out.println("3rd");
 			newEndDateTime = LocalDateTime.of(currentEndDateTime.toLocalDate(), editEndTime);
 		} else {
-			System.out.println("4th");
 			newEndDateTime = currentEndDateTime;
 		}
 		
@@ -842,7 +834,6 @@ public class Edit {
 			throw new EditException(LocalDateTime.MAX);
 		}
 		
-	
 	}
 	
 	/*
