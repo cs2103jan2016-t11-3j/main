@@ -9,7 +9,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 
 import common.*;
-import logic.timeOutput.TimeOutput;
+import logic.timeoutput.TimeOutput;
 
 import org.junit.Test;
 
