@@ -562,13 +562,13 @@ public class Edit {
 
 		try {
 			checkForInvalidDateTimeEdit(task);
-			
+
 			// If the original start date is null, i.e. it is a floating task which is being edited to another 
 			// category, then the date will be default to today.
 			if (originalStartDate.equals(LocalDate.MAX)) {
 				originalStartDate = LocalDate.now();
 			}
-	
+			
 			if (!originalStartTime.equals(editStartTime)) {
 				task.setStartDateTime(LocalDateTime.of(originalStartDate, editStartTime));
 				task.updateTaskDateTimesArray();
@@ -732,13 +732,13 @@ public class Edit {
 		}
 		
 		try {
-			checkForInvalidDateTimeEdit(task);
-			
 			// If the original end date is null, i.e. it is a floating task which is being edited to another
 			// category, then the date will be default to the start date.
 			if (originalEndDate.equals(LocalDate.MAX)) {
 				originalEndDate = task.getStartDateTime().toLocalDate();
 			}
+
+			checkForInvalidDateTimeEdit(task, originalEndDate);
 	
 			if (!originalEndTime.equals(editEndTime)) {
 				task.setEndDateTime(LocalDateTime.of(originalEndDate, editEndTime));
@@ -816,6 +816,16 @@ public class Edit {
 			isEditStartDate = false;
 			isEditStartTime = false;
 			isEditEndDate = false;
+			isEditEndTime = false;
+			throw new EditException(LocalDateTime.MAX);
+		}
+	}
+	
+	// Only called by editEndTime
+	private void checkForInvalidDateTimeEdit(TaskObject task, LocalDate originalEndDate) throws EditException {
+		assert (isEditEndTime = true);
+		
+		if (task.getStartDateTime().isAfter(LocalDateTime.of(originalEndDate, editEndTime))) {
 			isEditEndTime = false;
 			throw new EditException(LocalDateTime.MAX);
 		}
