@@ -387,7 +387,7 @@ public class MainController implements Initializable {
 	}
 
 	private void focusToAddedTask() {
-		int sortIndex = _UI.getAddSortedIndex();
+		int sortIndex = _UI.getSortedIndex();
 		taskTable.scrollTo(sortIndex - 1);
 		Platform.runLater(new Runnable() {
 			@Override
@@ -401,7 +401,7 @@ public class MainController implements Initializable {
 		String[] input = _input.split(" ");
 		if (input.length > 1) {
 			try {
-				int index = Integer.parseInt(input[1]);
+				int index = _UI.getSortedIndex();
 				taskTable.scrollTo(index - 1);
 				taskTable.getSelectionModel().select(index - 1);
 			} catch (NumberFormatException e) {

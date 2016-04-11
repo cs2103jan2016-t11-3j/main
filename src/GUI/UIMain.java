@@ -135,7 +135,7 @@ public class UIMain extends Application {
 	 * 
 	 * @return logic.getSortedIndex()
 	 */
-	public int getAddSortedIndex() {
+	public int getSortedIndex() {
 		return logic.getSortedIndex();
 	}
 
