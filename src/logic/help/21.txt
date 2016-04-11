@@ -1,0 +1,4 @@
+Undo an action
+Enter the undo command. This restores the state of the task list to what it had been before the last command was executed.
+
+- undo

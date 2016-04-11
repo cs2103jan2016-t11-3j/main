@@ -1,3 +1,4 @@
-Scroll the display while viewing the task list
+Search by title
+Enter a search command, followed by a search title. All search keywords are non-case-sensitive.
 
-Use the arrow keys up and down to display the previous and next pages in the display.
+- search/view/find/filter/display <search title>

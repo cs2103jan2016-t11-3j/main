@@ -1,0 +1,4 @@
+Load from a backup file
+Enter a load command and the keyword “backup”. This loads the task list from the backup file and is used in the event where the task list fails to load from the normal save file. 
+
+- load backup

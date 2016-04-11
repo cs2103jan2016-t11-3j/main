@@ -1,0 +1,4 @@
+Search by date and time
+Enter a search command, followed by a search date and time. A search by time will always require a search date as well.
+
+- search/view/find/filter/display <search date time>

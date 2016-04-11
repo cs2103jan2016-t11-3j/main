@@ -1,0 +1,4 @@
+Delete all occurrences of a recurring task
+Enter a delete command, the keyword “all” and an index number. If the specified task is not a recurring task, it is processed as a normal delete of a task.
+
+- delete all <index number>

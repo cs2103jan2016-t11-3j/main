@@ -1,10 +1,41 @@
-Adding an Event/Deadline/Floating task
-Enter “add” <event/deadline/floating task description>
-Enter “add” <event/deadline/floating task description> <start/end date time> 
+Add a floating task
+Enter “add”, followed by the title of the task.
 
-Usage Examples:
-add Dinner with John 7pm - 8pm	
-Creates an event named “Dinner with John”, scheduled between 7pm to 8pm on the day this was created
+- add <task title>
 
-add Dinner with John	
-Creates a floating task named “Dinner with John”
+LONGLONGLONGLONGLONGLONG
+LONG
+LONG
+LONG
+
+LONG
+LONG
+LONG
+
+LONG
+LONG
+LONG
+LONG
+
+LONG
+LONG
+
+LONG
+LONG
+LONG
+
+LONGLONG
+LONG
+
+LONG
+LONG
+LONG
+LONG
+
+LONG
+LONGLONG
+
+LONG
+LONG
+
+LONG

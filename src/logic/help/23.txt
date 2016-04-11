@@ -1,0 +1,4 @@
+Change a new default save location
+Enter the “save to” command, followed by the new filepath that will be set as the new default save location.
+
+- save to <filepath>

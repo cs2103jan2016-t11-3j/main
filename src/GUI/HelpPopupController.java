@@ -111,7 +111,7 @@ public class HelpPopupController implements Initializable {
 	}
 
 	private void setPageNumber() {
-		pageNumber.setText(page + "/7");
+		pageNumber.setText(page + "/28");
 	}
 
 	private void setTopicName() {
@@ -157,7 +157,7 @@ public class HelpPopupController implements Initializable {
 	 */
 	@FXML
 	public void handleArrowPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.RIGHT && page < 7) {
+		if (event.getCode() == KeyCode.RIGHT && page < 28) {
 			page++;
 		}
 		if (event.getCode() == KeyCode.LEFT && page > 1) {

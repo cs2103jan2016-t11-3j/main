@@ -1,0 +1,5 @@
+Mark a task as completed
+Enter a mark command representing “completed”, followed by an index number.
+
+- done/finish/finished/complete/completed <index number>
+
