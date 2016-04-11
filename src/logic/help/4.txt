@@ -1,6 +1,5 @@
 Add a recurring task
 Enter “add”, followed by the title of the task, an interval, an optional date/time and an optional termination condition.
-
 The syntax for the individual components is:
 (a)	Interval
 	- every <optional number of times> <frequency> 
@@ -12,7 +11,6 @@ The syntax for the individual components is:
 
 If there is no specified termination condition, the task is known as an infinitely recurring task. 
 The program will maintain a maximum of 10 occurrences for the task based on the interval.
-
 If there is no specified start date, it will be default to today’s date.
 
 - add <task title> <interval> <optional date time> <optional termination condition>
