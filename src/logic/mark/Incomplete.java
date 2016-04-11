@@ -83,7 +83,7 @@ public class Incomplete extends Mark {
 						createOutput(STATUS_OVERDUE);
 						logger.log(Level.INFO, "Status changed to \'overdue\'");
 					}
-
+					isExceptionThrown = true;
 				}
 
 				return true;

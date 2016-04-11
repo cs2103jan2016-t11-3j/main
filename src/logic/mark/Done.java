@@ -105,6 +105,7 @@ public class Done extends Mark {
 		} catch (MarkException e) {
 			logger.log(Level.WARNING, "task to be marked already has that status");
 			createErrorOutput(e.getMarkExceptionMessage());
+			isExceptionThrown = true;
 			return false;
 		}
 	}
@@ -133,6 +134,7 @@ public class Done extends Mark {
 		} catch (RecurrenceException e) {
 			String exceptionMessage = e.getRecurrenceExceptionMessage();
 			createErrorOutput(exceptionMessage);
+			isExceptionThrown = true;
 		}
 	}
 
@@ -147,6 +149,7 @@ public class Done extends Mark {
 		} catch (RecurrenceException e) {
 			String exceptionMessage = e.getRecurrenceExceptionMessage();
 			createErrorOutput(exceptionMessage);
+			isExceptionThrown = true;
 		}
 	}
 
